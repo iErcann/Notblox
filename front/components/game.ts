@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { Camera } from "./camera";
 import { Renderer } from "./renderer";
 import { Player } from "./player";
-
+import websocket from "./websocket";
 export class Game {
   lastRenderTime = Date.now();
   tickrate = 20;

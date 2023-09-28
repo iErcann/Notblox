@@ -1,7 +1,8 @@
 import { EntityEnum } from "../entity/entity.js";
-import { Component, Serializable } from "./component.js";
+import { Component, ComponentEnum, Serializable } from "./component.js";
 
 export class NetworkDataComponent extends Component implements Serializable {
+  type = ComponentEnum.NONE;
   constructor(
     entityId: number,
     public entityType: EntityEnum,
@@ -18,13 +19,13 @@ export class NetworkDataComponent extends Component implements Serializable {
     const components = this.getComponents();
     const serializedComponents = components.map((component) => {
       // Serialize each component (you can define serialization logic for each component type)
-      return component.serialize();
+      return { t: component.type, ...component.serialize() };
     });
 
     const networkData = {
-      type: this.entityType,
+      t: this.entityType,
       id: this.entityId,
-      components: serializedComponents,
+      c: serializedComponents,
     };
 
     // Convert networkData to JSON and send it to clients

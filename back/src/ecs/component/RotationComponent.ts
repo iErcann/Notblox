@@ -1,7 +1,8 @@
-import { Component, Serializable } from "./component.js";
+import { Component, ComponentEnum, Serializable } from "./component.js";
 
 // Define a RotationComponent class
 export class RotationComponent extends Component implements Serializable {
+  type = ComponentEnum.ROTATION;
   constructor(
     entityId: number,
     public pitch: number, // Pitch rotation (e.g., around X-axis)
@@ -12,9 +13,9 @@ export class RotationComponent extends Component implements Serializable {
   }
   serialize() {
     return {
-      pitch: this.pitch,
-      yaw: this.yaw,
-      roll: this.roll,
+      p: this.pitch,
+      y: this.yaw,
+      r: this.roll,
     };
   }
 }

@@ -21,29 +21,20 @@ const networkSystem = NetworkSystem.getInstance();
 
 // Physics
 const syncPositionSystem = new SyncPositionSystem();
-const player = new Player(0, 10, 0);
-const packet = new InputPacket(player.entity.id, true, false, false, false);
-inputProcessingSystem.receiveInputPacket(packet);
-const cube = new Cube(0, 10, 0, 0.5);
+// const player = new Player(0, 10, 0);
+// const packet = new InputPacket(player.entity.id, true, false, false, false);
+// inputProcessingSystem.receiveInputPacket(packet);
+new Cube(0, 10, 0, 0.5);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(10.0, 0.1, 10.0);
 physicsSystem.world.createCollider(groundColliderDesc);
 
 function gameLoop() {
-  // for (const entity of entities) {
-  //   const playerPosition =
-  //     entity.getComponent<PositionComponent>(PositionComponent);
-  //   if (playerPosition) {
-  //     console.log(
-  //       `Player's position is (${playerPosition.x}, ${playerPosition.y}, ${playerPosition.z})`
-  //     );
-  //   }
-  // }
   movementSystem.update(entities);
   physicsSystem.update();
   syncPositionSystem.update(entities);
-  networkSystem.serializeAll(entities);
+  networkSystem.update(entities);
   setTimeout(gameLoop, 16);
 }
 

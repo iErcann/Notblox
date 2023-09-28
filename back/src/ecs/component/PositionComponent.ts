@@ -1,7 +1,8 @@
-import { Component, Serializable } from "./component.js";
+import { Component, ComponentEnum, Serializable } from "./component.js";
 
 // Define a PositionComponent class
 export class PositionComponent extends Component implements Serializable {
+  type = ComponentEnum.POSITION;
   constructor(
     entityId: number,
     public x: number,
@@ -12,9 +13,9 @@ export class PositionComponent extends Component implements Serializable {
   }
   serialize() {
     return {
-      x: this.x,
-      y: this.y,
-      z: this.z,
+      x: Number(this.x.toFixed(2)),
+      y: Number(this.y.toFixed(2)),
+      z: Number(this.z.toFixed(2)),
     };
   }
 }

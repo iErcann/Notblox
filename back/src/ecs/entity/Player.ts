@@ -5,7 +5,9 @@ import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
 import { PositionComponent } from "../component/PositionComponent.js";
+import { RotationComponent } from "../component/RotationComponent.js";
 import { VelocityComponent } from "../component/VelocityComponent.js";
+import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "./EntityManager.js";
 import { Entity, EntityEnum } from "./entity.js";
@@ -13,7 +15,13 @@ import { Entity, EntityEnum } from "./entity.js";
 export class Player {
   entity: Entity;
 
-  constructor(initialX: number, initialY: number, initialZ: number) {
+  constructor(
+    ws: WebSocket,
+    initialX: number,
+    initialY: number,
+    initialZ: number
+  ) {
+    console.log("New player created !");
     this.entity = EntityManager.getInstance().createEntity(EntityEnum.PLAYER);
     const world = PhysicsSystem.getInstance().world;
 
@@ -26,9 +34,12 @@ export class Player {
     );
 
     this.entity.addComponent(positionComponent);
+
+    const rotationComponent = new RotationComponent(this.entity.id, 0, 1, 2);
+    this.entity.addComponent(rotationComponent);
+
     // Adding a VelocityComponent with initial velocity as 0
     this.entity.addComponent(new VelocityComponent(this.entity.id, 0, 0));
-
     // Adding an InputComponent to handle player inputs
     this.entity.addComponent(new InputComponent(this.entity.id));
 
@@ -40,13 +51,15 @@ export class Player {
     this.createRigidBody(world);
     this.createCollider(world);
 
+    // Network
     const networkDataComponent = new NetworkDataComponent(
       this.entity.id,
       this.entity.type,
-      [positionComponent]
+      [positionComponent, rotationComponent]
     );
 
     this.entity.addComponent(networkDataComponent);
+    this.entity.addComponent(new WebSocketComponent(this.entity.id, ws));
   }
 
   getPosition() {

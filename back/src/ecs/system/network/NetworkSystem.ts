@@ -1,6 +1,7 @@
 // NetworkSystem.ts
 
 import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
+import { WebSocketComponent } from "../../component/WebsocketComponent.js";
 import { Entity } from "../../entity/entity.js";
 
 export class NetworkSystem {
@@ -29,13 +30,22 @@ export class NetworkSystem {
     });
 
     // Convert serializedEntities to JSON and send it to clients
-    const message = JSON.stringify(serializedEntities);
-    this.broadcast(message);
+    return JSON.stringify(serializedEntities);
   }
 
-  // Broadcast a message to all connected clients (implementation not shown here)
-  private broadcast(message: string) {
-    console.log("Simulating broadcast..");
-    console.log(message);
+  public update(entities: Entity[]) {
+    const serializedEntities = this.serializeAll(entities);
+    this.broadcast(entities, serializedEntities);
+  }
+  // Broadcast a message to all connected clients
+  private broadcast(entities: Entity[], message: string) {
+    entities.forEach((entity) => {
+      const websocketComponent =
+        entity.getComponent<WebSocketComponent>(WebSocketComponent);
+
+      if (websocketComponent) {
+        websocketComponent.ws.send(message);
+      }
+    });
   }
 }

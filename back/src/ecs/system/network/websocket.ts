@@ -1,10 +1,17 @@
 import { DEDICATED_COMPRESSOR_3KB } from "uWebSockets.js";
 import { App } from "uWebSockets.js";
+import { Player } from "../../entity/Player.js";
 
 function handleMessage(ws: any, message: any, isBinary: boolean) {
   // You can implement custom message handling here
   // For now, we'll just echo the message back
-  let ok = ws.send(message, isBinary, true);
+  // let ok = ws.send(message, isBinary, true);
+  // new Player(ws, 1, 1, 1);
+}
+
+function onConnect(ws: any) {
+  if (!ws) return;
+  new Player(ws, 1, 1, 1);
 }
 
 export function startWebSocket(port: number) {
@@ -16,6 +23,7 @@ export function startWebSocket(port: number) {
     maxPayloadLength: 512,
     compression: DEDICATED_COMPRESSOR_3KB,
     message: handleMessage, // Handle WebSocket messages
+    open: onConnect,
   });
 
   app.listen(port, (listenSocket) => {
