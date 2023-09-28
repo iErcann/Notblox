@@ -1,12 +1,16 @@
 import { Component } from "../component/component.js";
 
+export enum EntityEnum {
+  PLAYER = 1,
+  CUBE = 2,
+}
 // Define an Entity class
 export class Entity {
   private static nextId = 1;
   public id: number;
   public components: Component[] = [];
 
-  constructor() {
+  constructor(public type: EntityEnum) {
     this.id = Entity.nextId++;
   }
 

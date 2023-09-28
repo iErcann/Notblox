@@ -1,14 +1,14 @@
+import { Cube } from "./ecs/entity/Cube.js";
 import { EntityManager } from "./ecs/entity/EntityManager.js";
 import { Player } from "./ecs/entity/Player.js";
-import { startWebSocket } from "./ecs/network/websocket.js";
-import { BroadcastSystem } from "./ecs/system/BroadcastSystem.js";
-import { CharacterControllerSystem } from "./ecs/system/CharacterControllerSystem.js";
+import { startWebSocket } from "./ecs/system/network/websocket.js";
 import { InputProcessingSystem } from "./ecs/system/InputProcessingSystem.js";
 import { MovementSystem } from "./ecs/system/MovementSystem.js";
-import { PhysicsSystem } from "./ecs/system/PhysicsSystem.js";
-import { SyncPositionSystem } from "./ecs/system/SyncPositionSystem.js";
+import { PhysicsSystem } from "./ecs/system/physics/PhysicsSystem.js";
+import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import { InputPacket } from "./inputPacket.js";
 import Rapier from "./physics/rapier.js";
+import { NetworkSystem } from "./ecs/system/network/NetworkSystem.js";
 
 // Example usage
 // Create a system
@@ -16,15 +16,15 @@ const entityManager = EntityManager.getInstance();
 const entities = entityManager.getAllEntities();
 const physicsSystem = PhysicsSystem.getInstance();
 const movementSystem = new MovementSystem();
-const broadcastSystem = new BroadcastSystem(1);
 const inputProcessingSystem = new InputProcessingSystem(entities);
-const characterControllerSystem = new CharacterControllerSystem();
+const networkSystem = NetworkSystem.getInstance();
 
 // Physics
 const syncPositionSystem = new SyncPositionSystem();
 const player = new Player(0, 10, 0);
 const packet = new InputPacket(player.entity.id, true, false, false, false);
 inputProcessingSystem.receiveInputPacket(packet);
+const cube = new Cube(0, 10, 0, 0.5);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(10.0, 0.1, 10.0);
@@ -43,7 +43,7 @@ function gameLoop() {
   movementSystem.update(entities);
   physicsSystem.update();
   syncPositionSystem.update(entities);
-  broadcastSystem.update(entities);
+  networkSystem.serializeAll(entities);
   setTimeout(gameLoop, 16);
 }
 

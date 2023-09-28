@@ -1,25 +1,31 @@
 import Rapier from "../../physics/rapier.js";
 import { CharacterControllerComponent } from "../component/CharacterControllerComponent.js";
 import { InputComponent } from "../component/InputComponent.js";
+import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
 import { PositionComponent } from "../component/PositionComponent.js";
 import { VelocityComponent } from "../component/VelocityComponent.js";
-import { PhysicsSystem } from "../system/PhysicsSystem.js";
+import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "./EntityManager.js";
-import { Entity } from "./entity.js";
+import { Entity, EntityEnum } from "./entity.js";
 
 export class Player {
   entity: Entity;
 
   constructor(initialX: number, initialY: number, initialZ: number) {
-    this.entity = EntityManager.getInstance().createEntity();
+    this.entity = EntityManager.getInstance().createEntity(EntityEnum.PLAYER);
     const world = PhysicsSystem.getInstance().world;
 
     // Adding a PositionComponent with initial position
-    this.entity.addComponent(
-      new PositionComponent(this.entity.id, initialX, initialY, initialZ)
+    const positionComponent = new PositionComponent(
+      this.entity.id,
+      initialX,
+      initialY,
+      initialZ
     );
+
+    this.entity.addComponent(positionComponent);
     // Adding a VelocityComponent with initial velocity as 0
     this.entity.addComponent(new VelocityComponent(this.entity.id, 0, 0));
 
@@ -33,7 +39,16 @@ export class Player {
 
     this.createRigidBody(world);
     this.createCollider(world);
+
+    const networkDataComponent = new NetworkDataComponent(
+      this.entity.id,
+      this.entity.type,
+      [positionComponent]
+    );
+
+    this.entity.addComponent(networkDataComponent);
   }
+
   getPosition() {
     return this.entity.getComponent<PositionComponent>(PositionComponent)!;
   }
