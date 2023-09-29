@@ -22,8 +22,10 @@ export class Player {
     initialZ: number
   ) {
     console.log("New player created !");
-    this.entity = EntityManager.getInstance().createEntity(EntityEnum.PLAYER);
     const world = PhysicsSystem.getInstance().world;
+    this.entity = EntityManager.getInstance().createEntity(EntityEnum.PLAYER);
+
+    this.entity.addComponent(new WebSocketComponent(this.entity.id, ws));
 
     // Adding a PositionComponent with initial position
     const positionComponent = new PositionComponent(
@@ -59,7 +61,6 @@ export class Player {
     );
 
     this.entity.addComponent(networkDataComponent);
-    this.entity.addComponent(new WebSocketComponent(this.entity.id, ws));
   }
 
   getPosition() {

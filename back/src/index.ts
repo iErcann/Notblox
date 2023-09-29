@@ -1,19 +1,18 @@
 import { Cube } from "./ecs/entity/Cube.js";
 import { EntityManager } from "./ecs/entity/EntityManager.js";
-import { Player } from "./ecs/entity/Player.js";
-import { startWebSocket } from "./ecs/system/network/websocket.js";
 import { InputProcessingSystem } from "./ecs/system/InputProcessingSystem.js";
 import { MovementSystem } from "./ecs/system/MovementSystem.js";
 import { PhysicsSystem } from "./ecs/system/physics/PhysicsSystem.js";
 import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
-import { InputPacket } from "./inputPacket.js";
 import Rapier from "./physics/rapier.js";
 import { NetworkSystem } from "./ecs/system/network/NetworkSystem.js";
+import { WebsocketSystem } from "./ecs/system/network/WebsocketSystem.js";
 
-// Example usage
 // Create a system
 const entityManager = EntityManager.getInstance();
+// TODO: Make it wait for the websocket server to start
 const entities = entityManager.getAllEntities();
+
 const physicsSystem = PhysicsSystem.getInstance();
 const movementSystem = new MovementSystem();
 const inputProcessingSystem = new InputProcessingSystem(entities);
@@ -24,6 +23,53 @@ const syncPositionSystem = new SyncPositionSystem();
 // const player = new Player(0, 10, 0);
 // const packet = new InputPacket(player.entity.id, true, false, false, false);
 // inputProcessingSystem.receiveInputPacket(packet);
+new Cube(10, 10, 10, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(10, 10, 10, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(10, 10, 10, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(10, 10, 10, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(10, 10, 10, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(10, 10, 10, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(10, 10, 10, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(10, 10, 10, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
+new Cube(0, 10, 0, 0.5);
 new Cube(0, 10, 0, 0.5);
 
 // Create the ground
@@ -35,8 +81,7 @@ function gameLoop() {
   physicsSystem.update();
   syncPositionSystem.update(entities);
   networkSystem.update(entities);
-  setTimeout(gameLoop, 16);
+  setTimeout(gameLoop, 1000 / 20);
 }
 
 gameLoop();
-startWebSocket(8001);

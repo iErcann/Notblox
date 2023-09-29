@@ -1,3 +1,5 @@
+import { unpack } from "msgpackr/unpack"; // if you only need to unpack
+
 const serverUrl = "ws://localhost:8001"; // Replace with your WebSocket server URL
 
 function startWebSocket() {
@@ -10,8 +12,8 @@ function startWebSocket() {
   });
 
   // Event handler for incoming messages
-  websocket.addEventListener("message", (event) => {
-    const message = JSON.parse(event.data);
+  websocket.addEventListener("message", async (event) => {
+    const message = unpack(await event.data.arrayBuffer());
     console.log("Received message:", message);
   });
 

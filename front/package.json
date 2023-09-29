@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/three": "^0.156.0",
+    "msgpackr": "^1.9.9",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",

@@ -3,11 +3,18 @@
 import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
 import { Entity } from "../../entity/entity.js";
+import { pack } from "msgpackr";
+import { WebsocketSystem } from "./WebsocketSystem.js";
+import { WebSocket } from "uWebSockets.js";
 
 export class NetworkSystem {
   private static instance: NetworkSystem;
+  private websocketSystem: WebsocketSystem;
+  private lastSerializedEntities: Buffer | undefined;
 
-  private constructor() {}
+  private constructor() {
+    this.websocketSystem = new WebsocketSystem();
+  }
 
   public static getInstance() {
     if (!NetworkSystem.instance) {
@@ -30,21 +37,23 @@ export class NetworkSystem {
     });
 
     // Convert serializedEntities to JSON and send it to clients
-    return JSON.stringify(serializedEntities);
+    return pack(serializedEntities);
   }
 
   public update(entities: Entity[]) {
     const serializedEntities = this.serializeAll(entities);
     this.broadcast(entities, serializedEntities);
+
+    this.lastSerializedEntities = serializedEntities;
   }
   // Broadcast a message to all connected clients
-  private broadcast(entities: Entity[], message: string) {
+  private broadcast(entities: Entity[], message: any) {
     entities.forEach((entity) => {
       const websocketComponent =
         entity.getComponent<WebSocketComponent>(WebSocketComponent);
 
       if (websocketComponent) {
-        websocketComponent.ws.send(message);
+        websocketComponent.ws.send(message, true);
       }
     });
   }
