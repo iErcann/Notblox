@@ -1,5 +1,6 @@
-import { Component } from "../component/component.js";
-import { Entity, EntityEnum } from "./entity.js";
+import { SerializedEntityType } from "@shared/serialized.js";
+import { Component } from "../component/Component.js";
+import { Entity } from "./Entity.js";
 
 export class EntityManager {
   private static instance: EntityManager;
@@ -7,7 +8,7 @@ export class EntityManager {
   private constructor() {}
 
   // Create a new entity and add it to the list
-  createEntity(type: EntityEnum): Entity {
+  createEntity(type: SerializedEntityType): Entity {
     const entity = new Entity(type);
     this.entities.push(entity);
     return entity;

@@ -7,10 +7,8 @@ import startWebSocket from "@/components/websocket";
 
 export default function Home() {
   useEffect(() => {
-    // Send a message when the component mounts
-    // websocket.send(JSON.stringify({ message: "Hello, WebSocket!" }));
-    startWebSocket();
     const game = new Game();
+    startWebSocket(game);
     game.start();
   }, []);
   return <div>{/* Render your component */}</div>;

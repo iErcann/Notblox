@@ -1,5 +1,5 @@
 import Rapier from "../../physics/rapier.js";
-import { Component } from "./component.js";
+import { Component } from "./Component.js";
 
 export class CharacterControllerComponent extends Component {
   characterController: Rapier.KinematicCharacterController; // Holds the character controller instance.

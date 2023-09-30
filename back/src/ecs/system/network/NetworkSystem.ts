@@ -2,7 +2,7 @@
 
 import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
-import { Entity } from "../../entity/entity.js";
+import { Entity } from "../../entity/Entity.js";
 import { pack } from "msgpackr";
 import { WebsocketSystem } from "./WebsocketSystem.js";
 import { WebSocket } from "uWebSockets.js";

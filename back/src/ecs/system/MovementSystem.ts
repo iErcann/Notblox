@@ -3,7 +3,7 @@ import { InputComponent } from "../component/InputComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PositionComponent } from "../component/PositionComponent.js";
 import { VelocityComponent } from "../component/VelocityComponent.js";
-import { Entity } from "../entity/entity.js";
+import { Entity } from "../entity/Entity.js";
 import Rapier from "../../physics/rapier.js";
 
 export class MovementSystem {

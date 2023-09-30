@@ -5,13 +5,16 @@ import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.
 import { PositionComponent } from "../component/PositionComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "./EntityManager.js";
-import { Entity, EntityEnum } from "./entity.js";
+import { Entity } from "./Entity.js";
+import { SerializedEntityType } from "../../../../shared/serialized.js";
 
 export class Cube {
   entity: Entity;
 
   constructor(x: number, y: number, z: number, size: number) {
-    this.entity = EntityManager.getInstance().createEntity(EntityEnum.CUBE);
+    this.entity = EntityManager.getInstance().createEntity(
+      SerializedEntityType.CUBE
+    );
     const world = PhysicsSystem.getInstance().world;
 
     // Adding a PositionComponent with initial position

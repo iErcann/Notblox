@@ -4,9 +4,10 @@ import {
   SerializedEntityType,
   SerializedNetworkData,
 } from "@shared/serialized";
+import { Game } from "./game";
 const serverUrl = "ws://localhost:8001"; // Replace with your WebSocket server URL
 
-function startWebSocket() {
+function startWebSocket(game: Game) {
   // Create a WebSocket instance
   const websocket = new WebSocket(serverUrl);
 
@@ -21,9 +22,10 @@ function startWebSocket() {
       await event.data.arrayBuffer()
     );
     message.forEach((entity) => {
-      console.log("Entity:", entity.id);
+      console.log("Entity:", entity.t);
       if (entity.t === SerializedEntityType.PLAYER) {
         console.log("Player:", entity.id);
+        console.log("Components:", entity.c);
         entity.c.forEach((component) => {
           if (component.t === SerializedComponentType.POSITION) {
             console.log("Position:", component);

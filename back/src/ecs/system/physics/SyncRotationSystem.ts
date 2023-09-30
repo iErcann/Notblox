@@ -1,6 +1,6 @@
 import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
 import { RotationComponent } from "../../component/RotationComponent.js";
-import { Entity } from "../../entity/entity.js";
+import { Entity } from "../../entity/Entity.js";
 
 export class SyncRotationSystem {
   update(entities: Entity[]) {

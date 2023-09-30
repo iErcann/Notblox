@@ -1,17 +1,18 @@
-import { Component } from "../component/component.js";
+import { SerializedEntityType } from "@shared/serialized.js";
+import { Component } from "../component/Component.js";
 
-export enum EntityEnum {
-  PLAYER = 1,
-  CUBE = 2,
-}
 // Define an Entity class
 export class Entity {
   private static nextId = 1;
   public id: number;
   public components: Component[] = [];
 
-  constructor(public type: EntityEnum) {
-    this.id = Entity.nextId++;
+  constructor(public type: SerializedEntityType, entityId?: number) {
+    if (!entityId) {
+      this.id = Entity.nextId++;
+    } else {
+      this.id = entityId;
+    }
   }
 
   // Add a component to the entity

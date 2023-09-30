@@ -2,7 +2,7 @@ import {
   SerializedComponentType,
   SerializedRotationComponent,
 } from "../../../../shared/serialized.js";
-import { Component, Serializable } from "./component.js";
+import { Component, Serializable } from "./Component.js";
 
 // Define a RotationComponent class
 export class RotationComponent extends Component implements Serializable {
@@ -21,6 +21,7 @@ export class RotationComponent extends Component implements Serializable {
 
   serialize(): SerializedRotationComponent {
     return {
+      t: SerializedComponentType.ROTATION,
       x: Number(this.x.toFixed(2)),
       y: Number(this.y.toFixed(2)),
       z: Number(this.z.toFixed(2)),

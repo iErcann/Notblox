@@ -11,8 +11,8 @@ export class Game {
   constructor() {
     const camera = new Camera();
     this.renderer = new Renderer(camera, new THREE.Scene());
-    const player = new Player(0xffffff);
-    this.renderer.scene.add(player.mesh);
+    // const player = new Player(0xffffff);
+    // this.renderer.scene.add(player.mesh);
   }
 
   loop() {

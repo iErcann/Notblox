@@ -1,7 +1,7 @@
 import { CharacterControllerComponent } from "../../component/CharacterControllerComponent.js";
 import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
 import { PositionComponent } from "../../component/PositionComponent.js";
-import { Entity } from "../../entity/entity.js";
+import { Entity } from "../../entity/Entity.js";
 
 export class SyncPositionSystem {
   update(entities: Entity[]) {

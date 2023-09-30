@@ -10,7 +10,8 @@ import { VelocityComponent } from "../component/VelocityComponent.js";
 import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "./EntityManager.js";
-import { Entity, EntityEnum } from "./entity.js";
+import { Entity } from "./Entity.js";
+import { SerializedEntityType } from "../../../../shared/serialized.js";
 
 export class Player {
   entity: Entity;
@@ -23,7 +24,9 @@ export class Player {
   ) {
     console.log("New player created !");
     const world = PhysicsSystem.getInstance().world;
-    this.entity = EntityManager.getInstance().createEntity(EntityEnum.PLAYER);
+    this.entity = EntityManager.getInstance().createEntity(
+      SerializedEntityType.PLAYER
+    );
 
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws));
 

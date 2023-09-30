@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { Renderable } from "./renderer";
 import { NetworkEntity } from "./networkEntity";
+import { SerializedPositionComponent } from "@shared/serialized";
 
 export class Player implements Renderable {
   mesh: THREE.Mesh;
@@ -19,20 +20,6 @@ export class Player implements Renderable {
   }
 }
 
-export interface SerializedPlayer {
-  position: {
-    x: number;
-    y: number;
-    z: number;
-  };
-  rotation: {
-    x: number;
-    y: number;
-    z: number;
-    w: number;
-  };
-}
-
 export class NetworkPlayer extends Player implements NetworkEntity {
   public nextPosition = new THREE.Vector3();
   public nextRotation = new THREE.Quaternion();
@@ -41,23 +28,19 @@ export class NetworkPlayer extends Player implements NetworkEntity {
     super(size);
   }
 
-  sync(data: SerializedPlayer) {
-    this.nextPosition = new THREE.Vector3(
-      data.position.x,
-      data.position.y,
-      data.position.z
-    );
-    this.nextRotation = new THREE.Quaternion(
-      data.rotation.x,
-      data.rotation.y,
-      data.rotation.z,
-      data.rotation.w
-    );
+  sync(position: SerializedPositionComponent) {
+    this.nextPosition = new THREE.Vector3(position.x, position.y, position.z);
+    // this.nextRotation = new THREE.Quaternion(
+    //   data.rotation.x,
+    //   data.rotation.y,
+    //   data.rotation.z,
+    //   data.rotation.w
+    // );
   }
   update(lerpValue: number) {
     //  this.mesh.position.copy(this.nextPosition)
     //  this.mesh.rotation.setFromQuaternion(this.nextRotation)
     this.mesh.position.lerp(this.nextPosition, lerpValue);
-    this.mesh.quaternion.slerp(this.nextRotation, lerpValue);
+    // this.mesh.quaternion.slerp(this.nextRotation, lerpValue);
   }
 }

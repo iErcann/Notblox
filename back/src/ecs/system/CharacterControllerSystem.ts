@@ -1,5 +1,5 @@
 import { CharacterControllerComponent } from "../component/CharacterControllerComponent.js";
-import { Entity } from "../entity/entity.js";
+import { Entity } from "../entity/Entity.js";
 
 export class CharacterControllerSystem {
   update(entities: Entity[]) {
