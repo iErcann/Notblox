@@ -1,20 +1,11 @@
 import { unpack } from "msgpackr/unpack"; // if you only need to unpack
-
+import {
+  SerializedComponentType,
+  SerializedEntityType,
+  SerializedNetworkData,
+} from "@shared/serialized";
 const serverUrl = "ws://localhost:8001"; // Replace with your WebSocket server URL
 
-interface Message {}
-
-interface SerializedEntity {
-  c: SerializedComponent[];
-}
-interface SerializedComponent {
-  t: number;
-}
-interface SerializedPositionComponent extends SerializedComponent {
-  x: number;
-  y: number;
-  z: number;
-}
 function startWebSocket() {
   // Create a WebSocket instance
   const websocket = new WebSocket(serverUrl);
@@ -26,8 +17,23 @@ function startWebSocket() {
 
   // Event handler for incoming messages
   websocket.addEventListener("message", async (event) => {
-    const message = unpack(await event.data.arrayBuffer());
-    console.log("Received message:", message);
+    const message: SerializedNetworkData = unpack(
+      await event.data.arrayBuffer()
+    );
+    message.forEach((entity) => {
+      console.log("Entity:", entity.id);
+      if (entity.t === SerializedEntityType.PLAYER) {
+        console.log("Player:", entity.id);
+        entity.c.forEach((component) => {
+          if (component.t === SerializedComponentType.POSITION) {
+            console.log("Position:", component);
+          }
+          if (component.t === SerializedComponentType.ROTATION) {
+            console.log("Rotation:", component);
+          }
+        });
+      }
+    });
   });
 
   // Event handler for errors

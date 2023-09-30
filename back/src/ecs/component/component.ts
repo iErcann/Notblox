@@ -1,13 +1,7 @@
-// Define a basic Component class
-
-export enum ComponentEnum {
-  NONE = 0,
-  POSITION = 1,
-  ROTATION = 2,
-}
+import { SerializedComponentType } from "@shared/serialized.js";
 
 export interface Serializable {
-  type: ComponentEnum;
+  type: SerializedComponentType;
   serialize(): any;
 }
 

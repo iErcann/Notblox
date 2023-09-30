@@ -8,7 +8,7 @@
     "dev:tsc": "tsc --build --watch tsconfig.json",
     "dev:nodemon": "nodemon --watch ./dist -e js --delay 250ms dist/index.js",
     "build": "tsc --build tsconfig.json",
-    "start": "tsc --build tsconfig.json && node dist/index.js"
+    "start": "tsc --build tsconfig.json && node dist/back/src/index.js"
   },
   "keywords": [],
   "author": "",

@@ -1,8 +1,9 @@
+import { SerializedComponentType } from "../../../../shared/serialized.js";
 import { EntityEnum } from "../entity/entity.js";
-import { Component, ComponentEnum, Serializable } from "./component.js";
+import { Component, Serializable } from "./component.js";
 
 export class NetworkDataComponent extends Component implements Serializable {
-  type = ComponentEnum.NONE;
+  type = SerializedComponentType.NONE;
   constructor(
     entityId: number,
     public entityType: EntityEnum,
@@ -23,7 +24,6 @@ export class NetworkDataComponent extends Component implements Serializable {
     });
 
     const networkData = {
-      t: this.entityType,
       id: this.entityId,
       c: serializedComponents,
     };

@@ -38,7 +38,7 @@ export class NetworkPlayer extends Player implements NetworkEntity {
   public nextRotation = new THREE.Quaternion();
 
   constructor(public entityId: number, size: number, color: number) {
-    super(size, color);
+    super(size);
   }
 
   sync(data: SerializedPlayer) {

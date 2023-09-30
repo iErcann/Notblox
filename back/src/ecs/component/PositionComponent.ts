@@ -1,8 +1,12 @@
-import { Component, ComponentEnum, Serializable } from "./component.js";
-import { SerializedPositionComponent } from "@shared/serialized.js";
+import {
+  SerializedComponentType,
+  SerializedPositionComponent,
+} from "../../../../shared/serialized.js";
+import { Component, Serializable } from "./component.js";
+
 // Define a PositionComponent class
 export class PositionComponent extends Component implements Serializable {
-  type = ComponentEnum.POSITION;
+  type = SerializedComponentType.POSITION;
   constructor(
     entityId: number,
     public x: number,
