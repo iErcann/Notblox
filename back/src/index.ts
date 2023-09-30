@@ -7,6 +7,7 @@ import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import Rapier from "./physics/rapier.js";
 import { NetworkSystem } from "./ecs/system/network/NetworkSystem.js";
 import { WebsocketSystem } from "./ecs/system/network/WebsocketSystem.js";
+import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -20,6 +21,7 @@ const networkSystem = NetworkSystem.getInstance();
 
 // Physics
 const syncPositionSystem = new SyncPositionSystem();
+const syncRotationSystem = new SyncRotationSystem();
 // const player = new Player(0, 10, 0);
 // const packet = new InputPacket(player.entity.id, true, false, false, false);
 // inputProcessingSystem.receiveInputPacket(packet);
@@ -79,6 +81,8 @@ physicsSystem.world.createCollider(groundColliderDesc);
 function gameLoop() {
   movementSystem.update(entities);
   physicsSystem.update();
+
+  syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
   networkSystem.update(entities);
   setTimeout(gameLoop, 1000 / 20);

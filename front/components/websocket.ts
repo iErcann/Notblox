@@ -2,6 +2,19 @@ import { unpack } from "msgpackr/unpack"; // if you only need to unpack
 
 const serverUrl = "ws://localhost:8001"; // Replace with your WebSocket server URL
 
+interface Message {}
+
+interface SerializedEntity {
+  c: SerializedComponent[];
+}
+interface SerializedComponent {
+  t: number;
+}
+interface SerializedPositionComponent extends SerializedComponent {
+  x: number;
+  y: number;
+  z: number;
+}
 function startWebSocket() {
   // Create a WebSocket instance
   const websocket = new WebSocket(serverUrl);

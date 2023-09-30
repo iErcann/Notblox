@@ -6,11 +6,14 @@ import { Entity } from "../../entity/entity.js";
 import { pack } from "msgpackr";
 import { WebsocketSystem } from "./WebsocketSystem.js";
 import { WebSocket } from "uWebSockets.js";
+import * as jsondiffpatch from "jsondiffpatch";
+import * as fossilDelta from "fossil-delta";
 
 export class NetworkSystem {
   private static instance: NetworkSystem;
   private websocketSystem: WebsocketSystem;
-  private lastSerializedEntities: Buffer | undefined;
+  private lastCompressedEntities: Buffer | undefined;
+  private deltaPatcher = jsondiffpatch.create();
 
   private constructor() {
     this.websocketSystem = new WebsocketSystem();
@@ -25,7 +28,7 @@ export class NetworkSystem {
 
   // Serialize components and send the entity's network data to clients
   public serializeAll(entities: Entity[]) {
-    const serializedEntities: any[] = [];
+    const serializedEntities: Object[] = [];
 
     entities.forEach((entity) => {
       const networkDataComponent =
@@ -36,16 +39,28 @@ export class NetworkSystem {
       }
     });
 
-    // Convert serializedEntities to JSON and send it to clients
-    return pack(serializedEntities);
+    return serializedEntities;
   }
 
   public update(entities: Entity[]) {
     const serializedEntities = this.serializeAll(entities);
-    this.broadcast(entities, serializedEntities);
+    const compressedEntities = pack(serializedEntities);
 
-    this.lastSerializedEntities = serializedEntities;
+    // if (!this.lastCompressedEntities) {
+    //   this.lastCompressedEntities = compressedEntities;
+    // }
+
+    // console.log(fossilDelta);
+    // const delta = fossilDelta.create(
+    //   this.lastCompressedEntities,
+    //   compressedEntities
+    // );
+    // this.broadcast(entities, delta);
+    // this.lastCompressedEntities = compressedEntities;
+
+    this.broadcast(entities, compressedEntities);
   }
+
   // Broadcast a message to all connected clients
   private broadcast(entities: Entity[], message: any) {
     entities.forEach((entity) => {
