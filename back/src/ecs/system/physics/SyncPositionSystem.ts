@@ -1,15 +1,13 @@
 import { CharacterControllerComponent } from "../../component/CharacterControllerComponent.js";
 import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
-import { PositionComponent } from "../../component/PositionComponent.js";
-import { Entity } from "../../entity/Entity.js";
+import { PositionComponent } from "../../../../../shared/component/PositionComponent.js";
+import { Entity } from "../../../../../shared/entity/Entity.js";
 
 export class SyncPositionSystem {
   update(entities: Entity[]) {
     entities.forEach((entity) => {
-      const bodyComponent =
-        entity.getComponent<PhysicsBodyComponent>(PhysicsBodyComponent);
-      const positionComponent =
-        entity.getComponent<PositionComponent>(PositionComponent);
+      const bodyComponent = entity.getComponent(PhysicsBodyComponent);
+      const positionComponent = entity.getComponent(PositionComponent);
 
       if (bodyComponent && positionComponent) {
         const position = bodyComponent.body.translation();
@@ -24,12 +22,10 @@ export class SyncPositionSystem {
 export class SyncCharacterPositionSystem {
   update(entities: Entity[]) {
     entities.forEach((entity) => {
-      const characterComponent =
-        entity.getComponent<CharacterControllerComponent>(
-          CharacterControllerComponent
-        );
-      const positionComponent =
-        entity.getComponent<PositionComponent>(PositionComponent);
+      const characterComponent = entity.getComponent(
+        CharacterControllerComponent
+      );
+      const positionComponent = entity.getComponent(PositionComponent);
 
       if (characterComponent && positionComponent) {
         const position =

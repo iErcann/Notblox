@@ -49,9 +49,7 @@ export class WebsocketSystem {
   private onClose(ws: any, code: number, message: any) {
     // Find player
     const disconnectedPlayer = this.players.find(
-      (player) =>
-        player.getEntity().getComponent<WebSocketComponent>(WebSocketComponent)
-          ?.ws === ws
+      (player) => player.getEntity().getComponent(WebSocketComponent)?.ws === ws
     );
 
     if (!disconnectedPlayer) {

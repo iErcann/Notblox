@@ -2,10 +2,10 @@ import Rapier from "../../physics/rapier.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
-import { PositionComponent } from "../component/PositionComponent.js";
+import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "./EntityManager.js";
-import { Entity } from "./Entity.js";
+import { Entity } from "../../../../shared/entity/Entity.js";
 import { SerializedEntityType } from "../../../../shared/serialized.js";
 
 export class Cube {

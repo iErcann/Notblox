@@ -1,4 +1,9 @@
-import { SerializedEntityType } from "@shared/serialized.js";
+import {
+  SerializedComponentType,
+  SerializedEntityType,
+} from "@shared/serialized.js";
+import { Serializable } from "@shared/component/Component.js";
+
 import { Component } from "../component/Component.js";
 
 // Define an Entity class
@@ -34,5 +39,13 @@ export class Entity {
     return this.components.find((c) => c instanceof componentType) as
       | T
       | undefined;
+  }
+
+  // This is used by the client only !
+  // We assume that the clients will only have serializable component so they will have a type!
+  getComponentByType(componentType: SerializedComponentType) {
+    return this.components.find(
+      (c) => "type" in c && c.type === componentType
+    ) as Serializable | undefined;
   }
 }

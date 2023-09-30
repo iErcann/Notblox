@@ -2,7 +2,7 @@
 
 import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
-import { Entity } from "../../entity/Entity.js";
+import { Entity } from "../../../../../shared/entity/Entity.js";
 import { pack } from "msgpackr";
 import { WebsocketSystem } from "./WebsocketSystem.js";
 import { WebSocket } from "uWebSockets.js";
@@ -31,8 +31,7 @@ export class NetworkSystem {
     const serializedEntities: Object[] = [];
 
     entities.forEach((entity) => {
-      const networkDataComponent =
-        entity.getComponent<NetworkDataComponent>(NetworkDataComponent);
+      const networkDataComponent = entity.getComponent(NetworkDataComponent);
 
       if (networkDataComponent) {
         serializedEntities.push(networkDataComponent.serialize());
@@ -64,8 +63,7 @@ export class NetworkSystem {
   // Broadcast a message to all connected clients
   private broadcast(entities: Entity[], message: any) {
     entities.forEach((entity) => {
-      const websocketComponent =
-        entity.getComponent<WebSocketComponent>(WebSocketComponent);
+      const websocketComponent = entity.getComponent(WebSocketComponent);
 
       if (websocketComponent) {
         websocketComponent.ws.send(message, true);

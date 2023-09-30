@@ -1,4 +1,4 @@
-import { Component } from "./Component.js";
+import { Component } from "../../../../shared/component/Component.js";
 
 // Define a VelocityComponent class
 export class VelocityComponent extends Component {

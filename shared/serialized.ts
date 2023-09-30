@@ -10,7 +10,7 @@ export enum SerializedEntityType {
 }
 
 export interface SerializedComponent {
-  t: SerializedComponentType;
+  t?: SerializedComponentType;
 }
 
 export interface SerializedEntity {

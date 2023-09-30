@@ -1,6 +1,6 @@
 import { SerializedEntityType } from "@shared/serialized.js";
-import { Component } from "../component/Component.js";
-import { Entity } from "./Entity.js";
+import { Component } from "../../../../shared/component/Component.js";
+import { Entity } from "../../../../shared/entity/Entity.js";
 
 export class EntityManager {
   private static instance: EntityManager;

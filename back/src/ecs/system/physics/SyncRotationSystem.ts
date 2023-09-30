@@ -1,14 +1,12 @@
 import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
-import { RotationComponent } from "../../component/RotationComponent.js";
-import { Entity } from "../../entity/Entity.js";
+import { RotationComponent } from "../../../../../shared/component/RotationComponent.js";
+import { Entity } from "../../../../../shared/entity/Entity.js";
 
 export class SyncRotationSystem {
   update(entities: Entity[]) {
     entities.forEach((entity) => {
-      const bodyComponent =
-        entity.getComponent<PhysicsBodyComponent>(PhysicsBodyComponent);
-      const rotationComponent =
-        entity.getComponent<RotationComponent>(RotationComponent);
+      const bodyComponent = entity.getComponent(PhysicsBodyComponent);
+      const rotationComponent = entity.getComponent(RotationComponent);
 
       if (bodyComponent && rotationComponent) {
         const rotation = bodyComponent.body.rotation();

@@ -1,7 +1,7 @@
 import {
   SerializedComponentType,
   SerializedRotationComponent,
-} from "../../../../shared/serialized.js";
+} from "../serialized.js";
 import { Component, Serializable } from "./Component.js";
 
 // Define a RotationComponent class
@@ -18,10 +18,15 @@ export class RotationComponent extends Component implements Serializable {
   ) {
     super(entityId); // Call the parent constructor with the entityId
   }
+  deserialize(data: SerializedRotationComponent): void {
+    this.x = data.x;
+    this.y = data.y;
+    this.z = data.z;
+    this.w = data.w;
+  }
 
   serialize(): SerializedRotationComponent {
     return {
-      t: SerializedComponentType.ROTATION,
       x: Number(this.x.toFixed(2)),
       y: Number(this.y.toFixed(2)),
       z: Number(this.z.toFixed(2)),

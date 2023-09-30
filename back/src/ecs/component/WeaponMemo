@@ -1,0 +1,43 @@
+class FactoryComponent {
+  projectileType: EntityType; // Type of projectile the weapon fires
+  firingRate: number; // Rate of fire in shots per second
+  range: number; // Maximum firing range
+  // Add other relevant properties
+}
+
+class ContainerComponent {
+  containedAmmo: Entity[]; // Array of entities (ammo, buffs, etc.) contained in the weapon
+  // Add other relevant properties
+}
+
+class PhysicalComponent {
+  position: Vector2; // Position in the game world
+  velocity: Vector2; // Velocity for moving weapons or projectiles
+  // Add other relevant properties
+}
+
+class HealthComponent {
+  currentHealth: number; // Current health/durability of the weapon
+  maxHealth: number; // Maximum health/durability of the weapon
+  // Add other relevant properties
+}
+
+// Define the Weapon component that combines all the sub-components
+class WeaponComponent {
+  factory: FactoryComponent;
+  container: ContainerComponent;
+  physical: PhysicalComponent;
+  health: HealthComponent;
+
+  constructor(
+    factory: FactoryComponent,
+    container: ContainerComponent,
+    physical: PhysicalComponent,
+    health: HealthComponent
+  ) {
+    this.factory = factory;
+    this.container = container;
+    this.physical = physical;
+    this.health = health;
+  }
+}

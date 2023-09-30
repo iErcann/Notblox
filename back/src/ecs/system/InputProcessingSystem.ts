@@ -1,6 +1,6 @@
 import { InputPacket } from "../../inputPacket.js";
 import { InputComponent } from "../component/InputComponent.js";
-import { Entity } from "../entity/Entity.js";
+import { Entity } from "../../../../shared/entity/Entity.js";
 
 export class InputProcessingSystem {
   private entities: Entity[]; // All entities in the game world
