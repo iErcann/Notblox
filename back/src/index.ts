@@ -40,7 +40,7 @@ function gameLoop() {
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
   networkSystem.update(entities);
-  setTimeout(gameLoop, 1000 / 20);
+  setTimeout(gameLoop, 1000 / 60);
 }
 
 gameLoop();

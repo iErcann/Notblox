@@ -30,7 +30,7 @@ export class Game {
     // Adding a ground
     const groundGeometry = new THREE.PlaneGeometry(100, 100);
     const groundMaterial = new THREE.MeshPhongMaterial();
-    groundMaterial.color = new THREE.Color(0x00ff00);
+    groundMaterial.color = new THREE.Color(0xffffff);
     const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.receiveShadow = true;
     groundMesh.rotation.x = -Math.PI / 2;
@@ -42,18 +42,18 @@ export class Game {
     this.syncPositionSystem.update(this.entities);
     this.syncRotationSystem.update(this.entities);
 
-    if (this.entities.length > 0) {
-      const randomEntity = this.entities[this.entities.length - 1];
-      const meshComponent = randomEntity.getComponent(MeshComponent);
+    // if (this.entities.length > 0) {
+    //   const randomEntity = this.entities[this.entities.length - 1];
+    //   const meshComponent = randomEntity.getComponent(MeshComponent);
 
-      if (meshComponent) {
-        this.renderer.camera.lookAt(meshComponent.mesh.position);
-      } else {
-        console.warn("Selected entity does not have a valid MeshComponent.");
-      }
-    } else {
-      console.warn("No entities available to follow.");
-    }
+    //   if (meshComponent) {
+    //     this.renderer.camera.lookAt(meshComponent.mesh.position);
+    //   } else {
+    //     console.warn("Selected entity does not have a valid MeshComponent.");
+    //   }
+    // } else {
+    //   console.warn("No entities available to follow.");
+    // }
 
     this.renderer.update();
     this.lastRenderTime = now;

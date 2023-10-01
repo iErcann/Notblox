@@ -30,7 +30,7 @@ export class RotationComponent extends Component implements Serializable {
       x: Number(this.x.toFixed(2)),
       y: Number(this.y.toFixed(2)),
       z: Number(this.z.toFixed(2)),
-      w: 0, // Replace with the appropriate value if needed
+      w: Number(this.w.toFixed(2)),
     };
   }
 }
