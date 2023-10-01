@@ -1,10 +1,8 @@
 import {
   SerializedComponentType,
   SerializedEntityType,
-} from "@shared/serialized.js";
-import { Serializable } from "@shared/component/Component.js";
-
-import { Component } from "../component/Component.js";
+} from "../serialized.js";
+import { Serializable, Component } from "../component/Component.js";
 
 // Define an Entity class
 export class Entity {

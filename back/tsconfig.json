@@ -13,10 +13,10 @@
       "skipLibCheck": true,
       "outDir": "dist",
       "rootDir": "..",
+      "baseUrl": "..",
       "typeRoots": ["node_modules/@types"],
       "paths": {
         "@shared/*": ["../shared/*"]
-      }
-
+      },
     }
   }
