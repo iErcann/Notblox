@@ -26,7 +26,7 @@ const syncRotationSystem = new SyncRotationSystem();
 // const packet = new InputPacket(player.entity.id, true, false, false, false);
 // inputProcessingSystem.receiveInputPacket(packet);
 for (let i = 0; i < 10; i++) {
-  new Cube(10, 10, 10, 0.5);
+  // new Cube(10, 10, 10, 0.5);
 }
 
 // Create the ground

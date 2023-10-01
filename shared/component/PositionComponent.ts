@@ -1,8 +1,8 @@
 import {
   SerializedComponentType,
   SerializedPositionComponent,
-} from "../serialized.js";
-import { Component, Serializable } from "./Component.js";
+} from "@shared/serialized";
+import { Component, Serializable } from "@shared/component/Component";
 
 // Define a PositionComponent class
 export class PositionComponent extends Component implements Serializable {

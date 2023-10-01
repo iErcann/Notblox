@@ -21,21 +21,7 @@ function startWebSocket(game: Game) {
     const message: SerializedNetworkData = unpack(
       await event.data.arrayBuffer()
     );
-    message.forEach((entity) => {
-      console.log("Entity:", entity.t);
-      if (entity.t === SerializedEntityType.PLAYER) {
-        console.log("Player:", entity.id);
-        console.log("Components:", entity.c);
-        entity.c.forEach((component) => {
-          if (component.t === SerializedComponentType.POSITION) {
-            console.log("Position:", component);
-          }
-          if (component.t === SerializedComponentType.ROTATION) {
-            console.log("Rotation:", component);
-          }
-        });
-      }
-    });
+    game.syncComponentSystem.update(game.entities, message);
   });
 
   // Event handler for errors

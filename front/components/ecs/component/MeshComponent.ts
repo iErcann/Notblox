@@ -1,4 +1,4 @@
-import THREE from "three";
+import * as THREE from "three";
 import { Component } from "@shared/component/Component";
 
 export class MeshComponent extends Component {

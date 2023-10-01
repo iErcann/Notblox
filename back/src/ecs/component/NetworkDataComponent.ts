@@ -16,6 +16,9 @@ export class NetworkDataComponent extends Component implements Serializable {
   ) {
     super(entityId);
   }
+  deserialize(data: any): void {
+    throw new Error("Method not implemented.");
+  }
 
   getComponents(): Serializable[] {
     return this.components;
