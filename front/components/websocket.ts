@@ -21,7 +21,11 @@ function startWebSocket(game: Game) {
     const message: SerializedNetworkData = unpack(
       await event.data.arrayBuffer()
     );
-    game.syncComponentSystem.update(game.entities, message);
+
+    game.syncComponentSystem.update(
+      game.entityManager.getAllEntities(),
+      message
+    );
   });
 
   // Event handler for errors

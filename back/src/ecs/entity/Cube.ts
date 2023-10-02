@@ -1,12 +1,13 @@
+import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
+import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
+import { Entity } from "../../../../shared/entity/Entity.js";
+import { SerializedEntityType } from "../../../../shared/serialized.js";
 import Rapier from "../../physics/rapier.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
-import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "./EntityManager.js";
-import { Entity } from "../../../../shared/entity/Entity.js";
-import { SerializedEntityType } from "../../../../shared/serialized.js";
 
 export class Cube {
   entity: Entity;
@@ -21,12 +22,16 @@ export class Cube {
     const positionComponent = new PositionComponent(this.entity.id, x, y, z);
     this.entity.addComponent(positionComponent);
 
+    const rotationComponent = new RotationComponent(this.entity.id, 0, 0, 0, 0);
+    this.entity.addComponent(rotationComponent);
+
     this.createRigidBody(world);
     this.createCollider(world, size);
 
     this.entity.addComponent(
       new NetworkDataComponent(this.entity.id, this.entity.type, [
         positionComponent,
+        rotationComponent,
       ])
     );
   }

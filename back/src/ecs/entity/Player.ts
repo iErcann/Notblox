@@ -1,17 +1,17 @@
+import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
+import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
+import { Entity } from "../../../../shared/entity/Entity.js";
+import { SerializedEntityType } from "../../../../shared/serialized.js";
 import Rapier from "../../physics/rapier.js";
 import { CharacterControllerComponent } from "../component/CharacterControllerComponent.js";
 import { InputComponent } from "../component/InputComponent.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
-import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
-import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
 import { VelocityComponent } from "../component/VelocityComponent.js";
 import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "./EntityManager.js";
-import { Entity } from "../../../../shared/entity/Entity.js";
-import { SerializedEntityType } from "../../../../shared/serialized.js";
 
 export class Player {
   entity: Entity;

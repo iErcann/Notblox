@@ -7,7 +7,7 @@ import startWebSocket from "@/components/websocket";
 
 export default function Home() {
   useEffect(() => {
-    const game = new Game();
+    const game = Game.getInstance();
     startWebSocket(game);
     game.start();
   }, []);

@@ -13,6 +13,7 @@ import { PositionComponent } from "@shared/component/PositionComponent";
 import { RotationComponent } from "@shared/component/RotationComponent";
 import { Game } from "@/components/game";
 import { Player } from "../entity/Player";
+import { Cube } from "../entity/Cube";
 import { MeshComponent } from "../component/MeshComponent";
 
 export class SyncComponentsSystem {
@@ -48,14 +49,20 @@ export class SyncComponentsSystem {
   createEntity(serializedEntity: SerializedEntity) {
     if (serializedEntity.t === SerializedEntityType.PLAYER) {
       const player = new Player(serializedEntity.id);
+
       this.game.renderer.scene.add(
         player.entity.getComponent(MeshComponent)!.mesh
       );
-      this.game.entities.push(player.entity);
 
       return player.entity;
     } else if (serializedEntity.t === SerializedEntityType.CUBE) {
-      // return new Cube(serializedEntity.id);
+      const cube = new Cube(serializedEntity.id);
+
+      this.game.renderer.scene.add(
+        cube.entity.getComponent(MeshComponent)!.mesh
+      );
+
+      return cube.entity;
     }
   }
   createComponent(serializedComponent: SerializedComponent, entityId: number) {
