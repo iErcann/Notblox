@@ -1,4 +1,4 @@
-import { SerializedEntityType } from "@shared/serialized";
+import { SerializedEntityType } from "@shared/network/server/serialized";
 import { EntityManager } from "./EntityManager";
 import { Entity } from "@shared/entity/Entity";
 import { MeshComponent } from "../component/MeshComponent";

@@ -1,7 +1,7 @@
 import { Entity } from "@shared/entity/Entity";
 import { MeshComponent } from "../component/MeshComponent";
 import * as THREE from "three";
-import { SerializedEntityType } from "@shared/serialized";
+import { SerializedEntityType } from "@shared/network/server/serialized";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { EntityManager } from "./EntityManager";
 

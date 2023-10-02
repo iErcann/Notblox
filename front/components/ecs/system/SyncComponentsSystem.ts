@@ -7,13 +7,14 @@ import {
   SerializedNetworkData,
   SerializedPositionComponent,
   SerializedRotationComponent,
-} from "@shared/serialized";
+} from "@shared/network/server/serialized";
 
 import { PositionComponent } from "@shared/component/PositionComponent";
 import { RotationComponent } from "@shared/component/RotationComponent";
 import { Game } from "@/components/game";
 import { Player } from "../entity/Player";
 import { Cube } from "../entity/Cube";
+
 import { MeshComponent } from "../component/MeshComponent";
 
 export class SyncComponentsSystem {

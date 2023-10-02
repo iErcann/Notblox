@@ -1,7 +1,4 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import { useEffect } from "react";
-import websocket from "@/components/websocket";
 import { Game } from "@/components/game";
 import startWebSocket from "@/components/websocket";
 

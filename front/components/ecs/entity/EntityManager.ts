@@ -1,4 +1,4 @@
-import { SerializedEntityType } from "@shared/serialized.js";
+import { SerializedEntityType } from "@shared/network/server/serialized";
 import { Component } from "@shared/component/Component.js";
 import { Entity } from "@shared/entity/Entity.js";
 

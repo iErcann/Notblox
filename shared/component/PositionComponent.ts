@@ -1,7 +1,7 @@
 import {
   SerializedComponentType,
   SerializedPositionComponent,
-} from "../serialized.js";
+} from "../network/server/serialized.js";
 import { Component, Serializable } from "../component/Component.js";
 
 // Define a PositionComponent class

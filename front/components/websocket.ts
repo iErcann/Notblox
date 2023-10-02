@@ -3,7 +3,7 @@ import {
   SerializedComponentType,
   SerializedEntityType,
   SerializedNetworkData,
-} from "@shared/serialized";
+} from "@shared/network/server/serialized";
 import { Game } from "./game";
 const serverUrl = "ws://localhost:8001"; // Replace with your WebSocket server URL
 

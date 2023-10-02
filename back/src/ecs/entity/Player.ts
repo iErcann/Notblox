@@ -1,7 +1,7 @@
 import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
 import { Entity } from "../../../../shared/entity/Entity.js";
-import { SerializedEntityType } from "../../../../shared/serialized.js";
+import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
 import Rapier from "../../physics/rapier.js";
 import { CharacterControllerComponent } from "../component/CharacterControllerComponent.js";
 import { InputComponent } from "../component/InputComponent.js";

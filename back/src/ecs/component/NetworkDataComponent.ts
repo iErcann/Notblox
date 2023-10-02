@@ -1,7 +1,7 @@
 import {
   SerializedComponentType,
   SerializedEntityType,
-} from "../../../../shared/serialized.js";
+} from "../../../../shared/network/server/serialized.js";
 import {
   Component,
   Serializable,

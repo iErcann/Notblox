@@ -44,7 +44,9 @@ export class WebsocketSystem {
   }
 
   private onConnect(ws: any) {
-    this.players.push(new Player(ws, 0, 0, 0));
+    const player = new Player(ws, 0, 0, 0);
+
+    this.players.push(player);
   }
   private onClose(ws: any, code: number, message: any) {
     // Find player

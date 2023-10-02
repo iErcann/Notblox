@@ -1,7 +1,7 @@
 import {
   SerializedComponentType,
   SerializedRotationComponent,
-} from "../serialized.js";
+} from "../network/server/serialized.js";
 import { Component, Serializable } from "../component/Component.js";
 
 // Define a RotationComponent class

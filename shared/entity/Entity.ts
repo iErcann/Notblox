@@ -1,7 +1,7 @@
 import {
   SerializedComponentType,
   SerializedEntityType,
-} from "../serialized.js";
+} from "../network/server/serialized.js";
 import { Serializable, Component } from "../component/Component.js";
 
 // Define an Entity class

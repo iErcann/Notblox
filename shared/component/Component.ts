@@ -1,4 +1,4 @@
-import { SerializedComponentType } from "../serialized.js";
+import { SerializedComponentType } from "../network/server/serialized.js";
 
 export interface Serializable {
   type: SerializedComponentType;
