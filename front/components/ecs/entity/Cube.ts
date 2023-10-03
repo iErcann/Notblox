@@ -17,7 +17,7 @@ export class Cube {
     const mesh = meshComponent.mesh;
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshPhongMaterial();
-    material.color = new THREE.Color(0x111222);
+    material.color = new THREE.Color(0xffffff);
     mesh.geometry = geometry;
     mesh.material = material;
     mesh.receiveShadow = true;

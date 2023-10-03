@@ -1,3 +1,5 @@
+// SNAPSHOT
+import { ServerMessage } from "./base";
 export enum SerializedComponentType {
   NONE = 0,
   POSITION = 1,
@@ -21,8 +23,6 @@ export interface SerializedEntity {
   c: SerializedComponent[];
 }
 
-export interface SerializedNetworkData extends Array<SerializedEntity> {}
-
 export interface SerializedPositionComponent extends SerializedComponent {
   x: number;
   y: number;
@@ -34,4 +34,7 @@ export interface SerializedRotationComponent extends SerializedComponent {
   y: number;
   z: number;
   w: number;
+}
+export interface SnapshotMessage extends ServerMessage {
+  e: Array<SerializedEntity>;
 }

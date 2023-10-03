@@ -1,6 +1,5 @@
 // NetworkSystem.ts
 
-import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
 import { Entity } from "../../../../../shared/entity/Entity.js";
 import { pack } from "msgpackr";
@@ -8,6 +7,12 @@ import { WebsocketSystem } from "./WebsocketSystem.js";
 import { WebSocket } from "uWebSockets.js";
 import * as jsondiffpatch from "jsondiffpatch";
 import * as fossilDelta from "fossil-delta";
+import {
+  SnapshotMessage,
+  SerializedEntity,
+} from "../../../../../shared/network/server/serialized.js";
+import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
+import { ServerMessageType } from "../../../../../shared/network/server/base.js";
 
 export class NetworkSystem {
   private static instance: NetworkSystem;
@@ -27,8 +32,8 @@ export class NetworkSystem {
   }
 
   // Serialize components and send the entity's network data to clients
-  public serializeAll(entities: Entity[]) {
-    const serializedEntities: Object[] = [];
+  public serializeAll(entities: Entity[]): SerializedEntity[] {
+    const serializedEntities: SerializedEntity[] = [];
 
     entities.forEach((entity) => {
       const networkDataComponent = entity.getComponent(NetworkDataComponent);
@@ -43,7 +48,12 @@ export class NetworkSystem {
 
   public update(entities: Entity[]) {
     const serializedEntities = this.serializeAll(entities);
-    const compressedEntities = pack(serializedEntities);
+
+    const snapshot: SnapshotMessage = {
+      t: ServerMessageType.SNAPSHOT,
+      e: serializedEntities,
+    };
+    const compressedSnapshot = pack(snapshot);
 
     // if (!this.lastCompressedEntities) {
     //   this.lastCompressedEntities = compressedEntities;
@@ -57,7 +67,8 @@ export class NetworkSystem {
     // this.broadcast(entities, delta);
     // this.lastCompressedEntities = compressedEntities;
 
-    this.broadcast(entities, compressedEntities);
+    console.table(snapshot);
+    this.broadcast(entities, compressedSnapshot);
   }
 
   // Broadcast a message to all connected clients

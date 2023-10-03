@@ -3,7 +3,9 @@ import { App } from "uWebSockets.js";
 import { Player } from "../../entity/Player.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
 import { EntityManager } from "../../entity/EntityManager.js";
-
+import { ConnectionMessage } from "../../../../../shared/network/server/connection.js";
+import { ServerMessageType } from "../../../../../shared/network/server/base.js";
+import { pack } from "msgpackr";
 export class WebsocketSystem {
   private port = 8001;
   private players: Player[] = [];
@@ -45,7 +47,12 @@ export class WebsocketSystem {
 
   private onConnect(ws: any) {
     const player = new Player(ws, 0, 0, 0);
+    const connectionMessage: ConnectionMessage = {
+      t: ServerMessageType.FIRST_CONNECTION,
+      id: player.entity.id,
+    };
 
+    ws.send(pack(connectionMessage), true);
     this.players.push(player);
   }
   private onClose(ws: any, code: number, message: any) {

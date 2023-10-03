@@ -5,6 +5,7 @@ import { SyncComponentsSystem } from "./ecs/system/SyncComponentsSystem";
 import { SyncPositionSystem } from "./ecs/system/SyncPositionSystem";
 import { SyncRotationSystem } from "./ecs/system/SyncRotationSystem";
 import { Renderer } from "./renderer";
+import { WebSocketManager } from "./WebsocketManager";
 
 export class Game {
   private static instance: Game;
@@ -16,6 +17,8 @@ export class Game {
   public syncComponentSystem: SyncComponentsSystem;
   private syncPositionSystem: SyncPositionSystem;
   private syncRotationSystem: SyncRotationSystem;
+  private websocketManager: WebSocketManager;
+  private currentPlayerId = 0;
 
   private constructor() {
     const camera = new Camera();
@@ -23,7 +26,12 @@ export class Game {
     this.syncComponentSystem = new SyncComponentsSystem(this);
     this.syncPositionSystem = new SyncPositionSystem();
     this.syncRotationSystem = new SyncRotationSystem();
+    this.websocketManager = new WebSocketManager(this);
     this.setupScene();
+  }
+
+  public onConnection(playerEntityId: number) {
+    this.currentPlayerId = playerEntityId;
   }
 
   public static getInstance(): Game {
@@ -44,20 +52,32 @@ export class Game {
   }
 
   private addLight() {
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(0, 10, 0);
-    light.castShadow = true;
-    this.renderer.scene.add(light);
+    // Use HemisphereLight for natural lighting
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x080820, 0.1);
+    this.renderer.scene.add(hemisphereLight);
+
+    // Add directional light for shadows and highlights
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    directionalLight.position.set(10, 10, 10);
+    directionalLight.castShadow = true;
+    this.renderer.scene.add(directionalLight);
   }
 
   private addGround() {
-    const groundGeometry = new THREE.PlaneGeometry(100, 100);
-    const groundMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
+    // Create a simple colored ground
+    const groundMaterial = new THREE.MeshPhongMaterial({
+      color: 0x00ff00, // Adjust the color as needed (green in this case)
+      specular: 0x111111,
+      shininess: 10,
+    });
+
+    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
     const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.receiveShadow = true;
     groundMesh.rotation.x = -Math.PI / 2;
     this.renderer.scene.add(groundMesh);
   }
+
   private interpolationFactor = 0.1; // Adjust this factor for the desired interpolation speed
   private tickRate = 20; // The tick rate in ticks per second
   private lastTickTime = 0; // Track the time of the last tick
