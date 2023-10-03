@@ -1,5 +1,6 @@
 import {
   SerializedComponentType,
+  SerializedEntity,
   SerializedEntityType,
 } from "../../../../shared/network/server/serialized.js";
 import {
@@ -24,20 +25,20 @@ export class NetworkDataComponent extends Component implements Serializable {
     return this.components;
   }
 
-  serialize() {
+  serialize(): SerializedEntity {
     const components = this.getComponents();
     const serializedComponents = components.map((component) => {
       // Serialize each component (you can define serialization logic for each component type)
       return { t: component.type, ...component.serialize() };
     });
 
-    const networkData = {
+    const BroadcastMessage = {
       id: this.entityId,
       t: this.entityType,
       c: serializedComponents,
     };
 
-    // Convert networkData to JSON and send it to clients
-    return networkData;
+    // Convert BroadcastMessage to JSON and send it to clients
+    return BroadcastMessage;
   }
 }

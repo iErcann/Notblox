@@ -4,7 +4,7 @@ import {
   SerializedComponentType,
   SerializedEntity,
   SerializedEntityType,
-  SerializedNetworkData,
+  SnapshotMessage,
   SerializedPositionComponent,
   SerializedRotationComponent,
 } from "@shared/network/server/serialized";
@@ -19,7 +19,8 @@ import { MeshComponent } from "../component/MeshComponent";
 
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
-  update(entities: Entity[], serializedEntities: SerializedNetworkData) {
+  update(entities: Entity[], snapshotMessage: SnapshotMessage) {
+    const serializedEntities = snapshotMessage.e;
     serializedEntities.forEach((serializedEntity) => {
       // Find the replicated entity
       let entity = entities.find((entity) => entity.id === serializedEntity.id);
@@ -32,7 +33,7 @@ export class SyncComponentsSystem {
       // Find the replicated components
       const serializedComponents = serializedEntity.c;
       serializedComponents.forEach((serializedComponent) => {
-        // We have to do the t! because NetworkDataComponent adds the type property after
+        // We have to do the t! because NetworkData adds the type property after
         const component = entity!.getComponentByType(serializedComponent.t!);
         if (component) {
           // Deserialize the component (this updates the component)
