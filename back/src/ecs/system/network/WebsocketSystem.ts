@@ -1,14 +1,23 @@
-import { DEDICATED_COMPRESSOR_3KB } from "uWebSockets.js";
-import { App } from "uWebSockets.js";
-import { Player } from "../../entity/Player.js";
+import { pack, unpack } from "msgpackr";
+import { App, DEDICATED_COMPRESSOR_3KB } from "uWebSockets.js";
+import {
+  ClientMessage,
+  ClientMessageType,
+} from "../../../../../shared/network/client/base.js";
+import { InputMessage } from "../../../../../shared/network/client/input.js";
+import { ServerMessageType } from "../../../../../shared/network/server/base.js";
+import { ConnectionMessage } from "../../../../../shared/network/server/connection.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
 import { EntityManager } from "../../entity/EntityManager.js";
-import { ConnectionMessage } from "../../../../../shared/network/server/connection.js";
-import { ServerMessageType } from "../../../../../shared/network/server/base.js";
-import { pack } from "msgpackr";
+import { Player } from "../../entity/Player.js";
+
+type MessageHandler = (message: ClientMessage) => void;
+
 export class WebsocketSystem {
   private port = 8001;
   private players: Player[] = [];
+  private messageHandlers: Map<ClientMessageType, MessageHandler> = new Map();
+
   constructor() {
     const app = App();
 
@@ -37,11 +46,31 @@ export class WebsocketSystem {
         console.error(`Failed to listen on port ${this.port}`);
       }
     });
+
+    this.addMessageHandler(ClientMessageType.INPUT, (message) => {
+      const inputMessage = message as InputMessage;
+      console.log(inputMessage);
+    });
   }
-  private onMessage(ws: any, message: any, isBinary: boolean) {}
+
+  public addMessageHandler(type: ClientMessageType, handler: MessageHandler) {
+    this.messageHandlers.set(type, handler);
+  }
+
+  public removeMessageHandler(type: ClientMessageType) {
+    this.messageHandlers.delete(type);
+  }
+
+  private onMessage(ws: any, message: any, isBinary: boolean) {
+    const clientMessage: ClientMessage = unpack(message);
+
+    const handler = this.messageHandlers.get(clientMessage.t);
+    if (handler) {
+      handler(clientMessage);
+    }
+  }
 
   private findPlayer(ws: any) {
-    console.log(this.players);
     return (
       this.players.find((player) => {
         const websocketComponent = player
@@ -53,7 +82,13 @@ export class WebsocketSystem {
   }
   private onConnect(ws: any) {
     // const player = this.findPlayer(ws);
-    const player = new Player(ws, 0, 5, 0);
+    const player = new Player(
+      ws,
+      Math.random() * 3,
+      3 + Math.random() * 7,
+      Math.random() * 3
+    );
+    // TODO: make handlers like WebsocketManager on client
     const connectionMessage: ConnectionMessage = {
       t: ServerMessageType.FIRST_CONNECTION,
       id: player.entity.id,

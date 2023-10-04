@@ -76,6 +76,7 @@ export class NetworkSystem {
       const websocketComponent = entity.getComponent(WebSocketComponent);
 
       if (websocketComponent) {
+        console.log("Found entity", entity.id);
         websocketComponent.ws.send(message, true);
       }
     });
