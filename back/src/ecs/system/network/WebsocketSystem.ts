@@ -7,11 +7,13 @@ import {
 import { InputMessage } from "../../../../../shared/network/client/input.js";
 import { ServerMessageType } from "../../../../../shared/network/server/base.js";
 import { ConnectionMessage } from "../../../../../shared/network/server/connection.js";
+import Rapier from "../../../physics/rapier.js";
+import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
 import { EntityManager } from "../../entity/EntityManager.js";
 import { Player } from "../../entity/Player.js";
 
-type MessageHandler = (message: ClientMessage) => void;
+type MessageHandler = (ws: any, message: any) => void;
 
 export class WebsocketSystem {
   private port = 8001;
@@ -47,9 +49,50 @@ export class WebsocketSystem {
       }
     });
 
-    this.addMessageHandler(ClientMessageType.INPUT, (message) => {
+    this.addMessageHandler(ClientMessageType.INPUT, (ws, message) => {
       const inputMessage = message as InputMessage;
-      console.log(inputMessage);
+
+      // Access 'ws' if needed within the handler
+      const player = this.findPlayer(ws);
+      if (!player) {
+        console.error("Can't find player with that input message.");
+        return;
+      }
+
+      const physicsBodyComponent = player
+        .getEntity()
+        .getComponent(PhysicsBodyComponent);
+
+      if (!physicsBodyComponent) {
+        console.error("Player doesn't have a rigidbody -> can't apply input");
+        return;
+      }
+
+      // Define the impulse values for each direction
+      const impulse = new Rapier.Vector3(0, 0, 0);
+
+      // Handle input for moving up
+      if (inputMessage.up) {
+        impulse.z = 5; // Adjust the vertical impulse value as needed (e.g., for jumping)
+      }
+
+      // Handle input for moving down (e.g., crouching)
+      if (inputMessage.down) {
+        impulse.z = -5; // Adjust the vertical impulse value as needed
+      }
+
+      // Handle input for moving left
+      if (inputMessage.left) {
+        impulse.x = -5; // Adjust the horizontal impulse value as needed (e.g., for moving left)
+      }
+
+      // Handle input for moving right
+      if (inputMessage.right) {
+        impulse.x = 5; // Adjust the horizontal impulse value as needed (e.g., for moving right)
+      }
+
+      // Apply the accumulated impulse to the physics body
+      physicsBodyComponent.body.applyImpulse(impulse, false);
     });
   }
 
@@ -66,10 +109,9 @@ export class WebsocketSystem {
 
     const handler = this.messageHandlers.get(clientMessage.t);
     if (handler) {
-      handler(clientMessage);
+      handler(ws, clientMessage);
     }
   }
-
   private findPlayer(ws: any) {
     return (
       this.players.find((player) => {
