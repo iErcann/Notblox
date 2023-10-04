@@ -38,28 +38,32 @@ export class WebsocketSystem {
       }
     });
   }
-  private onMessage(ws: any, message: any, isBinary: boolean) {
-    // You can implement custom message handling here
-    // For now, we'll just echo the message back
-    // let ok = ws.send(message, isBinary, true);
-    // new Player(ws, 1, 1, 1);
-  }
+  private onMessage(ws: any, message: any, isBinary: boolean) {}
 
+  private findPlayer(ws: any) {
+    console.log(this.players);
+    return (
+      this.players.find((player) => {
+        const websocketComponent = player
+          .getEntity()
+          .getComponent(WebSocketComponent);
+        return websocketComponent && websocketComponent.ws === ws;
+      }) || null
+    );
+  }
   private onConnect(ws: any) {
-    const player = new Player(ws, 0, 0, 0);
+    // const player = this.findPlayer(ws);
+    const player = new Player(ws, 0, 5, 0);
     const connectionMessage: ConnectionMessage = {
       t: ServerMessageType.FIRST_CONNECTION,
       id: player.entity.id,
     };
-
     ws.send(pack(connectionMessage), true);
     this.players.push(player);
   }
   private onClose(ws: any, code: number, message: any) {
     // Find player
-    const disconnectedPlayer = this.players.find(
-      (player) => player.getEntity().getComponent(WebSocketComponent)?.ws === ws
-    );
+    const disconnectedPlayer = this.findPlayer(ws);
 
     if (!disconnectedPlayer) {
       console.error("Disconnect : Player not found ?", ws);

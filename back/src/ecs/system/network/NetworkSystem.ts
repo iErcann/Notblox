@@ -67,7 +67,6 @@ export class NetworkSystem {
     // this.broadcast(entities, delta);
     // this.lastCompressedEntities = compressedEntities;
 
-    console.table(snapshot);
     this.broadcast(entities, compressedSnapshot);
   }
 

@@ -51,7 +51,7 @@ export class SyncComponentsSystem {
   createEntity(serializedEntity: SerializedEntity) {
     if (serializedEntity.t === SerializedEntityType.PLAYER) {
       const player = new Player(serializedEntity.id);
-
+      console.log("New player", player);
       this.game.renderer.scene.add(
         player.entity.getComponent(MeshComponent)!.mesh
       );

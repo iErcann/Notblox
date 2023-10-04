@@ -4,6 +4,9 @@ import { Server } from "http";
 import { SnapshotMessage } from "@shared/network/server/serialized";
 import { Game } from "./game";
 import { ConnectionMessage } from "@shared/network/server/connection";
+import { InputMessage } from "@shared/network/client/input";
+import { ClientMessage, ClientMessageType } from "@shared/network/client/base";
+import { pack } from "msgpackr";
 
 type MessageHandler = (message: ServerMessage) => void;
 
@@ -12,7 +15,6 @@ export class WebSocketManager {
   private messageHandlers: Map<ServerMessageType, MessageHandler> = new Map();
 
   constructor(game: Game, private serverUrl: string = "ws://localhost:8001") {
-    this.connect();
     this.addMessageHandler(ServerMessageType.SNAPSHOT, (message) => {
       const snapshotMessage = message as SnapshotMessage;
       game.syncComponentSystem.update(
@@ -23,19 +25,38 @@ export class WebSocketManager {
 
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
       const connectionMessage = message as ConnectionMessage;
+      game.currentPlayerId = connectionMessage.id;
+      console.log("first connection", game.currentPlayerId);
     });
   }
 
-  public connect() {
-    if (!this.websocket) {
-      this.websocket = new WebSocket(this.serverUrl);
-      this.websocket.addEventListener("open", this.onOpen.bind(this));
-      this.websocket.addEventListener("message", this.onMessage.bind(this));
-      this.websocket.addEventListener("error", this.onError.bind(this));
-      this.websocket.addEventListener("close", this.onClose.bind(this));
-    }
+  public async connect(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (!this.isConnected()) {
+        this.websocket = new WebSocket(this.serverUrl);
+        this.websocket.addEventListener("open", (event) => {
+          console.log("WebSocket connection opened:", event);
+          resolve(); // Resolve the promise when the connection is open.
+        });
+        this.websocket.addEventListener("message", this.onMessage.bind(this));
+        this.websocket.addEventListener("error", (errorEvent) => {
+          console.error("WebSocket error:", errorEvent);
+          reject(errorEvent); // Reject the promise on error.
+        });
+        this.websocket.addEventListener("close", (closeEvent) => {
+          if (closeEvent.wasClean) {
+            console.log(
+              `WebSocket connection closed cleanly, code=${closeEvent.code}, reason=${closeEvent.reason}`
+            );
+          } else {
+            console.error("WebSocket connection abruptly closed");
+          }
+        });
+      } else {
+        resolve(); // WebSocket already exists, resolve without a value.
+      }
+    });
   }
-
   public disconnect() {
     if (this.websocket) {
       this.websocket.close();
@@ -55,10 +76,21 @@ export class WebSocketManager {
     console.log("WebSocket connection opened:", event);
   }
 
+  private send(message: ClientMessage) {
+    if (this.isConnected()) {
+      this.websocket!.send(pack(message));
+    } else {
+      console.error("Websocket doesnt exist can't send message", message);
+    }
+  }
+  private isConnected(): boolean {
+    return (
+      this.websocket != null && this.websocket.readyState === WebSocket.OPEN
+    );
+  }
   private async onMessage(event: MessageEvent) {
     const buffer = await event.data.arrayBuffer();
     const message: ServerMessage = unpack(buffer);
-    console.log("Received message:", message.t);
 
     const handler = this.messageHandlers.get(message.t);
     if (handler) {
@@ -66,8 +98,15 @@ export class WebSocketManager {
     }
   }
 
-  private onError(error: Event) {
-    console.error("WebSocket error:", error);
+  public update() {
+    const inputMessage: InputMessage = {
+      t: ClientMessageType.INPUT,
+      down: true,
+      left: false,
+      right: false,
+      up: false,
+    };
+    this.send(inputMessage);
   }
 
   private onClose(event: CloseEvent) {
@@ -80,35 +119,3 @@ export class WebSocketManager {
     }
   }
 }
-
-/*
-import { WebSocketManager } from "./WebSocketManager";
-
-const serverUrl = "ws://localhost:8001"; // Replace with your WebSocket server URL
-
-const webSocketManager = new WebSocketManager(serverUrl);
-
-// Connect to the WebSocket server
-webSocketManager.connect();
-
-// Add message handlers
-webSocketManager.addMessageHandler(ServerMessageType.SNAPSHOT, (message) => {
-  // Handle SNAPSHOT message
-});
-
-webSocketManager.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
-  // Handle FIRST_CONNECTION message
-});
-
-// ...
-
-// To send messages, you can use the WebSocketManager's WebSocket instance:
-if (webSocketManager.isConnected()) {
-  webSocketManager.send(message);
-}
-
-// To disconnect:
-webSocketManager.disconnect();
-
-
-*/

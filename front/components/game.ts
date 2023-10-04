@@ -11,14 +11,13 @@ export class Game {
   private static instance: Game;
   public entityManager = EntityManager.getInstance();
   private lastRenderTime = Date.now();
-  private tickrate = 20;
   private loopFunction: () => void = this.loop.bind(this);
   public renderer: Renderer;
   public syncComponentSystem: SyncComponentsSystem;
   private syncPositionSystem: SyncPositionSystem;
   private syncRotationSystem: SyncRotationSystem;
   private websocketManager: WebSocketManager;
-  private currentPlayerId = 0;
+  public currentPlayerId = 0;
 
   private constructor() {
     const camera = new Camera();
@@ -30,10 +29,6 @@ export class Game {
     this.setupScene();
   }
 
-  public onConnection(playerEntityId: number) {
-    this.currentPlayerId = playerEntityId;
-  }
-
   public static getInstance(): Game {
     if (!Game.instance) {
       Game.instance = new Game();
@@ -41,7 +36,9 @@ export class Game {
     return Game.instance;
   }
 
-  public start() {
+  public async start() {
+    // Wait for the WebSocket connection to be established
+    await this.websocketManager.connect();
     document.body.appendChild(this.renderer.domElement);
     this.renderer.setAnimationLoop(this.loopFunction);
   }
@@ -79,13 +76,13 @@ export class Game {
   }
 
   private interpolationFactor = 0.1; // Adjust this factor for the desired interpolation speed
-  private tickRate = 20; // The tick rate in ticks per second
+  private tickRate = 10; // The tick rate in ticks per second
   private lastTickTime = 0; // Track the time of the last tick
 
   private loop() {
     const entities = this.entityManager.getAllEntities();
     const now = Date.now();
-
+    this.websocketManager.update();
     // Calculate the time since the last tick
     const deltaTime = now - this.lastRenderTime;
 
