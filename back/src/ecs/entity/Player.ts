@@ -75,6 +75,7 @@ export class Player {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
+    rigidBody.setGravityScale(2.0, false);
 
     this.entity.addComponent(
       new PhysicsBodyComponent(this.entity.id, rigidBody)

@@ -73,26 +73,27 @@ export class WebsocketSystem {
 
       // Handle input for moving up
       if (inputMessage.up) {
-        impulse.z = 5; // Adjust the vertical impulse value as needed (e.g., for jumping)
+        impulse.z = -50; // Adjust the vertical impulse value as needed (e.g., for jumping)
       }
 
       // Handle input for moving down (e.g., crouching)
       if (inputMessage.down) {
-        impulse.z = -5; // Adjust the vertical impulse value as needed
+        impulse.z = 50; // Adjust the vertical impulse value as needed
       }
 
       // Handle input for moving left
       if (inputMessage.left) {
-        impulse.x = -5; // Adjust the horizontal impulse value as needed (e.g., for moving left)
+        impulse.x = -50; // Adjust the horizontal impulse value as needed (e.g., for moving left)
       }
 
       // Handle input for moving right
       if (inputMessage.right) {
-        impulse.x = 5; // Adjust the horizontal impulse value as needed (e.g., for moving right)
+        impulse.x = 50; // Adjust the horizontal impulse value as needed (e.g., for moving right)
       }
 
       // Apply the accumulated impulse to the physics body
-      physicsBodyComponent.body.applyImpulse(impulse, false);
+      // physicsBodyComponent.body.applyImpulse(impulse, false);
+      physicsBodyComponent.body.setLinvel(impulse, false);
     });
   }
 
