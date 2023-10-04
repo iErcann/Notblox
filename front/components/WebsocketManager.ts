@@ -92,6 +92,7 @@ export class WebSocketManager {
     const buffer = await event.data.arrayBuffer();
     const message: ServerMessage = unpack(buffer);
 
+    console.log(message);
     const handler = this.messageHandlers.get(message.t);
     if (handler) {
       handler(message);
@@ -107,15 +108,5 @@ export class WebSocketManager {
       up: false,
     };
     this.send(inputMessage);
-  }
-
-  private onClose(event: CloseEvent) {
-    if (event.wasClean) {
-      console.log(
-        `WebSocket connection closed cleanly, code=${event.code}, reason=${event.reason}`
-      );
-    } else {
-      console.error("WebSocket connection abruptly closed");
-    }
   }
 }

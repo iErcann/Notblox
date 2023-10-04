@@ -21,6 +21,7 @@ export class SyncComponentsSystem {
   constructor(public game: Game) {}
   update(entities: Entity[], snapshotMessage: SnapshotMessage) {
     const serializedEntities = snapshotMessage.e;
+    console.log(serializedEntities);
     serializedEntities.forEach((serializedEntity) => {
       // Find the replicated entity
       let entity = entities.find((entity) => entity.id === serializedEntity.id);
