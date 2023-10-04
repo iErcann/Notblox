@@ -6,6 +6,7 @@ import { SyncPositionSystem } from "./ecs/system/SyncPositionSystem";
 import { SyncRotationSystem } from "./ecs/system/SyncRotationSystem";
 import { Renderer } from "./renderer";
 import { WebSocketManager } from "./WebsocketManager";
+import { InputManager } from "./InputManager";
 
 export class Game {
   private static instance: Game;
@@ -18,6 +19,7 @@ export class Game {
   private syncRotationSystem: SyncRotationSystem;
   private websocketManager: WebSocketManager;
   public currentPlayerId = 0;
+  private inputManager: InputManager;
 
   private constructor() {
     const camera = new Camera();
@@ -26,6 +28,7 @@ export class Game {
     this.syncPositionSystem = new SyncPositionSystem();
     this.syncRotationSystem = new SyncRotationSystem();
     this.websocketManager = new WebSocketManager(this);
+    this.inputManager = new InputManager(this.websocketManager);
     this.setupScene();
   }
 

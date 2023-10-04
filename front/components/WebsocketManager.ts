@@ -76,7 +76,7 @@ export class WebSocketManager {
     console.log("WebSocket connection opened:", event);
   }
 
-  private send(message: ClientMessage) {
+  public send(message: ClientMessage) {
     if (this.isConnected()) {
       this.websocket!.send(pack(message));
     } else {
@@ -92,21 +92,11 @@ export class WebSocketManager {
     const buffer = await event.data.arrayBuffer();
     const message: ServerMessage = unpack(buffer);
 
-    console.log(message);
     const handler = this.messageHandlers.get(message.t);
     if (handler) {
       handler(message);
     }
   }
 
-  public update() {
-    const inputMessage: InputMessage = {
-      t: ClientMessageType.INPUT,
-      down: true,
-      left: false,
-      right: false,
-      up: false,
-    };
-    this.send(inputMessage);
-  }
+  public update() {}
 }
