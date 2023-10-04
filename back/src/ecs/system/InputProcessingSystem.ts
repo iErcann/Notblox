@@ -21,7 +21,7 @@ export class InputProcessingSystem {
     }
 
     // Get or create the InputComponent for the entity
-    let inputComponent = entity.getComponent<InputComponent>(InputComponent);
+    let inputComponent = entity.getComponent(InputComponent);
 
     if (!inputComponent) {
       inputComponent = new InputComponent(entity.id);

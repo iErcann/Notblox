@@ -16,7 +16,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.scene = scene;
 
     this.setSize(window.innerWidth, window.innerHeight);
-    this.setPixelRatio(window.devicePixelRatio);
+    this.setPixelRatio(window.devicePixelRatio / 2);
 
     this.addLight();
 
