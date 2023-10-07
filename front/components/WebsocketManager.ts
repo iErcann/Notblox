@@ -15,18 +15,18 @@ export class WebSocketManager {
   private messageHandlers: Map<ServerMessageType, MessageHandler> = new Map();
 
   constructor(game: Game, private serverUrl: string = "ws://localhost:8001") {
+    this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
+      const connectionMessage = message as ConnectionMessage;
+      game.currentPlayerId = connectionMessage.id;
+      console.log("first connection", game.currentPlayerId);
+    });
+
     this.addMessageHandler(ServerMessageType.SNAPSHOT, (message) => {
       const snapshotMessage = message as SnapshotMessage;
       game.syncComponentSystem.update(
         game.entityManager.getAllEntities(),
         snapshotMessage
       );
-    });
-
-    this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
-      const connectionMessage = message as ConnectionMessage;
-      game.currentPlayerId = connectionMessage.id;
-      console.log("first connection", game.currentPlayerId);
     });
   }
 

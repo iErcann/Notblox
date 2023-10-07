@@ -7,7 +7,6 @@ export interface Renderable {
 export class Renderer extends THREE.WebGLRenderer {
   public camera: Camera;
   public scene: THREE.Scene;
-  private directionalLight: THREE.DirectionalLight | undefined;
 
   constructor(camera: Camera, scene: THREE.Scene) {
     super({ antialias: false });
@@ -25,24 +24,20 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   private addLight() {
-    this.shadowMap.enabled = true;
-    this.shadowMap.type = THREE.PCFSoftShadowMap;
+    // Use HemisphereLight for natural lighting
+    const hemisphereLight = new THREE.HemisphereLight(0x0000ff, 0x00ff00, 0.6);
+    this.scene.add(hemisphereLight);
 
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
-    this.directionalLight.position.set(0.2, 0.5, 0.3);
-    this.directionalLight.castShadow = true;
-    this.directionalLight.shadow.radius = 100;
+    // Add directional light for shadows and highlights
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(2, 3, 3);
+    directionalLight.castShadow = true;
+    this.scene.add(directionalLight);
 
-    this.scene.add(this.directionalLight);
+    // Add the sunlight to the scene
 
-    const hemiLight = new THREE.HemisphereLight(0x0000ff, 0x00ff00, 0.2);
-    this.scene.add(hemiLight);
-
-    const light = new THREE.PointLight(0xff0000, 1, 100);
-    light.position.set(-2, 0, 1);
-    light.castShadow = true;
-
-    this.scene.add(light);
+    const helper = new THREE.DirectionalLightHelper(directionalLight, 5);
+    this.scene.add(helper);
   }
 
   public update() {

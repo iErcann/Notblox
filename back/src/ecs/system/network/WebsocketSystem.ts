@@ -10,7 +10,7 @@ import { ConnectionMessage } from "../../../../../shared/network/server/connecti
 import Rapier from "../../../physics/rapier.js";
 import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
-import { EntityManager } from "../../entity/EntityManager.js";
+import { EntityManager } from "../../../../../shared/entity/EntityManager.js";
 import { Player } from "../../entity/Player.js";
 
 type MessageHandler = (ws: any, message: any) => void;
@@ -49,7 +49,8 @@ export class WebsocketSystem {
       }
     });
 
-    this.addMessageHandler(ClientMessageType.INPUT, (ws, message) => {
+    // TODO: Use MovementSystem (ECS approach)
+    this.addMessageHandler(ClientMessageType.INPUT, async (ws, message) => {
       const inputMessage = message as InputMessage;
 
       // Access 'ws' if needed within the handler
@@ -70,30 +71,34 @@ export class WebsocketSystem {
 
       // Define the impulse values for each direction
       const impulse = new Rapier.Vector3(0, 0, 0);
-
+      const speed = 100;
       // Handle input for moving up
       if (inputMessage.up) {
-        impulse.z = -50; // Adjust the vertical impulse value as needed (e.g., for jumping)
+        impulse.z = -speed; // Adjust the vertical impulse value as needed (e.g., for jumping)
       }
 
       // Handle input for moving down (e.g., crouching)
       if (inputMessage.down) {
-        impulse.z = 50; // Adjust the vertical impulse value as needed
+        impulse.z = speed; // Adjust the vertical impulse value as needed
       }
 
       // Handle input for moving left
       if (inputMessage.left) {
-        impulse.x = -50; // Adjust the horizontal impulse value as needed (e.g., for moving left)
+        impulse.x = -speed; // Adjust the horizontal impulse value as needed (e.g., for moving left)
       }
 
       // Handle input for moving right
       if (inputMessage.right) {
-        impulse.x = 50; // Adjust the horizontal impulse value as needed (e.g., for moving right)
+        impulse.x = speed; // Adjust the horizontal impulse value as needed (e.g., for moving right)
+      }
+
+      if (inputMessage.space) {
+        impulse.y = speed;
       }
 
       // Apply the accumulated impulse to the physics body
       // physicsBodyComponent.body.applyImpulse(impulse, false);
-      physicsBodyComponent.body.setLinvel(impulse, false);
+      physicsBodyComponent.body.setLinvel(impulse, true);
     });
   }
 

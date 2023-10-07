@@ -11,15 +11,6 @@ export class SyncPositionSystem {
       const positionComponent = entity.getComponent(PositionComponent);
 
       if (bodyComponent && positionComponent) {
-        // bodyComponent.body.applyImpulse(
-        //   new Rapier.Vector3(
-        //     (Math.random() - 1 / 2) * 5,
-        //     Math.random() > 0.95 ? 15 : 0,
-        //     (Math.random() - 1 / 2) * 5
-        //   ),
-        //   false
-        // );
-
         const position = bodyComponent.body.translation();
         positionComponent.x = position.x;
         positionComponent.y = position.y;

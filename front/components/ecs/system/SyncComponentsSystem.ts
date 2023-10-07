@@ -21,8 +21,8 @@ export class SyncComponentsSystem {
   constructor(public game: Game) {}
   update(entities: Entity[], snapshotMessage: SnapshotMessage) {
     const serializedEntities = snapshotMessage.e;
-    console.log(serializedEntities);
     serializedEntities.forEach((serializedEntity) => {
+      console.log(serializedEntity.id);
       // Find the replicated entity
       let entity = entities.find((entity) => entity.id === serializedEntity.id);
 
@@ -52,10 +52,13 @@ export class SyncComponentsSystem {
   createEntity(serializedEntity: SerializedEntity) {
     if (serializedEntity.t === SerializedEntityType.PLAYER) {
       const player = new Player(serializedEntity.id);
-      console.log("New player", player);
+
       this.game.renderer.scene.add(
         player.entity.getComponent(MeshComponent)!.mesh
       );
+      // player.entity
+      //   .getComponent(MeshComponent)!
+      //   .mesh.add(this.game.renderer.camera);
 
       return player.entity;
     } else if (serializedEntity.t === SerializedEntityType.CUBE) {

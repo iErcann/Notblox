@@ -1,12 +1,13 @@
 import * as THREE from "three";
 import { Camera } from "./camera";
-import { EntityManager } from "./ecs/entity/EntityManager";
+import { EntityManager } from "@shared/entity/EntityManager";
 import { SyncComponentsSystem } from "./ecs/system/SyncComponentsSystem";
 import { SyncPositionSystem } from "./ecs/system/SyncPositionSystem";
 import { SyncRotationSystem } from "./ecs/system/SyncRotationSystem";
 import { Renderer } from "./renderer";
 import { WebSocketManager } from "./WebsocketManager";
 import { InputManager } from "./InputManager";
+import { config } from "@shared/network/config";
 
 export class Game {
   private static instance: Game;
@@ -47,28 +48,13 @@ export class Game {
   }
 
   private setupScene() {
-    this.addLight();
     this.addGround();
-  }
-
-  private addLight() {
-    // Use HemisphereLight for natural lighting
-    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x080820, 0.1);
-    this.renderer.scene.add(hemisphereLight);
-
-    // Add directional light for shadows and highlights
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-    directionalLight.position.set(10, 10, 10);
-    directionalLight.castShadow = true;
-    this.renderer.scene.add(directionalLight);
   }
 
   private addGround() {
     // Create a simple colored ground
     const groundMaterial = new THREE.MeshPhongMaterial({
-      color: 0x00ff00, // Adjust the color as needed (green in this case)
-      specular: 0x111111,
-      shininess: 10,
+      color: 0x1eefff, // Adjust the color as needed (green in this case)
     });
 
     const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
@@ -79,13 +65,14 @@ export class Game {
   }
 
   private interpolationFactor = 0.1; // Adjust this factor for the desired interpolation speed
-  private tickRate = 10; // The tick rate in ticks per second
+  private tickRate = config.TICKRATE; // The tick rate in ticks per second
   private lastTickTime = 0; // Track the time of the last tick
 
   private loop() {
     const entities = this.entityManager.getAllEntities();
     const now = Date.now();
     this.websocketManager.update();
+    this.inputManager.sendInput();
     // Calculate the time since the last tick
     const deltaTime = now - this.lastRenderTime;
 

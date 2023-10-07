@@ -48,7 +48,6 @@ export class NetworkSystem {
 
   public update(entities: Entity[]) {
     const serializedEntities = this.serializeAll(entities);
-
     const snapshot: SnapshotMessage = {
       t: ServerMessageType.SNAPSHOT,
       e: serializedEntities,

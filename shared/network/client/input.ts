@@ -5,4 +5,5 @@ export interface InputMessage extends ClientMessage {
   down: boolean;
   left: boolean;
   right: boolean;
+  space: boolean;
 }
