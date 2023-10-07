@@ -1,8 +1,5 @@
-import { RigidBody } from "@dimforge/rapier3d-compat";
 import { InputComponent } from "../component/InputComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
-import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
-import { VelocityComponent } from "../component/VelocityComponent.js";
 import { Entity } from "../../../../shared/entity/Entity.js";
 import Rapier from "../../physics/rapier.js";
 
@@ -15,12 +12,36 @@ export class MovementSystem {
         entity.getComponent<PhysicsBodyComponent>(PhysicsBodyComponent);
 
       if (input && rigidBody) {
-        if (input.forward) {
-          rigidBody.body.addForce(new Rapier.Vector3(1, 0, 0), false);
+        const physicsBodyComponent = entity.getComponent(PhysicsBodyComponent);
+        if (!physicsBodyComponent) {
+          console.error("Player doesn't have a rigidbody -> can't apply input");
+          return;
         }
-        if (input.backward) {
-          rigidBody.body.addForce(new Rapier.Vector3(-1, 0, 0), false);
+        // Define the impulse values for each direction
+        const impulse = new Rapier.Vector3(0, 0, 0);
+        const speed = 100;
+        // Handle input for moving up
+        if (input.up) {
+          impulse.z = -speed; // Adjust the vertical impulse value as needed (e.g., for jumping)
         }
+        // Handle input for moving down (e.g., crouching)
+        if (input.down) {
+          impulse.z = speed; // Adjust the vertical impulse value as needed
+        }
+        // Handle input for moving left
+        if (input.left) {
+          impulse.x = -speed; // Adjust the horizontal impulse value as needed (e.g., for moving left)
+        }
+        // Handle input for moving right
+        if (input.right) {
+          impulse.x = speed; // Adjust the horizontal impulse value as needed (e.g., for moving right)
+        }
+        if (input.space) {
+          impulse.y = speed;
+        }
+        // Apply the accumulated impulse to the physics body
+        // physicsBodyComponent.body.applyImpulse(impulse, false);
+        physicsBodyComponent.body.setLinvel(impulse, true);
       }
     });
   }

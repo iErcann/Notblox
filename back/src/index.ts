@@ -1,13 +1,14 @@
 import { Cube } from "./ecs/entity/Cube.js";
 import { EntityManager } from "../../shared/entity/EntityManager.js";
 import { InputProcessingSystem } from "./ecs/system/InputProcessingSystem.js";
-import { MovementSystem } from "./ecs/system/MovementSystem.js";
+// import { MovementSystem } from "./ecs/system/MovementSystem.js";
 import { NetworkSystem } from "./ecs/system/network/NetworkSystem.js";
 import { PhysicsSystem } from "./ecs/system/physics/PhysicsSystem.js";
 import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
 import Rapier from "./physics/rapier.js";
 import { config } from "../../shared/network/config.js";
+import { MovementSystem } from "./ecs/system/MovementSystem.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -16,7 +17,6 @@ const entities = entityManager.getAllEntities();
 
 const physicsSystem = PhysicsSystem.getInstance();
 const movementSystem = new MovementSystem();
-const inputProcessingSystem = new InputProcessingSystem(entities);
 const networkSystem = NetworkSystem.getInstance();
 
 // Physics

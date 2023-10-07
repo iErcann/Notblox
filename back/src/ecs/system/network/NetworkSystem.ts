@@ -19,7 +19,6 @@ export class NetworkSystem {
   private websocketSystem: WebsocketSystem;
   private lastCompressedEntities: Buffer | undefined;
   private deltaPatcher = jsondiffpatch.create();
-
   private constructor() {
     this.websocketSystem = new WebsocketSystem();
   }
