@@ -7,16 +7,9 @@ import { Serializable, Component } from "../component/Component.js";
 // Define an Entity class
 export class Entity {
   private static nextId = 1;
-  public id: number;
   public components: Component[] = [];
 
-  constructor(public type: SerializedEntityType, entityId?: number) {
-    if (!entityId) {
-      this.id = Entity.nextId++;
-    } else {
-      this.id = entityId;
-    }
-  }
+  constructor(public type: SerializedEntityType, public id: number) {}
 
   // Add a component to the entity
   addComponent(component: Component) {

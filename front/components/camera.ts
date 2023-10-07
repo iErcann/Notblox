@@ -8,7 +8,8 @@ export class Camera extends THREE.PerspectiveCamera {
   constructor() {
     super(60, window.innerWidth / window.innerHeight, 0.01, 1000);
     this.setRotationFromAxisAngle(new Vector3(1, 0, 0), -90);
-    this.position.set(0, 15, 5);
+    this.position.set(0, 15, 12);
+
     this.up.set(0, 0, -1);
     this.lookAt(0, 0, 0);
   }

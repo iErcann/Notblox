@@ -6,7 +6,7 @@ export class PhysicsSystem {
 
   constructor() {
     console.log("WORLD");
-    const gravity = { x: 0.0, y: -9.81 * 10, z: 0.0 };
+    const gravity = { x: 0.0, y: -9.81 * 30, z: 0.0 };
     this.world = new Rapier.World(gravity);
   }
 

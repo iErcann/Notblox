@@ -1,6 +1,7 @@
 import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
 import { Entity } from "../../../../shared/entity/Entity.js";
+import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
 import Rapier from "../../physics/rapier.js";
 import { CharacterControllerComponent } from "../component/CharacterControllerComponent.js";
@@ -11,7 +12,6 @@ import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.
 import { VelocityComponent } from "../component/VelocityComponent.js";
 import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
-import { EntityManager } from "./EntityManager.js";
 
 export class Player {
   entity: Entity;
@@ -37,7 +37,6 @@ export class Player {
       initialY,
       initialZ
     );
-
     this.entity.addComponent(positionComponent);
 
     const rotationComponent = new RotationComponent(this.entity.id, 0, 1, 2);
@@ -73,9 +72,12 @@ export class Player {
     const { x, y, z } = this.getPosition();
     // Rigidbody
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
+    rigidBodyDesc.setLinearDamping(0.1);
+    rigidBodyDesc.setCcdEnabled(true);
+
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
-    rigidBody.setGravityScale(2.0, false);
+    rigidBody.lockRotations(true, false);
 
     this.entity.addComponent(
       new PhysicsBodyComponent(this.entity.id, rigidBody)
@@ -83,15 +85,19 @@ export class Player {
   }
   createCollider(world: Rapier.World) {
     // Collider
-    const rigidBodyComponent =
-      this.entity.getComponent<PhysicsBodyComponent>(PhysicsBodyComponent);
+    const rigidBodyComponent = this.entity.getComponent(PhysicsBodyComponent);
 
     if (!rigidBodyComponent) {
       console.error("Body doesn't exist on Player.");
       return;
     }
 
-    let colliderDesc = Rapier.ColliderDesc.cuboid(0.5, 0.5, 0.5);
+    let colliderDesc = Rapier.ColliderDesc.cuboid(0.5, 1, 0.5);
+    colliderDesc.setFriction(10);
+    colliderDesc.setFrictionCombineRule(Rapier.CoefficientCombineRule.Max);
+    colliderDesc.setRestitution(0.6);
+    colliderDesc.setRestitutionCombineRule(Rapier.CoefficientCombineRule.Max);
+
     let collider = world.createCollider(colliderDesc, rigidBodyComponent.body);
 
     this.entity.addComponent(
@@ -103,9 +109,7 @@ export class Player {
     return this.entity;
   }
   move(desiredTranslation: any) {
-    const controller = this.entity.getComponent<CharacterControllerComponent>(
-      CharacterControllerComponent
-    );
+    const controller = this.entity.getComponent(CharacterControllerComponent);
     if (controller) {
       controller.desiredTranslation = desiredTranslation;
     }

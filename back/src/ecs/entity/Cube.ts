@@ -7,7 +7,7 @@ import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
-import { EntityManager } from "./EntityManager.js";
+import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 
 export class Cube {
   entity: Entity;

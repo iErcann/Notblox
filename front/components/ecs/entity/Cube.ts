@@ -1,5 +1,5 @@
 import { SerializedEntityType } from "@shared/network/server/serialized";
-import { EntityManager } from "./EntityManager";
+import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 import { Entity } from "@shared/entity/Entity";
 import { MeshComponent } from "../component/MeshComponent";
 import * as THREE from "three";
