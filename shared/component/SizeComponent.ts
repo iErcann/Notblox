@@ -1,19 +1,20 @@
+import { NetworkDataComponent } from "back/src/ecs/component/NetworkDataComponent.js";
 import { Component, Serializable } from "../component/Component.js";
 import {
   SerializedComponentType,
   SerializedSizeComponent,
 } from "../network/server/serialized.js";
 
-export class SizeComponent extends Component implements Serializable {
-  type = SerializedComponentType.SIZE;
+import { NetworkComponent } from "../network/NetworkComponent.js";
 
+export class SizeComponent extends NetworkComponent {
   constructor(
     entityId: number,
     public width: number,
     public height: number,
     public depth: number
   ) {
-    super(entityId);
+    super(entityId, SerializedComponentType.SIZE);
   }
   deserialize(data: SerializedSizeComponent): void {
     this.width = data.width;

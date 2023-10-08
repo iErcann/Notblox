@@ -17,9 +17,17 @@ export class MovementSystem {
           console.error("Player doesn't have a rigidbody -> can't apply input");
           return;
         }
+        // Get the current linear velocity
+        const currentLinVel = physicsBodyComponent.body.linvel();
+
         // Define the impulse values for each direction
-        const impulse = new Rapier.Vector3(0, 0, 0);
-        const speed = 100;
+        const impulse = new Rapier.Vector3(
+          0,
+          currentLinVel.y, // Preserve the current Y velocity
+          0
+        );
+        const speed = 100 / 2;
+
         // Handle input for moving up
         if (input.up) {
           impulse.z = -speed; // Adjust the vertical impulse value as needed (e.g., for jumping)
@@ -40,7 +48,6 @@ export class MovementSystem {
           impulse.y = speed / 4;
         }
         // Apply the accumulated impulse to the physics body
-        // physicsBodyComponent.body.applyImpulse(impulse, false);
         physicsBodyComponent.body.setLinvel(impulse, true);
       }
     });

@@ -7,10 +7,13 @@ import {
   SnapshotMessage,
   SerializedPositionComponent,
   SerializedRotationComponent,
+  SerializedSizeComponent,
 } from "@shared/network/server/serialized";
 
 import { PositionComponent } from "@shared/component/PositionComponent";
 import { RotationComponent } from "@shared/component/RotationComponent";
+import { SizeComponent } from "@shared/component/SizeComponent";
+
 import { Game } from "@/components/game";
 import { Player } from "../entity/Player";
 import { Cube } from "../entity/Cube";
@@ -90,6 +93,15 @@ export class SyncComponentsSystem {
         serializedRotationComponent.y,
         serializedRotationComponent.z,
         serializedRotationComponent.w
+      );
+    } else if (serializedComponent.t === SerializedComponentType.SIZE) {
+      const serializedSizeComponent =
+        serializedComponent as SerializedSizeComponent;
+      return new SizeComponent(
+        entityId,
+        serializedSizeComponent.width,
+        serializedSizeComponent.height,
+        serializedSizeComponent.depth
       );
     }
   }

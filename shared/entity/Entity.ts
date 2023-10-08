@@ -35,6 +35,7 @@ export class Entity {
   // This is used by the client only !
   // We assume that the clients will only have serializable component so they will have a type!
   getComponentByType(componentType: SerializedComponentType) {
+    console.log(this.components);
     return this.components.find(
       (c) => "type" in c && c.type === componentType
     ) as Serializable | undefined;
