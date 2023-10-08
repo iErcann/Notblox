@@ -37,7 +37,7 @@ export class MovementSystem {
           impulse.x = speed; // Adjust the horizontal impulse value as needed (e.g., for moving right)
         }
         if (input.space) {
-          impulse.y = speed;
+          impulse.y = speed / 4;
         }
         // Apply the accumulated impulse to the physics body
         // physicsBodyComponent.body.applyImpulse(impulse, false);

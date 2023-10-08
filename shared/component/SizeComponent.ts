@@ -3,8 +3,9 @@ import {
   SerializedComponentType,
   SerializedSizeComponent,
 } from "../network/server/serialized.js";
+
 export class SizeComponent extends Component implements Serializable {
-  type: SerializedComponentType.SIZE;
+  type = SerializedComponentType.SIZE;
 
   constructor(
     entityId: number,

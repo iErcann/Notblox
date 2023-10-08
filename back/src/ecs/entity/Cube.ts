@@ -8,6 +8,7 @@ import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "../../../../shared/entity/EntityManager.js";
+import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
 
 export class Cube {
   entity: Entity;
@@ -25,13 +26,17 @@ export class Cube {
     const rotationComponent = new RotationComponent(this.entity.id, 0, 0, 0, 0);
     this.entity.addComponent(rotationComponent);
 
+    const sizeComponent = new SizeComponent(this.entity.id, 1, 1, 1);
+    this.entity.addComponent(sizeComponent);
+
     this.createRigidBody(world);
-    this.createCollider(world, size);
+    this.createCollider(world);
 
     this.entity.addComponent(
       new NetworkDataComponent(this.entity.id, this.entity.type, [
         positionComponent,
         rotationComponent,
+        sizeComponent,
       ])
     );
   }
@@ -49,17 +54,26 @@ export class Cube {
       new PhysicsBodyComponent(this.entity.id, rigidBody)
     );
   }
-  createCollider(world: Rapier.World, size: number) {
+  createCollider(world: Rapier.World) {
     // Collider
-    const rigidBodyComponent =
-      this.entity.getComponent<PhysicsBodyComponent>(PhysicsBodyComponent);
+    const sizeComponent = this.entity.getComponent(SizeComponent);
+    const rigidBodyComponent = this.entity.getComponent(PhysicsBodyComponent);
 
     if (!rigidBodyComponent) {
-      console.error("Body doesn't exist on Cube.");
+      console.error("BodyComponent doesn't exist on Cube.");
       return;
     }
 
-    let colliderDesc = Rapier.ColliderDesc.cuboid(size, size, size);
+    if (!sizeComponent) {
+      console.error("SizeComponent doesn't exist on Cube.");
+      return;
+    }
+
+    let colliderDesc = Rapier.ColliderDesc.cuboid(
+      sizeComponent.width,
+      sizeComponent.depth,
+      sizeComponent.height
+    );
     let collider = world.createCollider(colliderDesc, rigidBodyComponent.body);
 
     this.entity.addComponent(

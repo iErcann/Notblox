@@ -56,9 +56,9 @@ export class SyncComponentsSystem {
       this.game.renderer.scene.add(
         player.entity.getComponent(MeshComponent)!.mesh
       );
-      // player.entity
-      //   .getComponent(MeshComponent)!
-      //   .mesh.add(this.game.renderer.camera);
+      player.entity
+        .getComponent(MeshComponent)!
+        .mesh.add(this.game.renderer.camera);
 
       return player.entity;
     } else if (serializedEntity.t === SerializedEntityType.CUBE) {
