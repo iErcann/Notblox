@@ -8,6 +8,7 @@ import { Renderer } from "./renderer";
 import { WebSocketManager } from "./WebsocketManager";
 import { InputManager } from "./InputManager";
 import { config } from "@shared/network/config";
+import { SyncSizeSystem } from "./ecs/system/SyncSizeSystem";
 
 export class Game {
   private static instance: Game;
@@ -18,6 +19,7 @@ export class Game {
   public syncComponentSystem: SyncComponentsSystem;
   private syncPositionSystem: SyncPositionSystem;
   private syncRotationSystem: SyncRotationSystem;
+  private syncSizeSystem: SyncSizeSystem;
   private websocketManager: WebSocketManager;
   public currentPlayerId = 0;
   private inputManager: InputManager;
@@ -28,6 +30,7 @@ export class Game {
     this.syncComponentSystem = new SyncComponentsSystem(this);
     this.syncPositionSystem = new SyncPositionSystem();
     this.syncRotationSystem = new SyncRotationSystem();
+    this.syncSizeSystem = new SyncSizeSystem();
     this.websocketManager = new WebSocketManager(this);
     this.inputManager = new InputManager(this.websocketManager);
     this.setupScene();
@@ -81,6 +84,7 @@ export class Game {
     // Update position and rotation with interpolation
     this.syncPositionSystem.update(entities, interpolationFactor);
     this.syncRotationSystem.update(entities, interpolationFactor);
+    this.syncSizeSystem.update(entities);
 
     this.renderer.update();
     this.lastRenderTime = now;

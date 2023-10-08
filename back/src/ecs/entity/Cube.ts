@@ -26,7 +26,12 @@ export class Cube {
     const rotationComponent = new RotationComponent(this.entity.id, 0, 0, 0, 0);
     this.entity.addComponent(rotationComponent);
 
-    const sizeComponent = new SizeComponent(this.entity.id, 1, 1, 1);
+    const sizeComponent = new SizeComponent(
+      this.entity.id,
+      size,
+      size / 2,
+      size
+    );
     this.entity.addComponent(sizeComponent);
 
     this.createRigidBody(world);
@@ -49,7 +54,6 @@ export class Cube {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
-
     this.entity.addComponent(
       new PhysicsBodyComponent(this.entity.id, rigidBody)
     );
@@ -71,8 +75,8 @@ export class Cube {
 
     let colliderDesc = Rapier.ColliderDesc.cuboid(
       sizeComponent.width,
-      sizeComponent.depth,
-      sizeComponent.height
+      sizeComponent.height,
+      sizeComponent.depth
     );
     let collider = world.createCollider(colliderDesc, rigidBodyComponent.body);
 

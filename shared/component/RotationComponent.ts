@@ -2,12 +2,10 @@ import {
   SerializedComponentType,
   SerializedRotationComponent,
 } from "../network/server/serialized.js";
-import { Component, Serializable } from "../component/Component.js";
+import { NetworkComponent } from "../network/NetworkComponent.js";
 
 // Define a RotationComponent class
-export class RotationComponent extends Component implements Serializable {
-  type = SerializedComponentType.ROTATION;
-
+export class RotationComponent extends NetworkComponent {
   // Define public properties for pitch, yaw, and roll
   constructor(
     entityId: number,
@@ -16,7 +14,7 @@ export class RotationComponent extends Component implements Serializable {
     public z: number,
     public w = 0
   ) {
-    super(entityId); // Call the parent constructor with the entityId
+    super(entityId, SerializedComponentType.ROTATION); // Call the parent constructor with the entityId
   }
   deserialize(data: SerializedRotationComponent): void {
     this.x = data.x;
