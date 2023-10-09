@@ -26,7 +26,7 @@ export class MovementSystem {
           currentLinVel.y, // Preserve the current Y velocity
           0
         );
-        const speed = 100 / 2;
+        const speed = 60 / 2;
 
         // Handle input for moving up
         if (input.up) {

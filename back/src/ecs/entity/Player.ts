@@ -77,7 +77,7 @@ export class Player {
 
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
-    rigidBody.lockRotations(true, false);
+    // rigidBody.lockRotations(true, false);
 
     this.entity.addComponent(
       new PhysicsBodyComponent(this.entity.id, rigidBody)
