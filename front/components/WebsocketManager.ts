@@ -14,7 +14,7 @@ export class WebSocketManager {
   private websocket: WebSocket | null = null;
   private messageHandlers: Map<ServerMessageType, MessageHandler> = new Map();
 
-  constructor(game: Game, private serverUrl: string = "ws://localhost:8001") {
+  constructor(game: Game, private serverUrl: string = "wss://evalugem.com/ws") {
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
       const connectionMessage = message as ConnectionMessage;
       game.currentPlayerId = connectionMessage.id;
