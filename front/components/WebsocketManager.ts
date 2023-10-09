@@ -13,8 +13,16 @@ type MessageHandler = (message: ServerMessage) => void;
 export class WebSocketManager {
   private websocket: WebSocket | null = null;
   private messageHandlers: Map<ServerMessageType, MessageHandler> = new Map();
+  private serverUrl: string;
+  constructor(game: Game) {
+    // Check the NODE_ENV environment variable
+    const isProduction = process.env.NODE_ENV === "production";
 
-  constructor(game: Game, private serverUrl: string = "wss://evalugem.com/ws") {
+    // Set the serverUrl based on the environment
+    this.serverUrl = isProduction
+      ? "wss://evalugem.com/ws"
+      : "ws://localhost:8001";
+
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
       const connectionMessage = message as ConnectionMessage;
       game.currentPlayerId = connectionMessage.id;

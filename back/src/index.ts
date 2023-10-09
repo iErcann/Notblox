@@ -26,12 +26,8 @@ const syncRotationSystem = new SyncRotationSystem();
 // inputProcessingSystem.receiveInputPacket(packet);
 
 for (let i = 1; i <= 10; i++) {
-  new Cube(i * 10, i * 10, i, Math.floor(0.5 + i));
+  new Cube(i * 2, i * 10, i, Math.floor(0.5 + i));
 }
-
-setInterval(() => {
-  new Cube(Math.random() * 10, 10, Math.random() * 10, 1);
-}, 2000);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(100.0, 0.1, 100.0);
