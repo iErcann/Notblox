@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 // Define systems
 export class CameraFollowSystem {
-  constructor(public lerpFactor = 0.1) {}
+  constructor(public lerpFactor = 0.2) {}
 
   update(entities: Entity[]) {
     entities.forEach((entity) => {
