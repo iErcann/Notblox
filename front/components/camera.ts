@@ -9,6 +9,7 @@ export class Camera extends THREE.PerspectiveCamera {
     super(66, window.innerWidth / window.innerHeight, 0.01, 1000);
     this.position.set(0, 15, 12);
 
+    // this.position.applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
     this.lookAt(0, 0, 0);
   }
 
