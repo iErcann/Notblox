@@ -1,5 +1,5 @@
 import { pack, unpack } from "msgpackr";
-import { App, DEDICATED_COMPRESSOR_3KB } from "uWebSockets.js";
+import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from "uWebSockets.js";
 import {
   ClientMessage,
   ClientMessageType,
@@ -23,7 +23,15 @@ export class WebsocketSystem {
   private inputProcessingSystem: InputProcessingSystem;
 
   constructor() {
-    const app = App();
+    const isProduction = process.env.NODE_ENV === "production";
+
+    const app = isProduction
+      ? SSLApp({
+          /* SSL options */
+          key_file_name: "/etc/letsencrypt/live/evalugem.com/privkey.pem",
+          cert_file_name: "/etc/letsencrypt/live/evalugem.com/cert.pem",
+        })
+      : App();
 
     // Bind the methods to the current instance
     this.onMessage = this.onMessage.bind(this);
