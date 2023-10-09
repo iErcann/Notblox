@@ -2,7 +2,6 @@ import {
   SerializedComponentType,
   SerializedPositionComponent,
 } from "../network/server/serialized.js";
-import { Component, Serializable } from "../component/Component.js";
 import { NetworkComponent } from "../network/NetworkComponent.js";
 
 // Define a PositionComponent class
