@@ -1,5 +1,3 @@
-import { NetworkDataComponent } from "back/src/ecs/component/NetworkDataComponent.js";
-import { Component, Serializable } from "../component/Component.js";
 import {
   SerializedComponentType,
   SerializedSizeComponent,
