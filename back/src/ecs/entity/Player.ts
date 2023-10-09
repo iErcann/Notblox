@@ -93,9 +93,17 @@ export class Player {
     }
 
     let colliderDesc = Rapier.ColliderDesc.cuboid(0.5, 1, 0.5);
-    colliderDesc.setFriction(10);
+
+    // Adjust the friction to control sliding
+    colliderDesc.setFriction(0.2); // Adjust the value as needed
+
+    // Set the friction combine rule to control how friction is combined with other contacts
     colliderDesc.setFrictionCombineRule(Rapier.CoefficientCombineRule.Max);
-    colliderDesc.setRestitution(0.6);
+
+    // Set restitution to control how bouncy the player is when colliding with surfaces
+    colliderDesc.setRestitution(0.0); // Adjust the value as needed
+
+    // Set the restitution combine rule to control how restitution is combined with other contacts
     colliderDesc.setRestitutionCombineRule(Rapier.CoefficientCombineRule.Max);
 
     let collider = world.createCollider(colliderDesc, rigidBodyComponent.body);
@@ -104,6 +112,7 @@ export class Player {
       new PhysicsColliderComponent(this.entity.id, collider)
     );
   }
+
   // Getter for the underlying entity
   getEntity(): Entity {
     return this.entity;

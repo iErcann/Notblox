@@ -18,7 +18,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.shadowMap.type = THREE.PCFSoftShadowMap; //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
 
     this.setSize(window.innerWidth, window.innerHeight);
-    this.setPixelRatio(window.devicePixelRatio / 2);
+    this.setPixelRatio(window.devicePixelRatio / 1.8);
 
     this.addLight();
 
