@@ -9,6 +9,7 @@ import { WebSocketManager } from "./WebsocketManager";
 import { InputManager } from "./InputManager";
 import { config } from "@shared/network/config";
 import { SyncSizeSystem } from "./ecs/system/SyncSizeSystem";
+import { CameraFollowSystem } from "./ecs/system/CameraFollowSystem";
 
 export class Game {
   private static instance: Game;
@@ -20,6 +21,7 @@ export class Game {
   private syncPositionSystem: SyncPositionSystem;
   private syncRotationSystem: SyncRotationSystem;
   private syncSizeSystem: SyncSizeSystem;
+  private cameraFollowSystem: CameraFollowSystem;
   private websocketManager: WebSocketManager;
   public currentPlayerId = 0;
   private inputManager: InputManager;
@@ -31,6 +33,7 @@ export class Game {
     this.syncPositionSystem = new SyncPositionSystem();
     this.syncRotationSystem = new SyncRotationSystem();
     this.syncSizeSystem = new SyncSizeSystem();
+    this.cameraFollowSystem = new CameraFollowSystem();
     this.websocketManager = new WebSocketManager(this);
     this.inputManager = new InputManager(this.websocketManager);
     this.setupScene();
@@ -85,6 +88,7 @@ export class Game {
     this.syncPositionSystem.update(entities, interpolationFactor);
     this.syncRotationSystem.update(entities, interpolationFactor);
     this.syncSizeSystem.update(entities);
+    this.cameraFollowSystem.update(entities);
 
     this.renderer.update();
     this.lastRenderTime = now;

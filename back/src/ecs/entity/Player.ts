@@ -66,7 +66,7 @@ export class Player {
   }
 
   getPosition() {
-    return this.entity.getComponent<PositionComponent>(PositionComponent)!;
+    return this.entity.getComponent(PositionComponent)!;
   }
   createRigidBody(world: Rapier.World) {
     const { x, y, z } = this.getPosition();
@@ -92,7 +92,7 @@ export class Player {
       return;
     }
 
-    let colliderDesc = Rapier.ColliderDesc.cuboid(0.5, 1, 0.5);
+    let colliderDesc = Rapier.ColliderDesc.capsule(0.5, 1);
 
     // Adjust the friction to control sliding
     colliderDesc.setFriction(0.2); // Adjust the value as needed
