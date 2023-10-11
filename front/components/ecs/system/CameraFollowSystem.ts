@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 // Define systems
 export class CameraFollowSystem {
-  constructor(public lerpFactor = 0.2) {}
+  constructor(public lerpFactor = 0.05) {}
 
   update(entities: Entity[]) {
     entities.forEach((entity) => {
@@ -17,8 +17,8 @@ export class CameraFollowSystem {
         const camera = followComponent.camera;
         const targetPosition = new THREE.Vector3(
           positionComponent.x,
-          positionComponent.y + 15,
-          positionComponent.z + 10
+          positionComponent.y + 20,
+          positionComponent.z + 12
         );
 
         // Use lerp to smoothly move the camera towards the target position
@@ -27,3 +27,17 @@ export class CameraFollowSystem {
     });
   }
 }
+
+/* FPS mode
+       const targetPosition = new THREE.Vector3(
+          positionComponent.x,
+          positionComponent.y + 1,
+          positionComponent.z
+        );
+
+        // Use lerp to smoothly move the camera towards the target position
+        camera.position.lerp(targetPosition, this.lerpFactor);
+
+        camera.lookAt(targetPosition);
+      }
+      */

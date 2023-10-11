@@ -14,6 +14,7 @@ export class WebSocketManager {
   private websocket: WebSocket | null = null;
   private messageHandlers: Map<ServerMessageType, MessageHandler> = new Map();
   private serverUrl: string;
+  public timeSinceLastServerUpdate: number = 0;
   constructor(game: Game) {
     // Check the NODE_ENV environment variable
     const isProduction = process.env.NODE_ENV === "production";
@@ -30,6 +31,7 @@ export class WebSocketManager {
     });
 
     this.addMessageHandler(ServerMessageType.SNAPSHOT, (message) => {
+      this.timeSinceLastServerUpdate = 0;
       const snapshotMessage = message as SnapshotMessage;
       game.syncComponentSystem.update(
         game.entityManager.getAllEntities(),

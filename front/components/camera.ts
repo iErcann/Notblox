@@ -6,8 +6,8 @@ export class Camera extends THREE.PerspectiveCamera {
   followedObject: THREE.Mesh | undefined;
 
   constructor() {
-    super(66, window.innerWidth / window.innerHeight, 0.01, 1000);
-    this.position.set(0, 15, 12);
+    super(60, window.innerWidth / window.innerHeight);
+    this.position.set(0, 20, 12);
 
     // this.position.applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
     this.lookAt(0, 0, 0);

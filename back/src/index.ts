@@ -25,22 +25,25 @@ const syncRotationSystem = new SyncRotationSystem();
 // const packet = new InputPacket(player.entity.id, true, false, false, false);
 // inputProcessingSystem.receiveInputPacket(packet);
 
-for (let i = 1; i <= 10; i++) {
-  new Cube(i * 2, i * 10, i, Math.floor(0.5 + i));
-}
+new Cube(10, 5, 2, 3);
+new Cube(3, 8, 1, 2);
+new Cube(7, 2, 6, 4);
+new Cube(9, 6, 5, 3);
+new Cube(1, 1, 1, 2);
+new Cube(4, 9, 3, 3);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(100.0, 0.1, 100.0);
 physicsSystem.world.createCollider(groundColliderDesc);
 
 function gameLoop() {
+  setTimeout(gameLoop, 1000 / config.TICKRATE);
   movementSystem.update(entities);
   physicsSystem.update();
 
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
   networkSystem.update(entities);
-  setTimeout(gameLoop, 1000 / config.TICKRATE);
 }
 
 gameLoop();

@@ -37,7 +37,7 @@ export class Player {
     const loader = new GLTFLoader();
 
     loader.load(
-      "Roblox.glb",
+      "https://myaudio.nyc3.cdn.digitaloceanspaces.com/Roblox.glb",
       function (gltf) {
         gltf.scene.scale.set(0.51, 0.51, 0.51);
         mesh.add(gltf.scene);
