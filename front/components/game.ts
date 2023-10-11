@@ -10,6 +10,7 @@ import { InputManager } from "./InputManager";
 import { config } from "@shared/network/config";
 import { SyncSizeSystem } from "./ecs/system/SyncSizeSystem";
 import { CameraFollowSystem } from "./ecs/system/CameraFollowSystem";
+import { LoadManager } from "./LoadManager";
 
 export class Game {
   private static instance: Game;
@@ -23,6 +24,7 @@ export class Game {
   private syncSizeSystem: SyncSizeSystem;
   private cameraFollowSystem: CameraFollowSystem;
   private websocketManager: WebSocketManager;
+  private loadManager: LoadManager;
   public currentPlayerId = 0;
   private inputManager: InputManager;
 
@@ -36,7 +38,7 @@ export class Game {
     this.cameraFollowSystem = new CameraFollowSystem();
     this.websocketManager = new WebSocketManager(this);
     this.inputManager = new InputManager(this.websocketManager);
-    this.setupScene();
+    this.loadManager = new LoadManager();
   }
 
   public static getInstance(): Game {
@@ -53,23 +55,6 @@ export class Game {
     this.renderer.setAnimationLoop(this.loopFunction);
   }
 
-  private setupScene() {
-    this.addGround();
-  }
-
-  private addGround() {
-    // Create a simple colored ground
-    const groundMaterial = new THREE.MeshPhongMaterial({
-      color: 0x1eefff, // Adjust the color as needed (green in this case)
-    });
-
-    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
-    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
-    groundMesh.receiveShadow = true;
-    groundMesh.rotation.x = -Math.PI / 2;
-    this.renderer.scene.add(groundMesh);
-  }
-
   private interpolationFactor = 0.1; // Adjust this factor for the desired interpolation speed
   private tickRate = config.TICKRATE; // The tick rate in ticks per second
   private lastTickTime = 0; // Track the time of the last tick
@@ -80,17 +65,19 @@ export class Game {
     this.websocketManager.update();
     this.inputManager.sendInput();
     // Calculate the time since the last tick
-    const deltaTime = now - this.lastRenderTime;
 
-    const interpolationFactor = deltaTime / (1000 / this.tickRate);
+    const deltaTime = now - this.lastRenderTime;
+    const interpolationFactor =
+      this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
 
     // Update position and rotation with interpolation
-    this.syncPositionSystem.update(entities, interpolationFactor);
+    this.syncPositionSystem.update(entities, 0.2);
     this.syncRotationSystem.update(entities, interpolationFactor);
     this.syncSizeSystem.update(entities);
     this.cameraFollowSystem.update(entities);
 
     this.renderer.update();
     this.lastRenderTime = now;
+    this.websocketManager.timeSinceLastServerUpdate += deltaTime;
   }
 }

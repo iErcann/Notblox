@@ -26,12 +26,7 @@ export class Cube {
     const rotationComponent = new RotationComponent(this.entity.id, 0, 0, 0, 0);
     this.entity.addComponent(rotationComponent);
 
-    const sizeComponent = new SizeComponent(
-      this.entity.id,
-      size,
-      size / 2,
-      size
-    );
+    const sizeComponent = new SizeComponent(this.entity.id, size, size, size);
     this.entity.addComponent(sizeComponent);
 
     this.createRigidBody(world);
