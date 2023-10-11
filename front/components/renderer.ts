@@ -23,7 +23,8 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.addLight();
     // this.addDirectionnalLight();
-    this.addWorld();
+    // this.addWorld();
+    this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
