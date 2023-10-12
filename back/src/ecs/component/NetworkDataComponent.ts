@@ -35,13 +35,13 @@ export class NetworkDataComponent extends Component implements Serializable {
         return { t: component.type, ...component.serialize() };
       });
 
-    const BroadcastMessage = {
+    const broadcastMessage = {
       id: this.entityId,
       t: this.entityType,
       c: serializedComponents,
     };
 
     // Convert BroadcastMessage to JSON and send it to clients
-    return BroadcastMessage;
+    return broadcastMessage;
   }
 }
