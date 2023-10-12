@@ -46,7 +46,7 @@ export class Cube {
   createRigidBody(world: Rapier.World) {
     const { x, y, z } = this.getPosition();
     // Rigidbody
-    let rigidBodyDesc = Rapier.RigidBodyDesc.kinematicPositionBased();
+    let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
     this.entity.addComponent(

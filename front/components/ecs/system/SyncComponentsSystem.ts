@@ -65,7 +65,7 @@ export class SyncComponentsSystem {
 
       return player.entity;
     } else if (serializedEntity.t === SerializedEntityType.CUBE) {
-      const cube = new Cube(serializedEntity.id);
+      const cube = new Cube(serializedEntity.id, this.game);
 
       this.game.renderer.scene.add(
         cube.entity.getComponent(MeshComponent)!.mesh

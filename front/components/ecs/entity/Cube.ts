@@ -3,11 +3,12 @@ import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 import { Entity } from "@shared/entity/Entity";
 import { MeshComponent } from "../component/MeshComponent";
 import * as THREE from "three";
+import { Game } from "@/components/game.js";
 
 export class Cube {
   entity: Entity;
-  constructor(entityId: number) {
-    this.entity = EntityManager.getInstance().createEntity(
+  constructor(entityId: number, game: Game) {
+    this.entity = game.entityManager.createEntity(
       SerializedEntityType.CUBE,
       entityId
     );
