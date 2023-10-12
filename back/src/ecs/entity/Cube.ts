@@ -13,7 +13,14 @@ import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
 export class Cube {
   entity: Entity;
 
-  constructor(x: number, y: number, z: number, size: number) {
+  constructor(
+    x: number,
+    y: number,
+    z: number,
+    width: number,
+    height: number,
+    depth: number
+  ) {
     this.entity = EntityManager.getInstance().createEntity(
       SerializedEntityType.CUBE
     );
@@ -26,7 +33,12 @@ export class Cube {
     const rotationComponent = new RotationComponent(this.entity.id, 0, 0, 0, 0);
     this.entity.addComponent(rotationComponent);
 
-    const sizeComponent = new SizeComponent(this.entity.id, size, size, size);
+    const sizeComponent = new SizeComponent(
+      this.entity.id,
+      width,
+      height,
+      depth
+    );
     this.entity.addComponent(sizeComponent);
 
     this.createRigidBody(world);
@@ -47,6 +59,7 @@ export class Cube {
     const { x, y, z } = this.getPosition();
     // Rigidbody
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
+
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
     this.entity.addComponent(

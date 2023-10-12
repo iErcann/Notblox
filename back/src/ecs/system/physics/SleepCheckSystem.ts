@@ -1,8 +1,8 @@
-import { CharacterControllerComponent } from "../../component/CharacterControllerComponent.js";
-import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
 import { PositionComponent } from "../../../../../shared/component/PositionComponent.js";
-import { Entity } from "../../../../../shared/entity/Entity.js";
 import { RotationComponent } from "../../../../../shared/component/RotationComponent.js";
+import { SizeComponent } from "../../../../../shared/component/SizeComponent.js";
+import { Entity } from "../../../../../shared/entity/Entity.js";
+import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
 
 export class SleepCheckSystem {
   update(entities: Entity[]) {
@@ -18,6 +18,11 @@ export class SleepCheckSystem {
         const rotationComponent = entity.getComponent(RotationComponent);
         if (rotationComponent) {
           rotationComponent.isSent = !sleeping;
+        }
+
+        const sizeComponent = entity.getComponent(SizeComponent);
+        if (sizeComponent) {
+          sizeComponent.isSent = false;
         }
       }
     });
