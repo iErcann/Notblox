@@ -31,7 +31,7 @@ export class NetworkSystem {
   }
 
   // Serialize components and send the entity's network data to clients
-  public serializeAll(entities: Entity[]): SerializedEntity[] {
+  public serialize(entities: Entity[]): SerializedEntity[] {
     const serializedEntities: SerializedEntity[] = [];
 
     entities.forEach((entity) => {
@@ -46,7 +46,7 @@ export class NetworkSystem {
   }
 
   public update(entities: Entity[]) {
-    const serializedEntities = this.serializeAll(entities);
+    const serializedEntities = this.serialize(entities);
     const snapshot: SnapshotMessage = {
       t: ServerMessageType.SNAPSHOT,
       e: serializedEntities,

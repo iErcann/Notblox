@@ -74,10 +74,10 @@ export class Player {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
     rigidBodyDesc.setLinearDamping(0.1);
     rigidBodyDesc.setCcdEnabled(true);
+    rigidBodyDesc.setCanSleep(false);
 
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
-    rigidBody.lockRotations(true, false);
 
     this.entity.addComponent(
       new PhysicsBodyComponent(this.entity.id, rigidBody)
@@ -93,7 +93,6 @@ export class Player {
     }
 
     let colliderDesc = Rapier.ColliderDesc.capsule(0.5, 1);
-
     // Adjust the friction to control sliding
     colliderDesc.setFriction(0.2); // Adjust the value as needed
 

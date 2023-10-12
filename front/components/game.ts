@@ -24,7 +24,7 @@ export class Game {
   private syncSizeSystem: SyncSizeSystem;
   private cameraFollowSystem: CameraFollowSystem;
   private websocketManager: WebSocketManager;
-  private loadManager: LoadManager;
+  public loadManager: LoadManager;
   public currentPlayerId = 0;
   private inputManager: InputManager;
 
@@ -39,6 +39,7 @@ export class Game {
     this.websocketManager = new WebSocketManager(this);
     this.inputManager = new InputManager(this.websocketManager);
     this.loadManager = new LoadManager();
+    this.loadManager.load("./test.glb");
   }
 
   public static getInstance(): Game {

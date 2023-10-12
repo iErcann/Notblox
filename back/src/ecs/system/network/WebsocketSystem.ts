@@ -111,7 +111,7 @@ export class WebsocketSystem {
     const player = new Player(
       ws,
       Math.random() * 3,
-      3 + Math.random() * 7,
+      13 + Math.random() * 7,
       Math.random() * 3
     );
     // TODO: make handlers like WebsocketManager on client

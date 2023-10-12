@@ -4,7 +4,7 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 export class LoadManager {
   dracoLoader = new DRACOLoader();
   constructor() {
-    this.dracoLoader.setDecoderPath("/examples/jsm/libs/draco/"); // Replace with the actual path to the Draco decoder
+    this.dracoLoader.setDecoderPath("/draco/"); // Replace with the actual path to the Draco decoder
   }
 
   public load(path: string): THREE.Mesh | null {

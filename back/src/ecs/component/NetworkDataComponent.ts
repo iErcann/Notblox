@@ -7,13 +7,14 @@ import {
   Component,
   Serializable,
 } from "../../../../shared/component/Component.js";
+import { NetworkComponent } from "shared/network/NetworkComponent.js";
 
 export class NetworkDataComponent extends Component implements Serializable {
   type = SerializedComponentType.NONE;
   constructor(
     entityId: number,
     public entityType: SerializedEntityType,
-    private components: Serializable[]
+    private components: NetworkComponent[]
   ) {
     super(entityId);
   }
@@ -21,16 +22,17 @@ export class NetworkDataComponent extends Component implements Serializable {
     throw new Error("Method not implemented.");
   }
 
-  getComponents(): Serializable[] {
+  getComponents(): NetworkComponent[] {
     return this.components;
   }
 
   serialize(): SerializedEntity {
     const components = this.getComponents();
-    const serializedComponents = components.map((component) => {
-      // Serialize each component (you can define serialization logic for each component type)
-      return { t: component.type, ...component.serialize() };
-    });
+    const serializedComponents = components
+      .filter((component) => component.isSent === true)
+      .map((component: Serializable) => {
+        return { t: component.type, ...component.serialize() };
+      });
 
     const BroadcastMessage = {
       id: this.entityId,

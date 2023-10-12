@@ -12,7 +12,7 @@ import { FollowComponent } from "../component/FollowComponent";
 export class Player {
   entity: Entity;
   constructor(entityId: number, game: Game) {
-    this.entity = EntityManager.getInstance().createEntity(
+    this.entity = game.entityManager.createEntity(
       SerializedEntityType.PLAYER,
       entityId
     );
