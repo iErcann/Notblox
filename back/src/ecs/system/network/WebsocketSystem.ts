@@ -107,14 +107,12 @@ export class WebsocketSystem {
     );
   }
   private onConnect(ws: any) {
-    // const player = this.findPlayer(ws);
     const player = new Player(
       ws,
       Math.random() * 3,
       13 + Math.random() * 7,
       Math.random() * 3
     );
-    // TODO: make handlers like WebsocketManager on client
     const connectionMessage: ConnectionMessage = {
       t: ServerMessageType.FIRST_CONNECTION,
       id: player.entity.id,

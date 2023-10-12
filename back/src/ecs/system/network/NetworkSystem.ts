@@ -1,12 +1,8 @@
-// NetworkSystem.ts
-
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
 import { Entity } from "../../../../../shared/entity/Entity.js";
 import { pack } from "msgpackr";
 import { WebsocketSystem } from "./WebsocketSystem.js";
-import { WebSocket } from "uWebSockets.js";
 import * as jsondiffpatch from "jsondiffpatch";
-import * as fossilDelta from "fossil-delta";
 import {
   SnapshotMessage,
   SerializedEntity,
@@ -17,66 +13,70 @@ import { ServerMessageType } from "../../../../../shared/network/server/base.js"
 export class NetworkSystem {
   private static instance: NetworkSystem;
   private websocketSystem: WebsocketSystem;
-  private lastCompressedEntities: Buffer | undefined;
   private deltaPatcher = jsondiffpatch.create();
+
   private constructor() {
     this.websocketSystem = new WebsocketSystem();
   }
 
-  public static getInstance() {
+  public static getInstance(): NetworkSystem {
     if (!NetworkSystem.instance) {
       NetworkSystem.instance = new NetworkSystem();
     }
     return NetworkSystem.instance;
   }
 
-  // Serialize components and send the entity's network data to clients
-  public serialize(entities: Entity[]): SerializedEntity[] {
+  private serialize(entities: Entity[], serializeAll: boolean) {
     const serializedEntities: SerializedEntity[] = [];
 
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const networkDataComponent = entity.getComponent(NetworkDataComponent);
 
       if (networkDataComponent) {
-        serializedEntities.push(networkDataComponent.serialize());
+        serializeAll;
+        serializedEntities.push(networkDataComponent.serialize(serializeAll));
       }
-    });
-
+    }
     return serializedEntities;
   }
 
-  public update(entities: Entity[]) {
-    const serializedEntities = this.serialize(entities);
+  public update(entities: Entity[]): void {
+    const serializedEntities = this.serialize(entities, false);
     const snapshot: SnapshotMessage = {
       t: ServerMessageType.SNAPSHOT,
       e: serializedEntities,
     };
+
+    let fullSerializedEntities: SerializedEntity[] | undefined;
+    for (const entity of entities) {
+      const websocketComponent = entity.getComponent(WebSocketComponent);
+      if (websocketComponent && !websocketComponent.isFirstSnapshotSent) {
+        if (!fullSerializedEntities)
+          fullSerializedEntities = this.serialize(entities, true);
+
+        websocketComponent.ws.send(
+          pack({
+            t: ServerMessageType.SNAPSHOT,
+            e: fullSerializedEntities,
+          }),
+          true
+        );
+
+        websocketComponent.isFirstSnapshotSent = true;
+      }
+    }
+
     const compressedSnapshot = pack(snapshot);
-
-    // if (!this.lastCompressedEntities) {
-    //   this.lastCompressedEntities = compressedEntities;
-    // }
-
-    // console.log(fossilDelta);
-    // const delta = fossilDelta.create(
-    //   this.lastCompressedEntities,
-    //   compressedEntities
-    // );
-    // this.broadcast(entities, delta);
-    // this.lastCompressedEntities = compressedEntities;
-
     this.broadcast(entities, compressedSnapshot);
   }
 
   // Broadcast a message to all connected clients
-  private broadcast(entities: Entity[], message: any) {
-    entities.forEach((entity) => {
+  private broadcast(entities: Entity[], message: any): void {
+    for (const entity of entities) {
       const websocketComponent = entity.getComponent(WebSocketComponent);
-
       if (websocketComponent) {
-        console.log("Found entity", entity.id);
         websocketComponent.ws.send(message, true);
       }
-    });
+    }
   }
 }

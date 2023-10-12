@@ -11,6 +11,7 @@ import { NetworkComponent } from "shared/network/NetworkComponent.js";
 
 export class NetworkDataComponent extends Component implements Serializable {
   type = SerializedComponentType.NONE;
+
   constructor(
     entityId: number,
     public entityType: SerializedEntityType,
@@ -26,10 +27,10 @@ export class NetworkDataComponent extends Component implements Serializable {
     return this.components;
   }
 
-  serialize(): SerializedEntity {
+  serialize(serializeAll = false): SerializedEntity {
     const components = this.getComponents();
     const serializedComponents = components
-      .filter((component) => component.isSent === true)
+      .filter((component) => serializeAll || component.isSent === true)
       .map((component: Serializable) => {
         return { t: component.type, ...component.serialize() };
       });
