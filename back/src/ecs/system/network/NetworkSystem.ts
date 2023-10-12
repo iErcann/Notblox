@@ -33,7 +33,12 @@ export class NetworkSystem {
       const networkDataComponent = entity.getComponent(NetworkDataComponent);
 
       if (networkDataComponent) {
-        serializedEntities.push(networkDataComponent.serialize(serializeAll));
+        const _serializedEntities =
+          networkDataComponent.serialize(serializeAll);
+
+        // This is to skip entities who doesn't have a single component in their array, might change in the future put lowers the badnwdith
+        if (_serializedEntities != null)
+          serializedEntities.push(_serializedEntities);
       }
     }
     return serializedEntities;

@@ -27,13 +27,17 @@ export class NetworkDataComponent extends Component implements Serializable {
     return this.components;
   }
 
-  serialize(serializeAll = false): SerializedEntity {
+  serialize(serializeAll = false): SerializedEntity | null {
     const components = this.getComponents();
     const serializedComponents = components
       .filter((component) => serializeAll || component.isSent === true)
       .map((component: Serializable) => {
         return { t: component.type, ...component.serialize() };
       });
+
+    if (serializedComponents.length === 0) {
+      return null;
+    }
 
     const broadcastMessage = {
       id: this.entityId,
