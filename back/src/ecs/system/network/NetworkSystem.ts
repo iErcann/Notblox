@@ -33,41 +33,40 @@ export class NetworkSystem {
       const networkDataComponent = entity.getComponent(NetworkDataComponent);
 
       if (networkDataComponent) {
-        serializeAll;
         serializedEntities.push(networkDataComponent.serialize(serializeAll));
       }
     }
     return serializedEntities;
   }
 
-  public update(entities: Entity[]): void {
-    const serializedEntities = this.serialize(entities, false);
-    const snapshot: SnapshotMessage = {
+  private buildSnapshotMessage(serializedEntities: SerializedEntity[]) {
+    return pack({
       t: ServerMessageType.SNAPSHOT,
       e: serializedEntities,
-    };
-
-    let fullSerializedEntities: SerializedEntity[] | undefined;
+    });
+  }
+  public update(entities: Entity[]): void {
+    // First we find entities that just connected (Player)
+    let fullSnapshotMessage: Buffer | undefined;
     for (const entity of entities) {
       const websocketComponent = entity.getComponent(WebSocketComponent);
       if (websocketComponent && !websocketComponent.isFirstSnapshotSent) {
-        if (!fullSerializedEntities)
-          fullSerializedEntities = this.serialize(entities, true);
-
-        websocketComponent.ws.send(
-          pack({
-            t: ServerMessageType.SNAPSHOT,
-            e: fullSerializedEntities,
-          }),
-          true
-        );
-
+        if (!fullSnapshotMessage) {
+          const fullSerializedEntities = this.serialize(entities, true);
+          fullSnapshotMessage = this.buildSnapshotMessage(
+            fullSerializedEntities
+          );
+          console.log("Hasnt sent the first");
+        }
+        websocketComponent.ws.send(fullSnapshotMessage, true);
         websocketComponent.isFirstSnapshotSent = true;
       }
     }
 
-    const compressedSnapshot = pack(snapshot);
-    this.broadcast(entities, compressedSnapshot);
+    // Then we send delta snapshot
+    const serializedEntities = this.serialize(entities, false);
+    const snapshotMessage = this.buildSnapshotMessage(serializedEntities);
+    this.broadcast(entities, snapshotMessage);
   }
 
   // Broadcast a message to all connected clients
