@@ -14,10 +14,10 @@ export class Camera extends THREE.PerspectiveCamera {
     this.lookAt(0, 0, 0);
     this.orbitControls = new OrbitControls(this, renderer.domElement);
     this.orbitControls.autoRotate = false;
-    this.orbitControls.maxZoom = 5;
-    this.orbitControls.minZoom = 5;
-    this.orbitControls.maxDistance = 5;
-    this.orbitControls.minDistance = 5;
+    this.orbitControls.maxDistance = 1;
+    this.orbitControls.minDistance = 1;
+    this.orbitControls.enablePan = false;
+    this.orbitControls.enableDamping = false;
   }
 
   update() {
