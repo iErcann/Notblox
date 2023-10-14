@@ -24,7 +24,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.addLight();
     // this.addDirectionnalLight();
     // this.addWorld();
-    this.addGround();
+    // this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
@@ -80,7 +80,7 @@ export class Renderer extends THREE.WebGLRenderer {
             child.receiveShadow = true;
           }
         });
-        gltf.scene.position.setY(-10);
+        gltf.scene.position.setY(-5);
         that.scene.add(gltf.scene);
         gltf.animations;
         Array<THREE.AnimationClip>;
