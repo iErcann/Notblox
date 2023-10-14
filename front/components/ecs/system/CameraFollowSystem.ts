@@ -18,7 +18,7 @@ export class CameraFollowSystem {
         const camera = followComponent.camera;
         const targetPosition = new THREE.Vector3(
           positionComponent.x,
-          positionComponent.y,
+          positionComponent.y + 2,
           positionComponent.z
         );
         const orbitControler = camera.orbitControls;
