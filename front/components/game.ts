@@ -74,7 +74,7 @@ export class Game {
     this.syncPositionSystem.update(entities, 0.2);
     this.syncRotationSystem.update(entities, interpolationFactor);
     this.syncSizeSystem.update(entities);
-    this.cameraFollowSystem.update(entities);
+    this.cameraFollowSystem.update(entities, this.inputManager);
 
     this.renderer.update();
     this.lastRenderTime = now;

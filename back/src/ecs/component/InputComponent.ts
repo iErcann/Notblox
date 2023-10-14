@@ -6,4 +6,5 @@ export class InputComponent extends Component {
   left: boolean = false;
   right: boolean = false;
   space: boolean = false;
+  lookingAngle: number = 0;
 }
