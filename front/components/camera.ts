@@ -8,16 +8,16 @@ export class Camera extends THREE.PerspectiveCamera {
   public orbitControls: OrbitControls;
   constructor(renderer: Renderer) {
     super(60, window.innerWidth / window.innerHeight);
-    this.position.set(0, 20, 12);
 
     // this.position.applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
-    this.lookAt(0, 0, 0);
     this.orbitControls = new OrbitControls(this, renderer.domElement);
     this.orbitControls.autoRotate = false;
-    this.orbitControls.maxDistance = 1;
-    this.orbitControls.minDistance = 1;
+    this.orbitControls.maxDistance = 13;
+    this.orbitControls.minDistance = 13;
     this.orbitControls.enablePan = false;
     this.orbitControls.enableDamping = false;
+    this.orbitControls.minPolarAngle = -Math.PI / 2;
+    this.orbitControls.maxPolarAngle = Math.PI / 2;
   }
 
   update() {

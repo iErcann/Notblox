@@ -26,32 +26,40 @@ export class MovementSystem {
           console.error("Player doesn't have a rigidbody -> can't apply input");
           return;
         }
-        // Get the current linear velocity
-        const currentLinVel = physicsBodyComponent.body.linvel();
 
         // Define the impulse values for each direction
         const impulse = new Rapier.Vector3(
           0,
-          currentLinVel.y - 0.1, // Preserve the current Y velocity
+          rigidBodyComponent.body.linvel().y - 1,
           0
         );
-        const speed = 100 / 2;
+        const speed = 100;
 
-        // Handle input for moving up
+        // Calculate the movement direction based on the looking angle
+        const lookingAngle = inputComponent.lookingAngle; // Get the looking angle
+
+        console.log(lookingAngle);
+        const moveDirection = new Rapier.Vector3(
+          Math.sin(lookingAngle),
+          0,
+          Math.cos(lookingAngle)
+        );
+
         if (inputComponent.up) {
-          impulse.z = -speed; // Adjust the vertical impulse value as needed (e.g., for jumping)
+          impulse.x = moveDirection.x * speed;
+          impulse.z = -moveDirection.z * speed;
         }
-        // Handle input for moving down (e.g., crouching)
         if (inputComponent.down) {
-          impulse.z = speed; // Adjust the vertical impulse value as needed
+          impulse.x = -moveDirection.x * speed;
+          impulse.z = moveDirection.z * speed;
         }
-        // Handle input for moving left
         if (inputComponent.left) {
-          impulse.x = -speed; // Adjust the horizontal impulse value as needed (e.g., for moving left)
+          impulse.x = -Math.cos(lookingAngle) * speed;
+          impulse.z = -Math.sin(lookingAngle) * speed;
         }
-        // Handle input for moving right
         if (inputComponent.right) {
-          impulse.x = speed; // Adjust the horizontal impulse value as needed (e.g., for moving right)
+          impulse.x = Math.cos(lookingAngle) * speed;
+          impulse.z = Math.sin(lookingAngle) * speed;
         }
         if (inputComponent.space) {
           let ray = new Rapier.Ray(
@@ -76,10 +84,22 @@ export class MovementSystem {
           );
           console.log(hit);
           if (hit != null) {
-            impulse.y = 70;
+            impulse.y = 50;
           }
         }
+
         // Apply the accumulated impulse to the physics body
+        // const rotation = physicsBodyComponent.body.rotation();
+
+        // physicsBodyComponent.body.setRotation(
+        //   {
+        //     x: rotation.x,
+        //     y: rotation.y,
+        //     z: rotation.z,
+        //     w: rotation.w,
+        //   },
+        //   true
+        // );
         physicsBodyComponent.body.setLinvel(impulse, true);
       }
     });

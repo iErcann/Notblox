@@ -3,13 +3,14 @@ import { InputMessage } from "@shared/network/client/input";
 import { WebSocketManager } from "./WebsocketManager";
 
 export class InputManager {
-  private readonly inputState: InputMessage = {
+  public inputState: InputMessage = {
     t: ClientMessageType.INPUT,
     up: false,
     down: false,
     left: false,
     right: false,
     space: false,
+    lookingAngle: 0,
   };
 
   constructor(private webSocketManager: WebSocketManager) {

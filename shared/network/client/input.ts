@@ -6,4 +6,5 @@ export interface InputMessage extends ClientMessage {
   left: boolean;
   right: boolean;
   space: boolean;
+  lookingAngle: number;
 }

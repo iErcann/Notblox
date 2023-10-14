@@ -33,7 +33,6 @@ export class WebSocketManager {
     this.addMessageHandler(ServerMessageType.SNAPSHOT, (message) => {
       this.timeSinceLastServerUpdate = 0;
       const snapshotMessage = message as SnapshotMessage;
-      console.log(snapshotMessage);
       game.syncComponentSystem.update(
         game.entityManager.getAllEntities(),
         snapshotMessage
