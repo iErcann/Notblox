@@ -23,6 +23,5 @@ export class InputProcessingSystem {
     inputComponent.left = inputMessage.left;
     inputComponent.right = inputMessage.right;
     inputComponent.space = inputMessage.space;
-    inputComponent.lookingAngle = inputMessage.lookingAngle;
   }
 }
