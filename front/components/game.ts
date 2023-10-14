@@ -29,8 +29,7 @@ export class Game {
   private inputManager: InputManager;
 
   private constructor() {
-    const camera = new Camera();
-    this.renderer = new Renderer(camera, new THREE.Scene());
+    this.renderer = new Renderer(new THREE.Scene());
     this.syncComponentSystem = new SyncComponentsSystem(this);
     this.syncPositionSystem = new SyncPositionSystem();
     this.syncRotationSystem = new SyncRotationSystem();

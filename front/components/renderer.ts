@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { Camera } from "./camera";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
 export interface Renderable {
   mesh: THREE.Mesh;
   addToScene(): any;
@@ -9,10 +11,10 @@ export class Renderer extends THREE.WebGLRenderer {
   public camera: Camera;
   public scene: THREE.Scene;
   private directionalLight: THREE.DirectionalLight | undefined;
-  constructor(camera: Camera, scene: THREE.Scene) {
+  constructor(scene: THREE.Scene) {
     super({ antialias: false });
 
-    this.camera = camera;
+    this.camera = new Camera(this);
     this.scene = scene;
 
     this.shadowMap.enabled = true;
@@ -24,7 +26,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.addLight();
     // this.addDirectionnalLight();
     // this.addWorld();
-    // this.addGround();
+    this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
@@ -104,10 +106,11 @@ export class Renderer extends THREE.WebGLRenderer {
     );
   }
   public update() {
-    this.render(this.scene, this.camera);
     if (this.directionalLight) {
       this.directionalLight.position.copy(this.camera.position);
     }
+    this.camera.update();
+    this.render(this.scene, this.camera);
   }
 
   private onWindowResize() {
