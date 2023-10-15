@@ -13,24 +13,54 @@ export class AnimationSystem {
       const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
 
       if (inputComponent && rigidBodyComponent) {
-        if (inputComponent.up) {
-          this.rotatePlayer(rigidBodyComponent, { x: 0, y: 1, z: 0, w: 0 });
+        if (inputComponent.down && inputComponent.left) {
+          const quaternion = new THREE.Quaternion().setFromAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            -Math.PI / 4
+          );
+          this.rotatePlayer(rigidBodyComponent, quaternion);
+        } else if (inputComponent.down && inputComponent.right) {
+          const quaternion = new THREE.Quaternion().setFromAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            Math.PI / 4
+          );
+          this.rotatePlayer(rigidBodyComponent, quaternion);
+        } else if (inputComponent.up && inputComponent.left) {
+          const quaternion = new THREE.Quaternion().setFromAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            Math.PI + Math.PI / 4
+          );
+          this.rotatePlayer(rigidBodyComponent, quaternion);
+        } else if (inputComponent.up && inputComponent.right) {
+          const quaternion = new THREE.Quaternion().setFromAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            Math.PI - Math.PI / 4
+          );
+          this.rotatePlayer(rigidBodyComponent, quaternion);
+        } else if (inputComponent.up) {
+          const quaternion = new THREE.Quaternion().setFromAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            Math.PI
+          );
+          this.rotatePlayer(rigidBodyComponent, quaternion);
         } else if (inputComponent.down) {
-          this.rotatePlayer(rigidBodyComponent, { x: 0, y: 0, z: 0, w: 1 });
+          const quaternion = new THREE.Quaternion().setFromAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            0
+          );
+          this.rotatePlayer(rigidBodyComponent, quaternion);
         } else if (inputComponent.left) {
-          this.rotatePlayer(rigidBodyComponent, {
-            x: 0.0,
-            y: -0.707,
-            z: 0.0,
-            w: 0.707,
-          });
+          const quaternion = new THREE.Quaternion().setFromAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            -Math.PI / 2
+          );
+          this.rotatePlayer(rigidBodyComponent, quaternion);
         } else if (inputComponent.right) {
-          this.rotatePlayer(rigidBodyComponent, {
-            x: 0.0,
-            y: 0.707,
-            z: 0.0,
-            w: 0.707,
-          });
+          const quaternion = new THREE.Quaternion().setFromAxisAngle(
+            new THREE.Vector3(0, 1, 0),
+            Math.PI / 2
+          );
+          this.rotatePlayer(rigidBodyComponent, quaternion);
         }
       }
     });
@@ -38,8 +68,17 @@ export class AnimationSystem {
 
   rotatePlayer(
     rigidBodyComponent: PhysicsBodyComponent,
-    quaternion: Rapier.Quaternion
+    quaternion: THREE.Quaternion
   ) {
-    rigidBodyComponent.body.setRotation(quaternion, true);
+    console.log(quaternion);
+    rigidBodyComponent.body.setRotation(
+      {
+        x: quaternion.x,
+        y: quaternion.y,
+        z: quaternion.z,
+        w: quaternion.w,
+      },
+      true
+    );
   }
 }
