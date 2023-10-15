@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { Camera } from "./camera";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { LoadManager } from "./LoadManager";
 
 export interface Renderable {
   mesh: THREE.Mesh;
@@ -11,10 +12,10 @@ export class Renderer extends THREE.WebGLRenderer {
   public camera: Camera;
   public scene: THREE.Scene;
   private directionalLight: THREE.DirectionalLight | undefined;
-  constructor(scene: THREE.Scene) {
+  constructor(scene: THREE.Scene, loadManager: LoadManager) {
     super({ antialias: false });
 
-    this.camera = new Camera(this);
+    this.camera = new Camera();
     this.scene = scene;
 
     this.shadowMap.enabled = true;
@@ -25,7 +26,7 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.addLight();
     // this.addDirectionnalLight();
-    // this.addWorld();
+    // this.addWorld(loadManager);
     this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
@@ -52,58 +53,36 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x00ff00, 1);
+    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 2.5);
+    hemisphereLight.position.set(0.5, 1, 0.75);
     this.scene.add(hemisphereLight);
   }
 
   private addGround() {
     // Create a simple colored ground
     const groundMaterial = new THREE.MeshPhongMaterial({
-      color: 0x1eefff, // Adjust the color as needed (green in this case)
+      color: 0xe8e8e8, // Adjust the color as needed (green in this case)
+      flatShading: true,
     });
 
     const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
     const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.receiveShadow = true;
     groundMesh.rotation.x = -Math.PI / 2;
+
     this.scene.add(groundMesh);
   }
 
-  private addWorld() {
-    const loader = new GLTFLoader();
-
-    const that = this;
-    loader.load(
-      "https://myaudio.nyc3.cdn.digitaloceanspaces.com/SanAndreas.glb",
-      function (gltf) {
-        gltf.scene.traverse(function (child) {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-        gltf.scene.position.setY(-5);
-        that.scene.add(gltf.scene);
-        gltf.animations;
-        Array<THREE.AnimationClip>;
-        gltf.scene;
-        THREE.Group;
-        gltf.scenes;
-        Array<THREE.Group>;
-        gltf.cameras;
-        Array<THREE.Camera>;
-        gltf.asset;
-        Object;
-      },
-      // called while loading is progressing
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-      },
-      // called when loading has errors
-      function (error) {
-        console.log("An error happened");
-      }
-    );
+  private addWorld(loadManager: LoadManager) {
+    loadManager
+      .glTFLoad(
+        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/SanAndreas.glb"
+      )
+      .then((loadedMesh: THREE.Object3D) => {
+        loadedMesh.position.y = -8;
+        loadedMesh.scale.set(1.51, 1.51, 1.51);
+        this.scene.add(loadedMesh);
+      });
   }
   public update() {
     if (this.directionalLight) {

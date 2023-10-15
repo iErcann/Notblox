@@ -29,7 +29,6 @@ export class Game {
   private inputManager: InputManager;
 
   private constructor() {
-    this.renderer = new Renderer(new THREE.Scene());
     this.syncComponentSystem = new SyncComponentsSystem(this);
     this.syncPositionSystem = new SyncPositionSystem();
     this.syncRotationSystem = new SyncRotationSystem();
@@ -38,7 +37,8 @@ export class Game {
     this.websocketManager = new WebSocketManager(this);
     this.inputManager = new InputManager(this.websocketManager);
     this.loadManager = new LoadManager();
-    this.loadManager.load("./test.glb");
+    this.loadManager.dracoLoad("./SanAndreasDraco.glb");
+    this.renderer = new Renderer(new THREE.Scene(), this.loadManager);
   }
 
   public static getInstance(): Game {
@@ -72,9 +72,9 @@ export class Game {
 
     // Update position and rotation with interpolation
     this.syncPositionSystem.update(entities, 0.2);
-    this.syncRotationSystem.update(entities, interpolationFactor);
+    this.syncRotationSystem.update(entities, 0.5);
     this.syncSizeSystem.update(entities);
-    this.cameraFollowSystem.update(entities, this.inputManager);
+    this.cameraFollowSystem.update(entities);
 
     this.renderer.update();
     this.lastRenderTime = now;

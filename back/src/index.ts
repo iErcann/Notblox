@@ -13,6 +13,7 @@ import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
 import { SyncSizeSystem } from "./ecs/system/physics/SyncSizeSystem.js";
 import Rapier from "./physics/rapier.js";
+import { AnimationSystem } from "./ecs/system/AnimationSystem.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -27,25 +28,26 @@ const networkSystem = NetworkSystem.getInstance();
 const syncPositionSystem = new SyncPositionSystem();
 const syncRotationSystem = new SyncRotationSystem();
 const syncSizeSystem = new SyncSizeSystem();
+const animationSystem = new AnimationSystem();
 
 const sleepCheckSystem = new SleepCheckSystem();
 // const packet = new InputPacket(player.entity.id, true, false, false, false);
 // inputProcessingSystem.receiveInputPacket(packet);
 
 for (let i = 1; i < 10; i++) {
-  new Cube(Math.cos(i) * i, 2, Math.sin(i) * i, i, i, i);
+  new Cube(Math.cos(i) * 25, i / 2, Math.sin(i) * 50, 5, i, 10);
 }
 
-// setInterval(() => {
-//   new Cube(
-//     Math.random() * 10,
-//     Math.random() * 10 + 10,
-//     Math.random() * 10,
-//     1,
-//     1,
-//     1
-//   );
-// }, 500);
+setInterval(() => {
+  new Cube(
+    Math.random() * 10,
+    Math.random() * 10 + 10,
+    Math.random() * 10,
+    1,
+    1,
+    1
+  );
+}, 5000);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
@@ -58,6 +60,7 @@ function gameLoop() {
 
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
+  animationSystem.update(entities);
 
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
   // syncSizeSystem.update(entities);

@@ -32,10 +32,10 @@ export class MovementSystem {
         // Define the impulse values for each direction
         const impulse = new Rapier.Vector3(
           0,
-          currentLinVel.y - 0.1, // Preserve the current Y velocity
+          currentLinVel.y - 2.6, // Preserve the current Y velocity
           0
         );
-        const speed = 100 / 2;
+        const speed = 100;
 
         // Handle input for moving up
         if (inputComponent.up) {
@@ -76,7 +76,7 @@ export class MovementSystem {
           );
           console.log(hit);
           if (hit != null) {
-            impulse.y = 70;
+            impulse.y = 100;
           }
         }
         // Apply the accumulated impulse to the physics body
