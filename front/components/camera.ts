@@ -5,9 +5,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 export class Camera extends THREE.PerspectiveCamera {
   public followedObject: THREE.Mesh | undefined;
+  public offset = new THREE.Vector3(0, 20, 20);
   constructor() {
     super(60, window.innerWidth / window.innerHeight);
-    this.position.set(0, 20, 12);
+    this.position.copy(this.offset);
 
     // this.position.applyAxisAngle(new Vector3(0, 1, 0), Math.PI / 2);
     this.lookAt(0, 0, 0);

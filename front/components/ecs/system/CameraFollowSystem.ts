@@ -17,8 +17,8 @@ export class CameraFollowSystem {
         const camera = followComponent.camera;
         const targetPosition = new THREE.Vector3(
           positionComponent.x,
-          positionComponent.y + 20,
-          positionComponent.z + 12
+          positionComponent.y + camera.offset.y,
+          positionComponent.z + camera.offset.z
         );
 
         // Use lerp to smoothly move the camera towards the target position

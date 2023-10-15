@@ -36,18 +36,19 @@ const sleepCheckSystem = new SleepCheckSystem();
 
 for (let i = 1; i < 10; i++) {
   new Cube(Math.cos(i) * 25, i / 2, Math.sin(i) * 50, 5, i, 10);
+  new Cube(i * 10, i * 10, i, 1, 1, 1);
 }
 
-setInterval(() => {
-  new Cube(
-    Math.random() * 10,
-    Math.random() * 10 + 10,
-    Math.random() * 10,
-    1,
-    1,
-    1
-  );
-}, 5000);
+// setInterval(() => {
+//   new Cube(
+//     Math.random() * 10,
+//     Math.random() * 10 + 10,
+//     Math.random() * 10,
+//     1,
+//     1,
+//     1
+//   );
+// }, 5000);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);

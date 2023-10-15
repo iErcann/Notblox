@@ -35,9 +35,11 @@ export class Player {
     }
 
     const loader = game.loadManager;
-    loader.glTFLoad("Bocky.glb").then((loadedMesh: THREE.Object3D) => {
-      mesh.add(loadedMesh);
-      loadedMesh.scale.set(0.5, 0.5, 0.5);
-    });
+    loader
+      .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Bocky.glb")
+      .then((loadedMesh: THREE.Object3D) => {
+        mesh.add(loadedMesh);
+        loadedMesh.scale.set(0.5, 0.5, 0.5);
+      });
   }
 }
