@@ -34,40 +34,10 @@ export class Player {
       );
     }
 
-    const loader = new GLTFLoader();
-
-    loader.load(
-      "https://myaudio.nyc3.cdn.digitaloceanspaces.com/Roblox.glb",
-      function (gltf) {
-        gltf.scene.scale.set(0.51, 0.51, 0.51);
-        mesh.add(gltf.scene);
-
-        gltf.scene.traverse(function (child) {
-          if (child instanceof THREE.Mesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-
-        gltf.animations;
-        Array<THREE.AnimationClip>;
-        gltf.scene;
-        THREE.Group;
-        gltf.scenes;
-        Array<THREE.Group>;
-        gltf.cameras;
-        Array<THREE.Camera>;
-        gltf.asset;
-        Object;
-      },
-      // called while loading is progressing
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-      },
-      // called when loading has errors
-      function (error) {
-        console.log("An error happened");
-      }
-    );
+    const loader = game.loadManager;
+    loader.glTFLoad("Bocky.glb").then((loadedMesh: THREE.Object3D) => {
+      mesh.add(loadedMesh);
+      loadedMesh.scale.set(0.5, 0.5, 0.5);
+    });
   }
 }

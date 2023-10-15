@@ -10,7 +10,6 @@ export class InputManager {
     left: false,
     right: false,
     space: false,
-    lookingAngle: 0,
   };
 
   constructor(private webSocketManager: WebSocketManager) {
