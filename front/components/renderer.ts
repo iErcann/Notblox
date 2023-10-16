@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { Camera } from "./camera";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { LoadManager } from "./LoadManager";
 
@@ -77,7 +77,8 @@ export class Renderer extends THREE.WebGLRenderer {
   private addWorld(loadManager: LoadManager) {
     loadManager
       .glTFLoad("newtown__krunker_map__game_map.glb")
-      .then((loadedMesh: THREE.Object3D) => {
+      .then((gtlf: GLTF) => {
+        const loadedMesh = gtlf.scenes[0];
         loadedMesh.position.y = -8;
         loadedMesh.scale.set(0.5, 0.5, 0.5);
         this.scene.add(loadedMesh);
