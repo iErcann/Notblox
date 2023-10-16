@@ -93,13 +93,13 @@ export class Player {
 
     let colliderDesc = Rapier.ColliderDesc.capsule(0.5, 1);
     // Adjust the friction to control sliding
-    colliderDesc.setFriction(0.2); // Adjust the value as needed
+    // colliderDesc.setFriction(0.2); // Adjust the value as needed
 
     // Set the friction combine rule to control how friction is combined with other contacts
     colliderDesc.setFrictionCombineRule(Rapier.CoefficientCombineRule.Max);
 
     // Set restitution to control how bouncy the player is when colliding with surfaces
-    colliderDesc.setRestitution(0.0); // Adjust the value as needed
+    // colliderDesc.setRestitution(0.0); // Adjust the value as needed
 
     // Set the restitution combine rule to control how restitution is combined with other contacts
     colliderDesc.setRestitutionCombineRule(Rapier.CoefficientCombineRule.Max);

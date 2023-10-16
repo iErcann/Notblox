@@ -1,13 +1,14 @@
 import * as THREE from "three";
 import { MeshComponent } from "../component/MeshComponent";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import { Entity } from "@shared/entity/Entity";
 import { EntityManager } from "@shared/entity/EntityManager";
 import { SerializedEntityType } from "@shared/network/server/serialized";
 import { Game } from "@/components/game";
 import { FollowComponent } from "../component/FollowComponent";
+import { AnimationComponent } from "../component/AnimationComponent";
 
 export class Player {
   entity: Entity;
@@ -34,12 +35,19 @@ export class Player {
       );
     }
 
+    mesh.add(new THREE.PointLight(0xff3aff, 5, 10));
+
     const loader = game.loadManager;
+
     loader
-      .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Bocky.glb")
-      .then((loadedMesh: THREE.Object3D) => {
-        mesh.add(loadedMesh);
-        loadedMesh.scale.set(0.5, 0.5, 0.5);
+      // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Bocky.glb")
+      .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Walking.glb")
+      .then((gtlf: GLTF) => {
+        mesh.add(gtlf.scenes[0]);
+        mesh.scale.set(2.9, 2.9, 2.9);
+        this.entity.addComponent(
+          new AnimationComponent(this.entity.id, mesh, gtlf.animations)
+        );
       });
   }
 }

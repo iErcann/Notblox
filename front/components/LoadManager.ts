@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 export class LoadManager {
   dracoLoader = new DRACOLoader();
@@ -35,14 +35,14 @@ export class LoadManager {
     });
   }
 
-  public glTFLoad(path: string): Promise<THREE.Object3D> {
+  public glTFLoad(path: string): Promise<GLTF> {
     return new Promise((resolve, reject) => {
       // Load a GLTF model
       this.gltfLoader.load(
         path,
         (gltf) => {
           // You can access the loaded model directly using gltf.scene or gltf.scenes[0]
-          resolve(gltf.scene || gltf.scenes[0]);
+          resolve(gltf);
         },
         // called as loading progresses
         (xhr) => {
