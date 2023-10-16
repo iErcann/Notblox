@@ -11,6 +11,7 @@ import { config } from "@shared/network/config";
 import { SyncSizeSystem } from "./ecs/system/SyncSizeSystem";
 import { CameraFollowSystem } from "./ecs/system/CameraFollowSystem";
 import { LoadManager } from "./LoadManager";
+import { AnimationSystem } from "./ecs/system/AnimationSystem";
 
 export class Game {
   private static instance: Game;
@@ -24,6 +25,7 @@ export class Game {
   private syncSizeSystem: SyncSizeSystem;
   private cameraFollowSystem: CameraFollowSystem;
   private websocketManager: WebSocketManager;
+  private animationSystem: AnimationSystem;
   public loadManager: LoadManager;
   public currentPlayerId = 0;
   private inputManager: InputManager;
@@ -36,6 +38,7 @@ export class Game {
     this.cameraFollowSystem = new CameraFollowSystem();
     this.websocketManager = new WebSocketManager(this);
     this.inputManager = new InputManager(this.websocketManager);
+    this.animationSystem = new AnimationSystem();
     this.loadManager = new LoadManager();
     this.loadManager.dracoLoad("./SanAndreasDraco.glb");
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager);
@@ -75,6 +78,7 @@ export class Game {
     this.syncRotationSystem.update(entities, 0.5);
     this.syncSizeSystem.update(entities);
     this.cameraFollowSystem.update(entities);
+    this.animationSystem.update(entities);
 
     this.renderer.update();
     this.lastRenderTime = now;

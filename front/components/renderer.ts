@@ -53,7 +53,7 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 2.5);
+    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.5);
     hemisphereLight.position.set(0.5, 1, 0.75);
     this.scene.add(hemisphereLight);
   }
@@ -68,6 +68,7 @@ export class Renderer extends THREE.WebGLRenderer {
     const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
     const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
     groundMesh.receiveShadow = true;
+    groundMesh.castShadow = true;
     groundMesh.rotation.x = -Math.PI / 2;
 
     this.scene.add(groundMesh);
@@ -75,12 +76,10 @@ export class Renderer extends THREE.WebGLRenderer {
 
   private addWorld(loadManager: LoadManager) {
     loadManager
-      .glTFLoad(
-        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/SanAndreas.glb"
-      )
+      .glTFLoad("newtown__krunker_map__game_map.glb")
       .then((loadedMesh: THREE.Object3D) => {
         loadedMesh.position.y = -8;
-        loadedMesh.scale.set(1.51, 1.51, 1.51);
+        loadedMesh.scale.set(0.5, 0.5, 0.5);
         this.scene.add(loadedMesh);
       });
   }

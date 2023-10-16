@@ -21,21 +21,15 @@ export class MovementSystem {
         positionComponent &&
         colliderComponent
       ) {
-        const physicsBodyComponent = entity.getComponent(PhysicsBodyComponent);
-        if (!physicsBodyComponent) {
-          console.error("Player doesn't have a rigidbody -> can't apply input");
-          return;
-        }
-        // Get the current linear velocity
-        const currentLinVel = physicsBodyComponent.body.linvel();
+        const currentLinVel = rigidBodyComponent.body.linvel();
 
         // Define the impulse values for each direction
         const impulse = new Rapier.Vector3(
           0,
-          currentLinVel.y - 2.6, // Preserve the current Y velocity
+          currentLinVel.y - 4.6, // Preserve the current Y velocity
           0
         );
-        const speed = 100;
+        const speed = 100 / 3;
 
         // Handle input for moving up
         if (inputComponent.up) {
@@ -80,7 +74,7 @@ export class MovementSystem {
           }
         }
         // Apply the accumulated impulse to the physics body
-        physicsBodyComponent.body.setLinvel(impulse, true);
+        rigidBodyComponent.body.setLinvel(impulse, true);
       }
     });
   }

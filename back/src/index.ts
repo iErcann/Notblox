@@ -34,11 +34,13 @@ const sleepCheckSystem = new SleepCheckSystem();
 // const packet = new InputPacket(player.entity.id, true, false, false, false);
 // inputProcessingSystem.receiveInputPacket(packet);
 
-for (let i = 1; i < 10; i++) {
-  new Cube(Math.cos(i) * 25, i / 2, Math.sin(i) * 50, 5, i, 10);
-  new Cube(i * 10, i * 10, i, 1, 1, 1);
+for (let i = 1; i < 6; i++) {
+  new Cube(0, i * 10, -i * 10, 10, 2 * i, 5);
 }
 
+for (let i = 0; i < 5; i++) {
+  new Cube(i * 10, 10, 0, 1, 1, 1);
+}
 // setInterval(() => {
 //   new Cube(
 //     Math.random() * 10,
@@ -64,7 +66,7 @@ function gameLoop() {
   animationSystem.update(entities);
 
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
-  // syncSizeSystem.update(entities);
+  syncSizeSystem.update(entities);
 
   // for (const entity of entities) {
   //   const sizeComponent = entity.getComponent(SizeComponent);
