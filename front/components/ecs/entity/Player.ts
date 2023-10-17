@@ -35,16 +35,24 @@ export class Player {
       );
     }
 
-    mesh.add(new THREE.PointLight(0xff3aff, 5, 10));
+    const pointLight = new THREE.PointLight(0xff3aff, 15, 20);
+    pointLight.castShadow = true;
+
+    mesh.add(pointLight);
 
     const loader = game.loadManager;
 
     loader
+
+      // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Walking.glb")
       // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Bocky.glb")
-      .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Walking.glb")
+      .glTFLoad(
+        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/BockyAnimatedLOL.glb"
+      )
+
       .then((gtlf: GLTF) => {
         mesh.add(gtlf.scenes[0]);
-        mesh.scale.set(2.9, 2.9, 2.9);
+        mesh.scale.set(0.5, 0.5, 0.5);
         this.entity.addComponent(
           new AnimationComponent(this.entity.id, mesh, gtlf.animations)
         );

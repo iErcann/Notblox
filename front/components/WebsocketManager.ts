@@ -17,7 +17,6 @@ export class WebSocketManager {
   public timeSinceLastServerUpdate: number = 0;
   constructor(game: Game) {
     // Check the NODE_ENV environment variable
-    console.log(process.env);
     const isProduction = process.env.NEXT_PUBLIC_NODE_ENV === "production";
     console.log("production", isProduction);
     // Set the serverUrl based on the environment

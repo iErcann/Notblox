@@ -70,11 +70,12 @@ export class Game {
     // Calculate the time since the last tick
 
     const deltaTime = now - this.lastRenderTime;
+
     const interpolationFactor =
       this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
 
     // Update position and rotation with interpolation
-    this.syncPositionSystem.update(entities, 0.2);
+    this.syncPositionSystem.update(entities, 0.3);
     this.syncRotationSystem.update(entities, 0.5);
     this.syncSizeSystem.update(entities);
     this.cameraFollowSystem.update(entities);
