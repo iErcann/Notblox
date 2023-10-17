@@ -8,7 +8,7 @@ import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.
 export class MovementSystem {
   checkGround() {}
 
-  update(entities: Entity[], world: Rapier.World): void {
+  update(dt: number, entities: Entity[], world: Rapier.World): void {
     entities.forEach((entity) => {
       const inputComponent = entity.getComponent(InputComponent);
       const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
@@ -26,10 +26,10 @@ export class MovementSystem {
         // Define the impulse values for each direction
         const impulse = new Rapier.Vector3(
           0,
-          currentLinVel.y - 4.6, // Preserve the current Y velocity
+          currentLinVel.y - 0.1 * dt, // Preserve the current Y velocity
           0
         );
-        const speed = 100 / 3;
+        const speed = 1;
 
         // Handle input for moving up
         if (inputComponent.up) {
@@ -70,9 +70,13 @@ export class MovementSystem {
           );
           console.log(hit);
           if (hit != null) {
-            impulse.y = 100;
+            impulse.y = 2 * dt;
           }
         }
+
+        impulse.x *= dt;
+        impulse.z *= dt;
+
         // Apply the accumulated impulse to the physics body
         rigidBodyComponent.body.setLinvel(impulse, true);
       }

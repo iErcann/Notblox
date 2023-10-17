@@ -27,17 +27,3 @@ export class CameraFollowSystem {
     });
   }
 }
-
-/* FPS mode
-       const targetPosition = new THREE.Vector3(
-          positionComponent.x,
-          positionComponent.y + 1,
-          positionComponent.z
-        );
-
-        // Use lerp to smoothly move the camera towards the target position
-        camera.position.lerp(targetPosition, this.lerpFactor);
-
-        camera.lookAt(targetPosition);
-      }
-      */

@@ -35,7 +35,7 @@ const sleepCheckSystem = new SleepCheckSystem();
 // inputProcessingSystem.receiveInputPacket(packet);
 
 for (let i = 1; i < 6; i++) {
-  new Cube(0, i * 10, -i * 10, 10, 2 * i, 5);
+  new Cube(0, i * 10, -i * 18, 10, 2 * i, 5);
 }
 
 for (let i = 0; i < 5; i++) {
@@ -56,9 +56,14 @@ for (let i = 0; i < 5; i++) {
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
 physicsSystem.world.createCollider(groundColliderDesc);
 
+console.log(`Detected tick rate : ${config.TICKRATE}`);
+let lastUpdateTimestamp = Date.now();
 function gameLoop() {
   setTimeout(gameLoop, 1000 / config.TICKRATE);
-  movementSystem.update(entities, physicsSystem.world);
+  const now = Date.now();
+  const dt = now - lastUpdateTimestamp;
+
+  movementSystem.update(dt, entities, physicsSystem.world);
   physicsSystem.update();
 
   syncRotationSystem.update(entities);
@@ -88,6 +93,7 @@ function gameLoop() {
   // Then it becomes false
   // If it is modified, we changed the is sent.
   sleepCheckSystem.update(entities);
+  lastUpdateTimestamp = now;
 }
 
 gameLoop();

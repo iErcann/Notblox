@@ -23,6 +23,7 @@ import { MeshComponent } from "../component/MeshComponent";
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
   update(entities: Entity[], snapshotMessage: SnapshotMessage) {
+    console.log(snapshotMessage);
     const serializedEntities = snapshotMessage.e;
     serializedEntities.forEach((serializedEntity) => {
       // Find the replicated entity
@@ -58,10 +59,6 @@ export class SyncComponentsSystem {
       this.game.renderer.scene.add(
         player.entity.getComponent(MeshComponent)!.mesh
       );
-
-      // player.entity
-      //   .getComponent(MeshComponent)!
-      //   .mesh.add(this.game.renderer.camera);
 
       return player.entity;
     } else if (serializedEntity.t === SerializedEntityType.CUBE) {

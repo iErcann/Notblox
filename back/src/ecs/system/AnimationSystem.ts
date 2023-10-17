@@ -70,7 +70,6 @@ export class AnimationSystem {
     rigidBodyComponent: PhysicsBodyComponent,
     quaternion: THREE.Quaternion
   ) {
-    console.log(quaternion);
     rigidBodyComponent.body.setRotation(
       {
         x: quaternion.x,
