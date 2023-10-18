@@ -9,9 +9,10 @@ import { InputMessage } from "@shared/network/client/input";
 export class CameraFollowSystem {
   lastLookAtPosition: THREE.Vector3 | null = null;
   constructor(
-    public lerpFactor = 0.05,
+    public positionLerpFactor = 0.55,
+    public rotationLerpFactor = 0.25,
     private angle = 0,
-    private rotationSpeed = 0.001 // Add a rotation speed
+    private rotationSpeed = 0.01 // Add a rotation speed
   ) {}
 
   update(dt: number, entities: Entity[], input: InputMessage) {
@@ -28,7 +29,9 @@ export class CameraFollowSystem {
           positionComponent.z
         );
 
-        this.angle += this.rotationSpeed * dt;
+        console.log(input.cameraLeft);
+        if (input.cameraLeft) this.angle -= this.rotationSpeed * dt;
+        if (input.cameraRight) this.angle += this.rotationSpeed * dt;
 
         // camera.position.lerp(targetPosition, this.lerpFactor);
 
@@ -50,7 +53,7 @@ export class CameraFollowSystem {
 
     camera.position.lerp(
       new THREE.Vector3(cameraX, targetPosition.y + camera.offset.y, cameraZ),
-      this.lerpFactor
+      this.positionLerpFactor
     );
 
     // Point the camera at the player
@@ -58,7 +61,7 @@ export class CameraFollowSystem {
 
     if (!this.lastLookAtPosition) this.lastLookAtPosition = lookAtPosition;
 
-    this.lastLookAtPosition.lerp(lookAtPosition, this.lerpFactor);
+    this.lastLookAtPosition.lerp(lookAtPosition, this.rotationLerpFactor);
 
     camera.lookAt(
       this.lastLookAtPosition.x,

@@ -70,6 +70,12 @@ export class InputManager {
       case " ":
         this.inputState.space = false;
         break;
+      case "A":
+        this.inputState.cameraLeft = false;
+        break;
+      case "E":
+        this.inputState.cameraRight = false;
+        break;
     }
   }
 
