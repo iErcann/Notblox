@@ -78,7 +78,7 @@ export class Game {
     this.syncPositionSystem.update(entities, 0.3);
     this.syncRotationSystem.update(entities, 0.5);
     this.syncSizeSystem.update(entities);
-    this.cameraFollowSystem.update(entities);
+    this.cameraFollowSystem.update(deltaTime, entities);
     this.animationSystem.update(entities);
 
     this.renderer.update();

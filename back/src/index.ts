@@ -71,7 +71,7 @@ function gameLoop() {
   animationSystem.update(entities);
 
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
-  syncSizeSystem.update(entities);
+  // syncSizeSystem.update(entities);
 
   // for (const entity of entities) {
   //   const sizeComponent = entity.getComponent(SizeComponent);
