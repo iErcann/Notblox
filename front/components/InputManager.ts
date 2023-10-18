@@ -10,6 +10,8 @@ export class InputManager {
     left: false,
     right: false,
     space: false,
+    cameraLeft: false,
+    cameraRight: false,
   };
 
   constructor(private webSocketManager: WebSocketManager) {
@@ -37,6 +39,12 @@ export class InputManager {
         break;
       case " ":
         this.inputState.space = true;
+        break;
+      case "A":
+        this.inputState.cameraLeft = true;
+        break;
+      case "E":
+        this.inputState.cameraRight = true;
         break;
     }
   }
