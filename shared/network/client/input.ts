@@ -6,6 +6,7 @@ export interface InputMessage extends ClientMessage {
   left: boolean;
   right: boolean;
   space: boolean;
+  angleY: number;
   cameraLeft?: boolean;
   cameraRight?: boolean;
 }

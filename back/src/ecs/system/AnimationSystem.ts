@@ -13,59 +13,31 @@ export class AnimationSystem {
       const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
 
       if (inputComponent && rigidBodyComponent) {
-        if (inputComponent.down && inputComponent.left) {
-          const quaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            -Math.PI / 4
-          );
-          this.rotatePlayer(rigidBodyComponent, quaternion);
-        } else if (inputComponent.down && inputComponent.right) {
-          const quaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            Math.PI / 4
-          );
-          this.rotatePlayer(rigidBodyComponent, quaternion);
-        } else if (inputComponent.up && inputComponent.left) {
-          const quaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            Math.PI + Math.PI / 4
-          );
-          this.rotatePlayer(rigidBodyComponent, quaternion);
-        } else if (inputComponent.up && inputComponent.right) {
-          const quaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            Math.PI - Math.PI / 4
-          );
-          this.rotatePlayer(rigidBodyComponent, quaternion);
-        } else if (inputComponent.up) {
-          const quaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            Math.PI
-          );
-          this.rotatePlayer(rigidBodyComponent, quaternion);
-        } else if (inputComponent.down) {
-          const quaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            0
-          );
-          this.rotatePlayer(rigidBodyComponent, quaternion);
-        } else if (inputComponent.left) {
-          const quaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            -Math.PI / 2
-          );
-          this.rotatePlayer(rigidBodyComponent, quaternion);
-        } else if (inputComponent.right) {
-          const quaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0),
-            Math.PI / 2
-          );
-          this.rotatePlayer(rigidBodyComponent, quaternion);
-        }
+        const { up, down, left, right, lookingYAngle } = inputComponent;
+
+        // Define the quaternion rotation angle based on input
+        let angle = 0;
+        if (down) angle += Math.PI / 2;
+        if (up) angle += -Math.PI / 2;
+        if (right) angle += Math.PI;
+        if (left) angle += 0;
+
+        if (up && left) angle += Math.PI / 4;
+        if (up && right) angle += Math.PI - Math.PI / 4;
+        if (down && left) angle += -Math.PI / 4;
+        if (down && right) angle += Math.PI + Math.PI / 4;
+
+        // Create the quaternion
+        const quaternion = new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 1, 0),
+          angle - lookingYAngle
+        );
+
+        // Rotate the player
+        this.rotatePlayer(rigidBodyComponent, quaternion);
       }
     });
   }
-
   rotatePlayer(
     rigidBodyComponent: PhysicsBodyComponent,
     quaternion: THREE.Quaternion
