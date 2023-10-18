@@ -53,7 +53,7 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.8);
+    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.2);
     hemisphereLight.position.set(0.5, 1, 0.75);
     this.scene.add(hemisphereLight);
   }
