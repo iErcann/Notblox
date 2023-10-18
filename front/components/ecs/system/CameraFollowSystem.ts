@@ -1,18 +1,17 @@
+import * as THREE from "three";
 import { Entity } from "@shared/entity/Entity";
 import { FollowComponent } from "../component/FollowComponent";
 import { PositionComponent } from "@shared/component/PositionComponent";
-import * as THREE from "three";
 import { Camera } from "@/components/camera";
 import { InputMessage } from "@shared/network/client/input";
 
-// Define systems
 export class CameraFollowSystem {
-  lastLookAtPosition: THREE.Vector3 | null = null;
+  private lastLookAtPosition: THREE.Vector3 | undefined;
   constructor(
-    public positionLerpFactor = 0.55,
-    public rotationLerpFactor = 0.25,
+    private positionLerpFactor = 0.15,
+    private rotationLerpFactor = 0.25,
     private angle = 0,
-    private rotationSpeed = 0.01 // Add a rotation speed
+    private rotationSpeed = 0.01
   ) {}
 
   update(dt: number, entities: Entity[], input: InputMessage) {
@@ -21,7 +20,6 @@ export class CameraFollowSystem {
       const followComponent = entity.getComponent(FollowComponent);
 
       if (followComponent && positionComponent) {
-        // Adjust the position of the entity to follow the target
         const camera = followComponent.camera;
         const targetPosition = new THREE.Vector3(
           positionComponent.x,
@@ -29,25 +27,31 @@ export class CameraFollowSystem {
           positionComponent.z
         );
 
-        console.log(input.cameraLeft);
-        if (input.cameraLeft) this.angle -= this.rotationSpeed * dt;
-        if (input.cameraRight) this.angle += this.rotationSpeed * dt;
-
-        // camera.position.lerp(targetPosition, this.lerpFactor);
-
-        // Rotate the camera around the player
+        this.handleCameraRotation(dt, input);
+        this.adjustCameraPosition(camera, targetPosition);
         this.rotateCameraAroundPlayer(camera, targetPosition);
+        input.angleY = this.angle;
       }
     });
   }
+  private normalizeAngle(angle: number) {
+    while (angle < 0) {
+      angle += Math.PI * 2; // Add 2π to bring it into the range [0, 2π]
+    }
+    while (angle >= Math.PI * 2) {
+      angle -= Math.PI * 2; // Subtract 2π to bring it into the range [0, 2π]
+    }
+    return angle;
+  }
 
-  private rotateCameraAroundPlayer(
-    camera: Camera,
-    targetPosition: THREE.Vector3
-  ) {
-    // Calculate the new camera position based on the current angle
-    const radius = camera.offset.z; // Adjust this value to control the camera distance from the player
+  private handleCameraRotation(dt: number, input: InputMessage) {
+    if (input.cameraLeft) this.angle -= this.rotationSpeed * dt;
+    if (input.cameraRight) this.angle += this.rotationSpeed * dt;
+    this.angle = this.normalizeAngle(this.angle);
+  }
 
+  private adjustCameraPosition(camera: Camera, targetPosition: THREE.Vector3) {
+    const radius = camera.offset.z; // Adjust this value to control camera distance
     const cameraX = targetPosition.x + radius * Math.cos(this.angle);
     const cameraZ = targetPosition.z + radius * Math.sin(this.angle);
 
@@ -55,8 +59,12 @@ export class CameraFollowSystem {
       new THREE.Vector3(cameraX, targetPosition.y + camera.offset.y, cameraZ),
       this.positionLerpFactor
     );
+  }
 
-    // Point the camera at the player
+  private rotateCameraAroundPlayer(
+    camera: Camera,
+    targetPosition: THREE.Vector3
+  ) {
     const lookAtPosition = targetPosition.clone();
 
     if (!this.lastLookAtPosition) this.lastLookAtPosition = lookAtPosition;
