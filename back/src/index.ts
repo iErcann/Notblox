@@ -34,12 +34,12 @@ const sleepCheckSystem = new SleepCheckSystem();
 // const packet = new InputPacket(player.entity.id, true, false, false, false);
 // inputProcessingSystem.receiveInputPacket(packet);
 
-for (let i = 1; i < 6; i++) {
+for (let i = 1; i < 16; i++) {
   new Cube(0, i * 10, -i * 18, 10, 2 * i, 5);
 }
 
 for (let i = 0; i < 5; i++) {
-  new Cube(i * 10, 10, 0, 1, 1, 1);
+  new Cube(i * 10, 10, 0, 2, 2, 2);
 }
 // setInterval(() => {
 //   new Cube(

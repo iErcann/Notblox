@@ -15,6 +15,7 @@ export class AnimationSystem {
       if (inputComponent && rigidBodyComponent) {
         const { up, down, left, right, lookingYAngle } = inputComponent;
 
+        if (!up && !down && !left && !right) return;
         // Define the quaternion rotation angle based on input
         let angle = 0;
         if (down) angle += Math.PI / 2;

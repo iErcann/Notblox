@@ -3,6 +3,7 @@ import { Camera } from "./camera";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { LoadManager } from "./LoadManager";
+import { Sky } from "three/examples/jsm/objects/Sky.js";
 
 export interface Renderable {
   mesh: THREE.Mesh;
@@ -23,19 +24,46 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.setSize(window.innerWidth, window.innerHeight);
     this.setPixelRatio(window.devicePixelRatio);
+    this.toneMapping = THREE.ACESFilmicToneMapping;
+    this.toneMappingExposure = 0.5;
 
     this.addLight();
-    // this.addDirectionnalLight();
-    this.addWorld(loadManager);
-    // this.addGround();
+    this.addDirectionnalLight();
+    // this.addWorld(loadManager);
+    this.addSky();
+    this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
 
+  private addSky() {
+    const sun = new THREE.Vector3();
+
+    let sky = new Sky();
+
+    const uniforms = sky.material.uniforms;
+    uniforms["turbidity"].value = 10;
+    uniforms["rayleigh"].value = 3;
+    uniforms["mieCoefficient"].value = 0.005;
+    uniforms["mieDirectionalG"].value = 0.7;
+
+    const elevation = 2;
+    const azimuth = 180;
+
+    const phi = THREE.MathUtils.degToRad(90 - elevation);
+    const theta = THREE.MathUtils.degToRad(azimuth);
+
+    sun.setFromSphericalCoords(1, phi, theta);
+
+    uniforms["sunPosition"].value.copy(sun);
+
+    sky.scale.setScalar(450000);
+    this.scene.add(sky);
+  }
   private addDirectionnalLight() {
     // Add directional light for shadows and highlights
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    this.directionalLight.castShadow = true;
+    // this.directionalLight.castShadow = true;
     this.directionalLight.shadow.mapSize.x = 2048;
     this.directionalLight.shadow.mapSize.y = 2048;
     const size = 20;
@@ -75,10 +103,10 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   private addWorld(loadManager: LoadManager) {
-    loadManager.glTFLoad("SanAndreas2.glb").then((gtlf: GLTF) => {
+    loadManager.glTFLoad("world_1-1.glb").then((gtlf: GLTF) => {
       const loadedMesh = gtlf.scenes[0];
-      loadedMesh.position.y = -8;
-      loadedMesh.scale.set(1.2, 1.2, 1.2);
+      loadedMesh.position.y = -1;
+      loadedMesh.scale.set(4.2, 4.2, 4.2);
       this.scene.add(loadedMesh);
     });
   }
