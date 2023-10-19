@@ -48,31 +48,26 @@ export default function Home() {
           </div>
         </div>
       ) : (
-
-        <div className=" p-4 flex flex-col absolute bottom-2.5 left-1/2 transform -translate-x-1/2 -translate-y-1/2        ">
-          <h2>
-            Inventory
-          </h2>
+        <div className=" p-4 flex flex-col absolute bottom-2.5 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
+          <h2>Inventory</h2>
           <div className="flex flex-row">
-
-          {(() => {
-            const hotbarSlots = [];
-            for (let index = 0; index < 4; index++) {
-              hotbarSlots.push(
-                <div
-                key={index}
-                className="w-16 h-16 border border-4 border-gray-600 hover:border-yellow-400 p-2 flex items-center justify-center text-white bg-gray-400 bg-opacity-25"
+            {(() => {
+              const hotbarSlots = [];
+              for (let index = 0; index < 4; index++) {
+                hotbarSlots.push(
+                  <div
+                    key={index}
+                    className="w-16 h-16 mx-2 hover:border-yellow-400 p-2 flex items-center justify-center text-white bg-gray-400 bg-opacity-25"
                   >
                     {index + 1}
-                </div>
-              );
-            }
-            return hotbarSlots;
-          })()}
+                  </div>
+                );
+              }
+              return hotbarSlots;
+            })()}
           </div>
         </div>
-      
-        
+
         /* Render your game content here */
       )}
     </>
