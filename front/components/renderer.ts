@@ -26,8 +26,8 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.addLight();
     // this.addDirectionnalLight();
-    // this.addWorld(loadManager);
-    this.addGround();
+    this.addWorld(loadManager);
+    // this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
@@ -53,7 +53,7 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.2);
+    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 1.2);
     hemisphereLight.position.set(0.5, 1, 0.75);
     this.scene.add(hemisphereLight);
   }
@@ -75,14 +75,12 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   private addWorld(loadManager: LoadManager) {
-    loadManager
-      .glTFLoad("newtown__krunker_map__game_map.glb")
-      .then((gtlf: GLTF) => {
-        const loadedMesh = gtlf.scenes[0];
-        loadedMesh.position.y = -8;
-        loadedMesh.scale.set(0.5, 0.5, 0.5);
-        this.scene.add(loadedMesh);
-      });
+    loadManager.glTFLoad("SanAndreas2.glb").then((gtlf: GLTF) => {
+      const loadedMesh = gtlf.scenes[0];
+      loadedMesh.position.y = -8;
+      loadedMesh.scale.set(1.2, 1.2, 1.2);
+      this.scene.add(loadedMesh);
+    });
   }
   public update() {
     if (this.directionalLight) {

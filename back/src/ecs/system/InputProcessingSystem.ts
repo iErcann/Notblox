@@ -24,6 +24,5 @@ export class InputProcessingSystem {
     inputComponent.right = inputMessage.right;
     inputComponent.space = inputMessage.space;
     inputComponent.lookingYAngle = inputMessage.angleY;
-    console.log(inputComponent);
   }
 }
