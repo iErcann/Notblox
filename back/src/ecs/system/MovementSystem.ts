@@ -57,8 +57,8 @@ export class MovementSystem {
     const impulse = new Rapier.Vector3(0, currentLinVel.y - 0.1 * dt, 0);
 
     if (inputComponent.up) {
-      impulse.z = -speed * Math.sin(lookingYAngle);
-      impulse.x = -speed * Math.cos(lookingYAngle);
+      impulse.z += -speed * Math.sin(lookingYAngle);
+      impulse.x += -speed * Math.cos(lookingYAngle);
     }
     if (inputComponent.down) {
       impulse.z += speed * Math.sin(lookingYAngle);

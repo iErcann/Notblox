@@ -9,7 +9,7 @@ export class CameraFollowSystem {
   private lastLookAtPosition: THREE.Vector3 | undefined;
   constructor(
     private positionLerpFactor = 0.05,
-    private rotationLerpFactor = 0.25,
+    private rotationLerpFactor = 0.05,
     private angle = 0,
     private rotationSpeed = 0.01
   ) {}

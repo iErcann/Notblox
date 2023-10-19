@@ -75,7 +75,7 @@ export class Game {
       this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
 
     // Update position and rotation with interpolation
-    this.syncPositionSystem.update(entities, 0.3);
+    this.syncPositionSystem.update(entities, 0.2);
     this.syncRotationSystem.update(entities, 0.5);
     this.syncSizeSystem.update(entities);
     this.cameraFollowSystem.update(
