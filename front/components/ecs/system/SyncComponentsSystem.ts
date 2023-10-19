@@ -38,8 +38,12 @@ export class SyncComponentsSystem {
       const serializedComponents = serializedEntity.c;
       serializedComponents.forEach((serializedComponent) => {
         // We have to do the t! because NetworkData adds the type property after
+
         const component = entity!.getComponentByType(serializedComponent.t!);
         if (component) {
+          if (component.type === SerializedComponentType.SIZE) {
+            console.log("SIZE");
+          }
           // Deserialize the component (this updates the component)
           component.deserialize(serializedComponent);
         } else {
@@ -94,6 +98,7 @@ export class SyncComponentsSystem {
     } else if (serializedComponent.t === SerializedComponentType.SIZE) {
       const serializedSizeComponent =
         serializedComponent as SerializedSizeComponent;
+
       return new SizeComponent(
         entityId,
         serializedSizeComponent.width,

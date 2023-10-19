@@ -24,7 +24,7 @@ export class Player {
     const geometry = new THREE.BoxGeometry(1, 2, 1);
     const material = new THREE.MeshPhongMaterial();
     material.color = new THREE.Color(0xff5522);
-    // mesh.geometry = geometry;
+    //mesh.geometry = geometry;
     mesh.material = material;
     mesh.receiveShadow = true;
     mesh.castShadow = true;
@@ -49,10 +49,12 @@ export class Player {
       .glTFLoad(
         "https://myaudio.nyc3.cdn.digitaloceanspaces.com/BockyAnimatedLOL.glb"
       )
+      //.glTFLoad("Sketchbook.glb")
+      //.glTFLoad("MixamoTestBocky.glb")
 
       .then((gtlf: GLTF) => {
         mesh.add(gtlf.scenes[0]);
-        mesh.scale.set(0.5, 0.5, 0.5);
+        mesh.scale.set(0.7, 0.7, 0.7);
         this.entity.addComponent(
           new AnimationComponent(this.entity.id, mesh, gtlf.animations)
         );

@@ -30,7 +30,7 @@ export class NetworkDataComponent extends Component implements Serializable {
   serialize(serializeAll = false): SerializedEntity | null {
     const components = this.getComponents();
     const serializedComponents = components
-      .filter((component) => serializeAll || component.isSent === true)
+      .filter((component) => serializeAll || component.updated === true)
       .map((component: Serializable) => {
         return { t: component.type, ...component.serialize() };
       });

@@ -13,16 +13,16 @@ export class SleepCheckSystem {
         const sleeping = bodyComponent.body.isSleeping();
         const positionComponent = entity.getComponent(PositionComponent);
         if (positionComponent) {
-          positionComponent.isSent = !sleeping;
+          positionComponent.updated = !sleeping;
         }
         const rotationComponent = entity.getComponent(RotationComponent);
         if (rotationComponent) {
-          rotationComponent.isSent = !sleeping;
+          rotationComponent.updated = !sleeping;
         }
 
         const sizeComponent = entity.getComponent(SizeComponent);
         if (sizeComponent) {
-          sizeComponent.isSent = false;
+          sizeComponent.updated = false;
         }
       }
     });
