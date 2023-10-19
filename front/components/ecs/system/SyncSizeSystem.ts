@@ -13,7 +13,7 @@ export class SyncSizeSystem {
       if (meshComponent && sizeComponent) {
         if (entity.type === SerializedEntityType.CUBE) {
           // TODO: Fnd a proper way to fix this
-          // Maybe rename "isSent" boolean in networkcomponent to "updated"
+          // Maybe rename "updated" boolean in networkcomponent to "updated"
           // When it is received by the client
           // The server should only send updated components to the client anyway
           // Right ?

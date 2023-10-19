@@ -9,7 +9,7 @@ export class SyncSizeSystem {
       const colliderComponent = entity.getComponent(PhysicsColliderComponent);
       const sizeComponent = entity.getComponent(SizeComponent);
 
-      if (colliderComponent && sizeComponent && sizeComponent.isSent) {
+      if (colliderComponent && sizeComponent && sizeComponent.updated) {
         let colliderDesc = Rapier.ColliderDesc.cuboid(
           sizeComponent.width,
           sizeComponent.height,

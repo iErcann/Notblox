@@ -5,6 +5,7 @@ export enum SerializedComponentType {
   POSITION = 1,
   ROTATION = 2,
   SIZE = 3,
+  COLOR = 4,
 }
 
 export enum SerializedEntityType {
@@ -41,6 +42,10 @@ export interface SerializedSizeComponent extends SerializedComponent {
   width: number;
   height: number;
   depth: number;
+}
+
+export interface SerializedColorComponent extends SerializedComponent {
+  color: string;
 }
 
 export interface SnapshotMessage extends ServerMessage {

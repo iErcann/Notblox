@@ -99,3 +99,8 @@ this.eventSubscriptions = new Map();
     }`
 
 These examples illustrate different approaches to handling events within an ECS architecture, each with its own trade-offs in terms of complexity, maintainability, and performance. The choice of which approach to use depends on the specific requirements of your game and the ECS framework you are working with.
+
+## Component states
+
+A component is "updated" when its data has been changed ex: SizeComponent width += 1
+A component can be "destroyed" then it is sent

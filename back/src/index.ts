@@ -14,6 +14,7 @@ import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
 import { SyncSizeSystem } from "./ecs/system/physics/SyncSizeSystem.js";
 import Rapier from "./physics/rapier.js";
 import { AnimationSystem } from "./ecs/system/AnimationSystem.js";
+import { UpdateSizeSystem } from "./ecs/system/UpdateSizeSystem.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -28,6 +29,8 @@ const networkSystem = NetworkSystem.getInstance();
 const syncPositionSystem = new SyncPositionSystem();
 const syncRotationSystem = new SyncRotationSystem();
 const syncSizeSystem = new SyncSizeSystem();
+const updateSizeSystem = new UpdateSizeSystem();
+
 const animationSystem = new AnimationSystem();
 
 const sleepCheckSystem = new SleepCheckSystem();
@@ -69,9 +72,9 @@ function gameLoop() {
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
   animationSystem.update(entities);
-
+  //updateSizeSystem.update(entities);
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
-  // syncSizeSystem.update(entities);
+  syncSizeSystem.update(entities);
 
   // for (const entity of entities) {
   //   const sizeComponent = entity.getComponent(SizeComponent);
@@ -79,7 +82,7 @@ function gameLoop() {
   //     sizeComponent.width += 0.1;
   //     sizeComponent.height += 0.1;
 
-  //     sizeComponent.isSent = true;
+  //     sizeComponent.updated = true;
   //   }
   // }
 
@@ -88,7 +91,7 @@ function gameLoop() {
   // Check the order of things then so it doesnt reset after sending
 
   // IMPORTANT : Sleeping check should be at the end.
-  // A SizeComponent inherits NetworkComponent that has isSent to true by default
+  // A SizeComponent inherits NetworkComponent that has updated to true by default
   // It is then sent to the players once
   // Then it becomes false
   // If it is modified, we changed the is sent.
