@@ -1,5 +1,6 @@
 import { pack, unpack } from "msgpackr";
 import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from "uWebSockets.js";
+import { DestroyedComponent } from "../../../../../shared/component/DestroyedComponent.js";
 import {
   ClientMessage,
   ClientMessageType,
@@ -7,10 +8,8 @@ import {
 import { InputMessage } from "../../../../../shared/network/client/input.js";
 import { ServerMessageType } from "../../../../../shared/network/server/base.js";
 import { ConnectionMessage } from "../../../../../shared/network/server/connection.js";
-import Rapier from "../../../physics/rapier.js";
-import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
+import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
-import { EntityManager } from "../../../../../shared/entity/EntityManager.js";
 import { Player } from "../../entity/Player.js";
 import { InputProcessingSystem } from "../InputProcessingSystem.js";
 
@@ -69,7 +68,7 @@ export class WebsocketSystem {
       const player = this.findPlayer(ws);
 
       if (!player) {
-        console.error(`Entity with WS ${ws} not found.`);
+        console.error(`EnwebsocketComponenttity with WS ${ws} not found.`);
         return;
       }
 
@@ -121,18 +120,30 @@ export class WebsocketSystem {
     this.players.push(player);
   }
   private onClose(ws: any, code: number, message: any) {
-    // Find player
     const disconnectedPlayer = this.findPlayer(ws);
 
     if (!disconnectedPlayer) {
-      console.error("Disconnect : Player not found ?", ws);
+      console.error("Disconnect: Player not found?", ws);
       return;
     }
 
-    console.log("Disconnect : Player found !");
-    // Remove player from Entity Manager
-    EntityManager.getInstance().removeEntity(disconnectedPlayer.getEntity());
-    // Remove player from local players list (idk if this is necessary)
-    this.players.splice(this.players.indexOf(disconnectedPlayer), 1);
+    const entity = disconnectedPlayer.getEntity();
+    console.log("Disconnect: Player found!");
+
+    const entityId = entity.id;
+
+    // Removing WebSocketComponent to not retrigger a broadcast on this entity if its destroyed.
+    // Otherwise it throws an error.
+    entity.removeComponent(WebSocketComponent);
+
+    // Create and add the DestroyedComponent
+    const disconnectedComponent = new DestroyedComponent(entityId);
+    entity.addComponent(disconnectedComponent);
+
+    // Add the DestroyedComponent to the NetworkDataComponent if it exists
+    const networkComponent = entity.getComponent(NetworkDataComponent);
+    if (networkComponent) {
+      networkComponent.addComponent(disconnectedComponent);
+    }
   }
 }

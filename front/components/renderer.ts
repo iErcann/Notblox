@@ -78,6 +78,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.directionalLight.shadow.camera.left = size;
     this.directionalLight.shadow.camera.right = -size;
 
+    // this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
     this.scene.add(this.directionalLight.target);
     // Add the sunlight to the scene

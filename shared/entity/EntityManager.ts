@@ -35,6 +35,7 @@ export class EntityManager {
 
   // Remove an entity
   removeEntity(entity: Entity): void {
+    console.log(this.entities);
     const index = this.entities.indexOf(entity);
     if (index !== -1) {
       this.entities.splice(index, 1);

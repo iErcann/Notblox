@@ -54,14 +54,12 @@ export class Cube {
     );
     this.entity.addComponent(networkDataComponent);
 
-    setTimeout(() => {
-      if (Math.random() < 0.5) {
-        console.log("Destroyed cube");
-        const destroyedComponent = new DestroyedComponent(this.entity.id);
-        networkDataComponent.addComponent(destroyedComponent);
-        this.entity.addComponent(destroyedComponent);
-      }
-    }, 5000);
+    // setTimeout(() => {
+    //   console.log("Destroyed cube");
+    //   const destroyedComponent = new DestroyedComponent(this.entity.id);
+    //   networkDataComponent.addComponent(destroyedComponent);
+    //   this.entity.addComponent(destroyedComponent);
+    // }, 5000);
   }
   getPosition() {
     return this.entity.getComponent<PositionComponent>(PositionComponent)!;
