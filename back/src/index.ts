@@ -15,6 +15,7 @@ import { SyncSizeSystem } from "./ecs/system/physics/SyncSizeSystem.js";
 import Rapier from "./physics/rapier.js";
 import { AnimationSystem } from "./ecs/system/AnimationSystem.js";
 import { UpdateSizeSystem } from "./ecs/system/UpdateSizeSystem.js";
+import { DestroySystem } from "./ecs/system/DestroySystem.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -32,7 +33,7 @@ const syncSizeSystem = new SyncSizeSystem();
 const updateSizeSystem = new UpdateSizeSystem();
 
 const animationSystem = new AnimationSystem();
-
+const destroySystem = new DestroySystem();
 const sleepCheckSystem = new SleepCheckSystem();
 // const packet = new InputPacket(player.entity.id, true, false, false, false);
 // inputProcessingSystem.receiveInputPacket(packet);
@@ -72,30 +73,22 @@ function gameLoop() {
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
   animationSystem.update(entities);
-  //updateSizeSystem.update(entities);
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
   syncSizeSystem.update(entities);
-
-  // for (const entity of entities) {
-  //   const sizeComponent = entity.getComponent(SizeComponent);
-  //   if (sizeComponent) {
-  //     sizeComponent.width += 0.1;
-  //     sizeComponent.height += 0.1;
-
-  //     sizeComponent.updated = true;
-  //   }
-  // }
-
   networkSystem.update(entities);
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
   // Check the order of things then so it doesnt reset after sending
 
   // IMPORTANT : Sleeping check should be at the end.
-  // A SizeComponent inherits NetworkComponent that has updated to true by default
+  // A SizeComponent inherits NetworkCom ponent that has updated to true by default
   // It is then sent to the players once
   // Then it becomes false
   // If it is modified, we changed the is sent.
   sleepCheckSystem.update(entities);
+
+  // DestroyedSystem should be at the end because it destorys the entities
+  // but we need to notify the clients with networkSystem.update
+  destroySystem.update(entities, entityManager, physicsSystem.world);
   lastUpdateTimestamp = now;
 }
 

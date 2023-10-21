@@ -15,7 +15,7 @@ export class NetworkDataComponent extends Component implements Serializable {
   constructor(
     entityId: number,
     public entityType: SerializedEntityType,
-    private components: NetworkComponent[]
+    public components: NetworkComponent[]
   ) {
     super(entityId);
   }
@@ -25,6 +25,17 @@ export class NetworkDataComponent extends Component implements Serializable {
 
   getComponents(): NetworkComponent[] {
     return this.components;
+  }
+
+  removeComponent(componentType: typeof NetworkComponent) {
+    this.components = this.components.filter(
+      (c) => !(c instanceof componentType)
+    );
+  }
+
+  // Add a component to the entity
+  addComponent(component: NetworkComponent) {
+    this.components.push(component);
   }
 
   serialize(serializeAll = false): SerializedEntity | null {
@@ -45,7 +56,6 @@ export class NetworkDataComponent extends Component implements Serializable {
       c: serializedComponents,
     };
 
-    // Convert BroadcastMessage to JSON and send it to clients
     return broadcastMessage;
   }
 }

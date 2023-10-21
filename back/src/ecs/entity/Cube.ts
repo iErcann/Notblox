@@ -1,7 +1,10 @@
 import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
+import { DestroyedComponent } from "../../../../shared/component/DestroyedComponent.js";
+
 import { Entity } from "../../../../shared/entity/Entity.js";
 import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
+
 import Rapier from "../../physics/rapier.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
@@ -44,13 +47,21 @@ export class Cube {
     this.createRigidBody(world);
     this.createCollider(world);
 
-    this.entity.addComponent(
-      new NetworkDataComponent(this.entity.id, this.entity.type, [
-        positionComponent,
-        rotationComponent,
-        sizeComponent,
-      ])
+    const networkDataComponent = new NetworkDataComponent(
+      this.entity.id,
+      this.entity.type,
+      [positionComponent, rotationComponent, sizeComponent]
     );
+    this.entity.addComponent(networkDataComponent);
+
+    setTimeout(() => {
+      if (Math.random() < 0.5) {
+        console.log("Destroyed cube");
+        const destroyedComponent = new DestroyedComponent(this.entity.id);
+        networkDataComponent.addComponent(destroyedComponent);
+        this.entity.addComponent(destroyedComponent);
+      }
+    }, 5000);
   }
   getPosition() {
     return this.entity.getComponent<PositionComponent>(PositionComponent)!;

@@ -6,6 +6,7 @@ export enum SerializedComponentType {
   ROTATION = 2,
   SIZE = 3,
   COLOR = 4,
+  DESTROYED = 5,
 }
 
 export enum SerializedEntityType {
@@ -47,6 +48,8 @@ export interface SerializedSizeComponent extends SerializedComponent {
 export interface SerializedColorComponent extends SerializedComponent {
   color: string;
 }
+
+export interface SerializedDestroyedComponent extends SerializedComponent {}
 
 export interface SnapshotMessage extends ServerMessage {
   e: Array<SerializedEntity>;

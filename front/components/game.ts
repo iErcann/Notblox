@@ -12,6 +12,7 @@ import { SyncSizeSystem } from "./ecs/system/SyncSizeSystem";
 import { CameraFollowSystem } from "./ecs/system/CameraFollowSystem";
 import { LoadManager } from "./LoadManager";
 import { AnimationSystem } from "./ecs/system/AnimationSystem";
+import { DestroySystem } from "./ecs/system/DestroySystem";
 
 export class Game {
   private static instance: Game;
@@ -26,6 +27,7 @@ export class Game {
   private cameraFollowSystem: CameraFollowSystem;
   private websocketManager: WebSocketManager;
   private animationSystem: AnimationSystem;
+  private destroyedSystem: DestroySystem;
   public loadManager: LoadManager;
   public currentPlayerId = 0;
   private inputManager: InputManager;
@@ -41,6 +43,7 @@ export class Game {
     this.animationSystem = new AnimationSystem();
     this.loadManager = new LoadManager();
     this.loadManager.dracoLoad("./SanAndreasDraco.glb");
+    this.destroyedSystem = new DestroySystem();
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager);
   }
 
@@ -84,7 +87,7 @@ export class Game {
       this.inputManager.inputState
     );
     this.animationSystem.update(entities);
-
+    this.destroyedSystem.update(entities, this);
     this.renderer.update();
     this.lastRenderTime = now;
     this.websocketManager.timeSinceLastServerUpdate += deltaTime;
