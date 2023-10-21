@@ -5,6 +5,11 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { LoadManager } from "./LoadManager";
 import { Sky } from "three/examples/jsm/objects/Sky.js";
 
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { GlitchPass } from "three/addons/postprocessing/GlitchPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+
 export interface Renderable {
   mesh: THREE.Mesh;
   addToScene(): any;
@@ -13,6 +18,7 @@ export class Renderer extends THREE.WebGLRenderer {
   public camera: Camera;
   public scene: THREE.Scene;
   private directionalLight: THREE.DirectionalLight | undefined;
+
   constructor(scene: THREE.Scene, loadManager: LoadManager) {
     super({ antialias: false });
 

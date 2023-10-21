@@ -8,9 +8,11 @@ import {
   SerializedPositionComponent,
   SerializedRotationComponent,
   SerializedSizeComponent,
+  SerializedDestroyedComponent,
 } from "@shared/network/server/serialized";
 
 import { PositionComponent } from "@shared/component/PositionComponent";
+import { DestroyedComponent } from "@shared/component/DestroyedComponent";
 import { RotationComponent } from "@shared/component/RotationComponent";
 import { SizeComponent } from "@shared/component/SizeComponent";
 
@@ -23,37 +25,44 @@ import { MeshComponent } from "../component/MeshComponent";
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
   update(entities: Entity[], snapshotMessage: SnapshotMessage) {
-    console.log(snapshotMessage);
     const serializedEntities = snapshotMessage.e;
-    serializedEntities.forEach((serializedEntity) => {
+    for (const serializedEntity of serializedEntities) {
       // Find the replicated entity
       let entity = entities.find((entity) => entity.id === serializedEntity.id);
 
       if (!entity) {
         // If the entity doesn't exist, we create it
-        entity = this.createEntity(serializedEntity)!;
+        const createdEntity = this.createEntity(serializedEntity);
+        if (!createdEntity) {
+          console.error("Can't create entity, add it to createEntity");
+          continue;
+        }
+        entity = createdEntity;
       }
 
       // Find the replicated components
       const serializedComponents = serializedEntity.c;
-      serializedComponents.forEach((serializedComponent) => {
+      for (const serializedComponent of serializedComponents) {
         // We have to do the t! because NetworkData adds the type property after
 
-        const component = entity!.getComponentByType(serializedComponent.t!);
+        const component = entity.getComponentByType(serializedComponent.t!);
         if (component) {
-          if (component.type === SerializedComponentType.SIZE) {
-            console.log("SIZE");
-          }
           // Deserialize the component (this updates the component)
           component.deserialize(serializedComponent);
         } else {
           // If the component doesn't exist, we create it
-          entity!.addComponent(
-            this.createComponent(serializedComponent, entity!.id)!
+          const createdComponent = this.createComponent(
+            serializedComponent,
+            entity.id
           );
+          if (createdComponent) entity.addComponent(createdComponent);
+          else
+            console.error(
+              "Can't create received component, add it to createComponent."
+            );
         }
-      });
-    });
+      }
+    }
   }
 
   createEntity(serializedEntity: SerializedEntity) {
@@ -105,6 +114,11 @@ export class SyncComponentsSystem {
         serializedSizeComponent.height,
         serializedSizeComponent.depth
       );
+    } else if (serializedComponent.t === SerializedComponentType.DESTROYED) {
+      const serializedSizeComponent =
+        serializedComponent as SerializedDestroyedComponent;
+
+      return new DestroyedComponent(entityId);
     }
   }
 }

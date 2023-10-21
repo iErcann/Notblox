@@ -1,10 +1,9 @@
 import * as THREE from "three";
 import { MeshComponent } from "../component/MeshComponent";
 
-import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import { Entity } from "@shared/entity/Entity";
-import { EntityManager } from "@shared/entity/EntityManager";
 import { SerializedEntityType } from "@shared/network/server/serialized";
 import { Game } from "@/components/game";
 import { FollowComponent } from "../component/FollowComponent";
@@ -36,14 +35,12 @@ export class Player {
     }
 
     const pointLight = new THREE.PointLight(0xff3aff, 15, 20);
-    pointLight.castShadow = true;
-
+    // pointLight.castShadow = true;
     mesh.add(pointLight);
 
     const loader = game.loadManager;
 
     loader
-
       // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Walking.glb")
       // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Bocky.glb")
       .glTFLoad(
@@ -54,7 +51,7 @@ export class Player {
 
       .then((gtlf: GLTF) => {
         mesh.add(gtlf.scenes[0]);
-        mesh.scale.set(0.7, 0.7, 0.7);
+        mesh.scale.set(0.4, 0.4, 0.4);
         this.entity.addComponent(
           new AnimationComponent(this.entity.id, mesh, gtlf.animations)
         );
