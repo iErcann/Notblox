@@ -17,7 +17,10 @@ export class Entity {
   }
 
   // Remove a component from the entity
-  removeComponent(componentType: typeof Component) {
+
+  removeComponent<T extends Component>(
+    componentType: new (entityId: number, ...args: any[]) => T
+  ): void {
     this.components = this.components.filter(
       (c) => !(c instanceof componentType)
     );

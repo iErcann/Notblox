@@ -87,7 +87,7 @@ export class Game {
       this.inputManager.inputState
     );
     this.animationSystem.update(entities);
-    this.destroyedSystem.update(entities, this);
+    this.destroyedSystem.update(entities, this.entityManager, this.renderer);
     this.renderer.update();
     this.lastRenderTime = now;
     this.websocketManager.timeSinceLastServerUpdate += deltaTime;

@@ -1,11 +1,13 @@
 import { EntityManager } from "../../shared/entity/EntityManager.js";
 import { Cube } from "./ecs/entity/Cube.js";
 // import { MovementSystem } from "./ecs/system/MovementSystem.js";
-import { SizeComponent } from "../../shared/component/SizeComponent.js";
+import { DestroyedComponent } from "../../shared/component/DestroyedComponent.js";
 import { config } from "../../shared/network/config.js";
-import { PhysicsBodyComponent } from "./ecs/component/PhysicsBodyComponent.js";
-import { PhysicsColliderComponent } from "./ecs/component/PhysicsColliderComponent.js";
+import { NetworkDataComponent } from "./ecs/component/NetworkDataComponent.js";
+import { AnimationSystem } from "./ecs/system/AnimationSystem.js";
+import { DestroySystem } from "./ecs/system/DestroySystem.js";
 import { MovementSystem } from "./ecs/system/MovementSystem.js";
+import { UpdateSizeSystem } from "./ecs/system/UpdateSizeSystem.js";
 import { NetworkSystem } from "./ecs/system/network/NetworkSystem.js";
 import { PhysicsSystem } from "./ecs/system/physics/PhysicsSystem.js";
 import { SleepCheckSystem } from "./ecs/system/physics/SleepCheckSystem.js";
@@ -13,9 +15,6 @@ import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
 import { SyncSizeSystem } from "./ecs/system/physics/SyncSizeSystem.js";
 import Rapier from "./physics/rapier.js";
-import { AnimationSystem } from "./ecs/system/AnimationSystem.js";
-import { UpdateSizeSystem } from "./ecs/system/UpdateSizeSystem.js";
-import { DestroySystem } from "./ecs/system/DestroySystem.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -45,16 +44,24 @@ for (let i = 1; i < 16; i++) {
 for (let i = 0; i < 5; i++) {
   new Cube(i * 10, 10, 0, 2, 2, 2);
 }
-// setInterval(() => {
-//   new Cube(
-//     Math.random() * 10,
-//     Math.random() * 10 + 10,
-//     Math.random() * 10,
-//     1,
-//     1,
-//     1
-//   );
-// }, 5000);
+
+setInterval(() => {
+  const cube = new Cube(
+    Math.random() * 10,
+    Math.random() * 10 + 10,
+    Math.random() * 10,
+    1,
+    1,
+    1
+  );
+  setTimeout(() => {
+    const destroyedComponent = new DestroyedComponent(cube.entity.id);
+    const networkDataComponent = cube.entity.getComponent(NetworkDataComponent);
+    if (networkDataComponent)
+      networkDataComponent.addComponent(destroyedComponent);
+    cube.entity.addComponent(destroyedComponent);
+  }, 3000);
+}, 3000);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);

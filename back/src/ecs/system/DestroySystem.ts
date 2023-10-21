@@ -10,6 +10,7 @@ export class DestroySystem {
       const destroyComponent = entity.getComponent(DestroyedComponent);
       if (destroyComponent) {
         const rigidbodyComponent = entity.getComponent(PhysicsBodyComponent);
+
         if (rigidbodyComponent) world.removeRigidBody(rigidbodyComponent.body);
 
         entityManager.removeEntity(entity);
