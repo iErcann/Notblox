@@ -29,15 +29,15 @@ export class Renderer extends THREE.WebGLRenderer {
     this.shadowMap.type = THREE.PCFSoftShadowMap; //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
 
     this.setSize(window.innerWidth, window.innerHeight);
-    this.setPixelRatio(window.devicePixelRatio);
+    this.setPixelRatio(window.devicePixelRatio / 1.2);
     this.toneMapping = THREE.ACESFilmicToneMapping;
     this.toneMappingExposure = 0.5;
 
     this.addLight();
-    this.addDirectionnalLight();
-    // this.addWorld(loadManager);
+    // this.addDirectionnalLight();
+    this.addWorld(loadManager);
     this.addSky();
-    this.addGround();
+    // this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
@@ -112,8 +112,8 @@ export class Renderer extends THREE.WebGLRenderer {
   private addWorld(loadManager: LoadManager) {
     loadManager.glTFLoad("world_1-1.glb").then((gtlf: GLTF) => {
       const loadedMesh = gtlf.scenes[0];
-      loadedMesh.position.y = -1;
-      loadedMesh.scale.set(4.2, 4.2, 4.2);
+      loadedMesh.position.y = 0;
+      loadedMesh.scale.set(5.2, 5.2, 5.2);
       this.scene.add(loadedMesh);
     });
   }

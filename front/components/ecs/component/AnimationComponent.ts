@@ -12,8 +12,9 @@ export class AnimationComponent extends Component {
     this.mixer = new THREE.AnimationMixer(mesh);
 
     // Play all animations
+
     animations.forEach((clip, index) => {
-      this.mixer.clipAction(clip).play();
+      if (index === 3) this.mixer.clipAction(clip).play();
     });
   }
 }

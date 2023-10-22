@@ -7,7 +7,7 @@ export class AnimationSystem {
       const animationComponent = entity.getComponent(AnimationComponent);
 
       if (animationComponent) {
-        animationComponent.mixer.update(0.03);
+        animationComponent.mixer.update(0.02);
       }
     });
   }

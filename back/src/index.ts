@@ -38,7 +38,7 @@ const sleepCheckSystem = new SleepCheckSystem();
 // inputProcessingSystem.receiveInputPacket(packet);
 
 for (let i = 1; i < 16; i++) {
-  new Cube(0, i * 10, -i * 18, 10, 2 * i, 5);
+  new Cube(0, i, -i * 15, 3, i * 2, 3);
 }
 
 for (let i = 0; i < 5; i++) {
