@@ -1,6 +1,6 @@
 import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
-import { DestroyedComponent } from "../../../../shared/component/DestroyedComponent.js";
+import { EventDestroyedComponent } from "../../../../shared/component/events/EventDestroyedComponent.js";
 
 import { Entity } from "../../../../shared/entity/Entity.js";
 import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
@@ -53,13 +53,6 @@ export class Cube {
       [positionComponent, rotationComponent, sizeComponent]
     );
     this.entity.addComponent(networkDataComponent);
-
-    // setTimeout(() => {
-    //   console.log("Destroyed cube");
-    //   const destroyedComponent = new DestroyedComponent(this.entity.id);
-    //   networkDataComponent.addComponent(destroyedComponent);
-    //   this.entity.addComponent(destroyedComponent);
-    // }, 5000);
   }
   getPosition() {
     return this.entity.getComponent<PositionComponent>(PositionComponent)!;
@@ -70,6 +63,8 @@ export class Cube {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
 
     let rigidBody = world.createRigidBody(rigidBodyDesc);
+    rigidBody.setLinearDamping(5);
+    rigidBody.setAngularDamping(5);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
     this.entity.addComponent(
       new PhysicsBodyComponent(this.entity.id, rigidBody)

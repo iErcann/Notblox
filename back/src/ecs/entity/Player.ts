@@ -4,12 +4,10 @@ import { Entity } from "../../../../shared/entity/Entity.js";
 import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
 import Rapier from "../../physics/rapier.js";
-import { CharacterControllerComponent } from "../component/CharacterControllerComponent.js";
 import { InputComponent } from "../component/InputComponent.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
-import { VelocityComponent } from "../component/VelocityComponent.js";
 import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 
@@ -43,7 +41,6 @@ export class Player {
     this.entity.addComponent(rotationComponent);
 
     // Adding a VelocityComponent with initial velocity as 0
-    this.entity.addComponent(new VelocityComponent(this.entity.id, 0, 0));
     // Adding an InputComponent to handle player inputs
     this.entity.addComponent(new InputComponent(this.entity.id));
 
@@ -114,11 +111,5 @@ export class Player {
   // Getter for the underlying entity
   getEntity(): Entity {
     return this.entity;
-  }
-  move(desiredTranslation: any) {
-    const controller = this.entity.getComponent(CharacterControllerComponent);
-    if (controller) {
-      controller.desiredTranslation = desiredTranslation;
-    }
   }
 }

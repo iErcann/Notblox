@@ -1,6 +1,6 @@
 import { pack, unpack } from "msgpackr";
 import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from "uWebSockets.js";
-import { DestroyedComponent } from "../../../../../shared/component/DestroyedComponent.js";
+import { EventDestroyedComponent } from "../../../../../shared/component/events/EventDestroyedComponent.js";
 import {
   ClientMessage,
   ClientMessageType,
@@ -137,13 +137,13 @@ export class WebsocketSystem {
     entity.removeComponent(WebSocketComponent);
 
     // Create and add the DestroyedComponent
-    const disconnectedComponent = new DestroyedComponent(entityId);
-    entity.addComponent(disconnectedComponent);
+    const destroyedComponent = new EventDestroyedComponent(entityId);
+    entity.addComponent(destroyedComponent);
 
     // Add the DestroyedComponent to the NetworkDataComponent if it exists
     const networkComponent = entity.getComponent(NetworkDataComponent);
     if (networkComponent) {
-      networkComponent.addComponent(disconnectedComponent);
+      networkComponent.addComponent(destroyedComponent);
     }
   }
 }

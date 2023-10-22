@@ -1,11 +1,11 @@
 import {
   SerializedComponentType,
   SerializedSizeComponent,
-} from "../network/server/serialized.js";
+} from "../../network/server/serialized.js";
 
-import { NetworkComponent } from "../network/NetworkComponent.js";
+import { NetworkComponent } from "../../network/NetworkComponent.js";
 
-export class DestroyedComponent extends NetworkComponent {
+export class EventDestroyedComponent extends NetworkComponent {
   constructor(entityId: number) {
     super(entityId, SerializedComponentType.DESTROYED);
   }

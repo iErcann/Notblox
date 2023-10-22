@@ -12,7 +12,7 @@ import {
 } from "@shared/network/server/serialized";
 
 import { PositionComponent } from "@shared/component/PositionComponent";
-import { DestroyedComponent } from "@shared/component/DestroyedComponent";
+import { EventDestroyedComponent } from "@shared/component/events/EventDestroyedComponent";
 import { RotationComponent } from "@shared/component/RotationComponent";
 import { SizeComponent } from "@shared/component/SizeComponent";
 
@@ -43,6 +43,7 @@ export class SyncComponentsSystem {
       // Find the replicated components
       const serializedComponents = serializedEntity.c;
       for (const serializedComponent of serializedComponents) {
+        console.log(serializedComponent);
         // We have to do the t! because NetworkData adds the type property after
 
         const component = entity.getComponentByType(serializedComponent.t!);
@@ -118,7 +119,7 @@ export class SyncComponentsSystem {
       const serializedSizeComponent =
         serializedComponent as SerializedDestroyedComponent;
 
-      return new DestroyedComponent(entityId);
+      return new EventDestroyedComponent(entityId);
     }
   }
 }
