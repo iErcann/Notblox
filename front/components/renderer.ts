@@ -34,7 +34,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.toneMappingExposure = 0.5;
 
     this.addLight();
-    // this.addDirectionnalLight();
+    this.addDirectionnalLight();
     this.addWorld(loadManager);
     this.addSky();
     // this.addGround();
@@ -68,15 +68,7 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addDirectionnalLight() {
     // Add directional light for shadows and highlights
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    // this.directionalLight.castShadow = true;
-    this.directionalLight.shadow.mapSize.x = 2048;
-    this.directionalLight.shadow.mapSize.y = 2048;
-    const size = 20;
-    this.directionalLight.shadow.camera.top = size;
-    this.directionalLight.shadow.camera.bottom = -size;
-    this.directionalLight.shadow.camera.left = size;
-    this.directionalLight.shadow.camera.right = -size;
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 
     // this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
@@ -88,7 +80,7 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 1.2);
+    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.7);
     hemisphereLight.position.set(0.5, 1, 0.75);
     this.scene.add(hemisphereLight);
   }
@@ -110,12 +102,14 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   private addWorld(loadManager: LoadManager) {
-    loadManager.glTFLoad("world_1-1.glb").then((gtlf: GLTF) => {
-      const loadedMesh = gtlf.scenes[0];
-      loadedMesh.position.y = 0;
-      loadedMesh.scale.set(5.2, 5.2, 5.2);
-      this.scene.add(loadedMesh);
-    });
+    loadManager
+      .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
+      .then((gtlf: GLTF) => {
+        const loadedMesh = gtlf.scenes[0];
+        loadedMesh.position.y = 0.2;
+        loadedMesh.scale.set(5.2, 5.2, 5.2);
+        this.scene.add(loadedMesh);
+      });
   }
   public update() {
     if (this.directionalLight) {
