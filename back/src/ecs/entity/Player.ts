@@ -40,14 +40,7 @@ export class Player {
     const rotationComponent = new RotationComponent(this.entity.id, 0, 1, 2);
     this.entity.addComponent(rotationComponent);
 
-    // Adding a VelocityComponent with initial velocity as 0
-    // Adding an InputComponent to handle player inputs
     this.entity.addComponent(new InputComponent(this.entity.id));
-
-    // TODO: Retest this
-    // this.entity.addComponent(
-    //   new CharacterControllerComponent(this.entity.id, world)
-    // );
 
     this.createRigidBody(world);
     this.createCollider(world);

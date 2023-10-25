@@ -4,7 +4,6 @@ import {
 } from "../network/server/serialized.js";
 import { NetworkComponent } from "../network/NetworkComponent.js";
 
-// Define a PositionComponent class
 export class PositionComponent extends NetworkComponent {
   constructor(
     entityId: number,
@@ -12,7 +11,7 @@ export class PositionComponent extends NetworkComponent {
     public y: number,
     public z: number
   ) {
-    super(entityId, SerializedComponentType.POSITION); // Call the parent constructor with the entityId
+    super(entityId, SerializedComponentType.POSITION);
   }
   deserialize(data: SerializedPositionComponent): void {
     this.x = data.x;

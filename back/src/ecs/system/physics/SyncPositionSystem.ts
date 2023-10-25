@@ -1,7 +1,6 @@
 import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
 import { PositionComponent } from "../../../../../shared/component/PositionComponent.js";
 import { Entity } from "../../../../../shared/entity/Entity.js";
-import Rapier from "../../../physics/rapier.js";
 
 export class SyncPositionSystem {
   update(entities: Entity[]) {

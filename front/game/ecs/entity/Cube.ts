@@ -1,9 +1,9 @@
 import { SerializedEntityType } from "@shared/network/server/serialized";
 import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 import { Entity } from "@shared/entity/Entity";
-import { MeshComponent } from "../component/MeshComponent";
+import { MeshComponent } from "../component/MeshComponent.js";
 import * as THREE from "three";
-import { Game } from "@/components/game.js";
+import { Game } from "@/game/game.js";
 
 export class Cube {
   entity: Entity;
