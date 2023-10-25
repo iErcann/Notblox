@@ -6,7 +6,6 @@ import { NetworkComponent } from "../network/NetworkComponent.js";
 
 // Define a RotationComponent class
 export class RotationComponent extends NetworkComponent {
-  // Define public properties for pitch, yaw, and roll
   constructor(
     entityId: number,
     public x: number,
@@ -14,7 +13,7 @@ export class RotationComponent extends NetworkComponent {
     public z: number,
     public w = 0
   ) {
-    super(entityId, SerializedComponentType.ROTATION); // Call the parent constructor with the entityId
+    super(entityId, SerializedComponentType.ROTATION);
   }
   deserialize(data: SerializedRotationComponent): void {
     this.x = data.x;

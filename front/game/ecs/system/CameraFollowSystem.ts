@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { Entity } from "@shared/entity/Entity";
 import { FollowComponent } from "../component/FollowComponent";
 import { PositionComponent } from "@shared/component/PositionComponent";
-import { Camera } from "@/components/camera";
+import { Camera } from "@/game/camera";
 import { InputMessage } from "@shared/network/client/input";
 
 export class CameraFollowSystem {

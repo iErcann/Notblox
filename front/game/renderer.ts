@@ -35,9 +35,9 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.addLight();
     this.addDirectionnalLight();
-    this.addWorld(loadManager);
+    // this.addWorld(loadManager);
     this.addSky();
-    // this.addGround();
+    this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
@@ -49,7 +49,7 @@ export class Renderer extends THREE.WebGLRenderer {
 
     const uniforms = sky.material.uniforms;
     uniforms["turbidity"].value = 10;
-    uniforms["rayleigh"].value = 3;
+    uniforms["rayleigh"].value = 0.3;
     uniforms["mieCoefficient"].value = 0.005;
     uniforms["mieDirectionalG"].value = 0.7;
 
@@ -68,19 +68,19 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addDirectionnalLight() {
     // Add directional light for shadows and highlights
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 
     // this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
     this.scene.add(this.directionalLight.target);
     // Add the sunlight to the scene
 
-    const helper = new THREE.DirectionalLightHelper(this.directionalLight, 5);
-    this.scene.add(helper);
+    // const helper = new THREE.DirectionalLightHelper(this.directionalLight, 5);
+    // this.scene.add(helper);
   }
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemisphereLight = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.7);
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
     hemisphereLight.position.set(0.5, 1, 0.75);
     this.scene.add(hemisphereLight);
   }
@@ -88,8 +88,7 @@ export class Renderer extends THREE.WebGLRenderer {
   private addGround() {
     // Create a simple colored ground
     const groundMaterial = new THREE.MeshPhongMaterial({
-      color: 0xe8e8e8, // Adjust the color as needed (green in this case)
-      flatShading: true,
+      color: 0xbdbdbd, // Adjust the color as needed (green in this case)
     });
 
     const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
@@ -112,9 +111,9 @@ export class Renderer extends THREE.WebGLRenderer {
       });
   }
   public update() {
-    if (this.directionalLight) {
-      this.directionalLight.position.copy(this.camera.position);
-    }
+    // if (this.directionalLight) {
+    //   this.directionalLight.position.copy(this.camera.position);
+    // }
     this.camera.update();
     this.render(this.scene, this.camera);
   }

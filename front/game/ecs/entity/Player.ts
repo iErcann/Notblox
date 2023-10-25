@@ -5,7 +5,7 @@ import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import { Entity } from "@shared/entity/Entity";
 import { SerializedEntityType } from "@shared/network/server/serialized";
-import { Game } from "@/components/game";
+import { Game } from "@/game/game";
 import { FollowComponent } from "../component/FollowComponent";
 import { AnimationComponent } from "../component/AnimationComponent";
 
@@ -19,11 +19,12 @@ export class Player {
 
     const meshComponent = new MeshComponent(entityId);
     this.entity.addComponent(meshComponent);
-    const mesh = meshComponent.mesh;
-    const geometry = new THREE.BoxGeometry(1, 2, 1);
+    const mesh: THREE.Mesh = meshComponent.mesh;
+    const geometry = new THREE.CapsuleGeometry(1, 2, 1);
     const material = new THREE.MeshPhongMaterial();
+    material.transparent = true;
     material.color = new THREE.Color(0xff5522);
-    //mesh.geometry = geometry;
+    // mesh.geometry = geometry;
     mesh.material = material;
     mesh.receiveShadow = true;
     mesh.castShadow = true;
@@ -33,7 +34,6 @@ export class Player {
         new FollowComponent(entityId, game.renderer.camera)
       );
       const pointLight = new THREE.PointLight(0xff3aff, 15, 20);
-      // pointLight.castShadow = true;
       mesh.add(pointLight);
     }
 
@@ -46,13 +46,12 @@ export class Player {
       //   "https://myaudio.nyc3.cdn.digitaloceanspaces.com/BockyAnimatedLOL.glb"
       // )
       // .glTFLoad("Sketchbook.glb")
-      // .glTFLoad("MixamoTestBocky.glb")
-      .glTFLoad(
-        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/RetryModel.glb"
-      )
+      .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Character.glb")
+      // .glTFLoad(
+      //   "https://myaudio.nyc3.cdn.digitaloceanspaces.com/RetryModel.glb"
+      // )
       .then((gtlf: GLTF) => {
         mesh.add(gtlf.scenes[0]);
-        mesh.scale.set(0.4, 0.4, 0.4);
         this.entity.addComponent(
           new AnimationComponent(this.entity.id, mesh, gtlf.animations)
         );

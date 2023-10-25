@@ -16,7 +16,7 @@ import { EventDestroyedComponent } from "@shared/component/events/EventDestroyed
 import { RotationComponent } from "@shared/component/RotationComponent";
 import { SizeComponent } from "@shared/component/SizeComponent";
 
-import { Game } from "@/components/game";
+import { Game } from "@/game/game";
 import { Player } from "../entity/Player";
 import { Cube } from "../entity/Cube";
 
