@@ -5,7 +5,7 @@ import { RotationComponent } from "@shared/component/RotationComponent";
 
 export class SyncRotationSystem {
   update(entities: Entity[], interpolationFactor: number) {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const meshComponent = entity.getComponent(MeshComponent);
       const rotationComponent = entity.getComponent(RotationComponent);
 
@@ -23,6 +23,6 @@ export class SyncRotationSystem {
           interpolationFactor
         );
       }
-    });
+    }
   }
 }

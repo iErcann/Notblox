@@ -26,7 +26,7 @@ constructor() {
 }
 
     // In the system's update loop:
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       if (entity.hasComponent(PlayerDeathEventComponent)) {
         const event = entity.getComponent(PlayerDeathEventComponent);
         // Handle the player's death event (e.g., update score, show game over screen)

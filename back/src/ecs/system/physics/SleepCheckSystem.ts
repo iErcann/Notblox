@@ -1,3 +1,4 @@
+import { ColorComponent } from "../../../../../shared/component/ColorComponent.js";
 import { PositionComponent } from "../../../../../shared/component/PositionComponent.js";
 import { RotationComponent } from "../../../../../shared/component/RotationComponent.js";
 import { SizeComponent } from "../../../../../shared/component/SizeComponent.js";
@@ -6,7 +7,7 @@ import { PhysicsBodyComponent } from "../../component/PhysicsBodyComponent.js";
 
 export class SleepCheckSystem {
   update(entities: Entity[]) {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const bodyComponent = entity.getComponent(PhysicsBodyComponent);
 
       if (bodyComponent) {
@@ -24,7 +25,11 @@ export class SleepCheckSystem {
         if (sizeComponent) {
           sizeComponent.updated = false;
         }
+        const colorComponent = entity.getComponent(ColorComponent);
+        if (colorComponent) {
+          colorComponent.updated = false;
+        }
       }
-    });
+    }
   }
 }

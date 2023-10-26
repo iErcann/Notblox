@@ -9,9 +9,9 @@ export class MovementSystem {
   checkGround() {}
 
   update(dt: number, entities: Entity[], world: Rapier.World): void {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       this.updateEntityMovement(dt, entity, world);
-    });
+    }
   }
 
   updateEntityMovement(dt: number, entity: Entity, world: Rapier.World) {
@@ -51,7 +51,7 @@ export class MovementSystem {
     rigidBodyComponent: PhysicsBodyComponent
   ) {
     const currentLinVel = rigidBodyComponent.body.linvel();
-    const speed = 0.8;
+    const speed = 0.6;
     const lookingYAngle = inputComponent.lookingYAngle;
 
     const impulse = new Rapier.Vector3(0, currentLinVel.y - 0.1 * dt, 0);

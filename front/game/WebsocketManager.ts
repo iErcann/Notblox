@@ -26,8 +26,8 @@ export class WebSocketManager {
 
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
       const connectionMessage = message as ConnectionMessage;
-      game.currentPlayerId = connectionMessage.id;
-      console.log("first connection", game.currentPlayerId);
+      game.currentPlayerEntityId = connectionMessage.id;
+      console.log("first connection", game.currentPlayerEntityId);
     });
 
     this.addMessageHandler(ServerMessageType.SNAPSHOT, (message) => {

@@ -4,7 +4,7 @@ import { Entity } from "../../../../../shared/entity/Entity.js";
 
 export class SyncPositionSystem {
   update(entities: Entity[]) {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const bodyComponent = entity.getComponent(PhysicsBodyComponent);
       const positionComponent = entity.getComponent(PositionComponent);
 
@@ -14,6 +14,6 @@ export class SyncPositionSystem {
         positionComponent.y = position.y;
         positionComponent.z = position.z;
       }
-    });
+    }
   }
 }

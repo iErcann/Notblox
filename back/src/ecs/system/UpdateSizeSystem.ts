@@ -3,7 +3,7 @@ import { Entity } from "../../../../shared/entity/Entity.js";
 
 export class UpdateSizeSystem {
   update(entities: Entity[]) {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const sizeComponent = entity.getComponent(SizeComponent);
       if (sizeComponent) {
         // Implement random size change
@@ -13,6 +13,6 @@ export class UpdateSizeSystem {
           sizeComponent.updated = true;
         }
       }
-    });
+    }
   }
 }
