@@ -5,7 +5,7 @@ import { PositionComponent } from "@shared/component/PositionComponent";
 
 export class SyncPositionSystem {
   update(entities: Entity[], interpolationFactor: number) {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const meshComponent = entity.getComponent(MeshComponent);
       const positionComponent = entity.getComponent(PositionComponent);
 
@@ -17,6 +17,6 @@ export class SyncPositionSystem {
         );
         meshComponent.mesh.position.lerp(targetPosition, interpolationFactor);
       }
-    });
+    }
   }
 }

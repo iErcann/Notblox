@@ -15,7 +15,7 @@ export class CameraFollowSystem {
   ) {}
 
   update(dt: number, entities: Entity[], input: InputMessage) {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const positionComponent = entity.getComponent(PositionComponent);
       const followComponent = entity.getComponent(FollowComponent);
 
@@ -32,7 +32,7 @@ export class CameraFollowSystem {
         this.rotateCameraAroundPlayer(camera, targetPosition);
         input.angleY = this.angle;
       }
-    });
+    }
   }
   private normalizeAngle(angle: number) {
     while (angle < 0) {

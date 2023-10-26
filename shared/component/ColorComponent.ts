@@ -1,7 +1,6 @@
 import {
   SerializedColorComponent,
   SerializedComponentType,
-  SerializedPositionComponent,
 } from "../network/server/serialized.js";
 import { NetworkComponent } from "../network/NetworkComponent.js";
 

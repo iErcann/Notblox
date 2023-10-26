@@ -8,6 +8,7 @@ import { InputComponent } from "../component/InputComponent.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
+import { PlayerComponent } from "../component/PlayerComponent.js";
 import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 
@@ -27,6 +28,8 @@ export class Player {
     );
 
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws));
+
+    this.entity.addComponent(new PlayerComponent(this.entity.id));
 
     // Adding a PositionComponent with initial position
     const positionComponent = new PositionComponent(

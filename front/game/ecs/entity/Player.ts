@@ -29,7 +29,7 @@ export class Player {
     mesh.receiveShadow = true;
     mesh.castShadow = true;
 
-    if (entityId === game.currentPlayerId) {
+    if (entityId === game.currentPlayerEntityId) {
       this.entity.addComponent(
         new FollowComponent(entityId, game.renderer.camera)
       );

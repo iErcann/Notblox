@@ -9,6 +9,7 @@ import {
   SerializedRotationComponent,
   SerializedSizeComponent,
   SerializedDestroyedComponent,
+  SerializedColorComponent,
 } from "@shared/network/server/serialized";
 
 import { PositionComponent } from "@shared/component/PositionComponent";
@@ -21,6 +22,7 @@ import { Player } from "../entity/Player";
 import { Cube } from "../entity/Cube";
 
 import { MeshComponent } from "../component/MeshComponent";
+import { ColorComponent } from "@shared/component/ColorComponent";
 
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
@@ -43,11 +45,11 @@ export class SyncComponentsSystem {
       // Find the replicated components
       const serializedComponents = serializedEntity.c;
       for (const serializedComponent of serializedComponents) {
-        console.log(serializedComponent);
         // We have to do the t! because NetworkData adds the type property after
 
         const component = entity.getComponentByType(serializedComponent.t!);
         if (component) {
+          console.log(component);
           // Deserialize the component (this updates the component)
           component.deserialize(serializedComponent);
         } else {
@@ -120,6 +122,10 @@ export class SyncComponentsSystem {
         serializedComponent as SerializedDestroyedComponent;
 
       return new EventDestroyedComponent(entityId);
+    } else if (serializedComponent.t === SerializedComponentType.COLOR) {
+      const serializedColorComponent =
+        serializedComponent as SerializedColorComponent;
+      return new ColorComponent(entityId, serializedColorComponent.color);
     }
   }
 }

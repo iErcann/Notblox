@@ -4,7 +4,7 @@ import { Entity } from "../../../../../shared/entity/Entity.js";
 
 export class SyncRotationSystem {
   update(entities: Entity[]) {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const bodyComponent = entity.getComponent(PhysicsBodyComponent);
       const rotationComponent = entity.getComponent(RotationComponent);
 
@@ -15,6 +15,6 @@ export class SyncRotationSystem {
         rotationComponent.z = rotation.z;
         rotationComponent.w = rotation.w;
       }
-    });
+    }
   }
 }

@@ -6,7 +6,7 @@ import { BoxGeometry } from "three";
 
 export class SyncSizeSystem {
   update(entities: Entity[]) {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const meshComponent = entity.getComponent(MeshComponent);
       const sizeComponent = entity.getComponent(SizeComponent);
 
@@ -33,6 +33,6 @@ export class SyncSizeSystem {
           // );
         }
       }
-    });
+    }
   }
 }

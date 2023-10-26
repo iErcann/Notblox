@@ -8,7 +8,7 @@ import * as THREE from "three";
 
 export class AnimationSystem {
   update(entities: Entity[]): void {
-    entities.forEach((entity) => {
+    for (const entity of entities) {
       const inputComponent = entity.getComponent(InputComponent);
       const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
 
@@ -37,7 +37,7 @@ export class AnimationSystem {
         // Rotate the player
         this.rotatePlayer(rigidBodyComponent, quaternion);
       }
-    });
+    }
   }
   rotatePlayer(
     rigidBodyComponent: PhysicsBodyComponent,

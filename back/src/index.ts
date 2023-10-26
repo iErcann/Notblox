@@ -16,6 +16,8 @@ import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
 import Rapier from "./physics/rapier.js";
 import { EventSizeComponent } from "./ecs/component/events/EventSizeComponent.js";
+import { RandomSizeSystem } from "./ecs/system/RandomSizeSystem.js";
+import { SyncColorSystem } from "./ecs/system/events/SyncColorSystem.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -30,50 +32,49 @@ const networkSystem = NetworkSystem.getInstance();
 const syncPositionSystem = new SyncPositionSystem();
 const syncRotationSystem = new SyncRotationSystem();
 const syncSizeSystem = new SyncSizeSystem();
+const syncColorSystem = new SyncColorSystem();
+
 const updateSizeSystem = new UpdateSizeSystem();
 
 const animationSystem = new AnimationSystem();
 const destroySystem = new DestroySystem();
 const sleepCheckSystem = new SleepCheckSystem();
-// const packet = new InputPacket(player.entity.id, true, false, false, false);
-// inputProcessingSystem.receiveInputPacket(packet);
+const randomSizeSystem = new RandomSizeSystem();
 
-for (let i = 1; i < 16; i++) {
-  new Cube(0, i, -i * 15, 3, i * 2, 3);
-}
+// for (let i = 1; i < 3; i++) {
+//   new Cube(0, i, -i * 15, 3, i * 2, 3);
+// }
 
-for (let i = 0; i < 5; i++) {
-  new Cube(i * 10, 10, 0, 2, 2, 2);
-}
+// new Cube(-50, 10, 0, 10, 10, 100);
 
-setInterval(() => {
-  const cube = new Cube(
-    Math.random() * 10,
-    Math.random() * 10 + 10,
-    Math.random() * 10,
-    1,
-    1,
-    1
-  );
+// setInterval(() => {
+//   const cube = new Cube(
+//     Math.random() * 10,
+//     Math.random() * 10 + 10,
+//     Math.random() * 10,
+//     1,
+//     1,
+//     1
+//   );
 
-  if (Math.random() < 0.5) {
-    cube.entity.addComponent(
-      new EventSizeComponent(
-        cube.entity.id,
-        Math.random() * 5,
-        Math.random() * 5,
-        Math.random() * 5
-      )
-    );
-  }
-  setTimeout(() => {
-    const destroyedComponent = new EventDestroyedComponent(cube.entity.id);
-    const networkDataComponent = cube.entity.getComponent(NetworkDataComponent);
-    if (networkDataComponent)
-      networkDataComponent.addComponent(destroyedComponent);
-    cube.entity.addComponent(destroyedComponent);
-  }, 3000);
-}, 3000);
+//   if (Math.random() < 0.5) {
+//     cube.entity.addComponent(
+//       new EventSizeComponent(
+//         cube.entity.id,
+//         Math.random() * 5,
+//         Math.random() * 5,
+//         Math.random() * 5
+//       )
+//     );
+//   }
+//   setTimeout(() => {
+//     const destroyedComponent = new EventDestroyedComponent(cube.entity.id);
+//     const networkDataComponent = cube.entity.getComponent(NetworkDataComponent);
+//     if (networkDataComponent)
+//       networkDataComponent.addComponent(destroyedComponent);
+//     cube.entity.addComponent(destroyedComponent);
+//   }, 3000);
+// }, 3000);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
@@ -86,15 +87,18 @@ function gameLoop() {
   const now = Date.now();
   const dt = now - lastUpdateTimestamp;
 
+  animationSystem.update(entities);
   movementSystem.update(dt, entities, physicsSystem.world);
   physicsSystem.update();
 
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
-  animationSystem.update(entities);
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
   syncSizeSystem.update(entities);
+  syncColorSystem.update(entities);
   networkSystem.update(entities);
+  randomSizeSystem.update(entities);
+
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
   // Check the order of things then so it doesnt reset after sending
 

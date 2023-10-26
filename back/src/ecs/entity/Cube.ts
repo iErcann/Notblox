@@ -12,6 +12,7 @@ import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
+import { ColorComponent } from "../../../../shared/component/ColorComponent.js";
 
 export class Cube {
   entity: Entity;
@@ -44,13 +45,16 @@ export class Cube {
     );
     this.entity.addComponent(sizeComponent);
 
+    const colorComponent = new ColorComponent(this.entity.id, "#ff0000");
+    this.entity.addComponent(colorComponent);
+
     this.createRigidBody(world);
     this.createCollider(world);
 
     const networkDataComponent = new NetworkDataComponent(
       this.entity.id,
       this.entity.type,
-      [positionComponent, rotationComponent, sizeComponent]
+      [positionComponent, rotationComponent, sizeComponent, colorComponent]
     );
     this.entity.addComponent(networkDataComponent);
   }
@@ -63,8 +67,6 @@ export class Cube {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
 
     let rigidBody = world.createRigidBody(rigidBodyDesc);
-    rigidBody.setLinearDamping(5);
-    rigidBody.setAngularDamping(5);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
     this.entity.addComponent(
       new PhysicsBodyComponent(this.entity.id, rigidBody)
