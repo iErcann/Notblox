@@ -49,7 +49,6 @@ export class SyncComponentsSystem {
 
         const component = entity.getComponentByType(serializedComponent.t!);
         if (component) {
-          console.log(component);
           // Deserialize the component (this updates the component)
           component.deserialize(serializedComponent);
         } else {
