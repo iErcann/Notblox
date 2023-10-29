@@ -1,6 +1,4 @@
 // AnimationSystem.js
-import Rapier from "../../physics/rapier.js";
-import { RigidBody } from "@dimforge/rapier3d-compat";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { InputComponent } from "../component/InputComponent.js";
 import { Entity } from "shared/entity/Entity.js";
@@ -8,7 +6,8 @@ import * as THREE from "three";
 
 export class AnimationSystem {
   update(entities: Entity[]): void {
-    for (const entity of entities) {
+    // TODO: Understand why when you change this to for of it bugs and doesnt animate second player?
+    entities.forEach((entity) => {
       const inputComponent = entity.getComponent(InputComponent);
       const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
 
@@ -37,7 +36,7 @@ export class AnimationSystem {
         // Rotate the player
         this.rotatePlayer(rigidBodyComponent, quaternion);
       }
-    }
+    });
   }
   rotatePlayer(
     rigidBodyComponent: PhysicsBodyComponent,

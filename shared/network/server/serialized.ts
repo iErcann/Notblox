@@ -12,6 +12,7 @@ export enum SerializedComponentType {
 export enum SerializedEntityType {
   PLAYER = 1,
   CUBE = 2,
+  WORLD = 3,
 }
 
 export interface SerializedComponent {

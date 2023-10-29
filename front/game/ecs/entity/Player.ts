@@ -33,7 +33,9 @@ export class Player {
       this.entity.addComponent(
         new FollowComponent(entityId, game.renderer.camera)
       );
-      const pointLight = new THREE.PointLight(0xff3aff, 15, 20);
+      const pointLight = new THREE.PointLight(0xff3aff, 15, 50);
+      pointLight.position.set(0, 1, 0);
+      pointLight.castShadow = true;
       mesh.add(pointLight);
     }
 
@@ -45,11 +47,8 @@ export class Player {
       // .glTFLoad(
       //   "https://myaudio.nyc3.cdn.digitaloceanspaces.com/BockyAnimatedLOL.glb"
       // )
-      // .glTFLoad("Sketchbook.glb")
+      // .glTFLoad("Car.glb")
       .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Character.glb")
-      // .glTFLoad(
-      //   "https://myaudio.nyc3.cdn.digitaloceanspaces.com/RetryModel.glb"
-      // )
       .then((gtlf: GLTF) => {
         mesh.add(gtlf.scenes[0]);
         this.entity.addComponent(

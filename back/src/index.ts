@@ -18,6 +18,8 @@ import Rapier from "./physics/rapier.js";
 import { EventSizeComponent } from "./ecs/component/events/EventSizeComponent.js";
 import { RandomSizeSystem } from "./ecs/system/RandomSizeSystem.js";
 import { SyncColorSystem } from "./ecs/system/events/SyncColorSystem.js";
+import { TrimeshSystem } from "./ecs/system/events/TrimeshSystem.js";
+import { MapWorld } from "./ecs/entity/MapWorld.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -35,46 +37,51 @@ const syncSizeSystem = new SyncSizeSystem();
 const syncColorSystem = new SyncColorSystem();
 
 const updateSizeSystem = new UpdateSizeSystem();
+const trimeshSystem = new TrimeshSystem();
 
 const animationSystem = new AnimationSystem();
 const destroySystem = new DestroySystem();
 const sleepCheckSystem = new SleepCheckSystem();
 const randomSizeSystem = new RandomSizeSystem();
 
-// for (let i = 1; i < 3; i++) {
-//   new Cube(0, i, -i * 15, 3, i * 2, 3);
-// }
+for (let i = 1; i < 3; i++) {
+  new Cube(0, i, -i * 15, 3, i * 2, 3);
+}
+
+for (let i = 1; i < 10; i++) {
+  new Cube(30, i, -i * 15, 1, 1, 1);
+}
 
 // new Cube(-50, 10, 0, 10, 10, 100);
 
-// setInterval(() => {
-//   const cube = new Cube(
-//     Math.random() * 10,
-//     Math.random() * 10 + 10,
-//     Math.random() * 10,
-//     1,
-//     1,
-//     1
-//   );
+setInterval(() => {
+  const cube = new Cube(
+    Math.random() * 10,
+    Math.random() * 10 + 10,
+    Math.random() * 10,
+    1,
+    1,
+    1
+  );
 
-//   if (Math.random() < 0.5) {
-//     cube.entity.addComponent(
-//       new EventSizeComponent(
-//         cube.entity.id,
-//         Math.random() * 5,
-//         Math.random() * 5,
-//         Math.random() * 5
-//       )
-//     );
-//   }
-//   setTimeout(() => {
-//     const destroyedComponent = new EventDestroyedComponent(cube.entity.id);
-//     const networkDataComponent = cube.entity.getComponent(NetworkDataComponent);
-//     if (networkDataComponent)
-//       networkDataComponent.addComponent(destroyedComponent);
-//     cube.entity.addComponent(destroyedComponent);
-//   }, 3000);
-// }, 3000);
+  if (Math.random() < 0.5) {
+    cube.entity.addComponent(
+      new EventSizeComponent(
+        cube.entity.id,
+        Math.random() * 5,
+        Math.random() * 5,
+        Math.random() * 5
+      )
+    );
+  }
+  setTimeout(() => {
+    const destroyedComponent = new EventDestroyedComponent(cube.entity.id);
+    const networkDataComponent = cube.entity.getComponent(NetworkDataComponent);
+    if (networkDataComponent)
+      networkDataComponent.addComponent(destroyedComponent);
+    cube.entity.addComponent(destroyedComponent);
+  }, 3000);
+}, 3000);
 
 // Create the ground
 let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
@@ -82,15 +89,15 @@ physicsSystem.world.createCollider(groundColliderDesc);
 
 console.log(`Detected tick rate : ${config.TICKRATE}`);
 let lastUpdateTimestamp = Date.now();
+
+new MapWorld();
 function gameLoop() {
   setTimeout(gameLoop, 1000 / config.TICKRATE);
   const now = Date.now();
   const dt = now - lastUpdateTimestamp;
 
-  animationSystem.update(entities);
   movementSystem.update(dt, entities, physicsSystem.world);
-  physicsSystem.update();
-
+  animationSystem.update(entities);
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
@@ -98,6 +105,7 @@ function gameLoop() {
   syncColorSystem.update(entities);
   networkSystem.update(entities);
   randomSizeSystem.update(entities);
+  // trimeshSystem.update(entities);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
   // Check the order of things then so it doesnt reset after sending
@@ -109,6 +117,7 @@ function gameLoop() {
   // If it is modified, we changed the is sent.
   sleepCheckSystem.update(entities);
 
+  physicsSystem.update();
   // DestroyedSystem should be at the end because it destorys the entities
   // but we need to notify the clients with networkSystem.update
   destroySystem.update(entities, entityManager, physicsSystem.world);
