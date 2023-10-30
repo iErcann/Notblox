@@ -29,6 +29,7 @@
     "fossil-delta": "^1.0.2",
     "jsondiffpatch": "^0.5.0",
     "msgpackr": "^1.9.9",
+    "node-three-gltf": "^1.4.0",
     "ts-node": "^10.9.1",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.31.0"
   }

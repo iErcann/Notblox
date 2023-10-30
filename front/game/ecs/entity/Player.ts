@@ -35,7 +35,6 @@ export class Player {
       );
       const pointLight = new THREE.PointLight(0xff3aff, 15, 50);
       pointLight.position.set(0, 1, 0);
-      pointLight.castShadow = true;
       mesh.add(pointLight);
     }
 
@@ -49,7 +48,7 @@ export class Player {
       // )
       // .glTFLoad("Car.glb")
       .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Character.glb")
-      .then((gtlf: GLTF) => {
+        .then((gtlf: GLTF) => {
         mesh.add(gtlf.scenes[0]);
         this.entity.addComponent(
           new AnimationComponent(this.entity.id, mesh, gtlf.animations)

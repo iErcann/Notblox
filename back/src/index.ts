@@ -52,46 +52,46 @@ for (let i = 1; i < 10; i++) {
   new Cube(30, i, -i * 15, 1, 1, 1);
 }
 
-// new Cube(-50, 10, 0, 10, 10, 100);
+// // new Cube(-50, 10, 0, 10, 10, 100);
 
-setInterval(() => {
-  const cube = new Cube(
-    Math.random() * 10,
-    Math.random() * 10 + 10,
-    Math.random() * 10,
-    1,
-    1,
-    1
-  );
+// setInterval(() => {
+//   const cube = new Cube(
+//     Math.random() * 10,
+//     Math.random() * 10 + 10,
+//     Math.random() * 10,
+//     1,
+//     1,
+//     1
+//   );
 
-  if (Math.random() < 0.5) {
-    cube.entity.addComponent(
-      new EventSizeComponent(
-        cube.entity.id,
-        Math.random() * 5,
-        Math.random() * 5,
-        Math.random() * 5
-      )
-    );
-  }
-  setTimeout(() => {
-    const destroyedComponent = new EventDestroyedComponent(cube.entity.id);
-    const networkDataComponent = cube.entity.getComponent(NetworkDataComponent);
-    if (networkDataComponent)
-      networkDataComponent.addComponent(destroyedComponent);
-    cube.entity.addComponent(destroyedComponent);
-  }, 3000);
-}, 3000);
+//   if (Math.random() < 0.5) {
+//     cube.entity.addComponent(
+//       new EventSizeComponent(
+//         cube.entity.id,
+//         Math.random() * 5,
+//         Math.random() * 5,
+//         Math.random() * 5
+//       )
+//     );
+//   }
+//   setTimeout(() => {
+//     const destroyedComponent = new EventDestroyedComponent(cube.entity.id);
+//     const networkDataComponent = cube.entity.getComponent(NetworkDataComponent);
+//     if (networkDataComponent)
+//       networkDataComponent.addComponent(destroyedComponent);
+//     cube.entity.addComponent(destroyedComponent);
+//   }, 3000);
+// }, 3000);
 
+new MapWorld();
 // Create the ground
-let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
-physicsSystem.world.createCollider(groundColliderDesc);
+// let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
+// physicsSystem.world.createCollider(groundColliderDesc);
 
 console.log(`Detected tick rate : ${config.TICKRATE}`);
 let lastUpdateTimestamp = Date.now();
 
-new MapWorld();
-function gameLoop() {
+async function gameLoop() {
   setTimeout(gameLoop, 1000 / config.TICKRATE);
   const now = Date.now();
   const dt = now - lastUpdateTimestamp;
@@ -105,7 +105,7 @@ function gameLoop() {
   syncColorSystem.update(entities);
   networkSystem.update(entities);
   randomSizeSystem.update(entities);
-  // trimeshSystem.update(entities);
+  await trimeshSystem.update(entities, physicsSystem.world);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
   // Check the order of things then so it doesnt reset after sending
