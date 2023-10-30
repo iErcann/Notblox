@@ -8,7 +8,7 @@ import {
   loadGltf,
   TextureLoader,
 } from "node-three-gltf";
-import THREE from "three";
+import * as THREE from "three";
 
 export class TrimeshSystem {
   private gltfLoader: GLTFLoader;
@@ -34,61 +34,72 @@ export class TrimeshSystem {
   }
 
   async update(entities: Entity[], world: Rapier.World) {
+    // An array to store the promises for GLTF model loading
+    const loadPromises: Promise<void>[] = [];
+
     for (const entity of entities) {
       const eventTrimeshComponent = entity.getComponent(EventTrimeshComponent);
       if (eventTrimeshComponent) {
         console.log(entity.id, "geometry");
 
-        try {
-          this.loadGLTFModel(
-            "https://myaudio.nyc3.cdn.digitaloceanspaces.com/SimpleWorld.glb"
-          ).then((gltf: GLTF) => {
+        const loadPromise = this.loadGLTFModel(
+          "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
+        )
+          .then(async (gltf: GLTF) => {
             if (gltf) {
-              // Add the mesh to your scene
-              // Optionally, you can access the mesh's geometry, vertices, and indices
+              // Iterate over all child objects in the GLTF scene
+              gltf.scene.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                  const mesh = child as THREE.Mesh;
+                  const indices = mesh.geometry.index?.array;
+                  const vertices = mesh.geometry.attributes.position.array;
 
-              const mesh = gltf.scene.children[0] as THREE.Mesh;
-              const indices = mesh.geometry.index?.array;
-              const vertices = mesh.geometry.attributes.position.array;
+                  // Scale factor for the vertices
+                  const scale = 1; // Adjust as needed
 
-              // const geometry = new THREE.BufferGeometry();
-              // geometry.setAttribute(
-              //   "position",
-              //   new THREE.BufferAttribute(new Float32Array(vertices), 3)
-              // );
+                  // Create a new Float32Array to hold the scaled vertices
+                  const scaledVertices = new Float32Array(vertices.length);
 
-              console.log(indices, vertices);
-              // Create a new Float32Array to hold the scaled vertices
-              const scaledVertices = new Float32Array(vertices.length);
+                  // Scale the vertices
+                  for (let i = 0; i < vertices.length; i++) {
+                    scaledVertices[i] = vertices[i] * scale;
+                  }
 
-              // Scale the vertices
-              for (let i = 0; i < vertices.length; i++) {
-                scaledVertices[i] = vertices[i] * 1;
-              }
+                  // Create the trimesh collider for the current mesh
+                  const trimeshDesc = Rapier.ColliderDesc.trimesh(
+                    scaledVertices as Float32Array,
+                    indices as Uint32Array
+                  );
+                  trimeshDesc.setTranslation(
+                    mesh.position.x,
+                    mesh.position.y,
+                    mesh.position.z
+                  );
 
-              // Use the scaledVertices array in your trimesh creation
+                  // Create a kinematic position-based rigid body
+                  const rigidBody =
+                    Rapier.RigidBodyDesc.kinematicPositionBased();
 
-              console.log(vertices, indices);
-              const trimeshDesc = Rapier.ColliderDesc.trimesh(
-                scaledVertices as Float32Array,
-                indices as Uint32Array
-              );
-
-              console.log(indices, vertices);
-
-              const rigidBody = Rapier.RigidBodyDesc.kinematicPositionBased();
-
-              world.createCollider(
-                trimeshDesc,
-                world.createRigidBody(rigidBody)
-              );
+                  // Create the collider and attach it to the rigid body
+                  world.createCollider(
+                    trimeshDesc,
+                    world.createRigidBody(rigidBody)
+                  );
+                  console.log("Created trimesh");
+                }
+              });
             }
+          })
+          .catch((error) => {
+            console.error("Error loading GLTF model:", error);
           });
-        } catch (error) {
-          console.error("Error loading GLTF model:", error);
-        }
+
+        loadPromises.push(loadPromise);
         entity.removeComponent(EventTrimeshComponent);
       }
     }
+
+    // Wait for all GLTF model loading and trimesh creation to complete
+    await Promise.all(loadPromises);
   }
 }
