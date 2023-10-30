@@ -35,9 +35,9 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.addLight();
     this.addDirectionnalLight();
-    // this.addWorld(loadManager);
+    this.addWorld(loadManager);
     this.addSky();
-    this.addGround();
+    // this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
@@ -102,11 +102,16 @@ export class Renderer extends THREE.WebGLRenderer {
 
   private addWorld(loadManager: LoadManager) {
     loadManager
-      .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
+      // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
+      .glTFLoad("SimpleWorld.glb")
       .then((gtlf: GLTF) => {
-        const loadedMesh = gtlf.scenes[0];
-        loadedMesh.position.y = 0.2;
-        loadedMesh.scale.set(5.2, 5.2, 5.2);
+        const loadedMesh = gtlf.scene.children[0] as THREE.Mesh;
+        const indices = loadedMesh.geometry.index?.array;
+        const vertices = loadedMesh.geometry.attributes.position.array;
+
+        // const indices = loadedMesh.
+        // const vertices = loadedMesh.geometry.attributes.position.array;
+        console.log(indices, vertices);
         this.scene.add(loadedMesh);
       });
   }
