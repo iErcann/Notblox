@@ -44,14 +44,6 @@ const destroySystem = new DestroySystem();
 const sleepCheckSystem = new SleepCheckSystem();
 const randomSizeSystem = new RandomSizeSystem();
 
-for (let i = 1; i < 3; i++) {
-  new Cube(0, i, -i * 15, 3, i * 2, 3);
-}
-
-for (let i = 1; i < 10; i++) {
-  new Cube(30, i, -i * 15, 1, 1, 1);
-}
-
 // // new Cube(-50, 10, 0, 10, 10, 100);
 
 // setInterval(() => {
@@ -84,6 +76,13 @@ for (let i = 1; i < 10; i++) {
 // }, 3000);
 
 new MapWorld();
+
+setTimeout(() => {
+  for (let i = 1; i < 10; i++) {
+    new Cube(0, i * 2, 0, 1, 1, 1);
+  }
+}, 1000);
+
 // Create the ground
 // let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
 // physicsSystem.world.createCollider(groundColliderDesc);
@@ -96,6 +95,7 @@ async function gameLoop() {
   const now = Date.now();
   const dt = now - lastUpdateTimestamp;
 
+  await trimeshSystem.update(entities, physicsSystem.world);
   movementSystem.update(dt, entities, physicsSystem.world);
   animationSystem.update(entities);
   syncRotationSystem.update(entities);
@@ -105,7 +105,6 @@ async function gameLoop() {
   syncColorSystem.update(entities);
   networkSystem.update(entities);
   randomSizeSystem.update(entities);
-  await trimeshSystem.update(entities, physicsSystem.world);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
   // Check the order of things then so it doesnt reset after sending

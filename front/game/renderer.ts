@@ -68,7 +68,7 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addDirectionnalLight() {
     // Add directional light for shadows and highlights
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
 
     // this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
@@ -103,16 +103,11 @@ export class Renderer extends THREE.WebGLRenderer {
   private addWorld(loadManager: LoadManager) {
     loadManager
       // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
-      .glTFLoad("SimpleWorld.glb")
+      .glTFLoad(
+        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
+      )
       .then((gtlf: GLTF) => {
-        const loadedMesh = gtlf.scene.children[0] as THREE.Mesh;
-        const indices = loadedMesh.geometry.index?.array;
-        const vertices = loadedMesh.geometry.attributes.position.array;
-
-        // const indices = loadedMesh.
-        // const vertices = loadedMesh.geometry.attributes.position.array;
-        console.log(indices, vertices);
-        this.scene.add(loadedMesh);
+        this.scene.add(gtlf.scene);
       });
   }
   public update() {
