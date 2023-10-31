@@ -78,7 +78,7 @@ const randomSizeSystem = new RandomSizeSystem();
 new MapWorld();
 
 setTimeout(() => {
-  for (let i = 1; i < 10; i++) {
+  for (let i = 1; i < 2; i++) {
     new Cube(0, i * 2, 0, 1, 1, 1);
   }
 }, 1000);
@@ -104,7 +104,7 @@ async function gameLoop() {
   syncSizeSystem.update(entities);
   syncColorSystem.update(entities);
   networkSystem.update(entities);
-  randomSizeSystem.update(entities);
+  // randomSizeSystem.update(entities);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
   // Check the order of things then so it doesnt reset after sending

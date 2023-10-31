@@ -29,7 +29,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.shadowMap.type = THREE.PCFSoftShadowMap; //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
 
     this.setSize(window.innerWidth, window.innerHeight);
-    this.setPixelRatio(window.devicePixelRatio / 1.4);
+    this.setPixelRatio(window.devicePixelRatio / 2);
     this.toneMapping = THREE.ACESFilmicToneMapping;
     this.toneMappingExposure = 0.5;
 
@@ -104,7 +104,8 @@ export class Renderer extends THREE.WebGLRenderer {
     loadManager
       // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
       .glTFLoad(
-        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
+        // "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
+        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/FootballWorld.glb"
       )
       .then((gtlf: GLTF) => {
         this.scene.add(gtlf.scene);
