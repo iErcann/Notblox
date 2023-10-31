@@ -43,7 +43,8 @@ export class TrimeshSystem {
         console.log(entity.id, "geometry");
 
         const loadPromise = this.loadGLTFModel(
-          "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
+          // "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
+          "https://myaudio.nyc3.cdn.digitaloceanspaces.com/FootballWorld.glb"
         )
           .then(async (gltf: GLTF) => {
             if (gltf) {
@@ -76,6 +77,12 @@ export class TrimeshSystem {
                     mesh.position.z
                   );
 
+                  trimeshDesc.setRotation({
+                    x: mesh.quaternion.x,
+                    y: mesh.quaternion.y,
+                    z: mesh.quaternion.z,
+                    w: mesh.quaternion.w,
+                  });
                   // Create a kinematic position-based rigid body
                   const rigidBody =
                     Rapier.RigidBodyDesc.kinematicPositionBased();
