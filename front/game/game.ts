@@ -62,7 +62,7 @@ export class Game {
   public async start() {
     // Wait for the WebSocket connection to be established
     await this.websocketManager.connect();
-    document.body.appendChild(this.renderer.domElement);
+    this.renderer.appendChild();
     this.renderer.setAnimationLoop(this.loopFunction);
   }
 

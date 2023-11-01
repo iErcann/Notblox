@@ -9,6 +9,7 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { GlitchPass } from "three/addons/postprocessing/GlitchPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
 
 export interface Renderable {
   mesh: THREE.Mesh;
@@ -17,8 +18,7 @@ export interface Renderable {
 export class Renderer extends THREE.WebGLRenderer {
   public camera: Camera;
   public scene: THREE.Scene;
-  private directionalLight: THREE.DirectionalLight | undefined;
-
+  public css2DRenderer: CSS2DRenderer;
   constructor(scene: THREE.Scene, loadManager: LoadManager) {
     super({ antialias: true });
 
@@ -30,8 +30,13 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.setSize(window.innerWidth, window.innerHeight);
     this.setPixelRatio(window.devicePixelRatio / 1.2);
-    this.toneMapping = THREE.ACESFilmicToneMapping;
-    this.toneMappingExposure = 0.5;
+    this.toneMapping = THREE.CineonToneMapping;
+    // this.toneMappingExposure = 0.5;
+
+    this.css2DRenderer = new CSS2DRenderer();
+    this.css2DRenderer.setSize(window.innerWidth, window.innerHeight);
+    this.css2DRenderer.domElement.style.position = "absolute";
+    this.css2DRenderer.domElement.style.top = "0";
 
     this.addLight();
     this.addDirectionnalLight();
@@ -42,6 +47,12 @@ export class Renderer extends THREE.WebGLRenderer {
     window.addEventListener("resize", this.onWindowResize.bind(this), false);
   }
 
+  public appendChild() {
+    document.body.appendChild(this.domElement);
+    if (this.css2DRenderer)
+      document.body.appendChild(this.css2DRenderer.domElement);
+    else console.error("Can't append child CSS3DRenderer");
+  }
   private addSky() {
     const sun = new THREE.Vector3();
 
@@ -67,22 +78,39 @@ export class Renderer extends THREE.WebGLRenderer {
     this.scene.add(sky);
   }
   private addDirectionnalLight() {
-    // Add directional light for shadows and highlights
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    // Create a directional light for shadows and highlights
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.position.set(-1, 0.75, 1);
+    directionalLight.position.multiplyScalar(50);
 
-    this.directionalLight.castShadow = true;
-    this.scene.add(this.directionalLight);
-    this.scene.add(this.directionalLight.target);
-    // Add the sunlight to the scene
+    // Enable shadow casting
+    // directionalLight.castShadow = true;
 
-    // const helper = new THREE.DirectionalLightHelper(this.directionalLight, 5);
-    // this.scene.add(helper);
+    // Add the directional light to the scene
+    this.scene.add(directionalLight);
+
+    const side = 100;
+    directionalLight.shadow.camera.top = side;
+    directionalLight.shadow.camera.bottom = -side;
+    directionalLight.shadow.camera.left = side;
+    directionalLight.shadow.camera.right = -side;
+    // Create a target for the directional light (if needed)
+    const lightTarget = new THREE.Object3D();
+
+    this.scene.add(lightTarget);
+    directionalLight.target = lightTarget;
+
+    // Add a directional light helper for visualization (optional)
+    const helper = new THREE.DirectionalLightHelper(directionalLight, 5);
+    this.scene.add(helper);
   }
+
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
-    hemisphereLight.position.set(0.5, 1, 0.75);
-    this.scene.add(hemisphereLight);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.8);
+    hemiLight.position.set(0, 500, 0);
+    this.scene.add(hemiLight);
   }
 
   private addGround() {
@@ -109,6 +137,12 @@ export class Renderer extends THREE.WebGLRenderer {
       )
       .then((gtlf: GLTF) => {
         this.scene.add(gtlf.scene);
+        gtlf.scene.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true; // Make the child mesh cast shadows
+            child.receiveShadow = true; // Make the child mesh receive shadows
+          }
+        });
       });
   }
   public update() {
@@ -116,6 +150,7 @@ export class Renderer extends THREE.WebGLRenderer {
     //   this.directionalLight.position.copy(this.camera.position);
     // }
     this.camera.update();
+    this.css2DRenderer.render(this.scene, this.camera);
     this.render(this.scene, this.camera);
   }
 
@@ -124,5 +159,6 @@ export class Renderer extends THREE.WebGLRenderer {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.setSize(window.innerWidth, window.innerHeight);
+    this.css2DRenderer.setSize(window.innerWidth, window.innerHeight);
   }
 }

@@ -3,6 +3,7 @@ import { PositionComponent } from "../../../../../shared/component/PositionCompo
 import { Entity } from "../../../../../shared/entity/Entity.js";
 import { ColorComponent } from "../../../../../shared/component/ColorComponent.js";
 import { EventColorComponent } from "../../component/events/EventColorComponent.js";
+import Rapier from "../../../physics/rapier.js";
 
 export class BoundaryCheckSystem {
   update(entities: Entity[]) {
@@ -14,7 +15,7 @@ export class BoundaryCheckSystem {
         bodyComponent.body.setTranslation(
           {
             x: 0,
-            y: 10,
+            y: 4,
             z: 0,
           },
           true
@@ -26,6 +27,7 @@ export class BoundaryCheckSystem {
             new EventColorComponent(entity.id, "#" + randomHex)
           );
         }
+        bodyComponent.body.setLinvel(new Rapier.Vector3(0, 0, 0), true);
       }
     }
   }

@@ -5,7 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 export class Camera extends THREE.PerspectiveCamera {
   public followedObject: THREE.Mesh | undefined;
-  public offset = new THREE.Vector3(0, 15, 15);
+  public offset = new THREE.Vector3(0, 7, 15);
   constructor() {
     super(60, window.innerWidth / window.innerHeight);
     this.position.copy(this.offset);
