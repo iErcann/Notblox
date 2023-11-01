@@ -14,7 +14,7 @@ export class AnimationComponent extends Component {
     // Play all animations
 
     animations.forEach((clip, index) => {
-      if (index === 3) this.mixer.clipAction(clip).play();
+      if (index === 2) this.mixer.clipAction(clip).play();
     });
   }
 }
