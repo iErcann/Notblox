@@ -11,7 +11,10 @@ export class MapWorld {
     );
 
     this.entity.addComponent(
-      new EventTrimeshComponent(this.entity.id, "test.glb")
+      new EventTrimeshComponent(
+        this.entity.id,
+        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/FootballWorld3.glb"
+      )
     );
   }
 }

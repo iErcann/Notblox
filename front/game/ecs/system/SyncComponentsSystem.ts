@@ -10,12 +10,14 @@ import {
   SerializedSizeComponent,
   SerializedDestroyedComponent,
   SerializedColorComponent,
+  SerializedSingleSizeComponent,
 } from "@shared/network/server/serialized";
 
 import { PositionComponent } from "@shared/component/PositionComponent";
 import { EventDestroyedComponent } from "@shared/component/events/EventDestroyedComponent";
 import { RotationComponent } from "@shared/component/RotationComponent";
 import { SizeComponent } from "@shared/component/SizeComponent";
+import { SingleSizeComponent } from "@shared/component/SingleSizeComponent";
 
 import { Game } from "@/game/game";
 import { Player } from "../entity/Player";
@@ -23,6 +25,7 @@ import { Cube } from "../entity/Cube";
 
 import { MeshComponent } from "../component/MeshComponent";
 import { ColorComponent } from "@shared/component/ColorComponent";
+import { Sphere } from "../entity/Sphere";
 
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
@@ -84,6 +87,14 @@ export class SyncComponentsSystem {
       );
 
       return cube.entity;
+    } else if (serializedEntity.t === SerializedEntityType.SPHERE) {
+      const sphere = new Sphere(serializedEntity.id, this.game);
+
+      this.game.renderer.scene.add(
+        sphere.entity.getComponent(MeshComponent)!.mesh
+      );
+
+      return sphere.entity;
     }
   }
   createComponent(serializedComponent: SerializedComponent, entityId: number) {
@@ -125,6 +136,13 @@ export class SyncComponentsSystem {
       const serializedColorComponent =
         serializedComponent as SerializedColorComponent;
       return new ColorComponent(entityId, serializedColorComponent.color);
+    } else if (serializedComponent.t === SerializedComponentType.SINGLE_SIZE) {
+      const serializedSingleSizeComponent =
+        serializedComponent as SerializedSingleSizeComponent;
+      return new SingleSizeComponent(
+        entityId,
+        serializedSingleSizeComponent.size
+      );
     }
   }
 }

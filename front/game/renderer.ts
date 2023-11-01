@@ -20,7 +20,7 @@ export class Renderer extends THREE.WebGLRenderer {
   private directionalLight: THREE.DirectionalLight | undefined;
 
   constructor(scene: THREE.Scene, loadManager: LoadManager) {
-    super({ antialias: false });
+    super({ antialias: true });
 
     this.camera = new Camera();
     this.scene = scene;
@@ -29,7 +29,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.shadowMap.type = THREE.PCFSoftShadowMap; //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
 
     this.setSize(window.innerWidth, window.innerHeight);
-    this.setPixelRatio(window.devicePixelRatio / 2);
+    this.setPixelRatio(window.devicePixelRatio / 1.2);
     this.toneMapping = THREE.ACESFilmicToneMapping;
     this.toneMappingExposure = 0.5;
 
@@ -68,7 +68,7 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addDirectionnalLight() {
     // Add directional light for shadows and highlights
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.2);
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 
     this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
@@ -105,7 +105,7 @@ export class Renderer extends THREE.WebGLRenderer {
       // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
       .glTFLoad(
         // "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
-        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/FootballWorld.glb"
+        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/FootballWorld3.glb"
       )
       .then((gtlf: GLTF) => {
         this.scene.add(gtlf.scene);

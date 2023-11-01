@@ -7,12 +7,14 @@ export enum SerializedComponentType {
   SIZE = 3,
   COLOR = 4,
   DESTROYED = 5,
+  SINGLE_SIZE = 6,
 }
 
 export enum SerializedEntityType {
   PLAYER = 1,
   CUBE = 2,
   WORLD = 3,
+  SPHERE = 4,
 }
 
 export interface SerializedComponent {
@@ -44,6 +46,10 @@ export interface SerializedSizeComponent extends SerializedComponent {
   width: number;
   height: number;
   depth: number;
+}
+
+export interface SerializedSingleSizeComponent extends SerializedComponent {
+  size: number;
 }
 
 export interface SerializedColorComponent extends SerializedComponent {

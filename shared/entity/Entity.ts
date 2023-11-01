@@ -25,6 +25,9 @@ export class Entity {
       (c) => !(c instanceof componentType)
     );
   }
+  getAllComponents() {
+    return this.components;
+  }
 
   // Get a component from the entity
   getComponent<T extends Component>(
