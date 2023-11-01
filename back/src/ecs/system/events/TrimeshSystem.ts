@@ -42,10 +42,7 @@ export class TrimeshSystem {
       if (eventTrimeshComponent) {
         console.log(entity.id, "geometry");
 
-        const loadPromise = this.loadGLTFModel(
-          // "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
-          "https://myaudio.nyc3.cdn.digitaloceanspaces.com/FootballWorld.glb"
-        )
+        const loadPromise = this.loadGLTFModel(eventTrimeshComponent.filePath)
           .then(async (gltf: GLTF) => {
             if (gltf) {
               // Iterate over all child objects in the GLTF scene

@@ -21,6 +21,7 @@ import { SyncColorSystem } from "./ecs/system/events/SyncColorSystem.js";
 import { TrimeshSystem } from "./ecs/system/events/TrimeshSystem.js";
 import { MapWorld } from "./ecs/entity/MapWorld.js";
 import { BoundaryCheckSystem } from "./ecs/system/physics/BoundaryCheckSystem.js";
+import { Sphere } from "./ecs/entity/Sphere.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -81,6 +82,7 @@ new MapWorld();
 setTimeout(() => {
   for (let i = 1; i < 2; i++) {
     new Cube(0, i * 2, 0, 1, 1, 1);
+    new Sphere(0, i * 2, 0, 3);
   }
 }, 1000);
 
@@ -105,7 +107,7 @@ async function gameLoop() {
   syncSizeSystem.update(entities);
   syncColorSystem.update(entities);
   networkSystem.update(entities);
-  // randomSizeSystem.update(entities);
+  randomSizeSystem.update(entities);
   boundaryCheckSystem.update(entities);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)

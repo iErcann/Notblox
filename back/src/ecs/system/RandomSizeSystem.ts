@@ -1,12 +1,10 @@
-import Rapier from "../../physics/rapier.js";
 import { ColorComponent } from "../../../../shared/component/ColorComponent.js";
+import { SingleSizeComponent } from "../../../../shared/component/SingleSizeComponent.js";
 import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
 import { Entity } from "../../../../shared/entity/Entity.js";
-import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { EventColorComponent } from "../component/events/EventColorComponent.js";
+import { EventSingleSizeComponent } from "../component/events/EventSingleSizeComponent.js";
 import { EventSizeComponent } from "../component/events/EventSizeComponent.js";
-import { PlayerComponent } from "../component/PlayerComponent.js";
-import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 
 export class RandomSizeSystem {
   update(entities: Entity[]) {
@@ -31,6 +29,19 @@ export class RandomSizeSystem {
           const randomHex = Math.floor(Math.random() * 16777215).toString(16);
           entity.addComponent(
             new EventColorComponent(entity.id, "#" + randomHex)
+          );
+        }
+      }
+
+      const singleSizeComponent = entity.getComponent(SingleSizeComponent);
+      if (singleSizeComponent) {
+        if (Math.random() < 0.1) {
+          console.log("New event size component", singleSizeComponent.size + 1);
+          entity.addComponent(
+            new EventSingleSizeComponent(
+              entity.id,
+              singleSizeComponent.size + 1 / 10
+            )
           );
         }
       }
