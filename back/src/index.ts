@@ -80,10 +80,12 @@ const boundaryCheckSystem = new BoundaryCheckSystem();
 new MapWorld();
 
 setTimeout(() => {
-  for (let i = 1; i < 2; i++) {
-    new Cube(0, i * 2, 0, 1, 1, 1);
-    new Sphere(0, i * 2, 0, 3);
-  }
+  // for (let i = 1; i < 10; i++) {
+  //   for (let j = 1; j < 10; j++) {
+  //     new Cube(i * 2, i * 2, j * 2, 1, 1, 1);
+  //   }
+  // }
+  new Sphere(0, 30, 0, 1);
 }, 1000);
 
 // Create the ground
@@ -107,7 +109,7 @@ async function gameLoop() {
   syncSizeSystem.update(entities);
   syncColorSystem.update(entities);
   networkSystem.update(entities);
-  randomSizeSystem.update(entities);
+  // randomSizeSystem.update(entities);
   boundaryCheckSystem.update(entities);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)

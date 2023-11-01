@@ -53,6 +53,7 @@ export class Sphere {
     const { x, y, z } = this.getPosition();
     // Rigidbody
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
+    rigidBodyDesc.setLinearDamping(1);
 
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);

@@ -23,28 +23,28 @@ export class InputManager {
   private handleKeyDown(event: KeyboardEvent) {
     switch (event.key) {
       case "ArrowUp":
-      case "Z":
+      case "Z" || "z":
         this.inputState.up = true;
         break;
       case "ArrowDown":
-      case "S":
+      case "S" || "s":
         this.inputState.down = true;
         break;
       case "ArrowLeft":
-      case "Q":
+      case "Q" || "q":
         this.inputState.left = true;
         break;
       case "ArrowRight":
-      case "D":
+      case "D" || "d":
         this.inputState.right = true;
         break;
       case " ":
         this.inputState.space = true;
         break;
-      case "A":
+      case "A" || "a":
         this.inputState.cameraLeft = true;
         break;
-      case "E":
+      case "E" || "e":
         this.inputState.cameraRight = true;
         break;
     }
@@ -53,28 +53,28 @@ export class InputManager {
   private handleKeyUp(event: KeyboardEvent) {
     switch (event.key) {
       case "ArrowUp":
-      case "Z":
+      case "Z" || "z":
         this.inputState.up = false;
         break;
       case "ArrowDown":
-      case "S":
+      case "S" || "s":
         this.inputState.down = false;
         break;
       case "ArrowLeft":
-      case "Q":
+      case "Q" || "q":
         this.inputState.left = false;
         break;
       case "ArrowRight":
-      case "D":
+      case "D" || "d":
         this.inputState.right = false;
         break;
       case " ":
         this.inputState.space = false;
         break;
-      case "A":
+      case "A" || "a":
         this.inputState.cameraLeft = false;
         break;
-      case "E":
+      case "E" || "e":
         this.inputState.cameraRight = false;
         break;
     }
