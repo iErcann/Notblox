@@ -68,9 +68,9 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addDirectionnalLight() {
     // Add directional light for shadows and highlights
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.2);
 
-    // this.directionalLight.castShadow = true;
+    this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
     this.scene.add(this.directionalLight.target);
     // Add the sunlight to the scene

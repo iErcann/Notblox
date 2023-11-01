@@ -20,6 +20,7 @@ import { RandomSizeSystem } from "./ecs/system/RandomSizeSystem.js";
 import { SyncColorSystem } from "./ecs/system/events/SyncColorSystem.js";
 import { TrimeshSystem } from "./ecs/system/events/TrimeshSystem.js";
 import { MapWorld } from "./ecs/entity/MapWorld.js";
+import { BoundaryCheckSystem } from "./ecs/system/physics/BoundaryCheckSystem.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -43,7 +44,7 @@ const animationSystem = new AnimationSystem();
 const destroySystem = new DestroySystem();
 const sleepCheckSystem = new SleepCheckSystem();
 const randomSizeSystem = new RandomSizeSystem();
-
+const boundaryCheckSystem = new BoundaryCheckSystem();
 // // new Cube(-50, 10, 0, 10, 10, 100);
 
 // setInterval(() => {
@@ -105,6 +106,7 @@ async function gameLoop() {
   syncColorSystem.update(entities);
   networkSystem.update(entities);
   // randomSizeSystem.update(entities);
+  boundaryCheckSystem.update(entities);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
   // Check the order of things then so it doesnt reset after sending
