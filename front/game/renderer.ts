@@ -102,8 +102,8 @@ export class Renderer extends THREE.WebGLRenderer {
     directionalLight.target = lightTarget;
 
     // Add a directional light helper for visualization (optional)
-    const helper = new THREE.DirectionalLightHelper(directionalLight, 5);
-    this.scene.add(helper);
+    // const helper = new THREE.DirectionalLightHelper(directionalLight, 5);
+    // this.scene.add(helper);
   }
 
   private addLight() {

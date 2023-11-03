@@ -16,6 +16,7 @@ import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 
 export class Player {
   entity: Entity;
+
   constructor(entityId: number, game: Game) {
     this.entity = game.entityManager.createEntity(
       SerializedEntityType.PLAYER,
@@ -28,12 +29,12 @@ export class Player {
     const geometry = new THREE.CapsuleGeometry(1, 2, 1);
     const material = new THREE.MeshPhongMaterial();
     material.color = new THREE.Color(0xff5522);
-    // mesh.geometry = geometry;
     mesh.material = material;
     mesh.receiveShadow = true;
     mesh.castShadow = true;
 
-    if (entityId === game.currentPlayerEntityId) {
+    const isCurrentPlayer = this.entity.id === game.currentPlayerEntityId;
+    if (isCurrentPlayer) {
       this.entity.addComponent(
         new FollowComponent(entityId, game.renderer.camera)
       );
@@ -44,12 +45,6 @@ export class Player {
     const loader = game.loadManager;
 
     loader
-      // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Walking.glb")
-      // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Bocky.glb")
-      // .glTFLoad(
-      //   "https://myaudio.nyc3.cdn.digitaloceanspaces.com/BockyAnimatedLOL.glb"
-      // )
-      // .glTFLoad("Car.glb")
       .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Character.glb")
       .then((gtlf: GLTF) => {
         mesh.add(gtlf.scenes[0]);
@@ -57,8 +52,31 @@ export class Player {
           new AnimationComponent(this.entity.id, mesh, gtlf.animations)
         );
       });
+
     this.activateShadows();
 
+    if (!isCurrentPlayer) {
+      this.addPlayerNameText(mesh);
+    }
+  }
+
+  activateShadows() {
+    const meshComponent = this.entity.getComponent(MeshComponent);
+
+    if (meshComponent) {
+      const object3D = meshComponent.mesh;
+
+      // Enable shadows for all child meshes
+      object3D.traverse(function (child) {
+        if (child instanceof THREE.Mesh) {
+          child.castShadow = true; // Make the child mesh cast shadows
+          child.receiveShadow = true; // Make the child mesh receive shadows
+        }
+      });
+    }
+  }
+
+  addPlayerNameText(mesh: THREE.Mesh) {
     const playerNameElement = document.createElement("div");
     playerNameElement.textContent = "Player";
     playerNameElement.style.color = "#FFFFFF";
@@ -71,21 +89,5 @@ export class Player {
     cssObject.position.set(0, 3, 0);
 
     mesh.add(cssObject);
-  }
-  activateShadows() {
-    const meshComponent = this.entity.getComponent(MeshComponent);
-
-    if (meshComponent) {
-      const object3D = meshComponent.mesh;
-
-      // Enable shadows for all child meshes
-      object3D.traverse(function (child) {
-        if (child instanceof THREE.Mesh) {
-          console.log("shadows");
-          child.castShadow = true; // Make the child mesh cast shadows
-          child.receiveShadow = true; // Make the child mesh receive shadows
-        }
-      });
-    }
   }
 }
