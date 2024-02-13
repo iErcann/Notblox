@@ -1,9 +1,13 @@
 # Three JS Multiplayer Game Demo
 
+![Screen](screen.webp)
+
 ## Features
 
 - Multiplayer
+- Only TypeScript
 - 3D Physics (Rapier.js)
+- Vanilla Three.js
 - Server Authoritative
 - ECS (Entity Component System) with Network Sync (NetworkComponent)
 - Delta Compression
@@ -22,7 +26,7 @@ I wanted to create a simple multiplayer game engine using Three.js and my own EC
 I'm thinking about creating a GTA-like game with this engine. It would be a simple game with a city, cars, and players. The game would be server-authoritative, and the server would be able to spawn cars, NPCs, and other entities. The game would be a simple sandbox game where players can interact with each other and the environment.
 Inspiration : https://github.com/swift502/Sketchbook
 
-## Demo (WIP)
+## Demo (Click on the images to see the video)
 
 [![Football with real players](https://i.ytimg.com/an_webp/7vBifZ2qG1k/mqdefault_6s.webp?du=3000&sqp=CP7Wr64G&rs=AOn4CLBiHVVLOmVpj82LbnF-tuUzhLMLOA)](https://www.youtube.com/watch?v=7vBifZ2qG1k "See on youtube")
 
@@ -101,3 +105,8 @@ Other example:
 - `EventFireComponent` <- user input
 - `EventFireSystem` <- this checks for it
 - `shared/FireComponent` <- contains the real data, inherited from `NetworkComponent` because it needs to be sent to the clients back.
+
+## Asset
+
+San Andreas Map :
+https://skfb.ly/oJSPS
