@@ -1,5 +1,68 @@
- 
-### Shared file import Error .js files
+# Three JS Multiplayer Game Demo
+
+## Features
+
+- Multiplayer
+- 3D Physics (Rapier.js)
+- Server Authoritative
+- ECS (Entity Component System) with Network Sync (NetworkComponent)
+- Delta Compression
+- Interpolation
+- Fast to load (small assets)
+- Shared code between server and client (useful for component replication)
+- Trimesh Collider
+
+## Why ?
+
+Browser games are fun, but most of them are Unity WebGL exports that take a long time to load.
+I wanted to create a simple multiplayer game engine using Three.js and my own ECS. This project has in mind to be a simple and fast game engine that can be used to create simple multiplayer games with the modularity of ECS.
+
+### Multiplayer GTA-like ?
+
+I'm thinking about creating a GTA-like game with this engine. It would be a simple game with a city, cars, and players. The game would be server-authoritative, and the server would be able to spawn cars, NPCs, and other entities. The game would be a simple sandbox game where players can interact with each other and the environment.
+Inspiration : https://github.com/swift502/Sketchbook
+
+## Demo (WIP)
+
+[![Football with real players](https://i3.ytimg.com/vi/qVss25u2q9s/maxresdefault.jpg)](https://www.youtube.com/watch?v=qVss25u2q9s "See on youtube")
+
+[![Demo](https://i.ytimg.com/an_webp/Uu3VCuyD9EA/mqdefault_6s.webp?du=3000&sqp=CKDcr64G&rs=AOn4CLCEDb-3N3iwfoqOnx9kS0_Fay3_kg)](https://www.youtube.com/watch?v=Uu3VCuyD9EA "See on youtube")
+
+### Online demo
+
+Small demo here : https://not-roblox.vercel.app/
+
+Hosted on an european server, there is no client side prediction, so the game may be laggy if you are far from the server.
+
+### Controls
+
+- Z : Forward
+- S : Backward
+- Q : Left
+- D : Right
+- Space : Jump
+- A : Camera Left
+- E : Camera Right
+
+## How to run
+
+### Front-end
+
+```bash
+  cd front
+  npm install
+  npm run dev
+```
+
+### Back-end
+
+```bash
+  cd back
+  npm install
+  npm run start
+```
+
+### Shared file import Error .js files fix
 
 [Link to GitHub Discussion](https://github.com/vercel/next.js/discussions/32237)
 
@@ -17,157 +80,20 @@
 
 [Link to StackExchange Question](https://gamedev.stackexchange.com/questions/194133/is-it-better-design-to-store-event-effects-within-an-entity-itself-or-within-a)
 
-#### Attach Events as Transient Components:
-
-```javascript
-class PlayerDeathEventComponent {
-  constructor() {
-    // Initialize event data (e.g., cause of death, timestamp)
-  }
-}
-
-// In the system's update loop:
-for (const entity of entities) {
-  if (entity.hasComponent(PlayerDeathEventComponent)) {
-    const event = entity.getComponent(PlayerDeathEventComponent);
-    // Handle the player's death event (e.g., update score, show game over screen)
-    entity.removeComponent(PlayerDeathEventComponent);
-  }
-}
-```
-
-#### Systems with Event Queues:
-
-```javascript
-class EnemyBehaviorSystem {
-  constructor() {
-    this.eventQueue = [];
-  }
-
-  update(dt) {
-    // Process other enemy behavior logic
-
-    // Process events in the event queue
-    while (this.eventQueue.length > 0) {
-      const event = this.eventQueue.pop();
-      if (event.type === "EnemyHitByPlayer") {
-        // Handle enemy hit event (e.g., reduce enemy health, award points)
-      }
-    }
-  }
-
-  addEventToQueue(event) {
-    this.eventQueue.push(event);
-  }
-}
-```
-
-#### Global Event Manager:
-
-```javascript
-class EventManager {
-  constructor() {
-    this.eventSubscriptions = new Map();
-  }
-
-  subscribe(eventType, system) {
-    if (!this.eventSubscriptions.has(eventType)) {
-      this.eventSubscriptions.set(eventType, []);
-    }
-    this.eventSubscriptions.get(eventType).push(system);
-  }
-
-  publish(eventType, eventData) {
-    if (this.eventSubscriptions.has(eventType)) {
-      const subscribers = this.eventSubscriptions.get(eventType);
-      for (const system of subscribers) {
-        system.handleEvent(eventType, eventData);
-      }
-    }
-  }
-}
-
-class PlayerSystem {
-  constructor(eventManager) {
-    eventManager.subscribe("PlayerDied", this);
-  }
-
-  handleEvent(eventType, eventData) {
-    if (eventType === "PlayerDied") {
-      // Handle player death event
-    }
-  }
-}
-```
-
-These examples illustrate different approaches to handling events within an ECS architecture, each with its own trade-offs in terms of complexity, maintainability, and performance.
-
-[Link to Reddit Discussion](https://www.reddit.com/r/gamedev/comments/6dsrzy/ecs_and_event_handling_how_to_handle_events/)
-
-In an ECS, events can be thought of as components that only exist for one frame. Avoid sending data between systems outside entities and components for better ECS benefits.
-
-Options in C#:
-
-A. Allow multiple components of the same type on one entity.
-
-```csharp
-public class Entity
-{
-  public List<IComponent> Components;
-  // Example "Components" list content:
-  // RigidbodyComponent
-  // TransformComponent
-  // FrameCollisionComponent
-  // FrameCollisionComponent
-  // FrameCollisionComponent
-}
-```
-
-B. Allow Lists inside components.
-
-```csharp
-// No component = No collisions happened.
-public struct FrameCollisionComponent
-{
-  public List<Collision> Collisions = new List<Collision>(1);
-}
-```
-
-C. Create a new entity per collision and keep handles to affected entities.
-
-```csharp
-public void HandleCollisionFromInternalCollisionSystem(CollisionInfo ci)
-{
-  var ce = new CollisionEvent();
-  ce.A = GetEntityFromCollider(ci.ColliderA);
-  ce.B = GetEntityFromCollider(ci.ColliderB);
-  ce.ColInfo = GetCustomCollisionInfo(ci);
-
-  var entity = _world.CreateEntity();
-  entity.AddComponent(ce);
-}
-
-public struct CollisionEvent
-{
-  public EntityHandle A;
-  public EntityHandle B;
-  public CustomCollisionInfo ColInfo;
-}
-```
-
-If no system consumes the event, only reacts to it, a cleanup system that runs after physics can reset the event.
-
 ### Component states
 
 A component is "updated" when its data has been changed (e.g., `SizeComponent width += 1`). A component can be "destroyed," and then it is sent.
 
 ### My logic
 
-- Front-end only receives the delta; it only receives data when it has changed.
+- Front-end only receives the delta; it receives data when it has changed.
 - For example, if a `ColorComponent` changes, it is sent to the player.
 - If there is no change, it will not be sent anymore.
 - Back-end needs to pass some events; this is achieved with `EventComponents` that are only called once and then removed from the Entity.
 - If a player changes its `ColorComponent`, an `EventColorComponent` is fired, received by a `ColorSystem` that checks for each `EventColorComponent`, applies the logic to the `ColorComponent`, and destroys the `EventColorComponent`.
+
+Other example:
+
 - `EventFireComponent` <- user input
 - `EventFireSystem` <- this checks for it
 - `shared/FireComponent` <- contains the real data, inherited from `NetworkComponent` because it needs to be sent to the clients back.
