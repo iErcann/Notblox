@@ -46,20 +46,24 @@ Hosted on an european server, there is no client side prediction, so the game ma
 
 ## How to run
 
-### Front-end
-
-```bash
-  cd front
-  npm install
-  npm run dev
-```
-
 ### Back-end
+
+Modify the `back/.env` file with `NODE_ENV=development`
 
 ```bash
   cd back
   npm install
   npm run start
+```
+
+### Front-end
+
+Modify the `front/.env.local` file with `NEXT_PUBLIC_SERVER_URL=development`
+
+```bash
+  cd front
+  npm install
+  npm run dev
 ```
 
 ### Shared file import Error .js files fix
