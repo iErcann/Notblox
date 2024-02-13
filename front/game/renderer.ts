@@ -133,7 +133,7 @@ export class Renderer extends THREE.WebGLRenderer {
       // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
       .glTFLoad(
         // "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
-        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/FootballWorldBorderm.glb"
+        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
       )
       .then((gtlf: GLTF) => {
         this.scene.add(gtlf.scene);

@@ -47,7 +47,7 @@ export class Game {
     this.inputManager = new InputManager(this.websocketManager);
     this.animationSystem = new AnimationSystem();
     this.loadManager = new LoadManager();
-    this.loadManager.dracoLoad("./SanAndreasDraco.glb");
+    // this.loadManager.dracoLoad("./SanAndreasDraco.glb");
     this.destroySystem = new DestroySystem();
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager);
   }
@@ -76,8 +76,9 @@ export class Game {
     this.websocketManager.update();
     this.inputManager.sendInput();
     const deltaTime = now - this.lastRenderTime;
-    const interpolationFactor =
-      this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
+    // Interp factor is wrong here
+    // const interpolationFactor =
+    //   this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
     this.syncPositionSystem.update(entities, 0.2);
     this.syncRotationSystem.update(entities, 0.5);
     this.syncColorSystem.update(entities);
@@ -87,7 +88,7 @@ export class Game {
       entities,
       this.inputManager.inputState
     );
-    this.animationSystem.update(entities);
+    this.animationSystem.update(deltaTime, entities);
     this.destroySystem.update(entities, this.entityManager, this.renderer);
     this.renderer.update();
     this.lastRenderTime = now;
