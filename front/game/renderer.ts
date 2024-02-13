@@ -85,7 +85,7 @@ export class Renderer extends THREE.WebGLRenderer {
     directionalLight.position.multiplyScalar(50);
 
     // Enable shadow casting
-    // directionalLight.castShadow = true;
+    directionalLight.castShadow = true;
 
     // Add the directional light to the scene
     this.scene.add(directionalLight);

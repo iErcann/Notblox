@@ -13,6 +13,7 @@ import {
   CSS3DObject,
 } from "three/examples/jsm/renderers/CSS3DRenderer.js";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer.js";
+import { TextComponent } from "../component/TextComponent";
 
 export class Player {
   entity: Entity;
@@ -40,6 +41,10 @@ export class Player {
       );
       const pointLight = new THREE.PointLight(0xff3aff, 15, 50);
       mesh.add(pointLight);
+    } else {
+      const textComponent = new TextComponent(entityId, "Player " + entityId);
+      this.entity.addComponent(textComponent);
+      textComponent.setFollowedMesh(mesh);
     }
 
     const loader = game.loadManager;
@@ -54,10 +59,6 @@ export class Player {
       });
 
     this.activateShadows();
-
-    if (!isCurrentPlayer) {
-      this.addPlayerNameText(mesh);
-    }
   }
 
   activateShadows() {
@@ -74,20 +75,5 @@ export class Player {
         }
       });
     }
-  }
-
-  addPlayerNameText(mesh: THREE.Mesh) {
-    const playerNameElement = document.createElement("div");
-    playerNameElement.textContent = "Player";
-    playerNameElement.style.color = "#FFFFFF";
-    playerNameElement.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
-    playerNameElement.style.padding = "5px";
-    playerNameElement.style.fontFamily = "Arial, sans-serif";
-    playerNameElement.style.fontSize = "14px";
-
-    const cssObject = new CSS2DObject(playerNameElement);
-    cssObject.position.set(0, 3, 0);
-
-    mesh.add(cssObject);
   }
 }

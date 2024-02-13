@@ -4,6 +4,7 @@ import { Game } from "@/game/game.js";
 import { MeshComponent } from "../component/MeshComponent.js";
 import { EntityManager } from "@shared/entity/EntityManager.js";
 import { Renderer } from "@/game/renderer.js";
+import { TextComponent } from "../component/TextComponent.js";
 
 export class DestroySystem {
   update(entities: Entity[], entityManager: EntityManager, renderer: Renderer) {
@@ -14,6 +15,11 @@ export class DestroySystem {
         console.log("Destroying", entity);
         if (meshComponent) {
           renderer.scene.remove(meshComponent.mesh);
+        }
+
+        const textComponent = entity.getComponent(TextComponent);
+        if (textComponent) {
+          textComponent.textObject.element.remove();
         }
 
         entityManager.removeEntity(entity);
