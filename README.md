@@ -24,7 +24,7 @@ Inspiration : https://github.com/swift502/Sketchbook
 
 ## Demo (WIP)
 
-[![Football with real players](https://i3.ytimg.com/vi/qVss25u2q9s/maxresdefault.jpg)](https://www.youtube.com/watch?v=qVss25u2q9s "See on youtube")
+[![Football with real players](https://i.ytimg.com/an_webp/7vBifZ2qG1k/mqdefault_6s.webp?du=3000&sqp=CP7Wr64G&rs=AOn4CLBiHVVLOmVpj82LbnF-tuUzhLMLOA)](https://www.youtube.com/watch?v=7vBifZ2qG1k "See on youtube")
 
 [![Demo](https://i.ytimg.com/an_webp/Uu3VCuyD9EA/mqdefault_6s.webp?du=3000&sqp=CKDcr64G&rs=AOn4CLCEDb-3N3iwfoqOnx9kS0_Fay3_kg)](https://www.youtube.com/watch?v=Uu3VCuyD9EA "See on youtube")
 
