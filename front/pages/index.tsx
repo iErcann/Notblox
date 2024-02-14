@@ -14,7 +14,7 @@ export default function Home() {
         height={400}
         className="rounded-lg shadow-xl"
       />
-      <p className="text-xl ">My multiplayer 3D game 😎 </p>
+      <p className="text-xl "> 😎 </p>
 
       <Link href={"/test"}>
         <Button className="w-full  inline-flex h-14 items-center justify-center rounded-md bg-zinc-900 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
@@ -22,7 +22,7 @@ export default function Home() {
           Play Now
         </Button>
       </Link>
-      <Link href={"https://discord.gg/rdqEBCAA"}>
+      <Link href={"https://discord.gg/kPhgtj49U2"}>
         <Button className="inline-flex h-14 items-center justify-center rounded-md bg-blue-600 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
           <ExternalLink className="mr-2" />
           Join Discord
