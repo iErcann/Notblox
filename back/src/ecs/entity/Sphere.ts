@@ -67,12 +67,12 @@ export class Sphere {
     const rigidBodyComponent = this.entity.getComponent(PhysicsBodyComponent);
 
     if (!rigidBodyComponent) {
-      console.error("BodyComponent doesn't exist on Cube.");
+      console.error("BodyComponent doesn't exist on Sphere.");
       return;
     }
 
     if (!sizeComponent) {
-      console.error("SizeComponent doesn't exist on Cube.");
+      console.error("SizeComponent doesn't exist on Sphere.");
       return;
     }
 
