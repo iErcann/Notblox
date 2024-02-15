@@ -1,6 +1,6 @@
 # Three JS Multiplayer Game Demo
 
-![Screen](screen.webp)
+![Screen](GameScreen1.webp)
 
 ## Features
 
@@ -28,9 +28,9 @@ Inspiration : https://github.com/swift502/Sketchbook
 
 ## Demo (Click on the images to see the video)
 
-[![Football with real players](https://i.ytimg.com/an_webp/7vBifZ2qG1k/mqdefault_6s.webp?du=3000&sqp=CP7Wr64G&rs=AOn4CLBiHVVLOmVpj82LbnF-tuUzhLMLOA)](https://www.youtube.com/watch?v=7vBifZ2qG1k "See on youtube")
+[![Football with real players](GameScreen2.webp)](https://www.youtube.com/watch?v=7vBifZ2qG1k "See on youtube")
 
-[![Demo](https://i.ytimg.com/an_webp/Uu3VCuyD9EA/mqdefault_6s.webp?du=3000&sqp=CKDcr64G&rs=AOn4CLCEDb-3N3iwfoqOnx9kS0_Fay3_kg)](https://www.youtube.com/watch?v=Uu3VCuyD9EA "See on youtube")
+[![Demo](GameScreen3.webp)](https://www.youtube.com/watch?v=Uu3VCuyD9EA "See on youtube")
 
 ### Online demo
 
