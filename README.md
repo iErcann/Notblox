@@ -15,6 +15,9 @@
 - Fast to load (small assets)
 - Shared code between server and client (useful for component replication)
 - Trimesh Collider
+- 
+## You like this project or want to talk about Three.js games ? 
+Discord  https://discord.gg/aEBXPtFwgU 👀
 
 ## Why ?
 
