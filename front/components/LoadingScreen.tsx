@@ -1,6 +1,6 @@
 export default function LoadingScreen() {
-    return (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+  return (
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
       <div className="border border-slate-900 shadow rounded-lg p-4 max w-full mx-auto">
         <div className="animate-pulse flex space-x-4">
           <div className="flex-1 space-y-6 py-1">
@@ -16,7 +16,7 @@ export default function LoadingScreen() {
               <button
                 type="button"
                 className="w-full text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-                >
+              >
                 Please wait..
               </button>
             </div>

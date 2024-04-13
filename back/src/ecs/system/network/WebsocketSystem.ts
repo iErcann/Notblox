@@ -50,7 +50,7 @@ export class WebsocketSystem {
       close: this.onClose,
     });
 
-    app.listen(this.port, (listenSocket) => {
+    app.listen(this.port, (listenSocket: any) => {
       if (listenSocket) {
         console.log(`WebSocket server listening on port ${this.port}`);
       } else {
