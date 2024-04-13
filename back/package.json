@@ -31,6 +31,6 @@
     "msgpackr": "^1.9.9",
     "node-three-gltf": "^1.4.0",
     "ts-node": "^10.9.1",
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.31.0"
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.43.0"
   }
 }

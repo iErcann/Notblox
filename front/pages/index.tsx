@@ -1,3 +1,4 @@
+import KeyboardLayout from "@/components/KeyboardLayout";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Play } from "lucide-react";
 import Image from "next/image";
@@ -10,11 +11,10 @@ export default function Home() {
       <Image
         src="/Logo.png"
         alt={"Logo"}
-        width={300}
-        height={400}
+        width={200}
+        height={300}
         className="rounded-lg shadow-xl"
       />
-      <p className="text-xl "> 😎 </p>
 
       <Link href={"/test"}>
         <Button className="w-full  inline-flex h-14 items-center justify-center rounded-md bg-zinc-900 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
@@ -22,18 +22,21 @@ export default function Home() {
           Play Now
         </Button>
       </Link>
-      <Link href={"https://discord.gg/kPhgtj49U2"}>
-        <Button className="inline-flex h-14 items-center justify-center rounded-md bg-blue-600 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
-          <ExternalLink className="mr-2" />
-          Join Discord
-        </Button>
-      </Link>
 
-      <p className="text-lg font-semibold">What's this?</p>
-      <p className="text-sm text-gray-600 mt-2">
-        This is my playground for learning new technologies and having fun. I
-        might get inspired by Roblox (dont sue pls)
-      </p>
+      <KeyboardLayout />
+      <div className="hidden lg:block">
+        <p className="text-lg font-semibold">What's this?</p>
+        <p className="text-sm text-gray-600 my-4">
+          This is my playground for learning new technologies and having fun. I
+          might get inspired by Roblox (dont sue pls)
+        </p>
+        <Link href={"https://discord.gg/kPhgtj49U2"}  >
+          <Button className="inline-flex h-14 items-center justify-center rounded-md bg-blue-600 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
+            <ExternalLink className="mr-2" />
+            Join Discord
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
