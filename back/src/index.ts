@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { EntityManager } from "../../shared/entity/EntityManager.js";
 import { Cube } from "./ecs/entity/Cube.js";
 // import { MovementSystem } from "./ecs/system/MovementSystem.js";

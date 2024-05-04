@@ -27,8 +27,8 @@ export class WebsocketSystem {
     const app = isProduction
       ? SSLApp({
           /* SSL options */
-          key_file_name: "/etc/letsencrypt/live/evalugem.com/privkey.pem",
-          cert_file_name: "/etc/letsencrypt/live/evalugem.com/cert.pem",
+          key_file_name: "/etc/letsencrypt/live/npm-1/privkey.pem",
+          cert_file_name: "/etc/letsencrypt/live/npm-1/cert.pem",
         })
       : App();
 
