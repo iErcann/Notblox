@@ -22,7 +22,7 @@ export class WebSocketManager {
     console.log("production", isProduction);
     // Set the serverUrl based on the environment
     this.serverUrl = isProduction
-      ? "wss://evalugem.com/ws"
+      ? "wss://soraprompts.store:8001"
       : "ws://localhost:8001";
 
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
