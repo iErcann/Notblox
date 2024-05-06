@@ -16,6 +16,7 @@ import {
   DestroySystem,
 } from "./ecs/system";
 import { Camera } from "./camera";
+import { SleepCheckSystem } from "./ecs/system/SleepCheckSystem";
 
 export class Game {
   private static instance: Game;
@@ -31,6 +32,7 @@ export class Game {
   private cameraFollowSystem: CameraFollowSystem;
   private websocketManager: WebSocketManager;
   private animationSystem: AnimationSystem;
+  private sleepCheckSystem: SleepCheckSystem;
   private destroySystem: DestroySystem;
   public loadManager: LoadManager;
   private inputManager: InputManager;
@@ -47,6 +49,7 @@ export class Game {
     this.inputManager = new InputManager(this.websocketManager);
     this.animationSystem = new AnimationSystem();
     this.loadManager = new LoadManager();
+    this.sleepCheckSystem = new SleepCheckSystem();
     // this.loadManager.dracoLoad("./SanAndreasDraco.glb");
     this.destroySystem = new DestroySystem();
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager);
@@ -90,6 +93,7 @@ export class Game {
     );
     this.animationSystem.update(deltaTime, entities);
     this.destroySystem.update(entities, this.entityManager, this.renderer);
+    this.sleepCheckSystem.update(entities);
     this.renderer.update();
     this.lastRenderTime = now;
     this.websocketManager.timeSinceLastServerUpdate += deltaTime;

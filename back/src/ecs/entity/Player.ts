@@ -2,7 +2,10 @@ import { PositionComponent } from "../../../../shared/component/PositionComponen
 import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
 import { Entity } from "../../../../shared/entity/Entity.js";
 import { EntityManager } from "../../../../shared/entity/EntityManager.js";
-import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
+import {
+  SerializedEntityType,
+  SerializedStateType,
+} from "../../../../shared/network/server/serialized.js";
 import Rapier from "../../physics/rapier.js";
 import { InputComponent } from "../component/InputComponent.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
@@ -11,6 +14,7 @@ import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.
 import { PlayerComponent } from "../component/PlayerComponent.js";
 import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
+import { StateComponent } from "../../../../shared/component/StateComponent.js";
 
 export class Player {
   entity: Entity;
@@ -45,6 +49,12 @@ export class Player {
 
     this.entity.addComponent(new InputComponent(this.entity.id));
 
+    const stateComponent = new StateComponent(
+      this.entity.id,
+      SerializedStateType.IDLE
+    );
+    this.entity.addComponent(stateComponent);
+
     this.createRigidBody(world);
     this.createCollider(world);
 
@@ -52,7 +62,7 @@ export class Player {
     const networkDataComponent = new NetworkDataComponent(
       this.entity.id,
       this.entity.type,
-      [positionComponent, rotationComponent]
+      [positionComponent, rotationComponent, stateComponent]
     );
 
     this.entity.addComponent(networkDataComponent);

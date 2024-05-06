@@ -11,9 +11,11 @@ import {
   SerializedDestroyedComponent,
   SerializedColorComponent,
   SerializedSingleSizeComponent,
+  SerializedStateComponent,
 } from "@shared/network/server/serialized";
 
 import { PositionComponent } from "@shared/component/PositionComponent";
+import { StateComponent } from "@shared/component/StateComponent";
 import { EventDestroyedComponent } from "@shared/component/events/EventDestroyedComponent";
 import { RotationComponent } from "@shared/component/RotationComponent";
 import { SizeComponent } from "@shared/component/SizeComponent";
@@ -26,6 +28,7 @@ import { Cube } from "../entity/Cube";
 import { MeshComponent } from "../component/MeshComponent";
 import { ColorComponent } from "@shared/component/ColorComponent";
 import { Sphere } from "../entity/Sphere";
+import { NetworkComponent } from "@shared/network/NetworkComponent";
 
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
@@ -54,6 +57,7 @@ export class SyncComponentsSystem {
         if (component) {
           // Deserialize the component (this updates the component)
           component.deserialize(serializedComponent);
+          (component as NetworkComponent).updated = true;
         } else {
           // If the component doesn't exist, we create it
           const createdComponent = this.createComponent(
@@ -143,6 +147,10 @@ export class SyncComponentsSystem {
         entityId,
         serializedSingleSizeComponent.size
       );
+    } else if (serializedComponent.t === SerializedComponentType.STATE) {
+      const serializedStateComponent =
+        serializedComponent as SerializedStateComponent;
+      return new StateComponent(entityId, serializedStateComponent.state);
     }
   }
 }

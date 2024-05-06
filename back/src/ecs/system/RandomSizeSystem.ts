@@ -2,6 +2,7 @@ import { ColorComponent } from "../../../../shared/component/ColorComponent.js";
 import { SingleSizeComponent } from "../../../../shared/component/SingleSizeComponent.js";
 import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
 import { Entity } from "../../../../shared/entity/Entity.js";
+import { RandomizeComponent } from "../component/RandomizeComponent.js";
 import { EventColorComponent } from "../component/events/EventColorComponent.js";
 import { EventSingleSizeComponent } from "../component/events/EventSingleSizeComponent.js";
 import { EventSizeComponent } from "../component/events/EventSizeComponent.js";
@@ -9,15 +10,17 @@ import { EventSizeComponent } from "../component/events/EventSizeComponent.js";
 export class RandomSizeSystem {
   update(entities: Entity[]) {
     for (const entity of entities) {
+      if (!entity.getComponent(RandomizeComponent)) continue;
+
       const sizeComponent = entity.getComponent(SizeComponent);
       if (sizeComponent) {
         if (Math.random() < 0.01) {
           const { width, height, depth } = sizeComponent;
           const eventSizeComponent = new EventSizeComponent(
             entity.id,
-            Math.max(0.5, width + Math.random() / 3),
-            Math.max(0.5, height + Math.random() / 3),
-            Math.max(0.5, depth + Math.random() / 3)
+            Math.min(5, width + Math.random() / 3),
+            Math.min(5, height + Math.random() / 3),
+            Math.min(5, depth + Math.random() / 3)
           );
           entity.addComponent(eventSizeComponent);
         }

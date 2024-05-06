@@ -28,7 +28,6 @@ export class SyncSizeSystem {
 
         // This will rebroadcast the update to all clients.
         sizeComponent.updated = true;
-
         entity.removeComponent(EventSizeComponent);
       }
 

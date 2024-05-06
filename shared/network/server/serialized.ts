@@ -8,6 +8,9 @@ export enum SerializedComponentType {
   COLOR = 4,
   DESTROYED = 5,
   SINGLE_SIZE = 6,
+
+  // Used for animations mostly
+  STATE = 7,
 }
 
 export enum SerializedEntityType {
@@ -15,6 +18,15 @@ export enum SerializedEntityType {
   CUBE = 2,
   WORLD = 3,
   SPHERE = 4,
+}
+
+export enum SerializedStateType {
+  IDLE = "Idle",
+  WALK = "Walk",
+  RUN = "Run",
+  JUMP = "Jump",
+  ATTACK = "Attack",
+  DIE = "Die",
 }
 
 export interface SerializedComponent {
@@ -57,6 +69,10 @@ export interface SerializedColorComponent extends SerializedComponent {
 }
 
 export interface SerializedDestroyedComponent extends SerializedComponent {}
+
+export interface SerializedStateComponent extends SerializedComponent {
+  state: SerializedStateType;
+}
 
 export interface SnapshotMessage extends ServerMessage {
   e: Array<SerializedEntity>;

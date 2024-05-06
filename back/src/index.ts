@@ -7,7 +7,6 @@ import { config } from "../../shared/network/config.js";
 import { NetworkDataComponent } from "./ecs/component/NetworkDataComponent.js";
 import { AnimationSystem } from "./ecs/system/AnimationSystem.js";
 import { MovementSystem } from "./ecs/system/MovementSystem.js";
-import { UpdateSizeSystem } from "./ecs/system/UpdateSizeSystem.js";
 import { DestroySystem } from "./ecs/system/events/DestroySystem.js";
 import { SyncSizeSystem } from "./ecs/system/events/SyncSizeSystem.js";
 import { NetworkSystem } from "./ecs/system/network/NetworkSystem.js";
@@ -23,6 +22,7 @@ import { TrimeshSystem } from "./ecs/system/events/TrimeshSystem.js";
 import { MapWorld } from "./ecs/entity/MapWorld.js";
 import { BoundaryCheckSystem } from "./ecs/system/physics/BoundaryCheckSystem.js";
 import { Sphere } from "./ecs/entity/Sphere.js";
+import { RandomizeComponent } from "./ecs/component/RandomizeComponent.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -39,7 +39,6 @@ const syncRotationSystem = new SyncRotationSystem();
 const syncSizeSystem = new SyncSizeSystem();
 const syncColorSystem = new SyncColorSystem();
 
-const updateSizeSystem = new UpdateSizeSystem();
 const trimeshSystem = new TrimeshSystem();
 
 const animationSystem = new AnimationSystem();
@@ -81,11 +80,20 @@ const boundaryCheckSystem = new BoundaryCheckSystem();
 new MapWorld();
 
 setTimeout(() => {
-  for (let i = 1; i < 3; i++) {
+  // Walls
+  /*   for (let i = 0; i < 10; i++) {
     for (let j = 1; j < 3; j++) {
-      new Cube(i * 2, i * 2, j * 2, 1, 1, 1);
+      new Cube(i * 2, j * 2, 0, 1, 1, 1); // Front wall
+      new Cube(i * 2, j * 2, 18, 1, 1, 1); // Back wall
+      new Cube(0, j * 2, i * 2, 1, 1, 1); // Left wall
+      new Cube(18, j * 2, i * 2, 1, 1, 1); // Right wall
     }
   }
+ */
+  new Cube(0, 10, 0, 1, 1, 1);
+  new Cube(0, 10, 0, 1, 1, 1);
+  const randomCube = new Cube(0, 10, 0, 1, 1, 1);
+  randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id));
   new Sphere(0, 30, 0, 1);
 }, 1000);
 
@@ -109,15 +117,15 @@ async function gameLoop() {
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
   syncSizeSystem.update(entities);
   syncColorSystem.update(entities);
-  networkSystem.update(entities);
-  // randomSizeSystem.update(entities);
+  randomSizeSystem.update(entities);
   boundaryCheckSystem.update(entities);
+  networkSystem.update(entities);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
   // Check the order of things then so it doesnt reset after sending
 
   // IMPORTANT : Sleeping check should be at the end.
-  // A SizeComponent inherits NetworkCom ponent that has updated to true by default
+  // A SizeComponent inherits NetworkComponent that has updated to true by default
   // It is then sent to the players once
   // Then it becomes false
   // If it is modified, we changed the is sent.
