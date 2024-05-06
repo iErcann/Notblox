@@ -11,7 +11,7 @@ export class SyncSizeSystem {
       const meshComponent = entity.getComponent(MeshComponent);
       const sizeComponent = entity.getComponent(SizeComponent);
       if (!meshComponent) continue;
-      if (sizeComponent) {
+      if (sizeComponent && sizeComponent.updated) {
         if (entity.type === SerializedEntityType.CUBE) {
           meshComponent.mesh.geometry.dispose(); // Avoids memory leak.
           meshComponent.mesh.geometry = new BoxGeometry(
@@ -22,7 +22,7 @@ export class SyncSizeSystem {
         }
       }
       const singleSizeComponent = entity.getComponent(SingleSizeComponent);
-      if (singleSizeComponent) {
+      if (singleSizeComponent && singleSizeComponent.updated) {
         if (entity.type === SerializedEntityType.SPHERE) {
           meshComponent.mesh.geometry.dispose(); // Avoids memory leak.
           meshComponent.mesh.geometry = new SphereGeometry(

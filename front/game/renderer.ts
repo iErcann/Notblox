@@ -61,7 +61,7 @@ export class Renderer extends THREE.WebGLRenderer {
     const uniforms = sky.material.uniforms;
     uniforms["turbidity"].value = 10;
     uniforms["rayleigh"].value = 0.3;
-    uniforms["mieCoefficient"].value = 0.005;
+    uniforms["mieCoefficient"].value = 0.025;
     uniforms["mieDirectionalG"].value = 0.7;
 
     const elevation = 2;
@@ -79,13 +79,13 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addDirectionnalLight() {
     // Create a directional light for shadows and highlights
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight.shadow.mapSize.height = 2048;
     directionalLight.position.set(-1, 0.75, 1);
     directionalLight.position.multiplyScalar(50);
 
     // Enable shadow casting
-    // directionalLight.castShadow = true;
+    directionalLight.castShadow = true;
 
     // Add the directional light to the scene
     this.scene.add(directionalLight);
@@ -131,10 +131,7 @@ export class Renderer extends THREE.WebGLRenderer {
   private addWorld(loadManager: LoadManager) {
     loadManager
       // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
-      .glTFLoad(
-        // "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
-        "https://myaudio.nyc3.cdn.digitaloceanspaces.com/ClearedSanAndreas.glb"
-      )
+      .glTFLoad("assets/small.glb")
       .then((gtlf: GLTF) => {
         this.scene.add(gtlf.scene);
         gtlf.scene.traverse((child) => {

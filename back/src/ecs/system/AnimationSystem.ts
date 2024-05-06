@@ -1,20 +1,38 @@
 // AnimationSystem.js
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { InputComponent } from "../component/InputComponent.js";
-import { Entity } from "shared/entity/Entity.js";
 import * as THREE from "three";
+import { Entity } from "../../../../shared/entity/Entity.js";
+import { StateComponent } from "../../../../shared/component/StateComponent.js";
+import { SerializedStateType } from "../../../../shared/network/server/serialized.js";
 
 export class AnimationSystem {
   update(entities: Entity[]): void {
-    // TODO: Understand why when you change this to for of it bugs and doesnt animate second player?
     entities.forEach((entity) => {
       const inputComponent = entity.getComponent(InputComponent);
       const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
+      const stateComponent = entity.getComponent(StateComponent);
 
-      if (inputComponent && rigidBodyComponent) {
+      if (inputComponent && rigidBodyComponent && stateComponent) {
         const { up, down, left, right, lookingYAngle } = inputComponent;
 
-        if (!up && !down && !left && !right) return;
+        // If no input is received
+        if (!up && !down && !left && !right) {
+          // Update the state to idle (only once to avoid spamming the network)
+          if (stateComponent.state !== SerializedStateType.IDLE) {
+            stateComponent.state = SerializedStateType.IDLE;
+            // Will be set to false by the SleepCheckSystem after being sent once
+            stateComponent.updated = true;
+          }
+          // Return early to avoid rotating the player
+          return;
+        }
+
+        if (stateComponent.state != SerializedStateType.RUN) {
+          stateComponent.state = SerializedStateType.RUN;
+          stateComponent.updated = true;
+        }
+
         // Define the quaternion rotation angle based on input
         let angle = 0;
         if (down) angle += Math.PI / 2;

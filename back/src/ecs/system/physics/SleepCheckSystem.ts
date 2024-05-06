@@ -10,7 +10,7 @@ export class SleepCheckSystem {
   update(entities: Entity[]) {
     for (const entity of entities) {
       const bodyComponent = entity.getComponent(PhysicsBodyComponent);
-      this.sleepAllNetworkComponent(entity);
+      this.sleepNetworkComponent(entity);
       if (bodyComponent) {
         const sleeping = bodyComponent.body.isSleeping();
         const positionComponent = entity.getComponent(PositionComponent);
@@ -24,7 +24,7 @@ export class SleepCheckSystem {
       }
     }
   }
-  sleepAllNetworkComponent(entity: Entity) {
+  sleepNetworkComponent(entity: Entity) {
     const components = entity.getAllComponents();
     // Check if component is a NetworkComponent
     for (const component of components) {

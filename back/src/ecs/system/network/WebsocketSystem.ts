@@ -60,7 +60,6 @@ export class WebsocketSystem {
 
     this.inputProcessingSystem = new InputProcessingSystem();
 
-    // TODO: Use MovementSystem (ECS approach)
     this.addMessageHandler(ClientMessageType.INPUT, async (ws, message) => {
       const inputMessage = message as InputMessage;
 
@@ -68,7 +67,7 @@ export class WebsocketSystem {
       const player = this.findPlayer(ws);
 
       if (!player) {
-        console.error(`EnwebsocketComponenttity with WS ${ws} not found.`);
+        console.error(`Entity with WS ${ws} not found.`);
         return;
       }
 
@@ -136,14 +135,14 @@ export class WebsocketSystem {
     // Otherwise it throws an error.
     entity.removeComponent(WebSocketComponent);
 
-    // Create and add the DestroyedComponent
-    const destroyedComponent = new EventDestroyedComponent(entityId);
-    entity.addComponent(destroyedComponent);
+    // Create and add the EventDestroyedComponent
+    const eventDestroyedComponent = new EventDestroyedComponent(entityId);
+    entity.addComponent(eventDestroyedComponent);
 
-    // Add the DestroyedComponent to the NetworkDataComponent if it exists
+    // Add the EventDestroyedComponent to the NetworkDataComponent if it exists
     const networkComponent = entity.getComponent(NetworkDataComponent);
     if (networkComponent) {
-      networkComponent.addComponent(destroyedComponent);
+      networkComponent.addComponent(eventDestroyedComponent);
     }
   }
 }

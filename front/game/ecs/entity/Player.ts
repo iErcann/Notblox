@@ -26,13 +26,19 @@ export class Player {
 
     const meshComponent = new MeshComponent(entityId);
     this.entity.addComponent(meshComponent);
-    const mesh: THREE.Mesh = meshComponent.mesh;
-    const geometry = new THREE.CapsuleGeometry(1, 2, 1);
-    const material = new THREE.MeshPhongMaterial();
-    material.color = new THREE.Color(0xff5522);
-    mesh.material = material;
-    mesh.receiveShadow = true;
-    mesh.castShadow = true;
+    let mesh: THREE.Mesh = meshComponent.mesh;
+
+    const loader = game.loadManager;
+
+    loader.glTFLoad("assets/Character.glb").then((gtlf: GLTF) => {
+      mesh.add(gtlf.scene.children[0]);
+      mesh.animations = gtlf.animations;
+      console.log(mesh);
+
+      this.entity.addComponent(
+        new AnimationComponent(this.entity.id, mesh, gtlf.animations)
+      );
+    });
 
     const isCurrentPlayer = this.entity.id === game.currentPlayerEntityId;
     if (isCurrentPlayer) {
@@ -46,17 +52,6 @@ export class Player {
       this.entity.addComponent(textComponent);
       textComponent.setFollowedMesh(mesh);
     }
-
-    const loader = game.loadManager;
-
-    loader
-      .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/Character.glb")
-      .then((gtlf: GLTF) => {
-        mesh.add(gtlf.scenes[0]);
-        this.entity.addComponent(
-          new AnimationComponent(this.entity.id, mesh, gtlf.animations)
-        );
-      });
 
     this.activateShadows();
   }
