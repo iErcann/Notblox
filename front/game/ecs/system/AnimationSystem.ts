@@ -14,7 +14,10 @@ export class AnimationSystem {
         const mesh = meshComponent.mesh;
         const animations = mesh.animations;
 
-        if (stateComponent.updated) {
+        const isNotPlaying = animationComponent.mixer.time === 0;
+
+        if (stateComponent.updated || isNotPlaying) {
+          console.log("Loading animation");
           // find the animation that corresponds to the current state
           const animationName = stateComponent.state;
           const animation = animations.find(

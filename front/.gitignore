@@ -51,5 +51,7 @@ buck-out/
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
-.glb
-*.glb
+
+gta.glb
+gtasa.glb
+pool.glb

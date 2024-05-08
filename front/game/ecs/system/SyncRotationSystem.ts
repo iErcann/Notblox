@@ -9,7 +9,7 @@ export class SyncRotationSystem {
       const meshComponent = entity.getComponent(MeshComponent);
       const rotationComponent = entity.getComponent(RotationComponent);
 
-      if (meshComponent && rotationComponent) {
+      if (meshComponent && rotationComponent && rotationComponent.updated) {
         const targetQuaternion = new THREE.Quaternion(
           rotationComponent.x,
           rotationComponent.y,
