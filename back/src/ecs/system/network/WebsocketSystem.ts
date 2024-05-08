@@ -107,9 +107,9 @@ export class WebsocketSystem {
   private onConnect(ws: any) {
     const player = new Player(
       ws,
-      Math.random() * 3,
-      13 + Math.random() * 7,
-      Math.random() * 3
+      10 + Math.random() * 3,
+      10 + Math.random() * 7,
+      20 + Math.random() * 3
     );
     const connectionMessage: ConnectionMessage = {
       t: ServerMessageType.FIRST_CONNECTION,

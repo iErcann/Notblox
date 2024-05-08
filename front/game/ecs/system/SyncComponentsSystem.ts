@@ -64,6 +64,7 @@ export class SyncComponentsSystem {
             serializedComponent,
             entity.id
           );
+
           if (createdComponent) entity.addComponent(createdComponent);
           else
             console.error(

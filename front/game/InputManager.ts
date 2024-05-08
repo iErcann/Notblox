@@ -25,7 +25,7 @@ export class InputManager {
     // Retrieve keyboard language from local storage, defaulting to EN if not found
     const savedLanguage = localStorage.getItem("keyboardLanguage");
     this.keyboardLanguage = savedLanguage
-      ? savedLanguage as KeyboardLanguage
+      ? (savedLanguage as KeyboardLanguage)
       : KeyboardLanguage.EN;
 
     // Add event listeners to handle user input

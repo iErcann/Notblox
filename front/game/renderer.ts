@@ -79,30 +79,30 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addDirectionnalLight() {
     // Create a directional light for shadows and highlights
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight.shadow.mapSize.height = 2048;
-    directionalLight.position.set(-1, 0.75, 1);
-    directionalLight.position.multiplyScalar(50);
+    // Create a directional light with a different color and intensity
+    const directionalLight = new THREE.DirectionalLight(0xffaa00, 1.5);
+    directionalLight.position.set(1, 1, -1).multiplyScalar(50);
+
+    // Configure shadow properties with different values
+    directionalLight.shadow.mapSize.height = 1024;
+    const shadowSideLength = 150;
+    directionalLight.shadow.camera.top = shadowSideLength;
+    directionalLight.shadow.camera.bottom = -shadowSideLength;
+    directionalLight.shadow.camera.left = -shadowSideLength;
+    directionalLight.shadow.camera.right = shadowSideLength;
 
     // Enable shadow casting
     directionalLight.castShadow = true;
 
-    // Add the directional light to the scene
-    this.scene.add(directionalLight);
-
-    const side = 100;
-    directionalLight.shadow.camera.top = side;
-    directionalLight.shadow.camera.bottom = -side;
-    directionalLight.shadow.camera.left = side;
-    directionalLight.shadow.camera.right = -side;
-    // Create a target for the directional light (if needed)
+    // Create a target for the directional light
     const lightTarget = new THREE.Object3D();
-
-    this.scene.add(lightTarget);
     directionalLight.target = lightTarget;
 
-    // Add a directional light helper for visualization (optional)
-    // const helper = new THREE.DirectionalLightHelper(directionalLight, 5);
+    // Add the directional light and its target to the scene
+    this.scene.add(directionalLight, lightTarget);
+
+    // Uncomment the following lines to add a helper for visualization
+    // const helper = new THREE.DirectionalLightHelper(directionalLight, 10);
     // this.scene.add(helper);
   }
 

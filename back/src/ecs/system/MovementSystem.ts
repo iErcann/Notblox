@@ -6,8 +6,6 @@ import { PositionComponent } from "../../../../shared/component/PositionComponen
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
 
 export class MovementSystem {
-  checkGround() {}
-
   update(dt: number, entities: Entity[], world: Rapier.World): void {
     for (const entity of entities) {
       this.updateEntityMovement(dt, entity, world);
@@ -110,7 +108,7 @@ export class MovementSystem {
       );
 
       if (hit != null) {
-        impulse.y = 2 * dt;
+        impulse.y = 1.5 * dt;
       }
     }
   }

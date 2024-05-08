@@ -26,7 +26,8 @@ export enum SerializedStateType {
   RUN = "Run",
   JUMP = "Jump",
   ATTACK = "Attack",
-  DIE = "Die",
+  FALL = "Fall",
+  DEATH = "Death",
 }
 
 export interface SerializedComponent {

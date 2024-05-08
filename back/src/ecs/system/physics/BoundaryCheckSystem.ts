@@ -11,7 +11,7 @@ export class BoundaryCheckSystem {
       const bodyComponent = entity.getComponent(PhysicsBodyComponent);
       const positionComponent = entity.getComponent(PositionComponent);
 
-      if (bodyComponent && positionComponent && positionComponent.y < -10) {
+      if (bodyComponent && positionComponent && positionComponent.y < -40) {
         bodyComponent.body.setTranslation(
           {
             x: 0,

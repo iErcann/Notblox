@@ -45,22 +45,26 @@ export class TrimeshSystem {
         const loadPromise = this.loadGLTFModel(eventTrimeshComponent.filePath)
           .then(async (gltf: GLTF) => {
             if (gltf) {
+              console.log("Loading map", eventTrimeshComponent.filePath);
               // Iterate over all child objects in the GLTF scene
               gltf.scene.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
                   const mesh = child as THREE.Mesh;
                   const indices = mesh.geometry.index?.array;
                   const vertices = mesh.geometry.attributes.position.array;
+                  const scale = mesh.getWorldScale(mesh.scale);
 
                   // Scale factor for the vertices
-                  const scale = 1; // Adjust as needed
 
                   // Create a new Float32Array to hold the scaled vertices
                   const scaledVertices = new Float32Array(vertices.length);
 
                   // Scale the vertices
-                  for (let i = 0; i < vertices.length; i++) {
-                    scaledVertices[i] = vertices[i] * scale;
+                  for (let i = 0; i < vertices.length; i += 3) {
+                    // Scale each coordinate individually
+                    scaledVertices[i] = vertices[i] * scale.x;
+                    scaledVertices[i + 1] = vertices[i + 1] * scale.y;
+                    scaledVertices[i + 2] = vertices[i + 2] * scale.z;
                   }
 
                   // Create the trimesh collider for the current mesh

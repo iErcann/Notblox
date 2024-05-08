@@ -8,7 +8,7 @@ export class SyncColorSystem {
     for (const entity of entities) {
       const colorComponent = entity.getComponent(ColorComponent);
       const meshComponent = entity.getComponent(MeshComponent);
-      if (colorComponent && meshComponent) {
+      if (colorComponent && meshComponent && colorComponent.updated) {
         meshComponent.mesh.material = new THREE.MeshPhongMaterial({
           color: colorComponent.color,
         });

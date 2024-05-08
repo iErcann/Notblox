@@ -45,7 +45,7 @@ export class Player {
       this.entity.addComponent(
         new FollowComponent(entityId, game.renderer.camera)
       );
-      const pointLight = new THREE.PointLight(0xff3aff, 15, 50);
+      const pointLight = new THREE.PointLight(0xe1afd1, 5, 130);
       mesh.add(pointLight);
     } else {
       const textComponent = new TextComponent(entityId, "Player " + entityId);

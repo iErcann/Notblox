@@ -50,7 +50,6 @@ export class Game {
     this.animationSystem = new AnimationSystem();
     this.loadManager = new LoadManager();
     this.sleepCheckSystem = new SleepCheckSystem();
-    // this.loadManager.dracoLoad("./SanAndreasDraco.glb");
     this.destroySystem = new DestroySystem();
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager);
   }
@@ -82,7 +81,9 @@ export class Game {
     // Interp factor is wrong here
     // const interpolationFactor =
     //   this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
-    this.syncPositionSystem.update(entities, 0.2);
+
+    const positionInterpFactor = deltaTime / (1000 / this.tickRate);
+    this.syncPositionSystem.update(entities, positionInterpFactor);
     this.syncRotationSystem.update(entities, 0.5);
     this.syncColorSystem.update(entities);
     this.syncSizeSystem.update(entities);

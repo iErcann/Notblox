@@ -111,7 +111,7 @@ async function gameLoop() {
 
   await trimeshSystem.update(entities, physicsSystem.world);
   movementSystem.update(dt, entities, physicsSystem.world);
-  animationSystem.update(entities);
+  animationSystem.update(entities, physicsSystem.world);
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
