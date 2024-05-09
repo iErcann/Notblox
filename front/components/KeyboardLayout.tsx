@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "./ui/button";
 import { KeyboardLanguage } from "@/game/InputManager";
 
 export default function KeyboardLayout() {
@@ -23,7 +22,10 @@ export default function KeyboardLayout() {
 
   return (
     <div className="grid shadow p-4 space-y-4">
-      <p className="text-lg font-bold">Current controls { keyboardLayout === KeyboardLanguage.EN ? "US" : "French" }</p>
+      <p className="text-lg font-bold">
+        Current controls{" "}
+        {keyboardLayout === KeyboardLanguage.EN ? "US" : "French"}
+      </p>
       <p className="text-md font-semibold">Move</p>
       <div>
         <div>
@@ -81,9 +83,10 @@ export default function KeyboardLayout() {
           </kbd>
         </div>
       )}
-      <Button variant={"outline"} onClick={toggleKeyboardLayout}>
-        Switch to {keyboardLayout === KeyboardLanguage.EN ? "French" : "US"} Keyboard
-      </Button>
+      <button onClick={toggleKeyboardLayout}>
+        Switch to {keyboardLayout === KeyboardLanguage.EN ? "French" : "US"}{" "}
+        Keyboard
+      </button>
     </div>
   );
 }

@@ -1,34 +1,52 @@
 import { Entity } from "@shared/entity/Entity";
+import { Cube } from "../entity/Cube";
+import { Player } from "../entity/Player";
+import { Game } from "@/game/game";
+
 import {
   SerializedComponent,
   SerializedComponentType,
   SerializedEntity,
   SerializedEntityType,
+  SerializedStateType,
   SnapshotMessage,
-  SerializedPositionComponent,
-  SerializedRotationComponent,
-  SerializedSizeComponent,
-  SerializedDestroyedComponent,
-  SerializedColorComponent,
-  SerializedSingleSizeComponent,
-  SerializedStateComponent,
 } from "@shared/network/server/serialized";
 
-import { PositionComponent } from "@shared/component/PositionComponent";
-import { StateComponent } from "@shared/component/StateComponent";
+import {
+  PositionComponent,
+  SerializedPositionComponent,
+} from "@shared/component/PositionComponent";
+import {
+  RotationComponent,
+  SerializedRotationComponent,
+} from "@shared/component/RotationComponent";
+import {
+  SerializedSingleSizeComponent,
+  SingleSizeComponent,
+} from "@shared/component/SingleSizeComponent";
+import {
+  SerializedSizeComponent,
+  SizeComponent,
+} from "@shared/component/SizeComponent";
+import {
+  SerializedStateComponent,
+  StateComponent,
+} from "@shared/component/StateComponent";
 import { EventDestroyedComponent } from "@shared/component/events/EventDestroyedComponent";
-import { RotationComponent } from "@shared/component/RotationComponent";
-import { SizeComponent } from "@shared/component/SizeComponent";
-import { SingleSizeComponent } from "@shared/component/SingleSizeComponent";
-
-import { Game } from "@/game/game";
-import { Player } from "../entity/Player";
-import { Cube } from "../entity/Cube";
-
 import { MeshComponent } from "../component/MeshComponent";
-import { ColorComponent } from "@shared/component/ColorComponent";
-import { Sphere } from "../entity/Sphere";
+import {
+  ColorComponent,
+  SerializedColorComponent,
+} from "@shared/component/ColorComponent";
+import {
+  SerializedChatListComponent,
+  ChatListComponent,
+} from "@shared/component/ChatComponent";
+
 import { NetworkComponent } from "@shared/network/NetworkComponent";
+import { Sphere } from "../entity/Sphere";
+import { SerializedDestroyedComponent } from "./DestroySystem";
+import { Chat } from "../entity/Chat";
 
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
@@ -100,58 +118,32 @@ export class SyncComponentsSystem {
       );
 
       return sphere.entity;
+    } else if (serializedEntity.t === SerializedEntityType.CHAT) {
+      return new Chat(serializedEntity.id, this.game).entity;
     }
   }
   createComponent(serializedComponent: SerializedComponent, entityId: number) {
+    let createdComponent: NetworkComponent | undefined = undefined;
     if (serializedComponent.t === SerializedComponentType.POSITION) {
-      const serializedPositionComponent =
-        serializedComponent as SerializedPositionComponent;
-      return new PositionComponent(
-        entityId,
-        serializedPositionComponent.x,
-        serializedPositionComponent.y,
-        serializedPositionComponent.z
-      );
+      createdComponent = new PositionComponent(entityId, 1, 1, 1);
     } else if (serializedComponent.t === SerializedComponentType.ROTATION) {
-      const serializedRotationComponent =
-        serializedComponent as SerializedRotationComponent;
-      return new RotationComponent(
-        entityId,
-        serializedRotationComponent.x,
-        serializedRotationComponent.y,
-        serializedRotationComponent.z,
-        serializedRotationComponent.w
-      );
+      createdComponent = new RotationComponent(entityId, 1, 1, 1, 1);
     } else if (serializedComponent.t === SerializedComponentType.SIZE) {
-      const serializedSizeComponent =
-        serializedComponent as SerializedSizeComponent;
-
-      return new SizeComponent(
-        entityId,
-        serializedSizeComponent.width,
-        serializedSizeComponent.height,
-        serializedSizeComponent.depth
-      );
+      createdComponent = new SizeComponent(entityId, 1, 1, 1);
     } else if (serializedComponent.t === SerializedComponentType.DESTROYED) {
-      const serializedSizeComponent =
-        serializedComponent as SerializedDestroyedComponent;
-
-      return new EventDestroyedComponent(entityId);
+      createdComponent = new EventDestroyedComponent(entityId);
     } else if (serializedComponent.t === SerializedComponentType.COLOR) {
-      const serializedColorComponent =
-        serializedComponent as SerializedColorComponent;
-      return new ColorComponent(entityId, serializedColorComponent.color);
+      createdComponent = new ColorComponent(entityId, "0xffffff");
     } else if (serializedComponent.t === SerializedComponentType.SINGLE_SIZE) {
-      const serializedSingleSizeComponent =
-        serializedComponent as SerializedSingleSizeComponent;
-      return new SingleSizeComponent(
-        entityId,
-        serializedSingleSizeComponent.size
-      );
+      createdComponent = new SingleSizeComponent(entityId, 0);
     } else if (serializedComponent.t === SerializedComponentType.STATE) {
-      const serializedStateComponent =
-        serializedComponent as SerializedStateComponent;
-      return new StateComponent(entityId, serializedStateComponent.state);
+      createdComponent = new StateComponent(entityId, SerializedStateType.IDLE);
+    } else if (serializedComponent.t === SerializedComponentType.CHAT_LIST) {
+      createdComponent = new ChatListComponent(entityId, []);
     }
+    if (createdComponent) {
+      createdComponent.deserialize(serializedComponent);
+    }
+    return createdComponent;
   }
 }

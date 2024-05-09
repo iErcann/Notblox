@@ -10,6 +10,9 @@ import { EventColorComponent } from "../component/events/EventColorComponent.js"
 import { EventSingleSizeComponent } from "../component/events/EventSingleSizeComponent.js";
 import { EventSizeComponent } from "../component/events/EventSizeComponent.js";
 import Rapier from "../../physics/rapier.js";
+import { EntityManager } from "../../../../shared/entity/EntityManager.js";
+import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
+import { ChatListComponent } from "../../../../shared/component/ChatComponent.js";
 
 export class RandomSizeSystem {
   update(entities: Entity[]) {
@@ -31,6 +34,7 @@ export class RandomSizeSystem {
       // }
 
       const colorComponent = entity.getComponent(ColorComponent);
+
       if (colorComponent) {
         if (Math.random() < 0.01) {
           const randomHex = Math.floor(Math.random() * 16777215).toString(16);
@@ -44,6 +48,14 @@ export class RandomSizeSystem {
 
       if (rigidBodyComponent) {
         if (Math.random() < 0.05) {
+          const chatEntity = EntityManager.getFirstEntityByType(
+            entities,
+            SerializedEntityType.CHAT
+          );
+          chatEntity
+            ?.getComponent(ChatListComponent)
+            ?.addMessage("Server", Math.random().toString());
+
           rigidBodyComponent.body.applyImpulse(
             new Rapier.Vector3(
               (Math.random() - 1 / 2) * 500,

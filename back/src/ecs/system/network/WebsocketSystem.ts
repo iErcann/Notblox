@@ -104,6 +104,9 @@ export class WebsocketSystem {
       }) || null
     );
   }
+
+  // TODO: Create EventOnPlayerConnect and EventOnPlayerDisconnect to respects ECS
+  // Might be useful to query the chat and send a message to all players when a player connects or disconnects
   private onConnect(ws: any) {
     const player = new Player(
       ws,

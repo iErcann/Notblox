@@ -17,14 +17,17 @@ import {
 } from "./ecs/system";
 import { Camera } from "./camera";
 import { SleepCheckSystem } from "./ecs/system/SleepCheckSystem";
+import { Chat } from "./ecs/entity/Chat";
+import { ChatSystem } from "./ecs/system/ChatSystem";
+import { Hud } from "./hud";
 
 export class Game {
   private static instance: Game;
   public entityManager = EntityManager.getInstance();
+  public currentPlayerEntityId: number | undefined;
   private lastRenderTime = Date.now();
   private loopFunction: () => void = this.loop.bind(this);
   public syncComponentSystem: SyncComponentsSystem;
-  public currentPlayerEntityId: number | undefined;
   private syncPositionSystem: SyncPositionSystem;
   private syncRotationSystem: SyncRotationSystem;
   private syncColorSystem: SyncColorSystem;
@@ -34,10 +37,11 @@ export class Game {
   private animationSystem: AnimationSystem;
   private sleepCheckSystem: SleepCheckSystem;
   private destroySystem: DestroySystem;
+  private chatSystem: ChatSystem;
   public loadManager: LoadManager;
   private inputManager: InputManager;
   public renderer: Renderer;
-
+  public hud: Hud;
   private constructor() {
     this.syncComponentSystem = new SyncComponentsSystem(this);
     this.syncPositionSystem = new SyncPositionSystem();
@@ -50,8 +54,10 @@ export class Game {
     this.animationSystem = new AnimationSystem();
     this.loadManager = new LoadManager();
     this.sleepCheckSystem = new SleepCheckSystem();
+    this.chatSystem = new ChatSystem();
     this.destroySystem = new DestroySystem();
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager);
+    this.hud = new Hud();
   }
 
   public static getInstance(): Game {
@@ -85,6 +91,7 @@ export class Game {
     const positionInterpFactor = deltaTime / (1000 / this.tickRate);
     this.syncPositionSystem.update(entities, positionInterpFactor);
     this.syncRotationSystem.update(entities, 0.5);
+    this.chatSystem.update(entities, this.hud);
     this.syncColorSystem.update(entities);
     this.syncSizeSystem.update(entities);
     this.cameraFollowSystem.update(

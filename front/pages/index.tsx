@@ -1,5 +1,4 @@
 import KeyboardLayout from "@/components/KeyboardLayout";
-import { Button } from "@/components/ui/button";
 import { ExternalLink, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,10 +16,10 @@ export default function Home() {
       />
 
       <Link href={"/test"}>
-        <Button className="w-full  inline-flex h-14 items-center justify-center rounded-md bg-zinc-900 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
+        <button className="w-full  inline-flex h-14 items-center justify-center rounded-md bg-zinc-900 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
           <Play className="mr-2" />
           Play Now
-        </Button>
+        </button>
       </Link>
 
       <KeyboardLayout />
@@ -30,11 +29,11 @@ export default function Home() {
           This is my playground for learning new technologies and having fun. I
           might get inspired by Roblox (dont sue pls)
         </p>
-        <Link href={"https://discord.gg/kPhgtj49U2"}  >
-          <Button className="inline-flex h-14 items-center justify-center rounded-md bg-blue-600 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
+        <Link href={"https://discord.gg/kPhgtj49U2"}>
+          <button className="inline-flex h-14 items-center justify-center rounded-md bg-blue-600 px-10 text-lg font-medium text-zinc-50 shadow transition-colors hover:bg-zinc-900/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300">
             <ExternalLink className="mr-2" />
             Join Discord
-          </Button>
+          </button>
         </Link>
       </div>
     </div>
