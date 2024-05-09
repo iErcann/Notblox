@@ -1,6 +1,6 @@
 import {
+  SerializedComponent,
   SerializedComponentType,
-  SerializedPositionComponent,
 } from "../network/server/serialized.js";
 import { NetworkComponent } from "../network/NetworkComponent.js";
 
@@ -25,4 +25,10 @@ export class PositionComponent extends NetworkComponent {
       z: Number(this.z.toFixed(2)),
     };
   }
+}
+
+export interface SerializedPositionComponent extends SerializedComponent {
+  x: number;
+  y: number;
+  z: number;
 }

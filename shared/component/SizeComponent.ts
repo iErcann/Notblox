@@ -1,6 +1,6 @@
 import {
+  SerializedComponent,
   SerializedComponentType,
-  SerializedSizeComponent,
 } from "../network/server/serialized.js";
 
 import { NetworkComponent } from "../network/NetworkComponent.js";
@@ -26,4 +26,10 @@ export class SizeComponent extends NetworkComponent {
       depth: Number(this.depth.toFixed(2)),
     };
   }
+}
+
+export interface SerializedSizeComponent extends SerializedComponent {
+  width: number;
+  height: number;
+  depth: number;
 }

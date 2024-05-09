@@ -1,7 +1,4 @@
-import {
-  SerializedComponentType,
-  SerializedSizeComponent,
-} from "../../network/server/serialized.js";
+import { SerializedComponentType } from "../../network/server/serialized.js";
 
 import { NetworkComponent } from "../../network/NetworkComponent.js";
 
