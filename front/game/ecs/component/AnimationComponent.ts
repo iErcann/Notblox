@@ -11,9 +11,5 @@ export class AnimationComponent extends Component {
   ) {
     super(entityId);
     this.mixer = new THREE.AnimationMixer(mesh);
-
-    /*   animations.forEach((clip, index) => {
-      if (index === 4) this.mixer.clipAction(clip).play();
-    }); */
   }
 }

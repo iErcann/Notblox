@@ -1,18 +1,17 @@
 import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
-import { EventDestroyedComponent } from "../../../../shared/component/events/EventDestroyedComponent.js";
 
 import { Entity } from "../../../../shared/entity/Entity.js";
 import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
 
+import { ColorComponent } from "../../../../shared/component/ColorComponent.js";
+import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
+import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 import Rapier from "../../physics/rapier.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
-import { EntityManager } from "../../../../shared/entity/EntityManager.js";
-import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
-import { ColorComponent } from "../../../../shared/component/ColorComponent.js";
 
 export class Cube {
   entity: Entity;

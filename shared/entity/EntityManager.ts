@@ -26,6 +26,14 @@ export class EntityManager {
     return this.entities;
   }
 
+  static getEntitiesByType(entities: Entity[], type: SerializedEntityType) {
+    return entities.filter((entity) => entity.type === type);
+  }
+
+  static getFirstEntityByType(entities: Entity[], type: SerializedEntityType) {
+    return entities.find((entity) => entity.type === type);
+  }
+
   // Get entities with specific components
   getEntitiesWithComponents<T extends Component>(
     componentType: new (entityId: number, ...args: any[]) => T

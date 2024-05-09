@@ -11,7 +11,9 @@ export enum SerializedComponentType {
 
   // Used for animations mostly
   STATE = 7,
-  CHAT = 8,
+
+  CHAT_LIST = 8,
+  CHAT_MESSAGE = 9,
 }
 
 export enum SerializedEntityType {

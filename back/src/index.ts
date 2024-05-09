@@ -23,6 +23,7 @@ import { MapWorld } from "./ecs/entity/MapWorld.js";
 import { BoundaryCheckSystem } from "./ecs/system/physics/BoundaryCheckSystem.js";
 import { Sphere } from "./ecs/entity/Sphere.js";
 import { RandomizeComponent } from "./ecs/component/RandomizeComponent.js";
+import { Chat } from "./ecs/entity/Chat.js";
 
 // Create a system
 const entityManager = EntityManager.getInstance();
@@ -78,6 +79,7 @@ const boundaryCheckSystem = new BoundaryCheckSystem();
 // }, 3000);
 
 new MapWorld();
+new Chat();
 
 setTimeout(() => {
   // Walls
