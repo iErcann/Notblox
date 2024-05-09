@@ -1,5 +1,5 @@
 import {
-  SerializedColorComponent,
+  SerializedComponent,
   SerializedComponentType,
 } from "../network/server/serialized.js";
 import { NetworkComponent } from "../network/NetworkComponent.js";
@@ -17,4 +17,8 @@ export class ColorComponent extends NetworkComponent {
       color: this.color,
     };
   }
+}
+
+export interface SerializedColorComponent extends SerializedComponent {
+  color: string;
 }

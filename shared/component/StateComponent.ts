@@ -1,7 +1,7 @@
 import { NetworkComponent } from "../network/NetworkComponent.js";
 import {
+  SerializedComponent,
   SerializedComponentType,
-  SerializedStateComponent,
   SerializedStateType,
 } from "../network/server/serialized.js";
 
@@ -10,10 +10,13 @@ export class StateComponent extends NetworkComponent {
     super(entityId, SerializedComponentType.STATE);
   }
   deserialize(data: SerializedStateComponent) {
-    console.log("StateComponent.deserialize", data);
     this.state = data.state;
   }
   serialize(): SerializedStateComponent {
     return { state: this.state };
   }
+}
+
+export interface SerializedStateComponent extends SerializedComponent {
+  state: SerializedStateType;
 }

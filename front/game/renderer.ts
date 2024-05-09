@@ -29,7 +29,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.shadowMap.type = THREE.PCFSoftShadowMap; //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
 
     this.setSize(window.innerWidth, window.innerHeight);
-    this.setPixelRatio(window.devicePixelRatio / 1.2);
+    this.setPixelRatio(window.devicePixelRatio);
     this.toneMapping = THREE.CineonToneMapping;
     // this.toneMappingExposure = 0.5;
 
@@ -80,7 +80,7 @@ export class Renderer extends THREE.WebGLRenderer {
   private addDirectionnalLight() {
     // Create a directional light for shadows and highlights
     // Create a directional light with a different color and intensity
-    const directionalLight = new THREE.DirectionalLight(0xffaa00, 1.5);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(1, 1, -1).multiplyScalar(50);
 
     // Configure shadow properties with different values
@@ -108,8 +108,10 @@ export class Renderer extends THREE.WebGLRenderer {
 
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.8);
-    hemiLight.position.set(0, 500, 0);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
+    hemiLight.color.setHSL(0.59, 0.4, 0.6);
+    hemiLight.groundColor.setHSL(0.095, 0.2, 0.75);
+    hemiLight.position.set(0, 50, 0);
     this.scene.add(hemiLight);
   }
 

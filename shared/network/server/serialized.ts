@@ -11,6 +11,7 @@ export enum SerializedComponentType {
 
   // Used for animations mostly
   STATE = 7,
+  CHAT = 8,
 }
 
 export enum SerializedEntityType {
@@ -18,6 +19,7 @@ export enum SerializedEntityType {
   CUBE = 2,
   WORLD = 3,
   SPHERE = 4,
+  CHAT = 5,
 }
 
 export enum SerializedStateType {
@@ -40,39 +42,6 @@ export interface SerializedEntity {
   t: SerializedEntityType;
   // Components
   c: SerializedComponent[];
-}
-
-export interface SerializedPositionComponent extends SerializedComponent {
-  x: number;
-  y: number;
-  z: number;
-}
-
-export interface SerializedRotationComponent extends SerializedComponent {
-  x: number;
-  y: number;
-  z: number;
-  w: number;
-}
-
-export interface SerializedSizeComponent extends SerializedComponent {
-  width: number;
-  height: number;
-  depth: number;
-}
-
-export interface SerializedSingleSizeComponent extends SerializedComponent {
-  size: number;
-}
-
-export interface SerializedColorComponent extends SerializedComponent {
-  color: string;
-}
-
-export interface SerializedDestroyedComponent extends SerializedComponent {}
-
-export interface SerializedStateComponent extends SerializedComponent {
-  state: SerializedStateType;
 }
 
 export interface SnapshotMessage extends ServerMessage {
