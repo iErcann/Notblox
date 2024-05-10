@@ -1,6 +1,6 @@
 import Rapier from "../../../physics/rapier.js";
 import { Entity } from "../../../../../shared/entity/Entity.js";
-import { EventTrimeshComponent } from "../../component/events/EventTrimeshComponent.js";
+import { EventTrimesh } from "../../component/events/EventTrimesh.js";
 import {
   DRACOLoader,
   GLTF,
@@ -38,7 +38,7 @@ export class TrimeshSystem {
     const loadPromises: Promise<void>[] = [];
 
     for (const entity of entities) {
-      const eventTrimeshComponent = entity.getComponent(EventTrimeshComponent);
+      const eventTrimeshComponent = entity.getComponent(EventTrimesh);
       if (eventTrimeshComponent) {
         console.log(entity.id, "geometry");
 
@@ -93,7 +93,7 @@ export class TrimeshSystem {
                     trimeshDesc,
                     world.createRigidBody(rigidBody)
                   );
-                  console.log("Created trimesh");
+                  console.log("Created trimesh for", mesh.name);
                 }
               });
             }
@@ -103,7 +103,7 @@ export class TrimeshSystem {
           });
 
         loadPromises.push(loadPromise);
-        entity.removeComponent(EventTrimeshComponent);
+        entity.removeComponent(EventTrimesh);
       }
     }
 

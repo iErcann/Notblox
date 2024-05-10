@@ -108,7 +108,7 @@ export class MovementSystem {
       );
 
       if (hit != null) {
-        impulse.y = 1.5 * dt;
+        impulse.y = 10.5 * dt;
       }
     }
   }

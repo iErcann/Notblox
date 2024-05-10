@@ -2,9 +2,9 @@ import Rapier from "../../../physics/rapier.js";
 import { SizeComponent } from "../../../../../shared/component/SizeComponent.js";
 import { Entity } from "../../../../../shared/entity/Entity.js";
 import { PhysicsColliderComponent } from "../../component/PhysicsColliderComponent.js";
-import { EventSingleSizeComponent } from "../../component/events/EventSingleSizeComponent.js";
+import { EventSingleSize } from "../../component/events/EventSingleSize.js";
 import { SingleSizeComponent } from "../../../../../shared/component/SingleSizeComponent.js";
-import { EventSizeComponent } from "../../component/events/EventSizeComponent.js";
+import { EventSize } from "../../component/events/EventSize.js";
 import { SerializedEntityType } from "../../../../../shared/network/server/serialized.js";
 
 export class SyncSizeSystem {
@@ -14,7 +14,7 @@ export class SyncSizeSystem {
       if (!colliderComponent) continue;
 
       const sizeComponent = entity.getComponent(SizeComponent);
-      const eventSizeComponent = entity.getComponent(EventSizeComponent);
+      const eventSizeComponent = entity.getComponent(EventSize);
 
       if (eventSizeComponent && sizeComponent) {
         // TODO: Check for cube here like the sphere
@@ -28,13 +28,11 @@ export class SyncSizeSystem {
 
         // This will rebroadcast the update to all clients.
         sizeComponent.updated = true;
-        entity.removeComponent(EventSizeComponent);
+        entity.removeComponent(EventSize);
       }
 
       const singleSizeComponent = entity.getComponent(SingleSizeComponent);
-      const eventSingleSizeComponent = entity.getComponent(
-        EventSingleSizeComponent
-      );
+      const eventSingleSizeComponent = entity.getComponent(EventSingleSize);
 
       if (singleSizeComponent && eventSingleSizeComponent) {
         if (entity.type === SerializedEntityType.SPHERE) {
@@ -46,7 +44,7 @@ export class SyncSizeSystem {
 
           // This will rebroadcast the update to all clients.
           singleSizeComponent.updated = true;
-          entity.removeComponent(EventSingleSizeComponent);
+          entity.removeComponent(EventSingleSize);
         }
       }
     }

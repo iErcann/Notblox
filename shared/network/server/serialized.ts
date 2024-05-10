@@ -22,6 +22,7 @@ export enum SerializedEntityType {
   WORLD = 3,
   SPHERE = 4,
   CHAT = 5,
+  EVENT = 6,
 }
 
 export enum SerializedStateType {

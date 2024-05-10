@@ -15,7 +15,7 @@ import { SleepCheckSystem } from "./ecs/system/physics/SleepCheckSystem.js";
 import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
 import Rapier from "./physics/rapier.js";
-import { EventSizeComponent } from "./ecs/component/events/EventSizeComponent.js";
+import { EventSize } from "./ecs/component/events/EventSize.js";
 import { RandomSizeSystem } from "./ecs/system/RandomSizeSystem.js";
 import { SyncColorSystem } from "./ecs/system/events/SyncColorSystem.js";
 import { TrimeshSystem } from "./ecs/system/events/TrimeshSystem.js";
@@ -24,15 +24,16 @@ import { BoundaryCheckSystem } from "./ecs/system/physics/BoundaryCheckSystem.js
 import { Sphere } from "./ecs/entity/Sphere.js";
 import { RandomizeComponent } from "./ecs/component/RandomizeComponent.js";
 import { Chat } from "./ecs/entity/Chat.js";
+import { EventSystem } from "./ecs/system/events/EventSystem.js";
 
-// Create a system
 const entityManager = EntityManager.getInstance();
+const eventSystem = EventSystem.getInstance();
 // TODO: Make it wait for the websocket server to start
 const entities = entityManager.getAllEntities();
 
 const physicsSystem = PhysicsSystem.getInstance();
 const movementSystem = new MovementSystem();
-const networkSystem = NetworkSystem.getInstance();
+const networkSystem = new NetworkSystem();
 
 // Physics
 const syncPositionSystem = new SyncPositionSystem();
@@ -116,7 +117,8 @@ async function gameLoop() {
   animationSystem.update(entities, physicsSystem.world);
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
-  // TODO:  This make the rigidbody wake up so it will always be sent even if its supposd to sleep..
+  eventSystem.update(entities);
+  // TODO:  This make the rigidbody wake up so it will always be sent even if its supposed to sleep..
   syncSizeSystem.update(entities);
   syncColorSystem.update(entities);
   randomSizeSystem.update(entities);
@@ -134,7 +136,7 @@ async function gameLoop() {
   sleepCheckSystem.update(entities);
 
   physicsSystem.update();
-  // DestroyedSystem should be at the end because it destorys the entities
+  // DestroyedSystem should be at the end because it destroys the entities
   // but we need to notify the clients with networkSystem.update
   destroySystem.update(entities, entityManager, physicsSystem.world);
   lastUpdateTimestamp = now;

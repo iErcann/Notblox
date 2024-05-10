@@ -5,11 +5,16 @@ import {
   ClientMessage,
   ClientMessageType,
 } from "../../../../../shared/network/client/base.js";
+import { ChatMessage } from "../../../../../shared/network/client/chatMessage.js";
 import { InputMessage } from "../../../../../shared/network/client/input.js";
+
+import { EntityManager } from "../../../../../shared/entity/EntityManager.js";
 import { ServerMessageType } from "../../../../../shared/network/server/base.js";
 import { ConnectionMessage } from "../../../../../shared/network/server/connection.js";
+import { SerializedEntityType } from "../../../../../shared/network/server/serialized.js";
 import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
 import { WebSocketComponent } from "../../component/WebsocketComponent.js";
+import { EventChatMessage } from "../../component/events/EventChatMessage.js";
 import { Player } from "../../entity/Player.js";
 import { InputProcessingSystem } from "../InputProcessingSystem.js";
 
@@ -63,11 +68,10 @@ export class WebsocketSystem {
     this.addMessageHandler(ClientMessageType.INPUT, async (ws, message) => {
       const inputMessage = message as InputMessage;
 
-      // Access 'ws' if needed within the handler
-      const player = this.findPlayer(ws);
+      const player = ws.player;
 
       if (!player) {
-        console.error(`Entity with WS ${ws} not found.`);
+        console.error(`Player with WS ${ws} not found.`);
         return;
       }
 
@@ -76,6 +80,30 @@ export class WebsocketSystem {
         inputMessage
       );
     });
+
+    this.addMessageHandler(
+      ClientMessageType.CHAT_MESSAGE,
+      (ws, message: ChatMessage) => {
+        // const chatEntity = EntityManager.getFirstEntityByType(
+        //   EntityManager.getInstance().getAllEntities(),
+        //   SerializedEntityType.CHAT
+        // );
+        // if (!chatEntity) {
+        //   console.error("Chat entity not found");
+        //   return;
+        // }
+        // const player = ws.player;
+        // console.log(
+        //   `Chat message from ${player.getEntity().id}: ${message.content}`
+        // );
+        // const eventChatMessage = new EventChatMessage(
+        //   player.entity.id,
+        //   player,
+        //   message
+        // );
+        // chatEntity.addComponent(eventChatMessage);
+      }
+    );
   }
 
   public addMessageHandler(type: ClientMessageType, handler: MessageHandler) {
@@ -94,6 +122,9 @@ export class WebsocketSystem {
       handler(ws, clientMessage);
     }
   }
+
+  // Not used anymore since ws.player is set on first connection
+  // Also could be rewritten with a hashmap for better performance
   private findPlayer(ws: any) {
     return (
       this.players.find((player) => {
@@ -107,6 +138,7 @@ export class WebsocketSystem {
 
   // TODO: Create EventOnPlayerConnect and EventOnPlayerDisconnect to respects ECS
   // Might be useful to query the chat and send a message to all players when a player connects or disconnects
+  // Also could append scriptable events to be triggered on connect/disconnect depending on the game
   private onConnect(ws: any) {
     const player = new Player(
       ws,
@@ -118,6 +150,7 @@ export class WebsocketSystem {
       t: ServerMessageType.FIRST_CONNECTION,
       id: player.entity.id,
     };
+    ws.player = player;
     ws.send(pack(connectionMessage), true);
     this.players.push(player);
   }

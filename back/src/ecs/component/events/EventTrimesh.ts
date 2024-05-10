@@ -1,6 +1,6 @@
 import { Component } from "../../../../../shared/component/Component.js";
 
-export class EventTrimeshComponent extends Component {
+export class EventTrimesh extends Component {
   constructor(entityId: number, public filePath: string) {
     super(entityId);
   }
