@@ -15,6 +15,8 @@ import { PlayerComponent } from "../component/PlayerComponent.js";
 import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { StateComponent } from "../../../../shared/component/StateComponent.js";
+import { EventSystem } from "../system/events/EventSystem.js";
+import { EventChatMessage } from "../component/events/EventChatMessage.js";
 
 export class Player {
   entity: Entity;
@@ -25,7 +27,6 @@ export class Player {
     initialY: number,
     initialZ: number
   ) {
-    console.log("New player created !");
     const world = PhysicsSystem.getInstance().world;
     this.entity = EntityManager.getInstance().createEntity(
       SerializedEntityType.PLAYER
@@ -66,6 +67,14 @@ export class Player {
     );
 
     this.entity.addComponent(networkDataComponent);
+
+    EventSystem.getInstance().addEvent(
+      new EventChatMessage(
+        this.entity.id,
+        "🖥️ [SERVER]",
+        `Player ${this.entity.id} has joined the game. 🎉`
+      )
+    );
   }
 
   getPosition() {
@@ -77,7 +86,7 @@ export class Player {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
     rigidBodyDesc.setLinearDamping(0.1);
     rigidBodyDesc.setCcdEnabled(true);
-    rigidBodyDesc.lockRotations();
+    // rigidBodyDesc.lockRotations();
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
 

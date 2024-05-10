@@ -1,6 +1,6 @@
 import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { RotationComponent } from "../../../../shared/component/RotationComponent.js";
-import { EventDestroyedComponent } from "../../../../shared/component/events/EventDestroyedComponent.js";
+import { EventDestroyed } from "../../../../shared/component/events/EventDestroyed.js";
 
 import { Entity } from "../../../../shared/entity/Entity.js";
 import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";

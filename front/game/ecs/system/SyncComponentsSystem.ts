@@ -32,7 +32,7 @@ import {
   SerializedStateComponent,
   StateComponent,
 } from "@shared/component/StateComponent";
-import { EventDestroyedComponent } from "@shared/component/events/EventDestroyedComponent";
+import { EventDestroyed } from "@shared/component/events/EventDestroyed";
 import { MeshComponent } from "../component/MeshComponent";
 import {
   ColorComponent,
@@ -131,7 +131,7 @@ export class SyncComponentsSystem {
     } else if (serializedComponent.t === SerializedComponentType.SIZE) {
       createdComponent = new SizeComponent(entityId, 1, 1, 1);
     } else if (serializedComponent.t === SerializedComponentType.DESTROYED) {
-      createdComponent = new EventDestroyedComponent(entityId);
+      createdComponent = new EventDestroyed(entityId);
     } else if (serializedComponent.t === SerializedComponentType.COLOR) {
       createdComponent = new ColorComponent(entityId, "0xffffff");
     } else if (serializedComponent.t === SerializedComponentType.SINGLE_SIZE) {

@@ -18,41 +18,21 @@ export class Chat {
     );
 
     EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST A")
+      new EventChatMessage(
+        this.entity.id,
+        "🖥️ [SERVER]",
+        `Started ${new Date().toLocaleString()}`
+      )
     );
+
     EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST B")
+      new EventChatMessage(
+        this.entity.id,
+        "🖥️ [SERVER]",
+        "Welcome to the chat !"
+      )
     );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST CCCC")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST A")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST B")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST CCCC")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST A")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST B")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST CCCC")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST A")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST B")
-    );
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(this.entity.id, this.entity, "Server TEST CCCC")
-    );
+
     const chatListComponent = new ChatListComponent(this.entity.id, []);
     this.entity.addComponent(chatListComponent);
 

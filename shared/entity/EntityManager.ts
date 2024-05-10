@@ -33,6 +33,9 @@ export class EntityManager {
   static getFirstEntityByType(entities: Entity[], type: SerializedEntityType) {
     return entities.find((entity) => entity.type === type);
   }
+  static getEntityById(entities: Entity[], id: number) {
+    return entities.find((entity) => entity.id === id);
+  }
 
   // Get entities with specific components
   getEntitiesWithComponents<T extends Component>(
@@ -44,6 +47,13 @@ export class EntityManager {
   // Remove an entity
   removeEntity(entity: Entity): void {
     const index = this.entities.indexOf(entity);
+    if (index !== -1) {
+      this.entities.splice(index, 1);
+    }
+  }
+  removeEntityById(id: number): void {
+    const index = this.entities.findIndex((entity) => entity.id === id);
+    console.log("Removing entity", id, "from EntityManager");
     if (index !== -1) {
       this.entities.splice(index, 1);
     }

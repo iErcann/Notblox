@@ -52,9 +52,8 @@ export class TrimeshSystem {
                   const mesh = child as THREE.Mesh;
                   const indices = mesh.geometry.index?.array;
                   const vertices = mesh.geometry.attributes.position.array;
-                  const scale = mesh.getWorldScale(mesh.scale);
-
                   // Scale factor for the vertices
+                  const scale = mesh.getWorldScale(mesh.scale);
 
                   // Create a new Float32Array to hold the scaled vertices
                   const scaledVertices = new Float32Array(vertices.length);

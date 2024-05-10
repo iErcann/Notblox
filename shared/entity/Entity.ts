@@ -37,6 +37,12 @@ export class Entity {
       | T
       | undefined;
   }
+  // Get all components of a certain type
+  getComponents<T extends Component>(
+    componentType: new (entityId: number, ...args: any[]) => T
+  ): T[] {
+    return this.components.filter((c) => c instanceof componentType) as T[];
+  }
 
   // This is used by the client only !
   // We assume that the clients will only have serializable component so they will have a type!
