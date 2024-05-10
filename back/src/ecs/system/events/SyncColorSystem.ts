@@ -1,17 +1,17 @@
 import { ColorComponent } from "../../../../../shared/component/ColorComponent.js";
 import { Entity } from "../../../../../shared/entity/Entity.js";
-import { EventColorComponent } from "../../component/events/EventColorComponent.js";
+import { EventColor } from "../../component/events/EventColor.js";
 
 export class SyncColorSystem {
   update(entities: Entity[]) {
     for (const entity of entities) {
       const colorComponent = entity.getComponent(ColorComponent);
-      const eventColorComponent = entity.getComponent(EventColorComponent);
+      const eventColorComponent = entity.getComponent(EventColor);
 
       if (colorComponent && eventColorComponent) {
         colorComponent.color = eventColorComponent.color;
         colorComponent.updated = true;
-        entity.removeComponent(EventColorComponent);
+        entity.removeComponent(EventColor);
       }
     }
   }

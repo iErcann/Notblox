@@ -6,9 +6,9 @@ import { Entity } from "../../../../shared/entity/Entity.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PlayerComponent } from "../component/PlayerComponent.js";
 import { RandomizeComponent } from "../component/RandomizeComponent.js";
-import { EventColorComponent } from "../component/events/EventColorComponent.js";
-import { EventSingleSizeComponent } from "../component/events/EventSingleSizeComponent.js";
-import { EventSizeComponent } from "../component/events/EventSizeComponent.js";
+import { EventColor } from "../component/events/EventColor.js";
+import { EventSingleSize } from "../component/events/EventSingleSize.js";
+import { EventSize } from "../component/events/EventSize.js";
 import Rapier from "../../physics/rapier.js";
 import { EntityManager } from "../../../../shared/entity/EntityManager.js";
 import { SerializedEntityType } from "../../../../shared/network/server/serialized.js";
@@ -38,9 +38,7 @@ export class RandomSizeSystem {
       if (colorComponent) {
         if (Math.random() < 0.01) {
           const randomHex = Math.floor(Math.random() * 16777215).toString(16);
-          entity.addComponent(
-            new EventColorComponent(entity.id, "#" + randomHex)
-          );
+          entity.addComponent(new EventColor(entity.id, "#" + randomHex));
         }
       }
 
@@ -48,13 +46,13 @@ export class RandomSizeSystem {
 
       if (rigidBodyComponent) {
         if (Math.random() < 0.05) {
-          const chatEntity = EntityManager.getFirstEntityByType(
-            entities,
-            SerializedEntityType.CHAT
-          );
-          chatEntity
-            ?.getComponent(ChatListComponent)
-            ?.addMessage("Server", Math.random().toString());
+          // const chatEntity = EntityManager.getFirstEntityByType(
+          //   entities,
+          //   SerializedEntityType.CHAT
+          // );
+          // chatEntity
+          //   ?.getComponent(ChatListComponent)
+          //   ?.addMessage("Server", Math.random().toString());
 
           rigidBodyComponent.body.applyImpulse(
             new Rapier.Vector3(

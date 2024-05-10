@@ -1,6 +1,6 @@
 import { Component } from "../../../../../shared/component/Component.js";
 
-export class EventSizeComponent extends Component {
+export class EventSize extends Component {
   constructor(
     entityId: number,
     public width: number,

@@ -15,15 +15,8 @@ export class NetworkSystem {
   private websocketSystem: WebsocketSystem;
   private deltaPatcher = jsondiffpatch.create();
 
-  private constructor() {
+  constructor() {
     this.websocketSystem = new WebsocketSystem();
-  }
-
-  public static getInstance(): NetworkSystem {
-    if (!NetworkSystem.instance) {
-      NetworkSystem.instance = new NetworkSystem();
-    }
-    return NetworkSystem.instance;
   }
 
   private serialize(entities: Entity[], serializeAll: boolean) {
