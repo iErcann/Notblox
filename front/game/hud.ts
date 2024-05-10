@@ -15,10 +15,5 @@ export class Hud {
     this.updateChat = updateChat;
   }
 
-  public sendChatMessage(message: string) {
-    if (this.updateChat === undefined) {
-      console.error("HUD not initialized for the ChatSystem.");
-      return;
-    }
-  }
+  public sendChatMessage(message: string) {}
 }

@@ -1,6 +1,6 @@
 import { pack, unpack } from "msgpackr";
 import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from "uWebSockets.js";
-import { EventDestroyedComponent } from "../../../../../shared/component/events/EventDestroyedComponent.js";
+import { EventDestroyed } from "../../../../../shared/component/events/EventDestroyed.js";
 import {
   ClientMessage,
   ClientMessageType,
@@ -17,6 +17,7 @@ import { WebSocketComponent } from "../../component/WebsocketComponent.js";
 import { EventChatMessage } from "../../component/events/EventChatMessage.js";
 import { Player } from "../../entity/Player.js";
 import { InputProcessingSystem } from "../InputProcessingSystem.js";
+import { EventSystem } from "../events/EventSystem.js";
 
 type MessageHandler = (ws: any, message: any) => void;
 
@@ -155,7 +156,7 @@ export class WebsocketSystem {
     this.players.push(player);
   }
   private onClose(ws: any, code: number, message: any) {
-    const disconnectedPlayer = this.findPlayer(ws);
+    const disconnectedPlayer = ws.player;
 
     if (!disconnectedPlayer) {
       console.error("Disconnect: Player not found?", ws);
@@ -167,18 +168,7 @@ export class WebsocketSystem {
 
     const entityId = entity.id;
 
-    // Removing WebSocketComponent to not retrigger a broadcast on this entity if its destroyed.
-    // Otherwise it throws an error.
-    entity.removeComponent(WebSocketComponent);
-
     // Create and add the EventDestroyedComponent
-    const eventDestroyedComponent = new EventDestroyedComponent(entityId);
-    entity.addComponent(eventDestroyedComponent);
-
-    // Add the EventDestroyedComponent to the NetworkDataComponent if it exists
-    const networkComponent = entity.getComponent(NetworkDataComponent);
-    if (networkComponent) {
-      networkComponent.addComponent(eventDestroyedComponent);
-    }
+    EventSystem.getInstance().addEvent(new EventDestroyed(entityId));
   }
 }

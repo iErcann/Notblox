@@ -1,5 +1,5 @@
 import { Entity } from "../../../../shared/entity/Entity.js";
-import { EventDestroyedComponent } from "../../../../shared/component/events/EventDestroyedComponent.js";
+import { EventDestroyed } from "../../../../shared/component/events/EventDestroyed.js";
 import { Game } from "@/game/game.js";
 import { MeshComponent } from "../component/MeshComponent.js";
 import { EntityManager } from "@shared/entity/EntityManager.js";
@@ -10,7 +10,7 @@ import { SerializedComponent } from "@shared/network/server/serialized.js";
 export class DestroySystem {
   update(entities: Entity[], entityManager: EntityManager, renderer: Renderer) {
     for (const entity of entities) {
-      const destroyComponent = entity.getComponent(EventDestroyedComponent);
+      const destroyComponent = entity.getComponent(EventDestroyed);
       if (destroyComponent) {
         const meshComponent = entity.getComponent(MeshComponent);
         console.log("Destroying", entity);

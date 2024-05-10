@@ -29,12 +29,7 @@ export interface SerializedChatMessageComponent extends SerializedComponent {
 }
 
 export class ChatListComponent extends NetworkComponent {
-  constructor(
-    entityId: number,
-    public list: Array<ChatMessageComponent>,
-    private maxMessages: number = 30,
-    private maxContentLength: number = 128
-  ) {
+  constructor(entityId: number, public list: Array<ChatMessageComponent>) {
     super(entityId, SerializedComponentType.CHAT_LIST);
   }
   deserialize(data: SerializedChatListComponent): void {
@@ -49,18 +44,6 @@ export class ChatListComponent extends NetworkComponent {
 
   // Only used by the server
   addMessage(author: string, content: string) {
-    // Limit history to maxMessages
-    // Also, could send only the delta messages.
-
-    if (this.list.length >= this.maxMessages) {
-      this.list.shift();
-    }
-
-    // Limit content length
-    if (content.length > this.maxContentLength) {
-      content = content.substring(0, this.maxContentLength);
-    }
-
     this.list.push(
       new ChatMessageComponent(this.entityId, {
         author,
