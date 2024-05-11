@@ -4,6 +4,7 @@ import GameHud from "@/components/GameHud";
 import LoadingScreen from "@/components/LoadingScreen";
 import { ChatListComponent } from "@shared/component/ChatComponent";
 import { Chat } from "@/game/ecs/entity/Chat";
+import { NextSeo } from "next-seo";
 
 export default function TestServer() {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,13 +27,32 @@ export default function TestServer() {
     initializeGame();
   }, []);
 
-  useEffect(() => {
-    if (!chat) return;
-    console.log("REceived");
-  }, [chat]);
-
   return (
     <>
+      <NextSeo
+        title="Play Test World - Development Server"
+        description="Test server for NotBlox Online"
+        openGraph={{
+          url: "https://www.url.ie/a",
+          title: "Open Graph Title",
+          description: "Open Graph Description",
+          images: [
+            {
+              url: "/Logo.png",
+              width: 800,
+              height: 600,
+              alt: "NotBlox Logo",
+              type: "image/png",
+            },
+          ],
+          siteName: "NotBlox Online",
+        }}
+        twitter={{
+          handle: "@handle",
+          site: "@site",
+          cardType: "summary_large_image",
+        }}
+      />
       {isLoading ? (
         <LoadingScreen />
       ) : (

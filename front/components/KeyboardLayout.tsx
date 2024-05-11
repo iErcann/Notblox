@@ -21,10 +21,10 @@ export default function KeyboardLayout() {
   };
 
   return (
-    <div className="grid shadow p-4 space-y-4">
+    <div className="grid shadow p-4 space-y-4 ">
       <p className="text-lg font-bold">
         Current controls{" "}
-        {keyboardLayout === KeyboardLanguage.EN ? "US" : "French"}
+        {keyboardLayout === KeyboardLanguage.EN ? "QWERTY" : "AZERTY (French)"}
       </p>
       <p className="text-md font-semibold">Move</p>
       <div>
