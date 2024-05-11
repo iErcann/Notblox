@@ -13,6 +13,7 @@
     "lucide-react": "^0.289.0",
     "msgpackr": "^1.9.9",
     "next": "latest",
+    "next-seo": "^6.5.0",
     "react": "latest",
     "react-dom": "latest",
     "three": "^0.156.1"
