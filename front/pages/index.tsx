@@ -8,13 +8,14 @@ export default function Home() {
   return (
     <div className="container md:w-1/4 flex flex-col items-start md:items-center justify-center flex-1  text-center">
       <NextSeo
-        title="NotBlox Online - Play multiplayer games in your browser"
+        title="NotBlox - Play multiplayer games in your browser"
         description="Play multiplayer games like Roblox in your browser. Create your own games and share them with your friends."
         canonical="hhttps://notblox.online/"
         openGraph={{
           url: "https://www.url.ie/a",
-          title: "Open Graph Title",
-          description: "Open Graph Description",
+          title: "NotBlox Online - Play multiplayer games in your browser",
+          description:
+            "Play multiplayer games like Roblox in your browser. Create your own games and share them with your friends.",
           images: [
             {
               url: "/Logo.png",

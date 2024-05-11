@@ -30,12 +30,11 @@ export default function TestServer() {
   return (
     <>
       <NextSeo
-        title="Play Test World - Development Server"
+        title="Play Test World - NotBlox Development Server"
         description="Test server for NotBlox Online"
         openGraph={{
-          url: "https://www.url.ie/a",
-          title: "Open Graph Title",
-          description: "Open Graph Description",
+          title: "Play Test World - NotBlox Development Server",
+          description: "Test server for NotBlox Online",
           images: [
             {
               url: "/Logo.png",
