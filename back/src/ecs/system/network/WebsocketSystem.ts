@@ -155,7 +155,7 @@ export class WebsocketSystem {
     const player = new Player(
       ws,
       10 + Math.random() * 3,
-      10 + Math.random() * 7,
+      10,
       20 + Math.random() * 3
     );
     const connectionMessage: ConnectionMessage = {
