@@ -55,6 +55,4 @@ fastlane/screenshots
 gta.glb
 gtasa.glb
 pool.glb
-
-*.env
-*.env.local
+ 
