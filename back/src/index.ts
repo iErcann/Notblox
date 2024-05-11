@@ -64,8 +64,10 @@ setTimeout(() => {
   randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id));
 
   new Sphere(0, 30, 0, 1);
-  new Sphere(21.41, 10, -15.76, 1);
-  new Sphere(21.41, 10, -15.76, 0.5);
+
+  // Football field
+  new Sphere(-276, 52, -355.76, 1);
+  new Sphere(-276, 52, -355.76, 0.5);
 
   const randomSphere = new Sphere(0, 30, 0, 1.2);
   randomSphere.entity.addComponent(
