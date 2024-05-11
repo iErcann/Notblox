@@ -22,12 +22,19 @@ export default function Home() {
               alt: "NotBlox Logo",
               type: "image/png",
             },
+            {
+              url: "/BigPreview.webp",
+              width: 1200,
+              height: 630,
+              alt: "NotBlox Logo",
+              type: "image/webp",
+            },
           ],
           siteName: "NotBlox Online",
         }}
         twitter={{
-          handle: "@handle",
-          site: "@site",
+          handle: "@iercan_",
+          site: "@iercan_",
           cardType: "summary_large_image",
         }}
       />
