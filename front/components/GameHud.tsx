@@ -9,7 +9,8 @@ export default function GameHud({ chatList, sendMessage }: GameHudProps) {
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current)
+      (messagesEndRef.current as any).scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
