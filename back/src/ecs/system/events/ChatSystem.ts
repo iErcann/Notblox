@@ -22,7 +22,7 @@ export class ChatSystem {
 
     const chatListComponent = chatEntity.getComponent(ChatListComponent);
     if (chatListComponent) {
-      let { content, entityId } = event;
+      let { content, sender } = event;
 
       // TODO : Create NameComponent and add it to the player entity
       // Limit history to maxMessages
@@ -35,7 +35,7 @@ export class ChatSystem {
         content = content.substring(0, this.MAX_CONTENT_LENGTH);
       }
 
-      chatListComponent.addMessage(event.sender, event.content);
+      chatListComponent.addMessage(sender, content);
       return;
     }
   }

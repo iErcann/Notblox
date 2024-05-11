@@ -84,6 +84,9 @@ setTimeout(() => {
 console.log(`Detected tick rate : ${config.TICKRATE}`);
 let lastUpdateTimestamp = Date.now();
 
+// Either : setImmediate, setTimeout or setInterval
+// Check https://github.com/timetocode/node-game-loop/issues/3#issuecomment-382130083
+
 async function gameLoop() {
   setTimeout(gameLoop, 1000 / config.TICKRATE);
   const now = Date.now();
@@ -94,6 +97,7 @@ async function gameLoop() {
   animationSystem.update(entities, physicsSystem.world);
   syncRotationSystem.update(entities);
   syncPositionSystem.update(entities);
+
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposed to sleep..
   syncSizeSystem.update(entities);
   syncColorSystem.update(entities);
