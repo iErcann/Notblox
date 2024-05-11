@@ -5,7 +5,7 @@ import { EventChatMessage } from "../../component/events/EventChatMessage.js";
 import { SerializedEntityType } from "../../../../../shared/network/server/serialized.js";
 
 export class ChatSystem {
-  private MAX_MESSAGES: number = 30;
+  private MAX_MESSAGES: number = 20;
   private MAX_CONTENT_LENGTH: number = 128;
 
   update(entities: Entity[], event: EventChatMessage) {
@@ -25,7 +25,6 @@ export class ChatSystem {
       let { content, entityId } = event;
 
       // TODO : Create NameComponent and add it to the player entity
-
       // Limit history to maxMessages
       // Also, could send only the delta messages.
       if (chatListComponent.list.length >= this.MAX_MESSAGES) {

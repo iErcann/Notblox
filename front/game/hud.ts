@@ -1,7 +1,13 @@
 // Binding react states - game
 
 import { Dispatch, SetStateAction } from "react";
-import { ChatListComponent } from "@shared/component/ChatComponent";
+import {
+  ChatListComponent,
+  ChatMessageComponent,
+} from "@shared/component/ChatComponent";
+import { Game } from "./game";
+import { ClientMessageType } from "@shared/network/client/base";
+import { ChatMessage } from "@shared/network/client/chatMessage";
 
 // Props drill
 export class Hud {
@@ -15,5 +21,13 @@ export class Hud {
     this.updateChat = updateChat;
   }
 
-  public sendChatMessage(message: string) {}
+  public sendMessageToServer(message: string) {
+    if (message === "") return;
+    console.log("Sending message to server:", message);
+    const chatMessage: any = {
+      t: ClientMessageType.CHAT_MESSAGE,
+      content: message,
+    };
+    Game.getInstance().websocketManager.send(chatMessage);
+  }
 }

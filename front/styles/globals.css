@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
  
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) var(--primary);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 15px;
+}
+
+*::-webkit-scrollbar-track {
+  background:  var(--primary);
+  border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--secondary);
+  border-radius: 20px; /* Adjust this value for roundness */
+  border: 3px solid var(--primary);
+}
+
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;

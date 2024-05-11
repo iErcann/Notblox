@@ -72,7 +72,7 @@ export class Player {
       new EventChatMessage(
         this.entity.id,
         "🖥️ [SERVER]",
-        `Player ${this.entity.id} has joined the game. 🎉`
+        `Player ${this.entity.id} joined at ${new Date().toLocaleString()}`
       )
     );
   }
@@ -86,7 +86,7 @@ export class Player {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
     rigidBodyDesc.setLinearDamping(0.1);
     rigidBodyDesc.setCcdEnabled(true);
-    // rigidBodyDesc.lockRotations();
+    rigidBodyDesc.lockRotations();
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
 

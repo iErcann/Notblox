@@ -66,43 +66,54 @@ export class WebsocketSystem {
 
     this.inputProcessingSystem = new InputProcessingSystem();
 
-    this.addMessageHandler(ClientMessageType.INPUT, async (ws, message) => {
-      const inputMessage = message as InputMessage;
+    this.addMessageHandler(
+      ClientMessageType.INPUT,
+      async (ws, message: InputMessage) => {
+        const inputMessage = message;
 
-      const player = ws.player;
+        const player: Player = ws.player;
 
-      if (!player) {
-        console.error(`Player with WS ${ws} not found.`);
-        return;
+        if (!player) {
+          console.error(`Player with WS ${ws} not found.`);
+          return;
+        }
+        const { up, down, left, right, space, angleY } = inputMessage;
+        // Verify types
+        if (
+          typeof up !== "boolean" ||
+          typeof down !== "boolean" ||
+          typeof left !== "boolean" ||
+          typeof right !== "boolean" ||
+          typeof space !== "boolean" ||
+          typeof angleY !== "number"
+        ) {
+          console.error("Invalid input message", inputMessage);
+          return;
+        }
+
+        this.inputProcessingSystem.receiveInputPacket(
+          player.getEntity(),
+          inputMessage
+        );
       }
-
-      this.inputProcessingSystem.receiveInputPacket(
-        player.getEntity(),
-        inputMessage
-      );
-    });
+    );
 
     this.addMessageHandler(
       ClientMessageType.CHAT_MESSAGE,
       (ws, message: ChatMessage) => {
-        // const chatEntity = EntityManager.getFirstEntityByType(
-        //   EntityManager.getInstance().getAllEntities(),
-        //   SerializedEntityType.CHAT
-        // );
-        // if (!chatEntity) {
-        //   console.error("Chat entity not found");
-        //   return;
-        // }
-        // const player = ws.player;
-        // console.log(
-        //   `Chat message from ${player.getEntity().id}: ${message.content}`
-        // );
-        // const eventChatMessage = new EventChatMessage(
-        //   player.entity.id,
-        //   player,
-        //   message
-        // );
-        // chatEntity.addComponent(eventChatMessage);
+        console.log("Chat message received", message);
+        const player: Player = ws.player;
+        const id = player.getEntity().id;
+
+        const { content } = message;
+        // TODO: Zod here.
+        if (!content || typeof content !== "string") {
+          console.error(`Invalid chat message, sen't from ${player}`, message);
+          return;
+        }
+        EventSystem.getInstance().addEvent(
+          new EventChatMessage(id, `Player ${id}`, content)
+        );
       }
     );
   }
