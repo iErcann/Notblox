@@ -92,7 +92,7 @@ export class Renderer extends THREE.WebGLRenderer {
     directionalLight.shadow.camera.right = shadowSideLength;
 
     // Enable shadow casting
-    directionalLight.castShadow = true;
+    //directionalLight.castShadow = true;
 
     // Create a target for the directional light
     const lightTarget = new THREE.Object3D();

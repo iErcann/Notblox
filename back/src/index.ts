@@ -17,6 +17,9 @@ import { PhysicsSystem } from "./ecs/system/physics/PhysicsSystem.js";
 import { SleepCheckSystem } from "./ecs/system/physics/SleepCheckSystem.js";
 import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
+import { Cube } from "./ecs/entity/Cube.js";
+import { RandomizeComponent } from "./ecs/component/RandomizeComponent.js";
+import { Sphere } from "./ecs/entity/Sphere.js";
 
 const entityManager = EntityManager.getInstance();
 const eventSystem = EventSystem.getInstance();
@@ -43,9 +46,6 @@ const boundaryCheckSystem = new BoundaryCheckSystem();
 new MapWorld();
 new Chat();
 
-setInterval(() => {
-  console.log(entityManager.getAllEntities());
-}, 1000);
 setTimeout(() => {
   // Walls
   /*   for (let i = 0; i < 10; i++) {
@@ -57,11 +57,17 @@ setTimeout(() => {
     }
   }
  */
-  // new Cube(0, 10, 0, 1, 1, 1);
-  // new Cube(0, 10, 0, 1, 1, 1);
-  // const randomCube = new Cube(0, 10, 0, 1, 1, 1);
-  // randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id));
-  // new Sphere(0, 30, 0, 1);
+  new Cube(0, 10, 0, 1, 1, 1);
+  new Cube(0, 10, 0, 1, 1, 1);
+  const randomCube = new Cube(0, 10, 0, 1, 1, 1);
+  randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id));
+  new Sphere(0, 30, 0, 1);
+  const randomSphere = new Sphere(0, 30, 0, 1.2);
+  randomSphere.entity.addComponent(
+    new RandomizeComponent(randomCube.entity.id)
+  );
+
+  new Sphere(10, 30, 0, 4);
 }, 1000);
 
 // Create the ground
@@ -105,4 +111,8 @@ async function gameLoop() {
   lastUpdateTimestamp = now;
 }
 
-gameLoop();
+try {
+  gameLoop();
+} catch (error) {
+  console.error("Error in game loop:", error);
+}

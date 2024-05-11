@@ -33,7 +33,7 @@ export class Game {
   private syncColorSystem: SyncColorSystem;
   private syncSizeSystem: SyncSizeSystem;
   private cameraFollowSystem: CameraFollowSystem;
-  private websocketManager: WebSocketManager;
+  public websocketManager: WebSocketManager;
   private animationSystem: AnimationSystem;
   private sleepCheckSystem: SleepCheckSystem;
   private destroySystem: DestroySystem;
