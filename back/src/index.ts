@@ -47,16 +47,6 @@ new MapWorld();
 new Chat();
 
 setTimeout(() => {
-  // Walls
-  /*   for (let i = 0; i < 10; i++) {
-    for (let j = 1; j < 3; j++) {
-      new Cube(i * 2, j * 2, 0, 1, 1, 1); // Front wall
-      new Cube(i * 2, j * 2, 18, 1, 1, 1); // Back wall
-      new Cube(0, j * 2, i * 2, 1, 1, 1); // Left wall
-      new Cube(18, j * 2, i * 2, 1, 1, 1); // Right wall
-    }
-  }
- */
   new Cube(0, 10, 0, 1, 1, 1);
   new Cube(0, 10, 0, 1, 1, 1);
 
