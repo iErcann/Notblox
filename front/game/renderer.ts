@@ -10,6 +10,10 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { GlitchPass } from "three/addons/postprocessing/GlitchPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
+import { Entity } from "@shared/entity/Entity";
+import { EntityManager } from "@shared/entity/EntityManager";
+import { FollowComponent } from "./ecs/component/FollowComponent";
+import { PositionComponent } from "@shared/component/PositionComponent";
 
 export interface Renderable {
   mesh: THREE.Mesh;
@@ -19,6 +23,7 @@ export class Renderer extends THREE.WebGLRenderer {
   public camera: Camera;
   public scene: THREE.Scene;
   public css2DRenderer: CSS2DRenderer;
+  private directionalLight: THREE.DirectionalLight;
   constructor(scene: THREE.Scene, loadManager: LoadManager) {
     super({ antialias: true });
 
@@ -82,30 +87,30 @@ export class Renderer extends THREE.WebGLRenderer {
   private addDirectionnalLight() {
     // Create a directional light for shadows and highlights
     // Create a directional light with a different color and intensity
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, 1, -1).multiplyScalar(50);
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
 
     // Configure shadow properties with different values
-    directionalLight.shadow.mapSize.height = 1024;
-    const shadowSideLength = 150;
-    directionalLight.shadow.camera.top = shadowSideLength;
-    directionalLight.shadow.camera.bottom = -shadowSideLength;
-    directionalLight.shadow.camera.left = -shadowSideLength;
-    directionalLight.shadow.camera.right = shadowSideLength;
+    this.directionalLight.shadow.mapSize.height = 1024;
+    const shadowSideLength = 75;
+    this.directionalLight.shadow.camera.top = shadowSideLength;
+    this.directionalLight.shadow.camera.bottom = -shadowSideLength;
+    this.directionalLight.shadow.camera.left = -shadowSideLength;
+    this.directionalLight.shadow.camera.right = shadowSideLength;
+    this.directionalLight.shadow.normalBias = 0.06;
 
     // Enable shadow casting
-    //directionalLight.castShadow = true;
+    this.directionalLight.castShadow = true;
 
     // Create a target for the directional light
     const lightTarget = new THREE.Object3D();
-    directionalLight.target = lightTarget;
+    this.directionalLight.target = lightTarget;
 
     // Add the directional light and its target to the scene
-    this.scene.add(directionalLight, lightTarget);
+    this.scene.add(this.directionalLight, lightTarget);
 
     // Uncomment the following lines to add a helper for visualization
-    // const helper = new THREE.DirectionalLightHelper(directionalLight, 10);
-    // this.scene.add(helper);
+    const helper = new THREE.DirectionalLightHelper(this.directionalLight, 10);
+    this.scene.add(helper);
   }
 
   private addLight() {
@@ -146,10 +151,24 @@ export class Renderer extends THREE.WebGLRenderer {
         });
       });
   }
-  public update() {
-    // if (this.directionalLight) {
-    //   this.directionalLight.position.copy(this.camera.position);
-    // }
+  public update(entities: Entity[]) {
+    const followedEntity = EntityManager.getFirstEntityWithComponent(
+      entities,
+      FollowComponent
+    );
+    if (followedEntity) {
+      const position = followedEntity.getComponent(PositionComponent);
+      if (position) {
+        this.directionalLight.position.lerp(
+          new THREE.Vector3(position.x + 15, position.y + 150, position.z),
+          0.1
+        );
+        this.directionalLight.target.position.lerp(
+          new THREE.Vector3(position.x, position.y, position.z),
+          0.1
+        );
+      }
+    }
     this.camera.update();
     this.css2DRenderer.render(this.scene, this.camera);
     this.render(this.scene, this.camera);

@@ -112,7 +112,7 @@ export class Game {
     this.animationSystem.update(deltaTime, entities);
     this.destroySystem.update(entities, this.entityManager, this.renderer);
     this.sleepCheckSystem.update(entities);
-    this.renderer.update();
+    this.renderer.update(entities);
     this.lastRenderTime = now;
     this.websocketManager.timeSinceLastServerUpdate += deltaTime;
   }

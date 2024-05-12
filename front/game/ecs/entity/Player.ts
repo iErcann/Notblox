@@ -33,7 +33,8 @@ export class Player {
     loader.glTFLoad("assets/Character.glb").then((gtlf: GLTF) => {
       mesh.add(gtlf.scene.children[0]);
       mesh.animations = gtlf.animations;
-      console.log(mesh);
+
+      this.activateShadows();
 
       this.entity.addComponent(
         new AnimationComponent(this.entity.id, mesh, gtlf.animations)
@@ -52,8 +53,6 @@ export class Player {
       this.entity.addComponent(textComponent);
       textComponent.setFollowedMesh(mesh);
     }
-
-    this.activateShadows();
   }
 
   activateShadows() {
@@ -61,6 +60,8 @@ export class Player {
 
     if (meshComponent) {
       const object3D = meshComponent.mesh;
+      object3D.castShadow = true; // Make the mesh cast shadows
+      object3D.receiveShadow = true; // Make the mesh receive shadows
 
       // Enable shadows for all child meshes
       object3D.traverse(function (child) {
