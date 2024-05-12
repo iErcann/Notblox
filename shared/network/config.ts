@@ -1,3 +1,3 @@
 export const config = {
-  TICKRATE: 20,
+  SERVER_TICKRATE: 20, // SERVER
 };
