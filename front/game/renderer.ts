@@ -23,7 +23,7 @@ export class Renderer extends THREE.WebGLRenderer {
   public camera: Camera;
   public scene: THREE.Scene;
   public css2DRenderer: CSS2DRenderer;
-  private directionalLight: THREE.DirectionalLight;
+  private directionalLight: THREE.DirectionalLight | undefined;
   constructor(scene: THREE.Scene, loadManager: LoadManager) {
     super({ antialias: true });
 
@@ -66,7 +66,7 @@ export class Renderer extends THREE.WebGLRenderer {
     let sky = new Sky();
 
     const uniforms = sky.material.uniforms;
-    uniforms["turbidity"].value = 10;
+    uniforms["turbidity"].value = 1;
     uniforms["rayleigh"].value = 0.3;
     uniforms["mieCoefficient"].value = 0.025;
     uniforms["mieDirectionalG"].value = 0.7;
@@ -97,7 +97,6 @@ export class Renderer extends THREE.WebGLRenderer {
     this.directionalLight.shadow.camera.left = -shadowSideLength;
     this.directionalLight.shadow.camera.right = shadowSideLength;
     this.directionalLight.shadow.normalBias = 0.06;
-
     // Enable shadow casting
     this.directionalLight.castShadow = true;
 
@@ -156,11 +155,11 @@ export class Renderer extends THREE.WebGLRenderer {
       entities,
       FollowComponent
     );
-    if (followedEntity) {
+    if (followedEntity && this.directionalLight) {
       const position = followedEntity.getComponent(PositionComponent);
       if (position) {
         this.directionalLight.position.lerp(
-          new THREE.Vector3(position.x + 15, position.y + 150, position.z),
+          new THREE.Vector3(position.x, position.y + 150, position.z - 15),
           0.1
         );
         this.directionalLight.target.position.lerp(
