@@ -56,7 +56,7 @@ export class DestroySystem {
         new EventChatMessage(
           EventSystem.getInstance().eventQueue.entity.id,
           "🖥️ [SERVER]",
-          `Entity ${entity.id} destroyed at ${new Date().toLocaleString()}`
+          `Player ${entity.id} left the game.`
         )
       );
     }
