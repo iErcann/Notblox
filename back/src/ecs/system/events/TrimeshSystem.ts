@@ -40,8 +40,6 @@ export class TrimeshSystem {
     for (const entity of entities) {
       const eventTrimeshComponent = entity.getComponent(EventTrimesh);
       if (eventTrimeshComponent) {
-        console.log(entity.id, "geometry");
-
         const loadPromise = this.loadGLTFModel(eventTrimeshComponent.filePath)
           .then(async (gltf: GLTF) => {
             if (gltf) {

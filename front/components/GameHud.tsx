@@ -17,7 +17,7 @@ export default function GameHud({ chatList, sendMessage }: GameHudProps) {
     scrollToBottom();
   }, [chatList?.list]);
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-0 text-white p-4 z-50">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-0 text-white p-4 z-50 pointer-events-none">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <div>
@@ -37,7 +37,7 @@ export default function GameHud({ chatList, sendMessage }: GameHudProps) {
         </div>
       </div>
 
-      <div className="absolute bottom-4 right-4 bg-black bg-opacity-20 rounded-xl p-4 z-50 hidden md:block w-[360px]">
+      <div className="absolute bottom-4 right-4 bg-black bg-opacity-20 rounded-xl p-4 z-50 hidden md:block w-[360px]  pointer-events-auto">
         {/* Chat messages */}
         <div className="overflow-y-auto overflow-hidden max-h-full h-64   ">
           {chatList?.list.map((message, index) => {

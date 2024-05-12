@@ -22,24 +22,31 @@ export class EventSystem {
   // Mapping Event Component (String representation of their classnames) to Systems
   // EventName : [System1, System2, ...]
   private subscriptions: Map<string, any[]> = new Map();
-  private eventQueue: EventQueue;
+  eventQueue: EventQueue;
   private processedEvents: Component[] = [];
 
   private constructor() {
     this.eventQueue = new EventQueue();
     // Register systems
     this.subscriptions.set(EventChatMessage.name, [new ChatSystem()]);
-    this.subscriptions.set(EventSize.name, []);
     this.subscriptions.set(EventDestroyed.name, [new DestroySystem()]);
+    this.subscriptions.set(EventSize.name, []);
   }
   update(entities: Entity[]) {
-    this.handleComponent(entities, EventChatMessage);
+    // Order matters
     this.handleComponent(entities, EventDestroyed);
+    this.handleComponent(entities, EventChatMessage);
     // this.handleComponent(entities, EventSize);
   }
   afterUpdate(entities: Entity[]) {
     this.handleComponent(entities, EventDestroyed, true);
 
+    if (this.processedEvents.length > 0) {
+      console.log(
+        "EventSystem : afterUpdate : processedEvents",
+        this.processedEvents
+      );
+    }
     // Remove proccessed events
     for (const event of this.processedEvents) {
       this.eventQueue.entity.components.splice(
@@ -47,6 +54,7 @@ export class EventSystem {
         1
       );
     }
+    this.processedEvents = [];
   }
   // Duplicate components (events) are authorized for this one
   public addEvent(event: Component) {
@@ -68,6 +76,8 @@ export class EventSystem {
           const componentName = component.constructor.name;
           if (this.subscriptions.has(componentName)) {
             for (const system of this.subscriptions.get(componentName)!) {
+              // System call order is respected
+
               // All entities are passed to the system to allow systems to perform operations
               afterUpdate
                 ? system.afterUpdate(entities, component)

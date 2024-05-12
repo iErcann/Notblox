@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"node  dist/back/src/index.js\"",
+    "debug": "tsc-watch --onSuccess \"node --inspect=7000 dist/back/src/index.js\"",
+    "dev": "tsc-watch --onSuccess \"node dist/back/src/index.js\"",
     "build": "tsc --build tsconfig.json",
     "start": "tsc --build tsconfig.json && node dist/back/src/index.js"
   },
@@ -14,6 +15,7 @@
   "devDependencies": {
     "@types/fossil-delta": "^1.0.0",
     "@types/three": "^0.157.0",
+    "cross-env": "^7.0.3",
     "three": "^0.157.0",
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.0",

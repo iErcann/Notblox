@@ -12,10 +12,7 @@ import {
   SnapshotMessage,
 } from "@shared/network/server/serialized";
 
-import {
-  PositionComponent,
-  SerializedPositionComponent,
-} from "@shared/component/PositionComponent";
+import { PositionComponent } from "@shared/component/PositionComponent";
 import {
   RotationComponent,
   SerializedRotationComponent,

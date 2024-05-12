@@ -11,12 +11,12 @@ import { InputComponent } from "../component/InputComponent.js";
 import { NetworkDataComponent } from "../component/NetworkDataComponent.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
-import { PlayerComponent } from "../component/PlayerComponent.js";
 import { WebSocketComponent } from "../component/WebsocketComponent.js";
 import { PhysicsSystem } from "../system/physics/PhysicsSystem.js";
 import { StateComponent } from "../../../../shared/component/StateComponent.js";
 import { EventSystem } from "../system/events/EventSystem.js";
 import { EventChatMessage } from "../component/events/EventChatMessage.js";
+import { PlayerComponent } from "../component/tag/PlayerComponent.js";
 
 export class Player {
   entity: Entity;

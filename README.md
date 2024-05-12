@@ -109,7 +109,10 @@ Other example:
 - `EventFireSystem` <- this checks for it
 - `shared/FireComponent` <- contains the real data, inherited from `NetworkComponent` because it needs to be sent to the clients back.
 
-## Asset
+## Asset Credits
 
 San Andreas Map :
 https://skfb.ly/oJSPS
+
+Kenney Assets
+https://www.kenney.nl/
