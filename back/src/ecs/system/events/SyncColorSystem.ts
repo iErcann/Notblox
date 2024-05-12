@@ -10,6 +10,7 @@ export class SyncColorSystem {
 
       if (colorComponent && eventColorComponent) {
         colorComponent.color = eventColorComponent.color;
+        colorComponent.updated = true;
         entity.removeComponent(EventColor);
       }
     }
