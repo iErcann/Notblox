@@ -4,7 +4,7 @@ import { SingleSizeComponent } from "../../../../shared/component/SingleSizeComp
 import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
 import { Entity } from "../../../../shared/entity/Entity.js";
 import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
-import { PlayerComponent } from "../component/PlayerComponent.js";
+import { PlayerComponent } from "../component/tag/PlayerComponent.js";
 import { RandomizeComponent } from "../component/RandomizeComponent.js";
 import { EventColor } from "../component/events/EventColor.js";
 import { EventSingleSize } from "../component/events/EventSingleSize.js";

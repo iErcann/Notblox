@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { EntityManager } from "../../shared/entity/EntityManager.js";
-// import { MovementSystem } from "./ecs/system/MovementSystem.js";
 import { config } from "../../shared/network/config.js";
 import { Chat } from "./ecs/entity/Chat.js";
 import { MapWorld } from "./ecs/entity/MapWorld.js";
@@ -20,6 +19,8 @@ import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
 import { Cube } from "./ecs/entity/Cube.js";
 import { RandomizeComponent } from "./ecs/component/RandomizeComponent.js";
 import { Sphere } from "./ecs/entity/Sphere.js";
+import { EventDestroyed } from "../../shared/component/events/EventDestroyed.js";
+import { EventColor } from "./ecs/component/events/EventColor.js";
 
 const entityManager = EntityManager.getInstance();
 const eventSystem = EventSystem.getInstance();
@@ -30,7 +31,6 @@ const physicsSystem = PhysicsSystem.getInstance();
 const movementSystem = new MovementSystem();
 const networkSystem = new NetworkSystem();
 
-// Physics
 const syncPositionSystem = new SyncPositionSystem();
 const syncRotationSystem = new SyncRotationSystem();
 const syncSizeSystem = new SyncSizeSystem();
@@ -69,17 +69,24 @@ setTimeout(() => {
   new Sphere(-276, 52, -355.76, 1);
   new Sphere(-276, 52, -355.76, 0.5);
 
-  const randomSphere = new Sphere(0, 30, 0, 1.2);
-  randomSphere.entity.addComponent(
-    new RandomizeComponent(randomCube.entity.id)
-  );
+  for (let i = 0; i < 10; i++) {
+    const randomSphere = new Sphere(0, i * 30, 0, 1.2);
+    randomSphere.entity.addComponent(
+      new RandomizeComponent(randomCube.entity.id)
+    );
+  }
 
   new Sphere(10, 30, 0, 4);
 }, 1000);
 
-// Create the ground
-// let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
-// physicsSystem.world.createCollider(groundColliderDesc);
+// let movingCubeX = 0;
+// setInterval(() => {
+//   movingCubeX = (movingCubeX + 5) % 1000;
+//   const big = new Cube(movingCubeX, 10, 0, 10, 10, 10);
+//   setTimeout(() => {
+//     eventSystem.addEvent(new EventDestroyed(big.entity.id));
+//   }, 1000);
+// }, 2000);
 
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`);
 let lastUpdateTimestamp = Date.now();
@@ -93,6 +100,7 @@ async function gameLoop() {
   const dt = now - lastUpdateTimestamp;
 
   await trimeshSystem.update(entities, physicsSystem.world);
+  eventSystem.update(entities);
   movementSystem.update(dt, entities, physicsSystem.world);
   animationSystem.update(entities, physicsSystem.world);
   syncRotationSystem.update(entities);
@@ -103,7 +111,6 @@ async function gameLoop() {
   syncColorSystem.update(entities);
   randomSizeSystem.update(entities);
   boundaryCheckSystem.update(entities);
-  eventSystem.update(entities);
   networkSystem.update(entities);
 
   // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)

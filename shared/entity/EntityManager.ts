@@ -38,12 +38,19 @@ export class EntityManager {
   }
 
   // Get entities with specific components
-  getEntitiesWithComponents<T extends Component>(
+  static getEntitiesWithComponents<T extends Component>(
+    entities: Entity[],
     componentType: new (entityId: number, ...args: any[]) => T
   ): Entity[] {
-    return this.entities.filter((entity) => entity.getComponent(componentType));
+    return entities.filter((entity) => entity.getComponent(componentType));
   }
 
+  static getFirstEntityWithComponent<T extends Component>(
+    entities: Entity[],
+    componentType: new (entityId: number, ...args: any[]) => T
+  ): Entity | undefined {
+    return entities.find((entity) => entity.getComponent(componentType));
+  }
   // Remove an entity
   removeEntity(entity: Entity): void {
     const index = this.entities.indexOf(entity);

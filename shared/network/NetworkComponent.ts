@@ -7,7 +7,10 @@ export class NetworkComponent extends Component implements Serializable {
   // A WebsocketComponent can have a "initialSent" value which determines if its the first connection => then whe sould broadcast everything so the user as an initial copy of the components
   updated: boolean = true;
 
-  constructor(entityId: number, public type: SerializedComponentType) {
+  constructor(
+    entityId: number,
+    public type: SerializedComponentType = SerializedComponentType.NONE
+  ) {
     super(entityId);
   }
 

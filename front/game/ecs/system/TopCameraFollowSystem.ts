@@ -5,7 +5,7 @@ import { PositionComponent } from "@shared/component/PositionComponent";
 import { Camera } from "@/game/camera";
 import { InputMessage } from "@shared/network/client/input";
 
-export class CameraFollowSystem {
+export class TopCameraFollowSystem {
   private lastLookAtPosition: THREE.Vector3 | undefined;
   constructor(
     private positionLerpFactor = 0.05,

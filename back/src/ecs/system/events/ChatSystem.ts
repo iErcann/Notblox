@@ -3,6 +3,7 @@ import { ChatListComponent } from "../../../../../shared/component/ChatComponent
 import { Entity } from "../../../../../shared/entity/Entity.js";
 import { EventChatMessage } from "../../component/events/EventChatMessage.js";
 import { SerializedEntityType } from "../../../../../shared/network/server/serialized.js";
+import { ChatComponent } from "../../component/tag/ChatComponent.js";
 
 export class ChatSystem {
   private MAX_MESSAGES: number = 20;
@@ -10,13 +11,13 @@ export class ChatSystem {
 
   update(entities: Entity[], event: EventChatMessage) {
     // Find Chat Entity
-    const chatEntity = EntityManager.getFirstEntityByType(
+    const chatEntity = EntityManager.getFirstEntityWithComponent(
       entities,
-      SerializedEntityType.CHAT
+      ChatComponent
     );
 
     if (!chatEntity) {
-      console.error("ChatSystem : Chat entity not found");
+      console.error("ChatSystem : A chat entity is required to send messages.");
       return;
     }
 

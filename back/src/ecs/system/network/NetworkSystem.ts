@@ -62,6 +62,7 @@ export class NetworkSystem {
     }
 
     // Then we send delta snapshot
+    debugger;
     const serializedEntities = this.serialize(entities, false);
     const snapshotMessage = this.buildSnapshotMessage(serializedEntities);
     this.broadcast(entities, snapshotMessage);

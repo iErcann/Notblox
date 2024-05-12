@@ -22,7 +22,8 @@ export class Renderer extends THREE.WebGLRenderer {
   constructor(scene: THREE.Scene, loadManager: LoadManager) {
     super({ antialias: true });
 
-    this.camera = new Camera();
+    this.camera = new Camera(this);
+
     this.scene = scene;
 
     this.shadowMap.enabled = true;
@@ -37,6 +38,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight);
     this.css2DRenderer.domElement.style.position = "absolute";
     this.css2DRenderer.domElement.style.top = "0";
+    this.css2DRenderer.domElement.style.pointerEvents = "none";
 
     this.addLight();
     this.addDirectionnalLight();

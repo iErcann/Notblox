@@ -1,4 +1,4 @@
-import { unpack } from "msgpackr/unpack"; // if you only need to unpack
+import { unpack } from "msgpackr/unpack";
 import { ServerMessage, ServerMessageType } from "@shared/network/server/base";
 import { Server } from "http";
 import { SnapshotMessage } from "@shared/network/server/serialized";

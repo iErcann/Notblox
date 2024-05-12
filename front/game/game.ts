@@ -11,7 +11,7 @@ import {
   SyncRotationSystem,
   SyncColorSystem,
   SyncSizeSystem,
-  CameraFollowSystem,
+  TopCameraFollowSystem,
   AnimationSystem,
   DestroySystem,
 } from "./ecs/system";
@@ -20,6 +20,7 @@ import { SleepCheckSystem } from "./ecs/system/SleepCheckSystem";
 import { Chat } from "./ecs/entity/Chat";
 import { ChatSystem } from "./ecs/system/ChatSystem";
 import { Hud } from "./hud";
+import { OrbitCameraFollowSystem } from "./ecs/system/OrbitCameraFollowSystem";
 
 export class Game {
   private static instance: Game;
@@ -32,7 +33,8 @@ export class Game {
   private syncRotationSystem: SyncRotationSystem;
   private syncColorSystem: SyncColorSystem;
   private syncSizeSystem: SyncSizeSystem;
-  private cameraFollowSystem: CameraFollowSystem;
+  private topCameraFollowSystem: TopCameraFollowSystem;
+  private orbitCameraFollowSystem: OrbitCameraFollowSystem;
   public websocketManager: WebSocketManager;
   private animationSystem: AnimationSystem;
   private sleepCheckSystem: SleepCheckSystem;
@@ -48,7 +50,8 @@ export class Game {
     this.syncRotationSystem = new SyncRotationSystem();
     this.syncColorSystem = new SyncColorSystem();
     this.syncSizeSystem = new SyncSizeSystem();
-    this.cameraFollowSystem = new CameraFollowSystem();
+    this.topCameraFollowSystem = new TopCameraFollowSystem();
+    this.orbitCameraFollowSystem = new OrbitCameraFollowSystem();
     this.websocketManager = new WebSocketManager(this);
     this.inputManager = new InputManager(this.websocketManager);
     this.animationSystem = new AnimationSystem();
@@ -75,26 +78,33 @@ export class Game {
   }
 
   private interpolationFactor = 0.1;
-  private tickRate = config.SERVER_TICKRATE;
   private lastTickTime = 0;
 
   private loop() {
     const entities = this.entityManager.getAllEntities();
     const now = Date.now();
     this.websocketManager.update();
+    // Sending at a rate of SERVER_TICKRATE
+
     this.inputManager.sendInput();
     const deltaTime = now - this.lastRenderTime;
     // Interp factor is wrong here
     // const interpolationFactor =
     //   this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
 
-    const positionInterpFactor = deltaTime / (1000 / this.tickRate);
+    const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE);
     this.syncPositionSystem.update(entities, positionInterpFactor);
     this.syncRotationSystem.update(entities, 0.5);
     this.chatSystem.update(entities, this.hud);
     this.syncColorSystem.update(entities);
     this.syncSizeSystem.update(entities);
-    this.cameraFollowSystem.update(
+    // this.orbitCameraFollowSystem.update(
+    //   deltaTime,
+    //   entities,
+    //   this.renderer.camera.controls,
+    //   this.inputManager.inputState
+    // );
+    this.topCameraFollowSystem.update(
       deltaTime,
       entities,
       this.inputManager.inputState
