@@ -81,14 +81,14 @@ setTimeout(() => {
 // let groundColliderDesc = Rapier.ColliderDesc.cuboid(10000.0, 0.1, 10000.0);
 // physicsSystem.world.createCollider(groundColliderDesc);
 
-console.log(`Detected tick rate : ${config.TICKRATE}`);
+console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`);
 let lastUpdateTimestamp = Date.now();
 
 // Either : setImmediate, setTimeout or setInterval
 // Check https://github.com/timetocode/node-game-loop/issues/3#issuecomment-382130083
 
 async function gameLoop() {
-  setTimeout(gameLoop, 1000 / config.TICKRATE);
+  setTimeout(gameLoop, 1000 / config.SERVER_TICKRATE);
   const now = Date.now();
   const dt = now - lastUpdateTimestamp;
 

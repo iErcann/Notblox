@@ -182,9 +182,37 @@ export class InputManager {
         break;
     }
   }
+  private previousInputState: InputMessage | null = null;
 
+  // TODO: To lower the bandiwdth even more, send at a maxrate of config.SERVER_TICKRATE
+  // Only sending when the input state changes
   public sendInput() {
-    // Send the updated input state to the WebSocketManager
-    this.webSocketManager.send(this.inputState);
+    // Check if the current input state is different from the previous one
+    if (
+      !this.previousInputState ||
+      !this.areInputStatesEqual(this.inputState, this.previousInputState)
+    ) {
+      // Send the updated input state to the WebSocketManager
+      this.webSocketManager.send(this.inputState);
+
+      // Update the previous input state
+      this.previousInputState = { ...this.inputState };
+    }
+  }
+
+  private areInputStatesEqual(
+    state1: InputMessage,
+    state2: InputMessage
+  ): boolean {
+    return (
+      state1.up === state2.up &&
+      state1.down === state2.down &&
+      state1.left === state2.left &&
+      state1.right === state2.right &&
+      state1.space === state2.space &&
+      state1.cameraLeft === state2.cameraLeft &&
+      state1.cameraRight === state2.cameraRight &&
+      state1.angleY === state2.angleY
+    );
   }
 }

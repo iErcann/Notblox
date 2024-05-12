@@ -75,7 +75,7 @@ export class Game {
   }
 
   private interpolationFactor = 0.1;
-  private tickRate = config.TICKRATE;
+  private tickRate = config.SERVER_TICKRATE;
   private lastTickTime = 0;
 
   private loop() {
