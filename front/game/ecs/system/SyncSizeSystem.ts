@@ -30,6 +30,12 @@ export class SyncSizeSystem {
             32,
             16
           );
+        } else if (entity.type === SerializedEntityType.PLAYER) {
+          meshComponent.mesh.scale.set(
+            singleSizeComponent.size,
+            singleSizeComponent.size,
+            singleSizeComponent.size
+          );
         }
       }
     }

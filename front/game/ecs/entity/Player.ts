@@ -28,12 +28,15 @@ export class Player {
     this.entity.addComponent(meshComponent);
     let mesh: THREE.Mesh = meshComponent.mesh;
 
-    const loader = game.loadManager;
+    // Capsule debug wireframe
+    const geometry = new THREE.CapsuleGeometry(1, 1, 32);
+    const material = new THREE.MeshBasicMaterial({ wireframe: true });
+    mesh.geometry = geometry;
+    mesh.material = material;
 
-    loader.glTFLoad("assets/Character.glb").then((gtlf: GLTF) => {
+    game.loadManager.glTFLoad("assets/Character.glb").then((gtlf: GLTF) => {
       mesh.add(gtlf.scene.children[0]);
       mesh.animations = gtlf.animations;
-
       this.activateShadows();
 
       this.entity.addComponent(

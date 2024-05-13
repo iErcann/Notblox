@@ -13,15 +13,18 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.2.0",
     "@types/fossil-delta": "^1.0.0",
     "@types/three": "^0.157.0",
     "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
     "three": "^0.157.0",
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.0",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.8.0"
   },
   "type": "module",
   "dependencies": {
