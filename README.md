@@ -37,7 +37,7 @@ Inspiration : https://github.com/swift502/Sketchbook
 
 ### Online demo
 
-Small demo here : https://not-roblox.vercel.app/
+Small demo here : [NotBlox.online](https://www.notblox.online/)
 
 Hosted on an european server, there is no client side prediction, so the game may be laggy if you are far from the server.
 
