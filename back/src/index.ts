@@ -49,9 +49,6 @@ new MapWorld();
 new Chat();
 
 setTimeout(() => {
-  new Cube(0, 10, 0, 1, 1, 1);
-  new Cube(0, 10, 0, 1, 1, 1);
-
   const randomCube = new Cube(0, 10, 0, 1, 1, 1);
   randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id));
 
@@ -61,7 +58,7 @@ setTimeout(() => {
   new Sphere(-276, 52, -355.76, 1);
   new Sphere(-276, 52, -355.76, 0.5);
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 7; i++) {
     const randomSphere = new Sphere(0, i * 30, 0, 1.2);
     randomSphere.entity.addComponent(
       new RandomizeComponent(randomCube.entity.id)
