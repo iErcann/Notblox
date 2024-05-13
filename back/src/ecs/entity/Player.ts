@@ -34,7 +34,10 @@ export class Player {
       SerializedEntityType.PLAYER
     );
 
-    const sizeComponent = new SingleSizeComponent(this.entity.id, 2);
+    const sizeComponent = new SingleSizeComponent(
+      this.entity.id,
+      1 + Math.random()
+    );
     this.entity.addComponent(sizeComponent);
 
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws));
@@ -92,7 +95,7 @@ export class Player {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
     rigidBodyDesc.setLinearDamping(0.1);
     rigidBodyDesc.setCcdEnabled(true);
-    // rigidBodyDesc.lockRotations();
+    rigidBodyDesc.lockRotations();
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
 
