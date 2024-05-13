@@ -17,7 +17,6 @@ export class AnimationSystem {
         const isNotPlaying = animationComponent.mixer.time === 0;
 
         if (stateComponent.updated || isNotPlaying) {
-          console.log("Loading animation");
           // find the animation that corresponds to the current state
           const animationName = stateComponent.state;
           const animation = animations.find(
@@ -25,7 +24,6 @@ export class AnimationSystem {
           );
 
           if (animation) {
-            console.log("Playing animation: " + animationName);
             animationComponent.mixer.stopAllAction();
             const action = animationComponent.mixer.clipAction(animation);
             action.play();

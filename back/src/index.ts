@@ -21,6 +21,7 @@ import { RandomizeComponent } from "./ecs/component/RandomizeComponent.js";
 import { Sphere } from "./ecs/entity/Sphere.js";
 import { EventDestroyed } from "../../shared/component/events/EventDestroyed.js";
 import { EventColor } from "./ecs/component/events/EventColor.js";
+import { GroundedCheckSystem } from "./ecs/system/physics/GroundedCheckSystem.js";
 
 const entityManager = EntityManager.getInstance();
 const eventSystem = EventSystem.getInstance();
@@ -28,6 +29,7 @@ const eventSystem = EventSystem.getInstance();
 const entities = entityManager.getAllEntities();
 
 const physicsSystem = PhysicsSystem.getInstance();
+const groundedCheckSystem = new GroundedCheckSystem();
 const movementSystem = new MovementSystem();
 const networkSystem = new NetworkSystem();
 
@@ -91,6 +93,8 @@ async function gameLoop() {
 
   await trimeshSystem.update(entities, physicsSystem.world);
   eventSystem.update(entities);
+
+  groundedCheckSystem.update(entities, physicsSystem.world);
   movementSystem.update(dt, entities, physicsSystem.world);
   animationSystem.update(entities, physicsSystem.world);
   syncRotationSystem.update(entities);

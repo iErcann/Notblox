@@ -4,6 +4,8 @@ import { Entity } from "../../../../shared/entity/Entity.js";
 import Rapier from "../../physics/rapier.js";
 import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
+import { SingleSizeComponent } from "../../../../shared/component/SingleSizeComponent.js";
+import { GroundCheckComponent } from "../component/GroundedComponent.js";
 
 export class MovementSystem {
   update(dt: number, entities: Entity[], world: Rapier.World): void {
@@ -15,14 +17,14 @@ export class MovementSystem {
   updateEntityMovement(dt: number, entity: Entity, world: Rapier.World) {
     const inputComponent = entity.getComponent(InputComponent);
     const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
-    const colliderComponent = entity.getComponent(PhysicsColliderComponent);
     const positionComponent = entity.getComponent(PositionComponent);
+    const groundedCheckComponent = entity.getComponent(GroundCheckComponent);
 
     if (
       !inputComponent ||
       !rigidBodyComponent ||
       !positionComponent ||
-      !colliderComponent
+      !groundedCheckComponent
     ) {
       return; // Skip processing this entity if any required component is missing
     }
@@ -32,14 +34,19 @@ export class MovementSystem {
       inputComponent,
       rigidBodyComponent
     );
-    this.handleJump(
-      dt,
-      inputComponent,
-      positionComponent,
-      world,
-      colliderComponent,
-      impulse
-    );
+    // If the space key is pressed and the entity is grounded, apply an impulse
+    if (
+      inputComponent.space &&
+      groundedCheckComponent &&
+      groundedCheckComponent.grounded
+    ) {
+      // const sizeComponent = entity.getComponent(SingleSizeComponent);
+      // if (sizeComponent) {
+      //   sizeComponent.size += 0.1;
+      //   sizeComponent.updated = true;
+      // }
+      impulse.y = 1.5 * dt;
+    }
     this.applyImpulse(dt, rigidBodyComponent, impulse);
   }
 
@@ -75,42 +82,6 @@ export class MovementSystem {
     impulse.z *= dt;
 
     return impulse;
-  }
-
-  handleJump(
-    dt: number,
-    inputComponent: InputComponent,
-    positionComponent: PositionComponent,
-    world: Rapier.World,
-    colliderComponent: PhysicsColliderComponent,
-    impulse: Rapier.Vector3
-  ) {
-    if (inputComponent.space) {
-      const ray = new Rapier.Ray(
-        {
-          x: positionComponent.x,
-          y: positionComponent.y - 1,
-          z: positionComponent.z,
-        },
-        {
-          x: 0,
-          y: -1,
-          z: 0,
-        }
-      );
-      const hit = world.castRay(
-        ray,
-        1,
-        false,
-        undefined,
-        undefined,
-        colliderComponent.collider
-      );
-
-      if (hit != null) {
-        impulse.y = 1.5 * dt;
-      }
-    }
   }
 
   applyImpulse(

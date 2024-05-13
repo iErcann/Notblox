@@ -8,6 +8,7 @@ import { SerializedStateType } from "../../../../shared/network/server/serialize
 import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
 import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
 import Rapier from "../../physics/rapier.js";
+import { GroundCheckComponent } from "../component/GroundedComponent.js";
 
 export class AnimationSystem {
   update(entities: Entity[], world: Rapier.World): void {
@@ -25,13 +26,12 @@ export class AnimationSystem {
         positionComponent &&
         colliderComponent
       ) {
-        const isGrounded = this.isGrounded(
-          positionComponent,
-          colliderComponent,
-          world
+        const groundedComponent = entity.getComponent(GroundCheckComponent);
+        this.updateState(
+          inputComponent,
+          stateComponent,
+          groundedComponent?.grounded || false
         );
-
-        this.updateState(inputComponent, stateComponent, isGrounded);
 
         if (stateComponent.state !== SerializedStateType.IDLE) {
           const { down, up, left, right } = inputComponent;

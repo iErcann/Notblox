@@ -45,7 +45,7 @@ export default function Home() {
 
         <div className="flex flex-wrap items-center justify-around max-w-4xl sm:w-full space-y-8 ">
           <Image
-            src="/Logo-removebg-preview.png"
+            src="/Logo-Removed.png"
             alt={"Logo"}
             width={200}
             height={300}

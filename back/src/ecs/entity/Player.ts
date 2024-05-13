@@ -17,6 +17,8 @@ import { StateComponent } from "../../../../shared/component/StateComponent.js";
 import { EventSystem } from "../system/events/EventSystem.js";
 import { EventChatMessage } from "../component/events/EventChatMessage.js";
 import { PlayerComponent } from "../component/tag/PlayerComponent.js";
+import { SingleSizeComponent } from "../../../../shared/component/SingleSizeComponent.js";
+import { GroundCheckComponent } from "../component/GroundedComponent.js";
 
 export class Player {
   entity: Entity;
@@ -31,6 +33,9 @@ export class Player {
     this.entity = EntityManager.getInstance().createEntity(
       SerializedEntityType.PLAYER
     );
+
+    const sizeComponent = new SingleSizeComponent(this.entity.id, 2);
+    this.entity.addComponent(sizeComponent);
 
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws));
 
@@ -50,6 +55,8 @@ export class Player {
 
     this.entity.addComponent(new InputComponent(this.entity.id));
 
+    this.entity.addComponent(new GroundCheckComponent(this.entity.id));
+
     const stateComponent = new StateComponent(
       this.entity.id,
       SerializedStateType.IDLE
@@ -63,9 +70,8 @@ export class Player {
     const networkDataComponent = new NetworkDataComponent(
       this.entity.id,
       this.entity.type,
-      [positionComponent, rotationComponent, stateComponent]
+      [positionComponent, rotationComponent, sizeComponent, stateComponent]
     );
-
     this.entity.addComponent(networkDataComponent);
 
     EventSystem.getInstance().addEvent(
@@ -86,7 +92,7 @@ export class Player {
     let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic();
     rigidBodyDesc.setLinearDamping(0.1);
     rigidBodyDesc.setCcdEnabled(true);
-    rigidBodyDesc.lockRotations();
+    // rigidBodyDesc.lockRotations();
     let rigidBody = world.createRigidBody(rigidBodyDesc);
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false);
 
@@ -103,7 +109,16 @@ export class Player {
       return;
     }
 
-    let colliderDesc = Rapier.ColliderDesc.capsule(0.5, 1);
+    const sizeComponent = this.entity.getComponent(SingleSizeComponent);
+    if (!sizeComponent) {
+      console.error("Size component doesn't exist on Player.");
+      return;
+    }
+
+    let colliderDesc = Rapier.ColliderDesc.capsule(
+      sizeComponent.size / 2,
+      sizeComponent.size
+    );
     // Adjust the friction to control sliding
     // colliderDesc.setFriction(0.2); // Adjust the value as needed
 
