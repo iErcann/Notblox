@@ -6,6 +6,11 @@ import { EventSize } from "../../component/events/EventSize.js";
 import { EventQueue } from "../../entity/EventQueue.js";
 import { ChatSystem } from "./ChatSystem.js";
 import { DestroySystem } from "./DestroySystem.js";
+import { SyncSizeSystem } from "./SyncSizeSystem.js";
+import { EventSingleSize } from "../../component/events/EventSingleSize.js";
+import { SyncSingleSizeSystem } from "./SyncSingleSizeSystem.js";
+import { EventColor } from "../../component/events/EventColor.js";
+import { SyncColorSystem } from "./SyncColorSystem.js";
 
 /* See https://gamedev.stackexchange.com/a/194135 */
 export class EventSystem {
@@ -30,22 +35,23 @@ export class EventSystem {
     // Register systems
     this.subscriptions.set(EventChatMessage.name, [new ChatSystem()]);
     this.subscriptions.set(EventDestroyed.name, [new DestroySystem()]);
-    this.subscriptions.set(EventSize.name, []);
+    this.subscriptions.set(EventSize.name, [new SyncSizeSystem()]);
+    this.subscriptions.set(EventSingleSize.name, [new SyncSingleSizeSystem()]);
+    this.subscriptions.set(EventColor.name, [new SyncColorSystem()]);
   }
   update(entities: Entity[]) {
     // Order matters
     this.handleComponent(entities, EventDestroyed);
     this.handleComponent(entities, EventChatMessage);
-    // this.handleComponent(entities, EventSize);
+    this.handleComponent(entities, EventSingleSize);
+    this.handleComponent(entities, EventSize);
+    this.handleComponent(entities, EventColor);
   }
   afterUpdate(entities: Entity[]) {
     this.handleComponent(entities, EventDestroyed, true);
 
     if (this.processedEvents.length > 0) {
-      console.log(
-        "EventSystem : afterUpdate : processedEvents",
-        this.processedEvents
-      );
+      console.log("Processed events", this.processedEvents);
     }
     // Remove proccessed events
     for (const event of this.processedEvents) {

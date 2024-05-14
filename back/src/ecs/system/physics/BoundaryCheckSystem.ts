@@ -4,6 +4,8 @@ import { Entity } from "../../../../../shared/entity/Entity.js";
 import { ColorComponent } from "../../../../../shared/component/ColorComponent.js";
 import { EventColor } from "../../component/events/EventColor.js";
 import Rapier from "../../../physics/rapier.js";
+import { EntityManager } from "shared/entity/EntityManager.js";
+import { EventSystem } from "../events/EventSystem.js";
 
 export class BoundaryCheckSystem {
   update(entities: Entity[]) {
@@ -23,7 +25,9 @@ export class BoundaryCheckSystem {
         const colorComponent = entity.getComponent(ColorComponent);
         if (colorComponent) {
           const randomHex = Math.floor(Math.random() * 16777215).toString(16);
-          entity.addComponent(new EventColor(entity.id, "#" + randomHex));
+          EventSystem.getInstance().addEvent(
+            new EventColor(entity.id, "#" + randomHex)
+          );
         }
         bodyComponent.body.setLinvel(new Rapier.Vector3(0, 0, 0), true);
       }

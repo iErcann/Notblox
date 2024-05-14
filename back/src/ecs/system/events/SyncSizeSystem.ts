@@ -2,51 +2,33 @@ import Rapier from "../../../physics/rapier.js";
 import { SizeComponent } from "../../../../../shared/component/SizeComponent.js";
 import { Entity } from "../../../../../shared/entity/Entity.js";
 import { PhysicsColliderComponent } from "../../component/PhysicsColliderComponent.js";
-import { EventSingleSize } from "../../component/events/EventSingleSize.js";
-import { SingleSizeComponent } from "../../../../../shared/component/SingleSizeComponent.js";
 import { EventSize } from "../../component/events/EventSize.js";
-import { SerializedEntityType } from "../../../../../shared/network/server/serialized.js";
+import { EntityManager } from "../../../../../shared/entity/EntityManager.js";
 
 export class SyncSizeSystem {
-  update(entities: Entity[]) {
-    for (const entity of entities) {
-      const colliderComponent = entity.getComponent(PhysicsColliderComponent);
-      if (!colliderComponent) continue;
+  update(entities: Entity[], eventSize: EventSize) {
+    const entity = EntityManager.getEntityById(entities, eventSize.entityId);
 
-      const sizeComponent = entity.getComponent(SizeComponent);
-      const eventSizeComponent = entity.getComponent(EventSize);
+    if (!entity) return;
 
-      if (eventSizeComponent && sizeComponent) {
-        // TODO: Check for cube here like the sphere
-        const { width, height, depth } = eventSizeComponent;
-        sizeComponent.width = width;
-        sizeComponent.height = height;
-        sizeComponent.depth = depth;
+    const colliderComponent = entity.getComponent(PhysicsColliderComponent);
 
-        let colliderDesc = Rapier.ColliderDesc.cuboid(width, height, depth);
-        colliderComponent.collider.setShape(colliderDesc.shape);
+    if (!colliderComponent) return;
 
-        // This will rebroadcast the update to all clients.
-        sizeComponent.updated = true;
-        entity.removeComponent(EventSize);
-      }
+    const sizeComponent = entity.getComponent(SizeComponent);
 
-      const singleSizeComponent = entity.getComponent(SingleSizeComponent);
-      const eventSingleSizeComponent = entity.getComponent(EventSingleSize);
+    if (eventSize && sizeComponent) {
+      // TODO: Check for cube here like the sphere
+      const { width, height, depth } = eventSize;
+      sizeComponent.width = width;
+      sizeComponent.height = height;
+      sizeComponent.depth = depth;
 
-      if (singleSizeComponent && eventSingleSizeComponent) {
-        if (entity.type === SerializedEntityType.SPHERE) {
-          const { size } = eventSingleSizeComponent;
-          singleSizeComponent.size = size;
+      let colliderDesc = Rapier.ColliderDesc.cuboid(width, height, depth);
+      colliderComponent.collider.setShape(colliderDesc.shape);
 
-          let colliderDesc = Rapier.ColliderDesc.ball(size);
-          colliderComponent.collider.setShape(colliderDesc.shape);
-
-          // This will rebroadcast the update to all clients.
-          singleSizeComponent.updated = true;
-          entity.removeComponent(EventSingleSize);
-        }
-      }
+      // This will rebroadcast the update to all clients.
+      sizeComponent.updated = true;
     }
   }
 }
