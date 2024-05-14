@@ -18,19 +18,19 @@ export class RandomSizeSystem {
 
       const eventSystem = EventSystem.getInstance();
       const sizeComponent = entity.getComponent(SizeComponent);
-      if (sizeComponent) {
-        if (Math.random() < 0.01) {
-          const { width, height, depth } = sizeComponent;
-          eventSystem.addEvent(
-            new EventSize(
-              entity.id,
-              (width + 0.5) % 5,
-              (height + 0.5) % 5,
-              (depth + 0.5) % 5
-            )
-          );
-        }
-      }
+      // if (sizeComponent) {
+      //   if (Math.random() < 0.01) {
+      //     const { width, height, depth } = sizeComponent;
+      //     eventSystem.addEvent(
+      //       new EventSize(
+      //         entity.id,
+      //         (width + 0.5) % 5,
+      //         (height + 0.5) % 5,
+      //         (depth + 0.5) % 5
+      //       )
+      //     );
+      //   }
+      // }
 
       // const singleSizeComponent = entity.getComponent(SingleSizeComponent);
       // if (singleSizeComponent) {
