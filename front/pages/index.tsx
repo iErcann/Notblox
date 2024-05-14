@@ -9,11 +9,11 @@ export default function Home() {
     <div className="container md:w-1/4 flex flex-col items-start md:items-center justify-center flex-1  text-center">
       <NextSeo
         title="NotBlox - Play multiplayer games in your browser"
-        description="Play multiplayer games like Roblox in your browser. Create your own games and share them with your friends."
+        description="Play multiplayer games in your browser. Create your own games and share them with your friends."
         openGraph={{
           title: "NotBlox - Play multiplayer games in your browser",
           description:
-            "Play multiplayer games like Roblox in your browser. Create your own games and share them with your friends.",
+            "Play multiplayer games in your browser. Create your own games and share them with your friends.",
           images: [
             {
               url: "/Logo.png",
@@ -64,8 +64,7 @@ export default function Home() {
 
         <p className="text-lg font-semibold">What's this?</p>
         <p className="text-sm text-gray-600 my-4">
-          This is my playground for learning new technologies and having fun. I
-          might get inspired by Roblox (dont sue pls)
+          This is my playground for learning new technologies and having fun.
         </p>
         <Link
           href={"https://discord.gg/kPhgtj49U2"}
