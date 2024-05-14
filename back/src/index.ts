@@ -1,27 +1,23 @@
 import "dotenv/config";
 import { EntityManager } from "../../shared/entity/EntityManager.js";
 import { config } from "../../shared/network/config.js";
+import { RandomizeComponent } from "./ecs/component/RandomizeComponent.js";
 import { Chat } from "./ecs/entity/Chat.js";
+import { Cube } from "./ecs/entity/Cube.js";
 import { MapWorld } from "./ecs/entity/MapWorld.js";
+import { Sphere } from "./ecs/entity/Sphere.js";
 import { AnimationSystem } from "./ecs/system/AnimationSystem.js";
 import { MovementSystem } from "./ecs/system/MovementSystem.js";
 import { RandomSizeSystem } from "./ecs/system/RandomSizeSystem.js";
 import { EventSystem } from "./ecs/system/events/EventSystem.js";
-import { SyncColorSystem } from "./ecs/system/events/SyncColorSystem.js";
-import { SyncSizeSystem } from "./ecs/system/events/SyncSizeSystem.js";
 import { TrimeshSystem } from "./ecs/system/events/TrimeshSystem.js";
 import { NetworkSystem } from "./ecs/system/network/NetworkSystem.js";
 import { BoundaryCheckSystem } from "./ecs/system/physics/BoundaryCheckSystem.js";
+import { GroundedCheckSystem } from "./ecs/system/physics/GroundedCheckSystem.js";
 import { PhysicsSystem } from "./ecs/system/physics/PhysicsSystem.js";
 import { SleepCheckSystem } from "./ecs/system/physics/SleepCheckSystem.js";
 import { SyncPositionSystem } from "./ecs/system/physics/SyncPositionSystem.js";
 import { SyncRotationSystem } from "./ecs/system/physics/SyncRotationSystem.js";
-import { Cube } from "./ecs/entity/Cube.js";
-import { RandomizeComponent } from "./ecs/component/RandomizeComponent.js";
-import { Sphere } from "./ecs/entity/Sphere.js";
-import { EventDestroyed } from "../../shared/component/events/EventDestroyed.js";
-import { EventColor } from "./ecs/component/events/EventColor.js";
-import { GroundedCheckSystem } from "./ecs/system/physics/GroundedCheckSystem.js";
 
 const entityManager = EntityManager.getInstance();
 const eventSystem = EventSystem.getInstance();
@@ -35,8 +31,6 @@ const networkSystem = new NetworkSystem();
 
 const syncPositionSystem = new SyncPositionSystem();
 const syncRotationSystem = new SyncRotationSystem();
-const syncSizeSystem = new SyncSizeSystem();
-const syncColorSystem = new SyncColorSystem();
 
 const trimeshSystem = new TrimeshSystem();
 
@@ -52,13 +46,20 @@ setTimeout(() => {
   const randomCube = new Cube(0, 10, 0, 1, 1, 1);
   randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id));
 
+  for (let i = 0; i < 3; i++) {
+    const randomCube = new Cube(0, 10, 0, 1, 1, 1);
+    randomCube.entity.addComponent(
+      new RandomizeComponent(randomCube.entity.id)
+    );
+  }
+
   new Sphere(0, 30, 0, 1);
 
   // Football field
   new Sphere(-276, 52, -355.76, 1);
   new Sphere(-276, 52, -355.76, 0.5);
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 3; i++) {
     const randomSphere = new Sphere(0, i * 30, 0, 1.2);
     randomSphere.entity.addComponent(
       new RandomizeComponent(randomCube.entity.id)
@@ -89,6 +90,7 @@ async function gameLoop() {
   const dt = now - lastUpdateTimestamp;
 
   await trimeshSystem.update(entities, physicsSystem.world);
+  randomSizeSystem.update(entities);
   eventSystem.update(entities);
 
   groundedCheckSystem.update(entities, physicsSystem.world);
@@ -98,9 +100,6 @@ async function gameLoop() {
   syncPositionSystem.update(entities);
 
   // TODO:  This make the rigidbody wake up so it will always be sent even if its supposed to sleep..
-  syncSizeSystem.update(entities);
-  syncColorSystem.update(entities);
-  randomSizeSystem.update(entities);
   boundaryCheckSystem.update(entities);
   networkSystem.update(entities);
 
