@@ -33,7 +33,11 @@ export class InputManager {
     window.addEventListener("keyup", this.handleKeyUp.bind(this));
   }
 
+  private isGameFocused(event: KeyboardEvent) {
+    return event.target === document.body;
+  }
   private handleKeyDown(event: KeyboardEvent) {
+    if (!this.isGameFocused(event)) return;
     switch (this.keyboardLanguage) {
       case KeyboardLanguage.EN:
         switch (event.key) {
