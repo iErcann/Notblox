@@ -16,12 +16,8 @@ export class WebSocketManager {
   private serverUrl: string;
   public timeSinceLastServerUpdate: number = 0;
   constructor(game: Game) {
-    // Check the NODE_ENV environment variable
-    const isProduction = process.env.NEXT_PUBLIC_NODE_ENV === "production";
     // Set the serverUrl based on the environment
-    this.serverUrl = isProduction
-      ? "wss://soraprompts.store"
-      : "ws://localhost:8001";
+    this.serverUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? "ws://localhost:8001";
 
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
       const connectionMessage = message as ConnectionMessage;
