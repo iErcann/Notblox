@@ -60,12 +60,12 @@ Modify the `back/.env` file with `NODE_ENV=development`
 ```bash
   cd back
   npm install
-  npm run start
+  npm run dev
 ```
 
 ### Front-end
 
-Modify the `front/.env.local` file with `NEXT_PUBLIC_SERVER_URL=development`
+Uncomment the `NEXT_PUBLIC_SERVER_URL` variable in `front/.env.local`, it will default to localhost
 
 ```bash
   cd front
