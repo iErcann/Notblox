@@ -1,27 +1,27 @@
-# Use the official Node.js 20-alpine image as base
-FROM node:20
+FROM node:20 as build
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the rest of the application code
-COPY back /app/back
-COPY front /app/front
-COPY shared /app/shared
+COPY . .
 
 WORKDIR /app/back
 
-RUN rm -rf package-lock.json node_modules
-
+RUN rm -rf package-lock.json
 RUN npm install
-
-RUN ls -a
-
-# Build the application
 RUN npm run build
 
-# Expose the port that the application runs on
-EXPOSE 8001
+FROM node:20-alpine
 
-# Command to run the application
-CMD ["node", "./dist/back/src/index.js"]
+WORKDIR /app/back
+
+# https://github.com/uNetworking/uWebSockets.js/discussions/346#discussioncomment-1137301
+RUN apk add --no-cache libc6-compat git
+
+COPY --from=build /app/back/package.json .
+
+RUN npm install --omit=dev
+
+COPY --from=build /app/back/dist /app/back/dist
+COPY --from=build /app/front/public/assets /app/front/public/assets
+
+CMD ["node", "dist/back/src/index.js"]
