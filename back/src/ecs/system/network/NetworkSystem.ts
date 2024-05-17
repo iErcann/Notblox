@@ -1,79 +1,69 @@
-import { WebSocketComponent } from "../../component/WebsocketComponent.js";
-import { Entity } from "../../../../../shared/entity/Entity.js";
-import { pack } from "msgpackr";
-import { WebsocketSystem } from "./WebsocketSystem.js";
-import * as jsondiffpatch from "jsondiffpatch";
-import {
-  SnapshotMessage,
-  SerializedEntity,
-} from "../../../../../shared/network/server/serialized.js";
-import { NetworkDataComponent } from "../../component/NetworkDataComponent.js";
-import { ServerMessageType } from "../../../../../shared/network/server/base.js";
+import { pack } from 'msgpackr'
+import { WebSocketComponent } from '../../component/WebsocketComponent.js'
+import { Entity } from '../../../../../shared/entity/Entity.js'
+import { SerializedEntity } from '../../../../../shared/network/server/serialized.js'
+import { NetworkDataComponent } from '../../component/NetworkDataComponent.js'
+import { ServerMessageType } from '../../../../../shared/network/server/base.js'
+import { WebsocketSystem } from './WebsocketSystem.js'
 
 export class NetworkSystem {
-  private static instance: NetworkSystem;
-  private websocketSystem: WebsocketSystem;
-  private deltaPatcher = jsondiffpatch.create();
-
-  constructor() {
-    this.websocketSystem = new WebsocketSystem();
-  }
-
-  private serialize(entities: Entity[], serializeAll: boolean) {
-    const serializedEntities: SerializedEntity[] = [];
+  //  Serializes the given entities.
+  private websocketSystem = new WebsocketSystem()
+  private serialize(entities: Entity[], serializeAll: boolean): SerializedEntity[] {
+    const serializedEntities: SerializedEntity[] = []
 
     for (const entity of entities) {
-      const networkDataComponent = entity.getComponent(NetworkDataComponent);
+      const networkDataComponent = entity.getComponent(NetworkDataComponent)
 
       if (networkDataComponent) {
-        const _serializedEntities =
-          networkDataComponent.serialize(serializeAll);
+        const _serializedEntities = networkDataComponent.serialize(serializeAll)
 
-        // This is to skip entities who doesn't have a single component in their array, might change in the future put lowers the badnwdith
-        if (_serializedEntities != null)
-          serializedEntities.push(_serializedEntities);
+        // Skip entities without any components to reduce bandwidth
+        if (_serializedEntities != null) {
+          serializedEntities.push(_serializedEntities)
+        }
       }
     }
-    return serializedEntities;
+    return serializedEntities
   }
 
+  // Builds a snapshot message to send to the clients.
   private buildSnapshotMessage(serializedEntities: SerializedEntity[]) {
     return pack({
       t: ServerMessageType.SNAPSHOT,
       e: serializedEntities,
-    });
+    })
   }
+
+  // Updates the network state and sends snapshots to clients.
   public update(entities: Entity[]): void {
-    // First we find entities that just connected (Player)
-    let fullSnapshotMessage: Buffer | undefined;
+    // Send full snapshot to newly connected clients
+    let fullSnapshotMessage: Buffer | undefined
     for (const entity of entities) {
-      const websocketComponent = entity.getComponent(WebSocketComponent);
+      const websocketComponent = entity.getComponent(WebSocketComponent)
       if (websocketComponent && !websocketComponent.isFirstSnapshotSent) {
         if (!fullSnapshotMessage) {
-          const fullSerializedEntities = this.serialize(entities, true);
-          fullSnapshotMessage = this.buildSnapshotMessage(
-            fullSerializedEntities
-          );
-          console.log("Hasnt sent the first");
+          const fullSerializedEntities = this.serialize(entities, true)
+          fullSnapshotMessage = this.buildSnapshotMessage(fullSerializedEntities)
+          console.log("Hasn't sent the first snapshot")
         }
-        websocketComponent.ws.send(fullSnapshotMessage, true);
-        websocketComponent.isFirstSnapshotSent = true;
+        websocketComponent.ws.send(fullSnapshotMessage, true)
+        websocketComponent.isFirstSnapshotSent = true
       }
     }
 
-    // Then we send delta snapshot
-    debugger;
-    const serializedEntities = this.serialize(entities, false);
-    const snapshotMessage = this.buildSnapshotMessage(serializedEntities);
-    this.broadcast(entities, snapshotMessage);
+    // Send delta snapshots to all clients
+    const serializedEntities = this.serialize(entities, false)
+    const snapshotMessage = this.buildSnapshotMessage(serializedEntities)
+    this.broadcast(entities, snapshotMessage)
   }
 
-  // Broadcast a message to all connected clients
+  // Broadcasts a message to all connected clients.
   private broadcast(entities: Entity[], message: any): void {
     for (const entity of entities) {
-      const websocketComponent = entity.getComponent(WebSocketComponent);
+      const websocketComponent = entity.getComponent(WebSocketComponent)
       if (websocketComponent) {
-        websocketComponent.ws.send(message, true);
+        websocketComponent.ws.send(message, true)
       }
     }
   }

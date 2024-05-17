@@ -1,12 +1,12 @@
-import { ClientMessage } from "./base";
+import { ClientMessage } from './base'
 
 export interface InputMessage extends ClientMessage {
-  up: boolean;
-  down: boolean;
-  left: boolean;
-  right: boolean;
-  space: boolean;
-  angleY: number;
-  cameraLeft?: boolean;
-  cameraRight?: boolean;
+  up: boolean
+  down: boolean
+  left: boolean
+  right: boolean
+  space: boolean
+  angleY: number
+  cameraLeft?: boolean
+  cameraRight?: boolean
 }

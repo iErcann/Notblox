@@ -1,5 +1,5 @@
-import { ClientMessage } from "./base";
+import { ClientMessage } from './base'
 
 export interface ChatMessage extends ClientMessage {
-  content: string;
+  content: string
 }

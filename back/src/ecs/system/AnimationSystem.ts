@@ -1,23 +1,23 @@
 // AnimationSystem.js
-import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
-import { InputComponent } from "../component/InputComponent.js";
-import * as THREE from "three";
-import { Entity } from "../../../../shared/entity/Entity.js";
-import { StateComponent } from "../../../../shared/component/StateComponent.js";
-import { SerializedStateType } from "../../../../shared/network/server/serialized.js";
-import { PhysicsColliderComponent } from "../component/PhysicsColliderComponent.js";
-import { PositionComponent } from "../../../../shared/component/PositionComponent.js";
-import Rapier from "../../physics/rapier.js";
-import { GroundCheckComponent } from "../component/GroundedComponent.js";
+import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
+import { InputComponent } from '../component/InputComponent.js'
+import * as THREE from 'three'
+import { Entity } from '../../../../shared/entity/Entity.js'
+import { StateComponent } from '../../../../shared/component/StateComponent.js'
+import { SerializedStateType } from '../../../../shared/network/server/serialized.js'
+import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
+import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
+import Rapier from '../../physics/rapier.js'
+import { GroundCheckComponent } from '../component/GroundedComponent.js'
 
 export class AnimationSystem {
   update(entities: Entity[], world: Rapier.World): void {
     entities.forEach((entity) => {
-      const inputComponent = entity.getComponent(InputComponent);
-      const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
-      const positionComponent = entity.getComponent(PositionComponent);
-      const colliderComponent = entity.getComponent(PhysicsColliderComponent);
-      const stateComponent = entity.getComponent(StateComponent);
+      const inputComponent = entity.getComponent(InputComponent)
+      const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent)
+      const positionComponent = entity.getComponent(PositionComponent)
+      const colliderComponent = entity.getComponent(PhysicsColliderComponent)
+      const stateComponent = entity.getComponent(StateComponent)
 
       if (
         inputComponent &&
@@ -26,27 +26,20 @@ export class AnimationSystem {
         positionComponent &&
         colliderComponent
       ) {
-        const groundedComponent = entity.getComponent(GroundCheckComponent);
-        this.updateState(
-          inputComponent,
-          stateComponent,
-          groundedComponent?.grounded || false
-        );
+        const groundedComponent = entity.getComponent(GroundCheckComponent)
+        this.updateState(inputComponent, stateComponent, groundedComponent?.grounded || false)
 
         if (stateComponent.state !== SerializedStateType.IDLE) {
-          const { down, up, left, right } = inputComponent;
-          const isInputDirectional = down || up || left || right;
+          const { down, up, left, right } = inputComponent
+          const isInputDirectional = down || up || left || right
 
-          if (
-            stateComponent.state !== SerializedStateType.FALL ||
-            isInputDirectional
-          ) {
-            const quaternion = this.calculateRotation(inputComponent);
-            this.rotatePlayer(rigidBodyComponent, quaternion);
+          if (stateComponent.state !== SerializedStateType.FALL || isInputDirectional) {
+            const quaternion = this.calculateRotation(inputComponent)
+            this.rotatePlayer(rigidBodyComponent, quaternion)
           }
         }
       }
-    });
+    })
   }
 
   isGrounded(
@@ -65,17 +58,10 @@ export class AnimationSystem {
         y: -1,
         z: 0,
       }
-    );
+    )
 
-    const hit = world.castRay(
-      ray,
-      1,
-      false,
-      undefined,
-      undefined,
-      colliderComponent.collider
-    );
-    return hit !== null;
+    const hit = world.castRay(ray, 1, false, undefined, undefined, colliderComponent.collider)
+    return hit !== null
   }
 
   updateState(
@@ -83,46 +69,43 @@ export class AnimationSystem {
     stateComponent: StateComponent,
     isGrounded: boolean
   ): void {
-    const { up, down, left, right } = inputComponent;
-    let newState;
+    const { up, down, left, right } = inputComponent
+    let newState
 
     if (!isGrounded) {
-      newState = SerializedStateType.FALL;
+      newState = SerializedStateType.FALL
     } else if (!up && !down && !left && !right) {
-      newState = SerializedStateType.IDLE;
+      newState = SerializedStateType.IDLE
     } else {
-      newState = SerializedStateType.RUN;
+      newState = SerializedStateType.RUN
     }
 
     if (newState !== stateComponent.state) {
-      stateComponent.state = newState;
-      stateComponent.updated = true;
+      stateComponent.state = newState
+      stateComponent.updated = true
     }
   }
 
   calculateRotation(inputComponent: InputComponent): THREE.Quaternion {
-    const { up, down, left, right, lookingYAngle } = inputComponent;
-    let angle = 0;
+    const { up, down, left, right, lookingYAngle } = inputComponent
+    let angle = 0
 
-    if (down) angle += Math.PI / 2;
-    if (up) angle += -Math.PI / 2;
-    if (right) angle += Math.PI;
+    if (down) angle += Math.PI / 2
+    if (up) angle += -Math.PI / 2
+    if (right) angle += Math.PI
     // if (left) angle += 0;
-    if (up && left) angle += Math.PI / 4;
-    if (up && right) angle += Math.PI - Math.PI / 4;
-    if (down && left) angle += -Math.PI / 4;
-    if (down && right) angle += Math.PI + Math.PI / 4;
+    if (up && left) angle += Math.PI / 4
+    if (up && right) angle += Math.PI - Math.PI / 4
+    if (down && left) angle += -Math.PI / 4
+    if (down && right) angle += Math.PI + Math.PI / 4
 
     return new THREE.Quaternion().setFromAxisAngle(
       new THREE.Vector3(0, 1, 0),
       angle - lookingYAngle
-    );
+    )
   }
 
-  rotatePlayer(
-    rigidBodyComponent: PhysicsBodyComponent,
-    quaternion: THREE.Quaternion
-  ): void {
+  rotatePlayer(rigidBodyComponent: PhysicsBodyComponent, quaternion: THREE.Quaternion): void {
     rigidBodyComponent.body.setRotation(
       {
         x: quaternion.x,
@@ -131,6 +114,6 @@ export class AnimationSystem {
         w: quaternion.w,
       },
       true
-    );
+    )
   }
 }

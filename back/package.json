@@ -15,9 +15,10 @@
   "devDependencies": {
     "@eslint/js": "^9.2.0",
     "@types/fossil-delta": "^1.0.0",
+    "@types/node": "^20.12.12",
     "@types/three": "^0.157.0",
-    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
+    "nodemon": "^3.1.0",
     "three": "^0.157.0",
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.0",
@@ -36,7 +37,6 @@
     "jsondiffpatch": "^0.5.0",
     "msgpackr": "^1.9.9",
     "node-three-gltf": "^1.4.0",
-    "nodemon": "^3.1.0",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.43.0"
   }
 }

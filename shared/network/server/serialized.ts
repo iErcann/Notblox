@@ -1,5 +1,5 @@
 // SNAPSHOT
-import { ServerMessage } from "./base";
+import { ServerMessage } from './base'
 export enum SerializedComponentType {
   NONE = 0,
   POSITION = 1,
@@ -27,27 +27,27 @@ export enum SerializedEntityType {
 }
 
 export enum SerializedStateType {
-  IDLE = "Idle",
-  WALK = "Walk",
-  RUN = "Run",
-  JUMP = "Jump",
-  ATTACK = "Attack",
-  FALL = "Fall",
-  DEATH = "Death",
+  IDLE = 'Idle',
+  WALK = 'Walk',
+  RUN = 'Run',
+  JUMP = 'Jump',
+  ATTACK = 'Attack',
+  FALL = 'Fall',
+  DEATH = 'Death',
 }
 
 export interface SerializedComponent {
-  t?: SerializedComponentType;
+  t?: SerializedComponentType
 }
 
 export interface SerializedEntity {
-  id: number;
+  id: number
   // Type
-  t: SerializedEntityType;
+  t: SerializedEntityType
   // Components
-  c: SerializedComponent[];
+  c: SerializedComponent[]
 }
 
 export interface SnapshotMessage extends ServerMessage {
-  e: Array<SerializedEntity>;
+  e: Array<SerializedEntity>
 }

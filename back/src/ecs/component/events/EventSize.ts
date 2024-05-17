@@ -1,4 +1,4 @@
-import { Component } from "../../../../../shared/component/Component.js";
+import { Component } from '../../../../../shared/component/Component.js'
 
 export class EventSize extends Component {
   constructor(
@@ -7,6 +7,6 @@ export class EventSize extends Component {
     public height: number,
     public depth: number
   ) {
-    super(entityId);
+    super(entityId)
   }
 }

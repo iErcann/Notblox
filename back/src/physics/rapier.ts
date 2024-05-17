@@ -1,5 +1,5 @@
-import Rapier from "@dimforge/rapier3d-compat";
+import Rapier from '@dimforge/rapier3d-compat'
 
-await Rapier.init();
+await Rapier.init()
 
-export default Rapier;
+export default Rapier

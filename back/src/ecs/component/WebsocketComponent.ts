@@ -1,6 +1,6 @@
 // WebSocketComponent.ts
 
-import { Component } from "../../../../shared/component/Component.js";
+import { Component } from '../../../../shared/component/Component.js'
 
 export class WebSocketComponent extends Component {
   constructor(
@@ -9,6 +9,6 @@ export class WebSocketComponent extends Component {
     // On the first snapshot, we send the whole state of the game
     public isFirstSnapshotSent = false
   ) {
-    super(entityId);
+    super(entityId)
   }
 }

@@ -5,5 +5,5 @@ export enum ClientMessageType {
 }
 
 export interface ClientMessage {
-  t: ClientMessageType;
+  t: ClientMessageType
 }

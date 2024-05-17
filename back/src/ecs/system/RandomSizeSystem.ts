@@ -1,23 +1,23 @@
-import { ColorComponent } from "../../../../shared/component/ColorComponent.js";
-import { SizeComponent } from "../../../../shared/component/SizeComponent.js";
-import { Entity } from "../../../../shared/entity/Entity.js";
-import { PhysicsBodyComponent } from "../component/PhysicsBodyComponent.js";
-import { RandomizeComponent } from "../component/RandomizeComponent.js";
-import { EventColor } from "../component/events/EventColor.js";
-import { EventSize } from "../component/events/EventSize.js";
-import Rapier from "../../physics/rapier.js";
-import { SingleSizeComponent } from "../../../../shared/component/SingleSizeComponent.js";
-import { EventSingleSize } from "../component/events/EventSingleSize.js";
-import { EntityManager } from "shared/entity/EntityManager.js";
-import { EventSystem } from "./events/EventSystem.js";
+import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
+import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
+import { Entity } from '../../../../shared/entity/Entity.js'
+import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
+import { RandomizeComponent } from '../component/RandomizeComponent.js'
+import { EventColor } from '../component/events/EventColor.js'
+import { EventSize } from '../component/events/EventSize.js'
+import Rapier from '../../physics/rapier.js'
+import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
+import { EventSingleSize } from '../component/events/EventSingleSize.js'
+import { EntityManager } from 'shared/entity/EntityManager.js'
+import { EventSystem } from './events/EventSystem.js'
 
 export class RandomSizeSystem {
   update(entities: Entity[]) {
     for (const entity of entities) {
-      if (!entity.getComponent(RandomizeComponent)) continue;
+      if (!entity.getComponent(RandomizeComponent)) continue
 
-      const eventSystem = EventSystem.getInstance();
-      const sizeComponent = entity.getComponent(SizeComponent);
+      const eventSystem = EventSystem.getInstance()
+      const sizeComponent = entity.getComponent(SizeComponent)
       // if (sizeComponent) {
       //   if (Math.random() < 0.01) {
       //     const { width, height, depth } = sizeComponent;
@@ -44,16 +44,16 @@ export class RandomSizeSystem {
       //   }
       // }
 
-      const colorComponent = entity.getComponent(ColorComponent);
+      const colorComponent = entity.getComponent(ColorComponent)
 
       if (colorComponent) {
         if (Math.random() < 0.01) {
-          const randomHex = Math.floor(Math.random() * 16777215).toString(16);
-          eventSystem.addEvent(new EventColor(entity.id, "#" + randomHex));
+          const randomHex = Math.floor(Math.random() * 16777215).toString(16)
+          eventSystem.addEvent(new EventColor(entity.id, '#' + randomHex))
         }
       }
 
-      const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent);
+      const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent)
 
       if (rigidBodyComponent) {
         if (Math.random() < 0.05) {
@@ -64,7 +64,7 @@ export class RandomSizeSystem {
               (Math.random() - 1 / 2) * 750
             ),
             true
-          );
+          )
         }
       }
     }
