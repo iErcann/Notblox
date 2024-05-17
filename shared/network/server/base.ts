@@ -4,5 +4,5 @@ export enum ServerMessageType {
 }
 
 export interface ServerMessage {
-  t: ServerMessageType;
+  t: ServerMessageType
 }
