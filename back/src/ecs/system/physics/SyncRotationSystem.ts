@@ -3,7 +3,7 @@ import { RotationComponent } from '../../../../../shared/component/RotationCompo
 import { Entity } from '../../../../../shared/entity/Entity.js'
 
 export class SyncRotationSystem {
-  moveTreshold = 0.01
+  moveTreshold = 0.05
   update(entities: Entity[]) {
     for (const entity of entities) {
       const bodyComponent = entity.getComponent(PhysicsBodyComponent)
