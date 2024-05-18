@@ -5,6 +5,10 @@ import { Game } from './game'
 import { ConnectionMessage } from '@shared/network/server/connection'
 import { ClientMessage } from '@shared/network/client/base'
 
+import { isNativeAccelerationEnabled } from 'msgpackr'
+if (!isNativeAccelerationEnabled)
+  console.warn('Native acceleration not enabled, verify that install finished properly')
+
 type MessageHandler = (message: ServerMessage) => void
 
 export class WebSocketManager {
@@ -85,6 +89,7 @@ export class WebSocketManager {
   private isConnected(): boolean {
     return this.websocket != null && this.websocket.readyState === WebSocket.OPEN
   }
+
   private async onMessage(event: MessageEvent) {
     const buffer = await event.data.arrayBuffer()
     const message: ServerMessage = unpack(buffer)

@@ -1,13 +1,15 @@
-import { pack } from 'msgpackr'
+import { Packr, pack, unpack } from 'msgpackr'
 import { WebSocketComponent } from '../../component/WebsocketComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { SerializedEntity } from '../../../../../shared/network/server/serialized.js'
 import { NetworkDataComponent } from '../../component/NetworkDataComponent.js'
 import { ServerMessageType } from '../../../../../shared/network/server/base.js'
 import { WebsocketSystem } from './WebsocketSystem.js'
+import { readFileSync, writeFileSync } from 'fs'
 
 export class NetworkSystem {
   //  Serializes the given entities.
+  private packr = new Packr({})
   private websocketSystem = new WebsocketSystem()
   private serialize(entities: Entity[], serializeAll: boolean): SerializedEntity[] {
     const serializedEntities: SerializedEntity[] = []
@@ -29,7 +31,7 @@ export class NetworkSystem {
 
   // Builds a snapshot message to send to the clients.
   private buildSnapshotMessage(serializedEntities: SerializedEntity[]) {
-    return pack({
+    return this.packr.pack({
       t: ServerMessageType.SNAPSHOT,
       e: serializedEntities,
     })

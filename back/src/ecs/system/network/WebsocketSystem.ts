@@ -10,7 +10,7 @@ import { EventChatMessage } from '../../component/events/EventChatMessage.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
 import { EventSystem } from '../events/EventSystem.js'
-import { unpack, pack } from 'msgpackr'
+import { unpack, pack, Unpackr } from 'msgpackr'
 
 type MessageHandler = (ws: any, message: any) => void
 
