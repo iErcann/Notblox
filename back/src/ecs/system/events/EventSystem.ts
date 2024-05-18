@@ -1,91 +1,101 @@
-import { EventDestroyed } from '../../../../../shared/component/events/EventDestroyed.js'
-import { Component } from '../../../../../shared/component/Component.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
+import { Component } from '../../../../../shared/component/Component.js'
+import { EventDestroyed } from '../../../../../shared/component/events/EventDestroyed.js'
 import { EventChatMessage } from '../../component/events/EventChatMessage.js'
+import { EventColor } from '../../component/events/EventColor.js'
+import { EventSingleSize } from '../../component/events/EventSingleSize.js'
 import { EventSize } from '../../component/events/EventSize.js'
 import { EventQueue } from '../../entity/EventQueue.js'
 import { ChatSystem } from './ChatSystem.js'
 import { DestroySystem } from './DestroySystem.js'
-import { SyncSizeSystem } from './SyncSizeSystem.js'
-import { EventSingleSize } from '../../component/events/EventSingleSize.js'
-import { SyncSingleSizeSystem } from './SyncSingleSizeSystem.js'
-import { EventColor } from '../../component/events/EventColor.js'
 import { SyncColorSystem } from './SyncColorSystem.js'
+import { SyncSingleSizeSystem } from './SyncSingleSizeSystem.js'
+import { SyncSizeSystem } from './SyncSizeSystem.js'
 
-/* See https://gamedev.stackexchange.com/a/194135 */
+// Define a type alias for event class constructors
+type EventConstructor = new (...args: any[]) => Component
+
 export class EventSystem {
   private static instance: EventSystem
+  private subscriptions: Map<EventConstructor, System[]> = new Map()
+  private processedEvents: Component[] = []
+  eventQueue: EventQueue
 
-  public static getInstance(): EventSystem {
+  static getInstance(): EventSystem {
     if (!EventSystem.instance) {
       EventSystem.instance = new EventSystem()
     }
     return EventSystem.instance
   }
 
-  // Some components are treated as events.
-  // Mapping Event Component (String representation of their classnames) to Systems
-  // EventName : [System1, System2, ...]
-  private subscriptions: Map<string, any[]> = new Map()
-  eventQueue: EventQueue
-  private processedEvents: Component[] = []
-
   private constructor() {
+    this.initializeSubscriptions()
     this.eventQueue = new EventQueue()
-    // Register systems
-    this.subscriptions.set(EventChatMessage.name, [new ChatSystem()])
-    this.subscriptions.set(EventDestroyed.name, [new DestroySystem()])
-    this.subscriptions.set(EventSize.name, [new SyncSizeSystem()])
-    this.subscriptions.set(EventSingleSize.name, [new SyncSingleSizeSystem()])
-    this.subscriptions.set(EventColor.name, [new SyncColorSystem()])
   }
-  update(entities: Entity[]) {
-    // Order matters
-    this.handleComponent(entities, EventDestroyed)
-    this.handleComponent(entities, EventChatMessage)
-    this.handleComponent(entities, EventSingleSize)
-    this.handleComponent(entities, EventSize)
-    this.handleComponent(entities, EventColor)
-  }
-  afterUpdate(entities: Entity[]) {
-    this.handleComponent(entities, EventDestroyed, true)
 
-    for (const event of this.processedEvents) {
-      this.eventQueue.entity.components.splice(this.eventQueue.entity.components.indexOf(event), 1)
-    }
-    this.processedEvents = []
+  private initializeSubscriptions() {
+    this.subscriptions.set(EventChatMessage, [new ChatSystem()])
+    this.subscriptions.set(EventDestroyed, [new DestroySystem()])
+    this.subscriptions.set(EventSize, [new SyncSizeSystem()])
+    this.subscriptions.set(EventSingleSize, [new SyncSingleSizeSystem()])
+    this.subscriptions.set(EventColor, [new SyncColorSystem()])
   }
-  // Duplicate components (events) are authorized for this one
-  public addEvent(event: Component) {
+
+  update(entities: Entity[]) {
+    this.handleComponents(entities, false, [
+      EventDestroyed,
+      EventChatMessage,
+      EventSingleSize,
+      EventSize,
+      EventColor,
+    ])
+  }
+
+  afterUpdate(entities: Entity[]) {
+    this.handleComponents(entities, true, [EventDestroyed])
+    this.cleanProcessedEvents()
+  }
+
+  addEvent(event: Component) {
     this.eventQueue.entity.addComponent(event)
   }
 
-  // Handle a component event
-  // If multiple events are stored, they are all treated in the same frame
-  // Doing them one by one might have caused issues when 2 clients disconnect at the same time for example
-  private handleComponent<T extends Component>(
+  private handleComponents(
     entities: Entity[],
-    eventClassName: new (...args: any[]) => T,
-    afterUpdate: boolean = false
+    afterUpdate: boolean,
+    eventClasses: EventConstructor[]
   ) {
-    const components = this.eventQueue.entity.getComponents(eventClassName)
-    if (components) {
-      for (const component of components) {
-        if (component) {
-          const componentName = component.constructor.name
-          if (this.subscriptions.has(componentName)) {
-            for (const system of this.subscriptions.get(componentName)!) {
-              // System call order is respected
-
-              // All entities are passed to the system to allow systems to perform operations
-              afterUpdate
-                ? system.afterUpdate(entities, component)
-                : system.update(entities, component)
+    for (const EventClass of eventClasses) {
+      const components = this.eventQueue.entity.getComponents(EventClass)
+      if (components) {
+        for (const component of components) {
+          if (component) {
+            if (this.subscriptions.has(EventClass)) {
+              for (const system of this.subscriptions.get(EventClass)!) {
+                if (afterUpdate) {
+                  system.afterUpdate && system.afterUpdate(entities, component)
+                } else {
+                  system.update(entities, component)
+                }
+              }
+              this.processedEvents.push(component)
             }
-            this.processedEvents.push(component)
           }
         }
       }
     }
   }
+
+  private cleanProcessedEvents() {
+    for (const event of this.processedEvents) {
+      this.eventQueue.entity.components.splice(this.eventQueue.entity.components.indexOf(event), 1)
+    }
+    this.processedEvents = []
+  }
+}
+
+// Interface for System type (optional)
+interface System {
+  update(entities: Entity[], component: Component): void
+  afterUpdate?(entities: Entity[], component: Component): void // Optional afterUpdate method
 }

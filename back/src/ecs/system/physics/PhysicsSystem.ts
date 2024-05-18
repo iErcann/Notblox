@@ -14,7 +14,7 @@ export class PhysicsSystem {
   update() {
     this.world.step()
   }
-  public static getInstance(): PhysicsSystem {
+  static getInstance(): PhysicsSystem {
     if (!PhysicsSystem.instance) {
       PhysicsSystem.instance = new PhysicsSystem()
     }

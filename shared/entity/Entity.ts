@@ -4,12 +4,9 @@ import { Serializable, Component } from '../component/Component.js'
 // Define an Entity class
 export class Entity {
   private static nextId = 1
-  public components: Component[] = []
+  components: Component[] = []
 
-  constructor(
-    public type: SerializedEntityType = SerializedEntityType.NONE,
-    public id: number
-  ) {}
+  constructor(public type: SerializedEntityType = SerializedEntityType.NONE, public id: number) {}
 
   // Add a component to the entity
   addComponent(component: Component) {

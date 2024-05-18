@@ -3,7 +3,7 @@ import { ChatListComponent } from '../../../../../shared/component/ChatComponent
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EventChatMessage } from '../../component/events/EventChatMessage.js'
 import { SerializedEntityType } from '../../../../../shared/network/server/serialized.js'
-import { ChatComponent } from '../../component/tag/ChatComponent.js'
+import { ChatComponent } from '../../component/tag/TagChatComponent.js'
 
 export class ChatSystem {
   private MAX_MESSAGES: number = 20

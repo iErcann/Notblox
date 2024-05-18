@@ -8,7 +8,7 @@ import { PhysicsSystem } from '../physics/PhysicsSystem.js'
 import { SerializedEntityType } from '../../../../../shared/network/server/serialized.js'
 import { EventSystem } from './EventSystem.js'
 import { EventChatMessage } from '../../component/events/EventChatMessage.js'
-import { PlayerComponent } from '../../component/tag/PlayerComponent.js'
+import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 
 /*
   The EventDestroyed is first inside the EventQueue Entity.

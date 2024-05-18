@@ -3,10 +3,7 @@ import { SerializedComponent, SerializedComponentType } from '../network/server/
 import { NetworkComponent } from '../network/NetworkComponent.js'
 
 export class ChatMessageComponent extends NetworkComponent {
-  constructor(
-    entityId: number,
-    public message: SerializedChatMessageComponent
-  ) {
+  constructor(entityId: number, public message: SerializedChatMessageComponent) {
     super(entityId, SerializedComponentType.CHAT_MESSAGE)
   }
   deserialize(data: SerializedChatMessageComponent) {
@@ -26,13 +23,11 @@ export interface SerializedChatMessageComponent extends SerializedComponent {
 }
 
 export class ChatListComponent extends NetworkComponent {
-  constructor(
-    entityId: number,
-    public list: Array<ChatMessageComponent>
-  ) {
+  constructor(entityId: number, public list: Array<ChatMessageComponent>) {
     super(entityId, SerializedComponentType.CHAT_LIST)
   }
   deserialize(data: SerializedChatListComponent): void {
+    console.log('Deserializing ChatListComponent')
     this.list = data.messages.map((message) => new ChatMessageComponent(this.entityId, message))
   }
   serialize(): SerializedChatListComponent {

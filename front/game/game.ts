@@ -24,26 +24,26 @@ import { OrbitCameraFollowSystem } from './ecs/system/OrbitCameraFollowSystem'
 
 export class Game {
   private static instance: Game
-  public entityManager = EntityManager.getInstance()
-  public currentPlayerEntityId: number | undefined
+  entityManager = EntityManager.getInstance()
+  currentPlayerEntityId: number | undefined
   private lastRenderTime = Date.now()
   private loopFunction: () => void = this.loop.bind(this)
-  public syncComponentSystem: SyncComponentsSystem
+  syncComponentSystem: SyncComponentsSystem
   private syncPositionSystem: SyncPositionSystem
   private syncRotationSystem: SyncRotationSystem
   private syncColorSystem: SyncColorSystem
   private syncSizeSystem: SyncSizeSystem
   private topCameraFollowSystem: TopCameraFollowSystem
   private orbitCameraFollowSystem: OrbitCameraFollowSystem
-  public websocketManager: WebSocketManager
+  websocketManager: WebSocketManager
   private animationSystem: AnimationSystem
   private sleepCheckSystem: SleepCheckSystem
   private destroySystem: DestroySystem
   private chatSystem: ChatSystem
-  public loadManager: LoadManager
+  loadManager: LoadManager
   private inputManager: InputManager
-  public renderer: Renderer
-  public hud: Hud
+  renderer: Renderer
+  hud: Hud
   private constructor() {
     this.syncComponentSystem = new SyncComponentsSystem(this)
     this.syncPositionSystem = new SyncPositionSystem()
@@ -63,14 +63,14 @@ export class Game {
     this.hud = new Hud()
   }
 
-  public static getInstance(): Game {
+  static getInstance(): Game {
     if (!Game.instance) {
       Game.instance = new Game()
     }
     return Game.instance
   }
 
-  public async start() {
+  async start() {
     // Wait for the WebSocket connection to be established
     await this.websocketManager.connect()
     this.renderer.appendChild()
@@ -83,9 +83,6 @@ export class Game {
   private loop() {
     const entities = this.entityManager.getAllEntities()
     const now = Date.now()
-    this.websocketManager.update()
-    // Sending at a rate of SERVER_TICKRATE
-
     this.inputManager.sendInput()
     const deltaTime = now - this.lastRenderTime
     // Interp factor is wrong here
