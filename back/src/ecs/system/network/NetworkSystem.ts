@@ -36,7 +36,7 @@ export class NetworkSystem {
   }
 
   // Updates the network state and sends snapshots to clients.
-  public update(entities: Entity[]): void {
+  update(entities: Entity[]): void {
     // Send full snapshot to newly connected clients
     let fullSnapshotMessage: Buffer | undefined
     for (const entity of entities) {

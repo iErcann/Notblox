@@ -20,9 +20,9 @@ export interface Renderable {
   addToScene(): any
 }
 export class Renderer extends THREE.WebGLRenderer {
-  public camera: Camera
-  public scene: THREE.Scene
-  public css2DRenderer: CSS2DRenderer
+  camera: Camera
+  scene: THREE.Scene
+  css2DRenderer: CSS2DRenderer
   private directionalLight: THREE.DirectionalLight | undefined
   constructor(scene: THREE.Scene, loadManager: LoadManager) {
     super({ antialias: true })
@@ -54,7 +54,7 @@ export class Renderer extends THREE.WebGLRenderer {
     window.addEventListener('resize', this.onWindowResize.bind(this), false)
   }
 
-  public appendChild() {
+  appendChild() {
     document.body.appendChild(this.domElement)
     if (this.css2DRenderer) document.body.appendChild(this.css2DRenderer.domElement)
     else console.error("Can't append child CSS3DRenderer")
@@ -149,7 +149,7 @@ export class Renderer extends THREE.WebGLRenderer {
         })
       })
   }
-  public update(entities: Entity[]) {
+  update(entities: Entity[]) {
     const followedEntity = EntityManager.getFirstEntityWithComponent(entities, FollowComponent)
     if (followedEntity && this.directionalLight) {
       const position = followedEntity.getComponent(PositionComponent)

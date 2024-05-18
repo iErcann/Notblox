@@ -11,7 +11,7 @@ export class WebSocketManager {
   private websocket: WebSocket | null = null
   private messageHandlers: Map<ServerMessageType, MessageHandler> = new Map()
   private serverUrl: string
-  public timeSinceLastServerUpdate: number = 0
+  timeSinceLastServerUpdate: number = 0
   constructor(game: Game) {
     // Set the serverUrl based on the environment
     this.serverUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'ws://localhost:8001'
@@ -29,7 +29,7 @@ export class WebSocketManager {
     })
   }
 
-  public async connect(): Promise<void> {
+  async connect(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (!this.isConnected()) {
         this.websocket = new WebSocket(this.serverUrl)
@@ -56,18 +56,18 @@ export class WebSocketManager {
       }
     })
   }
-  public disconnect() {
+  disconnect() {
     if (this.websocket) {
       this.websocket.close()
       this.websocket = null
     }
   }
 
-  public addMessageHandler(type: ServerMessageType, handler: MessageHandler) {
+  addMessageHandler(type: ServerMessageType, handler: MessageHandler) {
     this.messageHandlers.set(type, handler)
   }
 
-  public removeMessageHandler(type: ServerMessageType) {
+  removeMessageHandler(type: ServerMessageType) {
     this.messageHandlers.delete(type)
   }
 
@@ -75,7 +75,7 @@ export class WebSocketManager {
     console.log('WebSocket connection opened:', event)
   }
 
-  public send(message: ClientMessage) {
+  send(message: ClientMessage) {
     if (this.isConnected()) {
       this.websocket!.send(pack(message))
     } else {
@@ -94,6 +94,4 @@ export class WebSocketManager {
       handler(message)
     }
   }
-
-  public update() {}
 }

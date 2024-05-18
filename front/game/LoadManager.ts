@@ -10,7 +10,7 @@ export class LoadManager {
     this.dracoLoader.setDecoderPath('/draco/') // Replace with the actual path to the Draco decoder
   }
 
-  public dracoLoad(path: string): Promise<THREE.Mesh> {
+  dracoLoad(path: string): Promise<THREE.Mesh> {
     return new Promise((resolve, reject) => {
       // Load a Draco geometry
       this.dracoLoader.load(
@@ -35,7 +35,7 @@ export class LoadManager {
     })
   }
 
-  public glTFLoad(path: string): Promise<GLTF> {
+  glTFLoad(path: string): Promise<GLTF> {
     return new Promise((resolve, reject) => {
       // Load a GLTF model
       this.gltfLoader.load(

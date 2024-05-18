@@ -16,7 +16,7 @@ import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
 import { StateComponent } from '../../../../shared/component/StateComponent.js'
 import { EventSystem } from '../system/events/EventSystem.js'
 import { EventChatMessage } from '../component/events/EventChatMessage.js'
-import { PlayerComponent } from '../component/tag/PlayerComponent.js'
+import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'
 import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
 

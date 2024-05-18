@@ -7,7 +7,7 @@ export enum KeyboardLanguage {
   EN = 'en',
 }
 export class InputManager {
-  public inputState: InputMessage = {
+  inputState: InputMessage = {
     t: ClientMessageType.INPUT,
     up: false,
     down: false,
@@ -190,7 +190,7 @@ export class InputManager {
 
   // TODO: To lower the bandiwdth even more, send at a maxrate of config.SERVER_TICKRATE
   // Only sending when the input state changes
-  public sendInput() {
+  sendInput() {
     // Check if the current input state is different from the previous one
     if (
       !this.previousInputState ||

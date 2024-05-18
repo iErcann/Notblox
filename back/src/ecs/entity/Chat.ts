@@ -7,7 +7,7 @@ import { EntityManager } from '../../../../shared/entity/EntityManager.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 import { NetworkDataComponent } from '../component/NetworkDataComponent.js'
 import { EventChatMessage } from '../component/events/EventChatMessage.js'
-import { ChatComponent } from '../component/tag/ChatComponent.js'
+import { ChatComponent } from '../component/tag/TagChatComponent.js'
 import { EventSystem } from '../system/events/EventSystem.js'
 
 export class Chat {

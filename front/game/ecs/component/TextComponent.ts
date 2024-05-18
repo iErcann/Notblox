@@ -27,7 +27,7 @@ export class TextComponent extends Component {
     cssObject.position.set(0, 3, 0) // Adjust the position as needed.
     return cssObject
   }
-  public setFollowedMesh(mesh: THREE.Mesh) {
+  setFollowedMesh(mesh: THREE.Mesh) {
     mesh.add(this.textObject)
   }
 }
