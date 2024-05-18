@@ -15,6 +15,13 @@ import { SyncSizeSystem } from './SyncSizeSystem.js'
 // Define a type alias for event class constructors
 type EventConstructor = new (...args: any[]) => Component
 
+// Interface for System type
+interface System {
+  update(entities: Entity[], component: Component): void
+  afterUpdate?(entities: Entity[], component: Component): void // Optional afterUpdate method
+}
+
+/* See https://gamedev.stackexchange.com/a/194135 */
 export class EventSystem {
   private static instance: EventSystem
   private subscriptions: Map<EventConstructor, System[]> = new Map()
@@ -34,6 +41,10 @@ export class EventSystem {
   }
 
   private initializeSubscriptions() {
+    // Some components are treated as events.
+    // Mapping Event Component (String representation of their classnames) to Systems
+    // EventName : [System1, System2, ...]
+    // Register systems
     this.subscriptions.set(EventChatMessage, [new ChatSystem()])
     this.subscriptions.set(EventDestroyed, [new DestroySystem()])
     this.subscriptions.set(EventSize, [new SyncSizeSystem()])
@@ -42,6 +53,7 @@ export class EventSystem {
   }
 
   update(entities: Entity[]) {
+    // Order matters
     this.handleComponents(entities, false, [
       EventDestroyed,
       EventChatMessage,
@@ -55,11 +67,13 @@ export class EventSystem {
     this.handleComponents(entities, true, [EventDestroyed])
     this.cleanProcessedEvents()
   }
-
+  // Duplicate components (events) are authorized for this one
   addEvent(event: Component) {
     this.eventQueue.entity.addComponent(event)
   }
-
+  // Handle a component event
+  // If multiple events are stored, they are all treated in the same frame
+  // Doing them one by one might have caused issues when 2 clients disconnect at the same
   private handleComponents(
     entities: Entity[],
     afterUpdate: boolean,
@@ -92,10 +106,4 @@ export class EventSystem {
     }
     this.processedEvents = []
   }
-}
-
-// Interface for System type (optional)
-interface System {
-  update(entities: Entity[], component: Component): void
-  afterUpdate?(entities: Entity[], component: Component): void // Optional afterUpdate method
 }
