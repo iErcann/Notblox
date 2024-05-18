@@ -8,24 +8,8 @@
   scrollbar-color: var(--secondary) var(--primary);
 }
 
-/* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-  width: 15px;
-}
-
-*::-webkit-scrollbar-track {
-  background:  var(--primary);
-  border-radius: 5px;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: var(--secondary);
-  border-radius: 20px; /* Adjust this value for roundness */
-  border: 3px solid var(--primary);
-}
-
-
-
+ 
+ 
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -88,9 +72,7 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
   }
-}
- 
-@layer base {
+
   * {
     @apply border-border;
   }
@@ -98,3 +80,10 @@
     @apply bg-background text-foreground;
   }
 }
+ 
+
+* {
+  scrollbar-color:  rgba(250, 250, 255, 0.1)  rgba(0, 0, 0, 0.2); /* Thumb color followed by track color */
+}
+ 
+ 

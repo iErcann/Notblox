@@ -25,7 +25,7 @@ export class Renderer extends THREE.WebGLRenderer {
   css2DRenderer: CSS2DRenderer
   private directionalLight: THREE.DirectionalLight | undefined
   constructor(scene: THREE.Scene, loadManager: LoadManager) {
-    super({ antialias: true })
+    super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
 
     this.camera = new Camera(this)
 
