@@ -11,6 +11,8 @@ export class SleepCheckSystem {
     for (const entity of entities) {
       const bodyComponent = entity.getComponent(PhysicsBodyComponent)
       this.sleepNetworkComponent(entity)
+      // https://github.com/dimforge/rapier/blob/af1ac9baa26b1199ae2728e91adf5345bcd1c693/src/dynamics/rigid_body_components.rs#L1030
+      // Rapier doesn't expose the treshold or the time to sleep
       if (bodyComponent) {
         const sleeping = bodyComponent.body.isSleeping()
         const positionComponent = entity.getComponent(PositionComponent)

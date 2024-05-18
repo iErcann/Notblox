@@ -3,7 +3,6 @@ import { EntityManager } from '../../shared/entity/EntityManager.js'
 import { config } from '../../shared/network/config.js'
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { Chat } from './ecs/entity/Chat.js'
-import { Cube } from './ecs/entity/Cube.js'
 import { MapWorld } from './ecs/entity/MapWorld.js'
 import { Sphere } from './ecs/entity/Sphere.js'
 import { AnimationSystem } from './ecs/system/AnimationSystem.js'
@@ -18,6 +17,8 @@ import { PhysicsSystem } from './ecs/system/physics/PhysicsSystem.js'
 import { SleepCheckSystem } from './ecs/system/physics/SleepCheckSystem.js'
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
+import { NetworkComponent } from '../../shared/network/NetworkComponent.js'
+import { Cube } from './ecs/entity/Cube.js'
 
 const entityManager = EntityManager.getInstance()
 const eventSystem = EventSystem.getInstance()
@@ -110,6 +111,17 @@ async function gameLoop() {
   sleepCheckSystem.update(entities)
   physicsSystem.update()
 
+  // Unsleepy components
+  for (const entity of entities) {
+    const components = entity.getAllComponents()
+    for (const component of components) {
+      if (component instanceof NetworkComponent) {
+        if (component.updated) {
+          console.log('FOUND', component)
+        }
+      }
+    }
+  }
   // Useful for DestroySystem
   eventSystem.afterUpdate(entities)
   lastUpdateTimestamp = now
