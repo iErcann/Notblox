@@ -53,13 +53,13 @@ export class Game {
     this.topCameraFollowSystem = new TopCameraFollowSystem()
     this.orbitCameraFollowSystem = new OrbitCameraFollowSystem()
     this.websocketManager = new WebSocketManager(this)
-    this.inputManager = new InputManager(this.websocketManager)
     this.animationSystem = new AnimationSystem()
     this.loadManager = new LoadManager()
     this.sleepCheckSystem = new SleepCheckSystem()
     this.chatSystem = new ChatSystem()
     this.destroySystem = new DestroySystem()
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager)
+    this.inputManager = new InputManager(this.websocketManager)
     this.hud = new Hud()
   }
 
@@ -100,12 +100,12 @@ export class Game {
     //   entities,
     //   this.renderer.camera.controls,
     //   this.inputManager.inputState
-    // );
-    this.topCameraFollowSystem.update(deltaTime, entities, this.inputManager.inputState)
+    // )
+    // this.topCameraFollowSystem.update(deltaTime, entities, this.inputManager.inputState)
     this.animationSystem.update(deltaTime, entities)
     this.destroySystem.update(entities, this.entityManager, this.renderer)
     this.sleepCheckSystem.update(entities)
-    this.renderer.update(entities)
+    this.renderer.update(deltaTime, entities, this.inputManager.inputState)
     this.lastRenderTime = now
     this.websocketManager.timeSinceLastServerUpdate += deltaTime
   }

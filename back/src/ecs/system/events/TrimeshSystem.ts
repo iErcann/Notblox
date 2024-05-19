@@ -1,15 +1,15 @@
 import Rapier from '../../../physics/rapier.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EventTrimesh } from '../../component/events/EventTrimesh.js'
-import { DRACOLoader, GLTF, GLTFLoader, loadGltf, TextureLoader } from 'node-three-gltf'
-import * as THREE from 'three'
+import { DRACOLoader, GLTF, GLTFLoader } from 'node-three-gltf'
+import { Mesh } from 'three'
 
 export class TrimeshSystem {
   private gltfLoader: GLTFLoader
 
   constructor() {
-    // Configure I/O.
     this.gltfLoader = new GLTFLoader()
+    this.gltfLoader.setDRACOLoader(new DRACOLoader())
   }
 
   async loadGLTFModel(url: string): Promise<any> {
@@ -40,8 +40,8 @@ export class TrimeshSystem {
               console.log('Loading map', eventTrimeshComponent.filePath)
               // Iterate over all child objects in the GLTF scene
               gltf.scene.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                  const mesh = child as THREE.Mesh
+                if (child instanceof Mesh) {
+                  const mesh = child as Mesh
                   const indices = mesh.geometry.index?.array
                   const vertices = mesh.geometry.attributes.position.array
                   // Scale factor for the vertices
