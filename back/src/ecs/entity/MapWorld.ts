@@ -9,7 +9,9 @@ export class MapWorld {
   constructor() {
     this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.WORLD)
 
-    this.entity.addComponent(new EventTrimesh(this.entity.id, '../front/public/assets/small.glb'))
+    this.entity.addComponent(
+      new EventTrimesh(this.entity.id, '../front/public/assets/keneeyworldled.glb')
+    )
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [])
   }
 }

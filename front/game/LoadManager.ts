@@ -8,6 +8,7 @@ export class LoadManager {
 
   constructor() {
     this.dracoLoader.setDecoderPath('/draco/') // Replace with the actual path to the Draco decoder
+    this.gltfLoader.setDRACOLoader(this.dracoLoader)
   }
 
   dracoLoad(path: string): Promise<THREE.Mesh> {
