@@ -53,6 +53,14 @@ export class EntityManager {
     return entities.find((entity) => entity.getComponent(componentType))
   }
 
+  // Get all entities with a specific component
+  static getEntitiesWithComponent<T extends Component>(
+    entities: Entity[],
+    componentType: new (entityId: number, ...args: any[]) => T
+  ): Entity[] {
+    return entities.filter((entity) => entity.getComponent(componentType))
+  }
+
   // Remove an entity
   removeEntity(entity: Entity): void {
     const index = this.entities.indexOf(entity)

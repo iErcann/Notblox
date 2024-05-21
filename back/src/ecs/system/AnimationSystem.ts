@@ -77,7 +77,7 @@ export class AnimationSystem {
     } else if (!up && !down && !left && !right) {
       newState = SerializedStateType.IDLE
     } else {
-      newState = SerializedStateType.RUN
+      newState = SerializedStateType.WALK
     }
 
     if (newState !== stateComponent.state) {

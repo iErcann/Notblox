@@ -11,17 +11,21 @@ export class SyncSingleSizeSystem {
     const entity = EntityManager.getEntityById(entities, eventSingleSize.entityId)
 
     if (!entity) return
-
     const colliderComponent = entity.getComponent(PhysicsColliderComponent)
 
     if (!colliderComponent) return
-
     const singleSizeComponent = entity.getComponent(SingleSizeComponent)
 
     if (singleSizeComponent && eventSingleSize) {
       // TODO: Create a SphereComponent and EventSphere instead of relying on SerializedEntityType
       if (entity.type === SerializedEntityType.SPHERE) {
         const { size } = eventSingleSize
+
+        if (size <= 0) {
+          console.error(`Invalid size value: ${size}`)
+          return
+        }
+
         singleSizeComponent.size = size
 
         let colliderDesc = Rapier.ColliderDesc.ball(size)

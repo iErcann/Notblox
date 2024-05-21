@@ -13,7 +13,9 @@ export class DestroySystem {
 
       if (destroyComponent) {
         console.log('DestroySystem: update: destroyComponent', destroyComponent)
+
         const meshComponent = entity.getComponent(MeshComponent)
+
         if (meshComponent) {
           renderer.scene.remove(meshComponent.mesh)
         }

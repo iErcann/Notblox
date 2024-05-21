@@ -18,6 +18,9 @@ import { PhysicsSystem } from './ecs/system/physics/PhysicsSystem.js'
 import { SleepCheckSystem } from './ecs/system/physics/SleepCheckSystem.js'
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
+import { ZombieComponent } from './ecs/component/ZombieComponent.js'
+import { ZombieSystem } from './ecs/system/ZombieSystem.js'
+import { EventColor } from './ecs/component/events/EventColor.js'
 
 const entityManager = EntityManager.getInstance()
 const eventSystem = EventSystem.getInstance()
@@ -39,30 +42,59 @@ const sleepCheckSystem = new SleepCheckSystem()
 const randomSizeSystem = new RandomSizeSystem()
 const boundaryCheckSystem = new BoundaryCheckSystem()
 
+const zombieSystem = new ZombieSystem()
+
 new MapWorld()
 new Chat()
+
+// rgb to hex
+function rgbToHex(r: number, g: number, b: number) {
+  // Floor
+  r = Math.floor(r)
+  g = Math.floor(g)
+  b = Math.floor(b)
+  return (
+    '#' +
+    [r, g, b]
+      .map((x) => {
+        const hex = x.toString(16)
+        return hex.length === 1 ? '0' + hex : hex
+      })
+      .join('')
+  )
+}
 
 setTimeout(() => {
   const randomCube = new Cube(0, 50, 0, 1, 1, 1)
   randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
 
-  for (let i = 0; i < 3; i++) {
-    const randomCube = new Cube(0, 50, 0, 1, 1, 1)
-    randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
+  const size = 8 // Define the size of the cube of cubes
+
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      for (let k = 0; k < size; k++) {
+        const cube = new Cube(i * 2, j * 2, k * 2, 2, 2, 2)
+        // Gradient color
+        const color = rgbToHex((i * 255) / size, (j * 255) / size, (k * 255) / size)
+        // cube.entity.addComponent(new ZombieComponent(cube.entity.id))
+        EventSystem.getInstance().addEvent(new EventColor(cube.entity.id, color))
+        // cube.entity.addComponent(new RandomizeComponent(cube.entity.id));
+      }
+    }
   }
 
-  new Sphere(0, 30, 0, 1)
+  // new Sphere(0, 30, 0, 1)
 
-  // Football field
-  new Sphere(-276, 52, -355.76, 1)
-  new Sphere(-276, 52, -355.76, 0.5)
+  // // Football field
+  // new Sphere(-276, 52, -355.76, 1)
+  // new Sphere(-276, 52, -355.76, 0.5)
 
-  for (let i = 1; i < 4; i++) {
-    const randomSphere = new Sphere(0, i * 30, 0, 1.2)
-    randomSphere.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
-  }
+  // for (let i = 1; i < 4; i++) {
+  //   const randomSphere = new Sphere(0, i * 30, 0, 1.2)
+  //   randomSphere.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
+  // }
 
-  new Sphere(10, 30, 0, 4)
+  // new Sphere(10, 30, 0, 4)
 }, 1000)
 
 // let movingCubeX = 0;
@@ -89,6 +121,7 @@ async function gameLoop() {
   randomSizeSystem.update(entities)
   eventSystem.update(entities)
 
+  zombieSystem.update(dt, entities, physicsSystem.world)
   groundedCheckSystem.update(entities, physicsSystem.world)
   movementSystem.update(dt, entities, physicsSystem.world)
   animationSystem.update(entities, physicsSystem.world)
@@ -120,3 +153,5 @@ try {
 } catch (error) {
   console.error('Error in game loop:', error)
 }
+
+// Events

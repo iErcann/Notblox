@@ -27,7 +27,7 @@ export class Player {
     const world = PhysicsSystem.getInstance().world
     this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.PLAYER)
 
-    const sizeComponent = new SingleSizeComponent(this.entity.id, 1 + Math.random())
+    const sizeComponent = new SingleSizeComponent(this.entity.id, 5 + Math.random())
     this.entity.addComponent(sizeComponent)
 
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))
