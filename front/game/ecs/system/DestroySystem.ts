@@ -3,13 +3,13 @@ import { EntityManager } from '@shared/entity/EntityManager.js'
 import { Renderer } from '@/game/renderer.js'
 import { TextComponent } from '../component/TextComponent.js'
 import { SerializedComponent } from '@shared/network/server/serialized.js'
-import { EventDestroyed } from '@shared/component/events/EventDestroyed.js'
+import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEvent.js'
 import { Entity } from '@shared/entity/Entity.js'
 
 export class DestroySystem {
   update(entities: Entity[], entityManager: EntityManager, renderer: Renderer) {
     for (const entity of entities) {
-      const destroyComponent = entity.getComponent(EventDestroyed)
+      const destroyComponent = entity.getComponent(EntityDestroyedEvent)
 
       if (destroyComponent) {
         console.log('DestroySystem: update: destroyComponent', destroyComponent)

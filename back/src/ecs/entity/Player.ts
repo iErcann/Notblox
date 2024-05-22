@@ -1,24 +1,24 @@
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import { RotationComponent } from '../../../../shared/component/RotationComponent.js'
+import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
+import { StateComponent } from '../../../../shared/component/StateComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../shared/entity/EntityManager.js'
+import { BaseEventSystem } from '../../../../shared/entity/EventSystem.js'
 import {
   SerializedEntityType,
   SerializedStateType,
 } from '../../../../shared/network/server/serialized.js'
 import Rapier from '../../physics/rapier.js'
+import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
 import { NetworkDataComponent } from '../component/NetworkDataComponent.js'
 import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
 import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
 import { WebSocketComponent } from '../component/WebsocketComponent.js'
-import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
-import { StateComponent } from '../../../../shared/component/StateComponent.js'
-import { EventSystem } from '../system/events/EventSystem.js'
-import { EventChatMessage } from '../component/events/EventChatMessage.js'
+import { ChatMessageEvent } from '../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'
-import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
-import { GroundCheckComponent } from '../component/GroundedComponent.js'
+import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
 
 export class Player {
   entity: Entity
@@ -60,8 +60,8 @@ export class Player {
     ])
     this.entity.addComponent(networkDataComponent)
 
-    EventSystem.getInstance().addEvent(
-      new EventChatMessage(
+    BaseEventSystem.getInstance().addEvent(
+      new ChatMessageEvent(
         this.entity.id,
         '🖥️ [SERVER]',
         `Player ${this.entity.id} joined at ${new Date().toLocaleString()}`

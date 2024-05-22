@@ -1,7 +1,7 @@
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
 import { ChatListComponent } from '../../../../../shared/component/ChatComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { EventChatMessage } from '../../component/events/EventChatMessage.js'
+import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { SerializedEntityType } from '../../../../../shared/network/server/serialized.js'
 import { ChatComponent } from '../../component/tag/TagChatComponent.js'
 
@@ -9,7 +9,7 @@ export class ChatSystem {
   private MAX_MESSAGES: number = 20
   private MAX_CONTENT_LENGTH: number = 128
 
-  update(entities: Entity[], event: EventChatMessage) {
+  update(entities: Entity[], event: ChatMessageEvent) {
     // Find Chat Entity
     const chatEntity = EntityManager.getFirstEntityWithComponent(entities, ChatComponent)
 

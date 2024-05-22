@@ -76,7 +76,7 @@ export class TrimeshSystem {
 
                   // Create the collider and attach it to the rigid body
                   world.createCollider(trimeshDesc, world.createRigidBody(rigidBody))
-                  console.log('Created trimesh for', mesh.name)
+                  // console.log('Created trimesh for', mesh.name)
                 }
               })
             }

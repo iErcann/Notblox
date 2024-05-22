@@ -73,6 +73,8 @@
 import 'dotenv/config'
 import { EntityManager } from '../../shared/entity/EntityManager.js'
 import { config } from '../../shared/network/config.js'
+import { BaseEventSystem } from '../../shared/entity/EventSystem.js'
+
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { Chat } from './ecs/entity/Chat.js'
 import { Cube } from './ecs/entity/Cube.js'
@@ -81,7 +83,6 @@ import { Sphere } from './ecs/entity/Sphere.js'
 import { AnimationSystem } from './ecs/system/AnimationSystem.js'
 import { MovementSystem } from './ecs/system/MovementSystem.js'
 import { RandomSizeSystem } from './ecs/system/RandomSizeSystem.js'
-import { EventSystem } from './ecs/system/events/EventSystem.js'
 import { TrimeshSystem } from './ecs/system/events/TrimeshSystem.js'
 import { NetworkSystem } from './ecs/system/network/NetworkSystem.js'
 import { BoundaryCheckSystem } from './ecs/system/physics/BoundaryCheckSystem.js'
@@ -90,9 +91,10 @@ import { PhysicsSystem } from './ecs/system/physics/PhysicsSystem.js'
 import { SleepCheckSystem } from './ecs/system/physics/SleepCheckSystem.js'
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
+import { ServerEventSystem } from './ecs/component/events/ServerEventSystem.js'
 
+const eventSystem = new BaseEventSystem(ServerEventSystem)
 const entityManager = EntityManager.getInstance()
-const eventSystem = EventSystem.getInstance()
 // TODO: Make it wait for the websocket server to start
 const entities = entityManager.getAllEntities()
 

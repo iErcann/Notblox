@@ -1,22 +1,18 @@
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
+import { BaseEventSystem } from '../../../../shared/entity/EventSystem.js'
+import Rapier from '../../physics/rapier.js'
 import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
 import { RandomizeComponent } from '../component/RandomizeComponent.js'
 import { EventColor } from '../component/events/EventColor.js'
-import { EventSize } from '../component/events/EventSize.js'
-import Rapier from '../../physics/rapier.js'
-import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
-import { EventSingleSize } from '../component/events/EventSingleSize.js'
-import { EntityManager } from 'shared/entity/EntityManager.js'
-import { EventSystem } from './events/EventSystem.js'
 
 export class RandomSizeSystem {
   update(entities: Entity[]) {
     for (const entity of entities) {
       if (!entity.getComponent(RandomizeComponent)) continue
 
-      const eventSystem = EventSystem.getInstance()
+      const eventSystem = BaseEventSystem.getInstance()
       const sizeComponent = entity.getComponent(SizeComponent)
       // if (sizeComponent) {
       //   if (Math.random() < 0.01) {

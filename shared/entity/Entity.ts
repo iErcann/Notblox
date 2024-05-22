@@ -1,20 +1,25 @@
 import { SerializedComponentType, SerializedEntityType } from '../network/server/serialized.js'
 import { Serializable, Component } from '../component/Component.js'
-import { EventSystem } from '../../back/src/ecs/system/events/EventSystem'
+import { BaseEventSystem } from './EventSystem.js'
+import { ComponentAddedEvent } from 'shared/component/events/ComponentAddedEvent.js'
+import { ComponentRemovedEvent } from 'shared/component/events/ComponentRemovedEvent.js'
 
 // Define an Entity class
 export class Entity {
-  private static nextId = 1
   components: Component[] = []
 
   constructor(public type: SerializedEntityType = SerializedEntityType.NONE, public id: number) {}
 
   // Add a component to the entity
-  addComponent(component: Component) {
+  addComponent<T extends Component>(component: T, createAddedEvent = true) {
     this.components.push(component)
-    // Create a ComponentAddedEvent
-    EventSystem.getInstance().onComponentAdded(component)
+
+    // This can be used to skip the recursion or non added events
+    if (createAddedEvent) {
+      BaseEventSystem.getInstance().onComponentAdded(component)
+    }
   }
+
   // Remove a component from the entity
   removeComponent<T extends Component>(
     componentType: new (entityId: number, ...args: any[]) => T
@@ -39,7 +44,7 @@ export class Entity {
   }
 
   // This is used by the client only !
-  // We assume that the clients will only have serializable component so they will have a type!
+  // We assume that the clients will only have serializable components so they will have a type!
   getComponentByType(componentType: SerializedComponentType) {
     return this.components.find((c) => 'type' in c && c.type === componentType) as
       | Serializable

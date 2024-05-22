@@ -9,6 +9,7 @@ export class MapWorld {
   constructor() {
     this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.WORLD)
 
+    // TODO: Use the new logic for the events.
     this.entity.addComponent(
       new EventTrimesh(this.entity.id, '../front/public/assets/keneeyworldled.glb')
     )

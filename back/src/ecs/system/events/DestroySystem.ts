@@ -1,14 +1,14 @@
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { EventDestroyed } from '../../../../../shared/component/events/EventDestroyed.js'
+import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
 import { PhysicsBodyComponent } from '../../component/PhysicsBodyComponent.js'
 import { NetworkDataComponent } from '../../component/NetworkDataComponent.js'
 import { WebSocketComponent } from '../../component/WebsocketComponent.js'
 import { PhysicsSystem } from '../physics/PhysicsSystem.js'
 import { SerializedEntityType } from '../../../../../shared/network/server/serialized.js'
-import { EventSystem } from './EventSystem.js'
-import { EventChatMessage } from '../../component/events/EventChatMessage.js'
+import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
+import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
 
 /*
   The EventDestroyed is first inside the EventQueue Entity.
@@ -19,7 +19,7 @@ import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 */
 
 export class DestroySystem {
-  update(entities: Entity[], eventDestroyed: EventDestroyed) {
+  update(entities: Entity[], eventDestroyed: EntityDestroyedEvent) {
     const entity = EntityManager.getEntityById(entities, eventDestroyed.entityId)
     if (!entity) {
       console.error('Update : DestroySystem: Entity not found with id', eventDestroyed.entityId)
@@ -42,9 +42,9 @@ export class DestroySystem {
     console.log('DestroySystem: update: entity', entity.type, SerializedEntityType.PLAYER)
 
     if (entity.getComponent(PlayerComponent)) {
-      EventSystem.getInstance().addEvent(
-        new EventChatMessage(
-          EventSystem.getInstance().eventQueue.entity.id,
+      BaseEventSystem.getInstance().addEvent(
+        new ChatMessageEvent(
+          BaseEventSystem.getInstance().eventQueue.entity.id,
           '🖥️ [SERVER]',
           `Player ${entity.id} left the game.`
         )
@@ -53,7 +53,7 @@ export class DestroySystem {
   }
 
   // Removing it after so client can receives the NetworkDataComponent
-  afterUpdate(entities: Entity[], eventDestroyed: EventDestroyed) {
+  afterUpdate(entities: Entity[], eventDestroyed: EntityDestroyedEvent) {
     const entity = EntityManager.getEntityById(entities, eventDestroyed.entityId)
     if (!entity) {
       console.error(

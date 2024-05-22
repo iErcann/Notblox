@@ -1,16 +1,16 @@
 import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from 'uWebSockets.js'
-import { EventDestroyed } from '../../../../../shared/component/events/EventDestroyed.js'
+import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
 import { ClientMessage, ClientMessageType } from '../../../../../shared/network/client/base.js'
 import { ChatMessage } from '../../../../../shared/network/client/chatMessage.js'
 import { InputMessage } from '../../../../../shared/network/client/input.js'
 
+import { pack, unpack } from 'msgpackr'
+import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
 import { ServerMessageType } from '../../../../../shared/network/server/base.js'
 import { ConnectionMessage } from '../../../../../shared/network/server/connection.js'
-import { EventChatMessage } from '../../component/events/EventChatMessage.js'
+import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
-import { EventSystem } from '../events/EventSystem.js'
-import { unpack, pack, Unpackr } from 'msgpackr'
 
 type MessageHandler = (ws: any, message: any) => void
 
@@ -102,7 +102,7 @@ export class WebsocketSystem {
     console.log('Disconnect: Player found!')
 
     const entityId = entity.id
-    EventSystem.getInstance().addEvent(new EventDestroyed(entityId))
+    BaseEventSystem.getInstance().addEvent(new EntityDestroyedEvent(entityId))
   }
 
   private async handleInputMessage(ws: any, message: InputMessage) {
@@ -137,6 +137,6 @@ export class WebsocketSystem {
       console.error(`Invalid chat message, sent from ${player}`, message)
       return
     }
-    EventSystem.getInstance().addEvent(new EventChatMessage(id, `Player ${id}`, content))
+    BaseEventSystem.getInstance().addEvent(new ChatMessageEvent(id, `Player ${id}`, content))
   }
 }

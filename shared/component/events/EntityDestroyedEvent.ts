@@ -2,7 +2,7 @@ import { SerializedComponentType } from '../../network/server/serialized.js'
 
 import { NetworkComponent } from '../../network/NetworkComponent.js'
 
-export class EventDestroyed extends NetworkComponent {
+export class EntityDestroyedEvent extends NetworkComponent {
   constructor(entityId: number) {
     super(entityId, SerializedComponentType.DESTROYED)
   }
