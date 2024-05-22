@@ -46,8 +46,7 @@ Hosted on an european server, there is no client side prediction, so the game ma
 - A : Left
 - D : Right
 - Space : Jump
-- Q : Camera Left
-- E : Camera Right
+- Mouse Left click : Rotate screen
 
 ## How to run
 
