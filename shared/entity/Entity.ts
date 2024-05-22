@@ -1,5 +1,6 @@
 import { SerializedComponentType, SerializedEntityType } from '../network/server/serialized.js'
 import { Serializable, Component } from '../component/Component.js'
+import { EventSystem } from '../../back/src/ecs/system/events/EventSystem'
 
 // Define an Entity class
 export class Entity {
@@ -11,10 +12,10 @@ export class Entity {
   // Add a component to the entity
   addComponent(component: Component) {
     this.components.push(component)
+    // Create a ComponentAddedEvent
+    EventSystem.getInstance().onComponentAdded(component)
   }
-
   // Remove a component from the entity
-
   removeComponent<T extends Component>(
     componentType: new (entityId: number, ...args: any[]) => T
   ): void {

@@ -1,3 +1,75 @@
+/*
+  Constraints : 
+    EntityManager.OnPlayerConnect(entities, connectedPlayerEntity)
+    EntityManager.OnPlayerDisconnect(entities, disconnectedPlayerEntity)
+
+    EntityManager.Game.OnStart(entities)
+    EntityManager.Game.OnEnd(entities)
+    EntityManager.Game.OnTick(entities, dt)
+
+    OnComponentAdded(entityId, component)
+    OnComponentRemoved(entityId, component)
+    OnComponentUpdated(entityId, component)
+
+    EntityManager.OnEntityAdded(entity)
+    EntityManager.OnEntityRemoved(entity)
+
+    const player = new Entity()
+    player.addComponent(new PlayerComponent())
+    player.addComponent(new PositionComponent())
+    player.addComponent(new RotationComponent())
+    player.addComponent(new NetworkComponent())
+    player.addComponent(new PhysicsComponent())
+    player.addComponent(new SizeComponent())
+
+    player.addComponent(new ColorComponent())
+
+  // class OnComponentAdded extends Component {
+    constructor(component: Component) {
+      super(entityId)
+    }    
+  }
+   // this will create a OnComponentAdded on EventManager event queue
+   // that will be dispatched to a system like
+  class ColorSystem {
+    constructor() {
+      eventSystem.addEventCallback(ComponentAddedEvent, this.onComponentAdded)
+    }
+
+
+
+    onComponentAdded(event: ComponentAddedEvent) {
+      if (event.component instanceof ColorComponent) {
+        // do something
+      }
+    }
+    onComponentRemoved(event: ComponentRemovedEvent) {
+      if (event.component instanceof ColorComponent) {
+        // do something
+      }
+    }
+  }
+
+   
+
+    player.addComponent(new HealthComponent())
+    player.addComponent(new ScoreComponent())
+
+    // This will need to be triggered by like a CollisionSystem that trigger  
+    // the event when a collision is detected
+    // same for OnCollisionExit, OnCollisionEnter
+
+    player.addComponent(new OnCollision(
+      (entity, otherEntity) => {
+        if (otherEntity.hasComponent(HealthComponent)) {
+          otherEntity.getComponent(HealthComponent).health -= 10
+        }
+      }
+    ))
+
+
+*/
+
 import 'dotenv/config'
 import { EntityManager } from '../../shared/entity/EntityManager.js'
 import { config } from '../../shared/network/config.js'

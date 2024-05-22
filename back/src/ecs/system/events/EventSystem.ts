@@ -11,6 +11,9 @@ import { DestroySystem } from './DestroySystem.js'
 import { SyncColorSystem } from './SyncColorSystem.js'
 import { SyncSingleSizeSystem } from './SyncSingleSizeSystem.js'
 import { SyncSizeSystem } from './SyncSizeSystem.js'
+import { EventComponentAdded } from '../../component/events/EventComponentAdded..js'
+import { EventComponentRemoved } from '../../component/events/EventComponentRemoved.js'
+import { ColorComponent } from 'shared/component/ColorComponent.js'
 
 // Define a type alias for event class constructors
 type EventConstructor = new (...args: any[]) => Component
@@ -19,6 +22,8 @@ type EventConstructor = new (...args: any[]) => Component
 interface System {
   update(entities: Entity[], component: Component): void
   afterUpdate?(entities: Entity[], component: Component): void // Optional afterUpdate method
+  onComponentAdded?(entity: Entity, component: Component): void // Optional onComponentAdded method
+  onComponentRemoved?(entity: Entity, component: Component): void // Optional onComponentRemoved method
 }
 
 /* See https://gamedev.stackexchange.com/a/194135 */
@@ -67,6 +72,15 @@ export class EventSystem {
     this.handleComponents(entities, true, [EventDestroyed])
     this.cleanProcessedEvents()
   }
+
+  onComponentAdded(addedComponent: Component) {
+    this.addEvent(new EventComponentAdded(addedComponent))
+  }
+
+  onComponentRemoved(removedComponent: Component) {
+    this.addEvent(new EventComponentRemoved(removedComponent))
+  }
+
   // Duplicate components (events) are authorized for this one
   addEvent(event: Component) {
     this.eventQueue.entity.addComponent(event)
