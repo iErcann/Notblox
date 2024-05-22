@@ -2,6 +2,21 @@
 
 ![Screen](GameScreen1.webp)
 
+### Online demo
+
+Small demo here : [NotBlox.online](https://www.notblox.online/)
+
+Hosted on an european server, there is no client side prediction, so the game may be laggy if you are far from the server.
+
+### Controls
+
+- W : Forward
+- S : Backward
+- A : Left
+- D : Right
+- Space : Jump
+- Mouse Left click : Rotate screen
+
 ## Features
 
 - Multiplayer
@@ -33,20 +48,7 @@ Inspiration : https://github.com/swift502/Sketchbook
 
 [![Demo](GameScreen3.webp)](https://www.youtube.com/watch?v=Uu3VCuyD9EA "See on youtube")
 
-### Online demo
-
-Small demo here : [NotBlox.online](https://www.notblox.online/)
-
-Hosted on an european server, there is no client side prediction, so the game may be laggy if you are far from the server.
-
-### Controls
-
-- W : Forward
-- S : Backward
-- A : Left
-- D : Right
-- Space : Jump
-- Mouse Left click : Rotate screen
+ 
 
 ## How to run
 
