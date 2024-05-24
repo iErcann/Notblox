@@ -1,26 +1,26 @@
-import * as THREE from 'three'
 import { EntityManager } from '@shared/entity/EntityManager'
-import { WebSocketManager } from './WebsocketManager'
-import { InputManager } from './InputManager'
+import { BaseEventSystem } from '@shared/entity/EventSystem'
 import { config } from '@shared/network/config'
+import * as THREE from 'three'
+import { InputManager } from './InputManager'
 import { LoadManager } from './LoadManager'
-import { Renderer } from './renderer'
+import { WebSocketManager } from './WebsocketManager'
 import {
+  AnimationSystem,
+  ChatSystem,
+  ClientEventSystem,
+  DestroySystem,
+  OrbitCameraFollowSystem,
+  SleepCheckSystem,
+  SyncColorSystem,
   SyncComponentsSystem,
   SyncPositionSystem,
   SyncRotationSystem,
-  SyncColorSystem,
   SyncSizeSystem,
   TopCameraFollowSystem,
-  AnimationSystem,
-  DestroySystem,
 } from './ecs/system'
-import { Camera } from './camera'
-import { SleepCheckSystem } from './ecs/system/SleepCheckSystem'
-import { Chat } from './ecs/entity/Chat'
-import { ChatSystem } from './ecs/system/ChatSystem'
 import { Hud } from './hud'
-import { OrbitCameraFollowSystem } from './ecs/system/OrbitCameraFollowSystem'
+import { Renderer } from './renderer'
 
 export class Game {
   private static instance: Game
@@ -34,7 +34,7 @@ export class Game {
   private syncColorSystem: SyncColorSystem
   private syncSizeSystem: SyncSizeSystem
   private topCameraFollowSystem: TopCameraFollowSystem
-  private orbitCameraFollowSystem: OrbitCameraFollowSystem
+  private eventSystem: ClientEventSystem
   websocketManager: WebSocketManager
   private animationSystem: AnimationSystem
   private sleepCheckSystem: SleepCheckSystem
@@ -51,13 +51,16 @@ export class Game {
     this.syncColorSystem = new SyncColorSystem()
     this.syncSizeSystem = new SyncSizeSystem()
     this.topCameraFollowSystem = new TopCameraFollowSystem()
-    this.orbitCameraFollowSystem = new OrbitCameraFollowSystem()
     this.websocketManager = new WebSocketManager(this)
     this.animationSystem = new AnimationSystem()
     this.loadManager = new LoadManager()
     this.sleepCheckSystem = new SleepCheckSystem()
     this.chatSystem = new ChatSystem()
     this.destroySystem = new DestroySystem()
+
+    BaseEventSystem.setEventSystemConstructor(ClientEventSystem)
+    this.eventSystem = BaseEventSystem.getInstance() as ClientEventSystem
+
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager)
     this.inputManager = new InputManager(this.websocketManager)
     this.hud = new Hud()
@@ -89,19 +92,13 @@ export class Game {
     // const interpolationFactor =
     //   this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
 
+    this.eventSystem.update(entities)
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
     this.syncPositionSystem.update(entities, positionInterpFactor)
     this.syncRotationSystem.update(entities, 0.5)
     this.chatSystem.update(entities, this.hud)
     this.syncColorSystem.update(entities)
     this.syncSizeSystem.update(entities)
-    // this.orbitCameraFollowSystem.update(
-    //   deltaTime,
-    //   entities,
-    //   this.renderer.camera.controls,
-    //   this.inputManager.inputState
-    // )
-    // this.topCameraFollowSystem.update(deltaTime, entities, this.inputManager.inputState)
     this.animationSystem.update(deltaTime, entities)
     this.destroySystem.update(entities, this.entityManager, this.renderer)
     this.sleepCheckSystem.update(entities)

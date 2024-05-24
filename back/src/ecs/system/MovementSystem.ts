@@ -27,11 +27,6 @@ export class MovementSystem {
     const impulse = this.calculateImpulse(dt, inputComponent, rigidBodyComponent)
     // If the space key is pressed and the entity is grounded, apply an impulse
     if (inputComponent.space && groundedCheckComponent && groundedCheckComponent.grounded) {
-      // const sizeComponent = entity.getComponent(SingleSizeComponent);
-      // if (sizeComponent) {
-      //   sizeComponent.size += 0.1;
-      //   sizeComponent.updated = true;
-      // }
       impulse.y = 1.5 * dt
     }
     this.applyImpulse(dt, rigidBodyComponent, impulse)

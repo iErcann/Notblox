@@ -1,8 +1,6 @@
 import { SerializedComponentType, SerializedEntityType } from '../network/server/serialized.js'
 import { Serializable, Component } from '../component/Component.js'
 import { BaseEventSystem } from './EventSystem.js'
-import { ComponentAddedEvent } from 'shared/component/events/ComponentAddedEvent.js'
-import { ComponentRemovedEvent } from 'shared/component/events/ComponentRemovedEvent.js'
 
 // Define an Entity class
 export class Entity {

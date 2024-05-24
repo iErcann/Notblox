@@ -12,7 +12,7 @@ import {
 import Rapier from '../../physics/rapier.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
-import { NetworkDataComponent } from '../component/NetworkDataComponent.js'
+import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
 import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
 import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
 import { WebSocketComponent } from '../component/WebsocketComponent.js'
@@ -58,6 +58,7 @@ export class Player {
       sizeComponent,
       stateComponent,
     ])
+
     this.entity.addComponent(networkDataComponent)
 
     BaseEventSystem.getInstance().addEvent(

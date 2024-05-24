@@ -2,7 +2,7 @@ import { EntityManager } from '../../../../shared/entity/EntityManager.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 import { EventTrimesh } from '../component/events/EventTrimesh.js'
-import { NetworkDataComponent } from '../component/NetworkDataComponent.js'
+import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
 
 export class MapWorld {
   entity: Entity

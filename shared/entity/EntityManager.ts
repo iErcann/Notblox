@@ -6,7 +6,6 @@ export class EntityManager {
   private static instance: EntityManager
   private entities: Entity[] = []
   private static nextId = 1
-
   private constructor() {}
 
   // Singleton pattern to get the single instance of EntityManager
@@ -19,6 +18,7 @@ export class EntityManager {
 
   // Create a new entity and add it to the list
   createEntity(type: SerializedEntityType, id?: number): Entity {
+    console.log('Creating entity', id, 'of type', type)
     const entityId = id ?? EntityManager.nextId++
     const entity = new Entity(type, entityId)
     this.entities.push(entity)

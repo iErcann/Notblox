@@ -93,7 +93,8 @@ import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { ServerEventSystem } from './ecs/component/events/ServerEventSystem.js'
 
-const eventSystem = new BaseEventSystem(ServerEventSystem)
+BaseEventSystem.setEventSystemConstructor(ServerEventSystem)
+const eventSystem = BaseEventSystem.getInstance()
 const entityManager = EntityManager.getInstance()
 // TODO: Make it wait for the websocket server to start
 const entities = entityManager.getAllEntities()

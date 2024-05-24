@@ -1,10 +1,10 @@
+import { NetworkComponent } from 'shared/network/NetworkComponent.js'
 import {
   SerializedComponentType,
   SerializedEntity,
   SerializedEntityType,
-} from '../../../../shared/network/server/serialized.js'
-import { Component, Serializable } from '../../../../shared/component/Component.js'
-import { NetworkComponent } from 'shared/network/NetworkComponent.js'
+} from '../network/server/serialized.js'
+import { Component, Serializable } from './Component.js'
 
 export class NetworkDataComponent extends Component implements Serializable {
   type = SerializedComponentType.NONE

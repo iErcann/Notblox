@@ -3,7 +3,7 @@ import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
 
 export class ServerEventSystem extends BaseEventSystem {
   constructor() {
-    super(ServerEventSystem)
+    super()
   }
   update(entities: Entity[]): void {}
   afterUpdate(entities: Entity[]): void {}

@@ -13,13 +13,12 @@ type EventConstructor = new (...args: any[]) => Component
 interface System {
   update(entities: Entity[], component: Component): void
   afterUpdate?(entities: Entity[], component: Component): void // Optional afterUpdate method
-  onComponentAdded?(entity: Entity, component: ComponentAddedEvent<Component>): void // Optional onComponentAdded method
-  onComponentRemoved?(entity: Entity, component: ComponentAddedEvent<Component>): void // Optional onComponentRemoved method
 }
 
 /* See https://gamedev.stackexchange.com/a/194135 */
 export class BaseEventSystem {
   private static instance: BaseEventSystem
+  private static eventSystemConstructor: new () => BaseEventSystem
   private subscriptions: Map<EventConstructor, System[]> = new Map()
   private processedEvents: Component[] = []
   eventQueue: EventQueue
@@ -28,15 +27,18 @@ export class BaseEventSystem {
   // But they share the same BaseEventSystem
   // We inject the event system constructor to create the right event system
   // So we don't have to import the server side code client side & vise versa
-  constructor(eventSystemConstructor: new () => BaseEventSystem) {
+  static setEventSystemConstructor(eventSystemConstructor: new () => BaseEventSystem) {
+    BaseEventSystem.eventSystemConstructor = eventSystemConstructor
+  }
+  constructor() {
     this.initializeSubscriptions()
     this.eventQueue = new EventQueue()
-    if (!BaseEventSystem.instance) {
-      BaseEventSystem.instance = new eventSystemConstructor()
-    }
   }
 
   static getInstance(): BaseEventSystem {
+    if (!BaseEventSystem.instance) {
+      BaseEventSystem.instance = new BaseEventSystem.eventSystemConstructor()
+    }
     return BaseEventSystem.instance
   }
 
@@ -63,7 +65,6 @@ export class BaseEventSystem {
       if (components) {
         for (const component of components) {
           if (component) {
-            console.log('Processing event', component)
             if (this.subscriptions.has(EventClass)) {
               for (const system of this.subscriptions.get(EventClass)!) {
                 if (afterUpdate) {
@@ -85,7 +86,7 @@ export class BaseEventSystem {
       this.eventQueue.entity.components.splice(this.eventQueue.entity.components.indexOf(event), 1)
     }
 
-    // Removing ComponentAddedEvent/ComponentRemovedEvent/ComponentUpdatedEvent events from the event queue
+    // Removing ComponentAddedEvent/ComponentRemovedEvent /ComponentUpdatedEvent events from the event queue
     this.eventQueue.entity.components = this.eventQueue.entity.components.filter(
       (component) =>
         !(
