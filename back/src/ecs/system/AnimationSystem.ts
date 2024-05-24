@@ -1,5 +1,5 @@
 // AnimationSystem.js
-import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
+import { DynamicPhysicsBodyComponent } from '../component/DynamicPhysicsBodyComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
 import * as THREE from 'three'
 import { Entity } from '../../../../shared/entity/Entity.js'
@@ -14,7 +14,7 @@ export class AnimationSystem {
   update(entities: Entity[], world: Rapier.World): void {
     entities.forEach((entity) => {
       const inputComponent = entity.getComponent(InputComponent)
-      const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent)
+      const rigidBodyComponent = entity.getComponent(DynamicPhysicsBodyComponent)
       const positionComponent = entity.getComponent(PositionComponent)
       const colliderComponent = entity.getComponent(PhysicsColliderComponent)
       const stateComponent = entity.getComponent(StateComponent)
@@ -105,7 +105,10 @@ export class AnimationSystem {
     )
   }
 
-  rotatePlayer(rigidBodyComponent: PhysicsBodyComponent, quaternion: THREE.Quaternion): void {
+  rotatePlayer(
+    rigidBodyComponent: DynamicPhysicsBodyComponent,
+    quaternion: THREE.Quaternion
+  ): void {
     rigidBodyComponent.body.setRotation(
       {
         x: quaternion.x,

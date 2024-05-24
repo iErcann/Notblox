@@ -7,7 +7,7 @@ import { SerializedEntityType } from '../../../../shared/network/server/serializ
 
 import Rapier from '../../physics/rapier.js'
 import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
-import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
+import { DynamicPhysicsBodyComponent } from '../component/DynamicPhysicsBodyComponent.js'
 import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
 import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
 import { EntityManager } from '../../../../shared/entity/EntityManager.js'
@@ -56,12 +56,12 @@ export class Sphere {
 
     let rigidBody = world.createRigidBody(rigidBodyDesc)
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false)
-    this.entity.addComponent(new PhysicsBodyComponent(this.entity.id, rigidBody))
+    this.entity.addComponent(new DynamicPhysicsBodyComponent(this.entity.id, rigidBody))
   }
   createCollider(world: Rapier.World) {
     // Collider
     const sizeComponent = this.entity.getComponent(SingleSizeComponent)
-    const rigidBodyComponent = this.entity.getComponent(PhysicsBodyComponent)
+    const rigidBodyComponent = this.entity.getComponent(DynamicPhysicsBodyComponent)
 
     if (!rigidBodyComponent) {
       console.error("BodyComponent doesn't exist on Sphere.")

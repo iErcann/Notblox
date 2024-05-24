@@ -1,20 +1,24 @@
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
 import { ColorComponent } from '../../../../../shared/component/ColorComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { EventColor } from '../../component/events/EventColor.js'
-import { BaseEventSystem } from 'shared/entity/EventSystem.js'
+import { ColorEvent } from '../../component/events/ColorEvent.js'
+import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
 
-export class SyncColorSystem {
-  update(entities: Entity[], eventColor: EventColor) {
-    const entity = EntityManager.getEntityById(entities, eventColor.entityId)
-    if (!entity) return
+export class ColorEventSystem {
+  update(entities: Entity[]) {
+    const eventColors = BaseEventSystem.getEventsByType(ColorEvent)
 
-    const colorComponent = entity.getComponent(ColorComponent)
-    if (!colorComponent) return
+    for (const eventColor of eventColors) {
+      const entity = EntityManager.getEntityById(entities, eventColor.entityId)
+      if (!entity) return
 
-    if (colorComponent && eventColor) {
-      colorComponent.color = eventColor.color
-      colorComponent.updated = true
+      const colorComponent = entity.getComponent(ColorComponent)
+      if (!colorComponent) return
+
+      if (colorComponent && eventColor) {
+        colorComponent.color = eventColor.color
+        colorComponent.updated = true
+      }
     }
   }
 }

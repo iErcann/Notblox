@@ -6,20 +6,10 @@ import { ComponentUpdatedEvent } from '../component/events/ComponentUpdatedEvent
 import { Entity } from './Entity.js'
 import { EventQueue } from './EventQueue.js'
 
-// Define a type alias for event class constructors
-type EventConstructor = new (...args: any[]) => Component
-
-// Interface for System type
-interface System {
-  update(entities: Entity[], component: Component): void
-  afterUpdate?(entities: Entity[], component: Component): void // Optional afterUpdate method
-}
-
 /* See https://gamedev.stackexchange.com/a/194135 */
 export class BaseEventSystem {
   private static instance: BaseEventSystem
   private static eventSystemConstructor: new () => BaseEventSystem
-  private subscriptions: Map<EventConstructor, System[]> = new Map()
   private processedEvents: Component[] = []
   eventQueue: EventQueue
 
@@ -31,7 +21,6 @@ export class BaseEventSystem {
     BaseEventSystem.eventSystemConstructor = eventSystemConstructor
   }
   constructor() {
-    this.initializeSubscriptions()
     this.eventQueue = new EventQueue()
   }
 
@@ -42,8 +31,6 @@ export class BaseEventSystem {
     return BaseEventSystem.instance
   }
 
-  initializeSubscriptions() {}
-  update(entities: Entity[]) {}
   afterUpdate(entities: Entity[]) {
     this.cleanProcessedEvents()
   }
@@ -51,53 +38,37 @@ export class BaseEventSystem {
   // Add an event to the event queue
   // Duplicate components (events) are authorized for this one
   static addEvent(event: Component) {
+    console.log('Adding event', event)
     BaseEventSystem.getInstance().eventQueue.entity.addComponent(event, false)
-  }
-  // Handle a component event
-  // If multiple events are stored, they are all treated in the same frame
-  // Doing them one by one might have caused issues when 2 clients disconnect at the same time
-  private handleComponents(
-    entities: Entity[],
-    afterUpdate: boolean,
-    eventClasses: EventConstructor[]
-  ) {
-    for (const EventClass of eventClasses) {
-      const components = this.eventQueue.entity.getComponents(EventClass)
-      if (components) {
-        for (const component of components) {
-          if (component) {
-            if (this.subscriptions.has(EventClass)) {
-              for (const system of this.subscriptions.get(EventClass)!) {
-                if (afterUpdate) {
-                  system.afterUpdate && system.afterUpdate(entities, component)
-                } else {
-                  system.update(entities, component)
-                }
-              }
-              this.processedEvents.push(component)
-            }
-          }
-        }
-      }
-    }
   }
 
   private cleanProcessedEvents() {
-    for (const event of this.processedEvents) {
-      this.eventQueue.entity.components.splice(this.eventQueue.entity.components.indexOf(event), 1)
-    }
+    // TODO: Check if asynchroneous events are processed correctly (ChatMessageEvent, etc.)
+    // Removing all events for now
+    this.eventQueue.entity.components = []
 
-    // Removing ComponentAddedEvent/ComponentRemovedEvent /ComponentUpdatedEvent events from the event queue
-    this.eventQueue.entity.components = this.eventQueue.entity.components.filter(
-      (component) =>
-        !(
-          component instanceof ComponentAddedEvent ||
-          component instanceof ComponentRemovedEvent ||
-          component instanceof ComponentUpdatedEvent
-        )
-    )
+    // for (const event of this.processedEvents) {
+    //   this.eventQueue.entity.components.splice(this.eventQueue.entity.components.indexOf(event), 1)
+    // }
 
-    this.processedEvents = []
+    // // Removing ComponentAddedEvent/ComponentRemovedEvent /ComponentUpdatedEvent events from the event queue
+    // this.eventQueue.entity.components = this.eventQueue.entity.components.filter(
+    //   (component) =>
+    //     !(
+    //       component instanceof ComponentAddedEvent ||
+    //       component instanceof ComponentRemovedEvent ||
+    //       component instanceof ComponentUpdatedEvent
+    //     )
+    // )
+
+    // this.processedEvents = []
+  }
+  static getEvents() {
+    return BaseEventSystem.getInstance().eventQueue.entity.components
+  }
+
+  static getEventsByType<T extends Component>(componentType: new (...args: any[]) => T): T[] {
+    return BaseEventSystem.getInstance().eventQueue.entity.getComponents(componentType)
   }
 
   static onComponentAdded<T extends Component>(addedComponent: T) {

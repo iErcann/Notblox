@@ -83,8 +83,8 @@ import { MapWorld } from './ecs/entity/MapWorld.js'
 import { Sphere } from './ecs/entity/Sphere.js'
 import { AnimationSystem } from './ecs/system/AnimationSystem.js'
 import { MovementSystem } from './ecs/system/MovementSystem.js'
-import { RandomSizeSystem } from './ecs/system/RandomSizeSystem.js'
-import { TrimeshSystem } from './ecs/system/events/TrimeshSystem.js'
+import { RandomizeSystem } from './ecs/system/RandomizeSystem.js'
+import { TrimeshEventSystem } from './ecs/system/events/TrimeshEventSystem.js'
 import { NetworkSystem } from './ecs/system/network/NetworkSystem.js'
 import { BoundaryCheckSystem } from './ecs/system/physics/BoundaryCheckSystem.js'
 import { GroundedCheckSystem } from './ecs/system/physics/GroundedCheckSystem.js'
@@ -92,27 +92,32 @@ import { PhysicsSystem } from './ecs/system/physics/PhysicsSystem.js'
 import { SleepCheckSystem } from './ecs/system/physics/SleepCheckSystem.js'
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
-import { ServerEventSystem } from './ecs/component/events/ServerEventSystem.js'
+import { ServerEventSystem } from './ecs/system/events/ServerEventSystem.js'
+import { ColorEventSystem } from './ecs/system/events/ColorEventSystem.js'
+import { SingleSizeEventSystem } from './ecs/system/events/SingleSizeEventSystem.js'
 
+// TODO: Make it wait for the websocket server to start
 BaseEventSystem.setEventSystemConstructor(ServerEventSystem)
 const eventSystem = BaseEventSystem.getInstance()
 const entityManager = EntityManager.getInstance()
-// TODO: Make it wait for the websocket server to start
 const entities = entityManager.getAllEntities()
+
+const colorEventSystem = new ColorEventSystem()
+const singleSizeEventSystem = new SingleSizeEventSystem()
+const sizeEventSystem = new SingleSizeEventSystem()
+const syncPositionSystem = new SyncPositionSystem()
+const syncRotationSystem = new SyncRotationSystem()
 
 const physicsSystem = PhysicsSystem.getInstance()
 const groundedCheckSystem = new GroundedCheckSystem()
 const movementSystem = new MovementSystem()
 const networkSystem = new NetworkSystem()
 
-const syncPositionSystem = new SyncPositionSystem()
-const syncRotationSystem = new SyncRotationSystem()
-
-const trimeshSystem = new TrimeshSystem()
+const trimeshSystem = new TrimeshEventSystem()
 
 const animationSystem = new AnimationSystem()
 const sleepCheckSystem = new SleepCheckSystem()
-const randomSizeSystem = new RandomSizeSystem()
+const randomizeSystem = new RandomizeSystem()
 const boundaryCheckSystem = new BoundaryCheckSystem()
 
 new MapWorld()
@@ -162,8 +167,11 @@ async function gameLoop() {
   const dt = now - lastUpdateTimestamp
 
   await trimeshSystem.update(entities, physicsSystem.world)
-  randomSizeSystem.update(entities)
-  eventSystem.update(entities)
+  randomizeSystem.update(entities)
+  // Event Handlers
+  sizeEventSystem.update(entities)
+  singleSizeEventSystem.update(entities)
+  colorEventSystem.update(entities)
 
   groundedCheckSystem.update(entities, physicsSystem.world)
   movementSystem.update(dt, entities, physicsSystem.world)
@@ -182,7 +190,7 @@ async function gameLoop() {
   // A SizeComponent inherits NetworkComponent that has updated to true by default
   // It is then sent to the players once
   // Then it becomes false
-  // If it is modified, we changed the is sent.
+  // If it is modified, we changed the updated to true
   sleepCheckSystem.update(entities)
   physicsSystem.update()
 

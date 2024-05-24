@@ -59,7 +59,7 @@ export class Game {
     this.destroySystem = new DestroySystem()
 
     BaseEventSystem.setEventSystemConstructor(ClientEventSystem)
-    this.eventSystem = BaseEventSystem as ClientEventSystem
+    this.eventSystem = BaseEventSystem.getInstance()
 
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager)
     this.inputManager = new InputManager(this.websocketManager)
@@ -92,7 +92,6 @@ export class Game {
     // const interpolationFactor =
     //   this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
 
-    this.eventSystem.update(entities)
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
     this.syncPositionSystem.update(entities, positionInterpFactor)
     this.syncRotationSystem.update(entities, 0.5)
@@ -103,6 +102,7 @@ export class Game {
     this.destroySystem.update(entities, this.entityManager, this.renderer)
     this.sleepCheckSystem.update(entities)
     this.renderer.update(deltaTime, entities, this.inputManager.inputState)
+    this.eventSystem.afterUpdate(entities)
     this.lastRenderTime = now
     this.websocketManager.timeSinceLastServerUpdate += deltaTime
   }

@@ -1,7 +1,6 @@
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
-import { PhysicsBodyComponent } from '../../component/PhysicsBodyComponent.js'
 import { NetworkDataComponent } from '../../../../../shared/component/NetworkDataComponent.js'
 import { WebSocketComponent } from '../../component/WebsocketComponent.js'
 import { PhysicsSystem } from '../physics/PhysicsSystem.js'
@@ -9,6 +8,8 @@ import { SerializedEntityType } from '../../../../../shared/network/server/seria
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
+import { DynamicPhysicsBodyComponent } from '../../component/DynamicPhysicsBodyComponent.js'
+import { KinematicPhysicsBodyComponent } from '../../component/KinematicPhysicsBodyComponent.js'
 
 /*
   The EventDestroyed is first inside the EventQueue Entity.
@@ -18,7 +19,7 @@ import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
   The after update is called after the network broadcast. And it removes the entity from the EntityManager.
 */
 
-export class DestroySystem {
+export class EventDestroySystem {
   update(entities: Entity[], eventDestroyed: EntityDestroyedEvent) {
     const entity = EntityManager.getEntityById(entities, eventDestroyed.entityId)
     if (!entity) {
@@ -61,7 +62,9 @@ export class DestroySystem {
 
     const world = PhysicsSystem.getInstance().world
 
-    const rigidbodyComponent = entity.getComponent(PhysicsBodyComponent)
+    const rigidbodyComponent =
+      entity.getComponent(DynamicPhysicsBodyComponent) ||
+      entity.getComponent(KinematicPhysicsBodyComponent)
 
     if (rigidbodyComponent) world.removeRigidBody(rigidbodyComponent.body)
 

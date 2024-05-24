@@ -1,15 +1,16 @@
-import { NetworkComponent } from '../../../../../shared/network/NetworkComponent.js'
-import { ColorComponent } from '../../../../../shared/component/ColorComponent.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { RotationComponent } from '../../../../../shared/component/RotationComponent.js'
-import { SizeComponent } from '../../../../../shared/component/SizeComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { PhysicsBodyComponent } from '../../component/PhysicsBodyComponent.js'
+import { NetworkComponent } from '../../../../../shared/network/NetworkComponent.js'
+import { DynamicPhysicsBodyComponent } from '../../component/DynamicPhysicsBodyComponent.js'
+import { KinematicPhysicsBodyComponent } from '../../component/KinematicPhysicsBodyComponent.js'
 
 export class SleepCheckSystem {
   update(entities: Entity[]) {
     for (const entity of entities) {
-      const bodyComponent = entity.getComponent(PhysicsBodyComponent)
+      const bodyComponent =
+        entity.getComponent(DynamicPhysicsBodyComponent) ||
+        entity.getComponent(KinematicPhysicsBodyComponent)
       this.sleepNetworkComponent(entity)
       if (bodyComponent) {
         const sleeping = bodyComponent.body.isSleeping()

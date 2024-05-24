@@ -1,7 +1,7 @@
 import { EntityManager } from '../../../../shared/entity/EntityManager.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
-import { EventTrimesh } from '../component/events/EventTrimesh.js'
+import { TrimeshEvent } from '../component/events/TrimeshEvent.js'
 import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
 
 export class MapWorld {
@@ -11,7 +11,7 @@ export class MapWorld {
 
     // TODO: Use the new logic for the events.
     this.entity.addComponent(
-      new EventTrimesh(this.entity.id, '../front/public/assets/keneeyworldled.glb')
+      new TrimeshEvent(this.entity.id, '../front/public/assets/keneeyworldled.glb')
     )
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [])
   }

@@ -49,7 +49,7 @@ export class SyncComponentsSystem {
       for (const serializedComponent of serializedComponents) {
         // We have to do the t! because NetworkData adds the type property after
 
-        const component = entity.getComponentByType(serializedComponent.t!)
+        const component = entity.getComponentBySerializedType(serializedComponent.t!)
         if (component) {
           // Deserialize the component (this updates the component)
           component.deserialize(serializedComponent)

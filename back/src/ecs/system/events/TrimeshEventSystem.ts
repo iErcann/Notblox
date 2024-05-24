@@ -1,10 +1,10 @@
 import Rapier from '../../../physics/rapier.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { EventTrimesh } from '../../component/events/EventTrimesh.js'
+import { TrimeshEvent } from '../../component/events/TrimeshEvent.js'
 import { DRACOLoader, GLTF, GLTFLoader } from 'node-three-gltf'
 import { Mesh } from 'three'
 
-export class TrimeshSystem {
+export class TrimeshEventSystem {
   private gltfLoader: GLTFLoader
 
   constructor() {
@@ -32,7 +32,7 @@ export class TrimeshSystem {
     const loadPromises: Promise<void>[] = []
 
     for (const entity of entities) {
-      const eventTrimeshComponent = entity.getComponent(EventTrimesh)
+      const eventTrimeshComponent = entity.getComponent(TrimeshEvent)
       if (eventTrimeshComponent) {
         const loadPromise = this.loadGLTFModel(eventTrimeshComponent.filePath)
           .then(async (gltf: GLTF) => {
@@ -86,7 +86,7 @@ export class TrimeshSystem {
           })
 
         loadPromises.push(loadPromise)
-        entity.removeComponent(EventTrimesh)
+        entity.removeComponent(TrimeshEvent)
       }
     }
 

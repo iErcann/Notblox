@@ -1,5 +1,5 @@
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
-import { PhysicsBodyComponent } from '../../component/PhysicsBodyComponent.js'
+import { DynamicPhysicsBodyComponent } from '../../component/DynamicPhysicsBodyComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import Rapier from '../../../physics/rapier.js'
 import { SingleSizeComponent } from '../../../../../shared/component/SingleSizeComponent.js'
@@ -10,7 +10,7 @@ export class GroundedCheckSystem {
   update(entities: Entity[], world: Rapier.World) {
     for (const entity of entities) {
       const groundedComponent = entity.getComponent(GroundCheckComponent)
-      const bodyComponent = entity.getComponent(PhysicsBodyComponent)
+      const bodyComponent = entity.getComponent(DynamicPhysicsBodyComponent)
       const positionComponent = entity.getComponent(PositionComponent)
       const colliderComponent = entity.getComponent(PhysicsColliderComponent)
 

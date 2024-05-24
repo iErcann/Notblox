@@ -2,7 +2,6 @@ import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
 import { ChatListComponent } from '../../../../../shared/component/ChatComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
-import { SerializedEntityType } from '../../../../../shared/network/server/serialized.js'
 import { ChatComponent } from '../../component/tag/TagChatComponent.js'
 
 export class ChatSystem {
