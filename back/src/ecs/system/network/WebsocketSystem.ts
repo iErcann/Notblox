@@ -102,7 +102,7 @@ export class WebsocketSystem {
     console.log('Disconnect: Player found!')
 
     const entityId = entity.id
-    BaseEventSystem.getInstance().addEvent(new EntityDestroyedEvent(entityId))
+    BaseEventSystem.addEvent(new EntityDestroyedEvent(entityId))
   }
 
   private async handleInputMessage(ws: any, message: InputMessage) {
@@ -137,6 +137,6 @@ export class WebsocketSystem {
       console.error(`Invalid chat message, sent from ${player}`, message)
       return
     }
-    BaseEventSystem.getInstance().addEvent(new ChatMessageEvent(id, `Player ${id}`, content))
+    BaseEventSystem.addEvent(new ChatMessageEvent(id, `Player ${id}`, content))
   }
 }

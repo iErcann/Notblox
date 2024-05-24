@@ -59,7 +59,7 @@ export class Game {
     this.destroySystem = new DestroySystem()
 
     BaseEventSystem.setEventSystemConstructor(ClientEventSystem)
-    this.eventSystem = BaseEventSystem.getInstance() as ClientEventSystem
+    this.eventSystem = BaseEventSystem as ClientEventSystem
 
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager)
     this.inputManager = new InputManager(this.websocketManager)

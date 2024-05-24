@@ -48,9 +48,10 @@ export class BaseEventSystem {
     this.cleanProcessedEvents()
   }
 
+  // Add an event to the event queue
   // Duplicate components (events) are authorized for this one
-  addEvent(event: Component) {
-    this.eventQueue.entity.addComponent(event, false)
+  static addEvent(event: Component) {
+    BaseEventSystem.getInstance().eventQueue.entity.addComponent(event, false)
   }
   // Handle a component event
   // If multiple events are stored, they are all treated in the same frame
@@ -98,11 +99,12 @@ export class BaseEventSystem {
 
     this.processedEvents = []
   }
-  onComponentAdded<T extends Component>(addedComponent: T) {
-    this.addEvent(new ComponentAddedEvent(addedComponent))
+
+  static onComponentAdded<T extends Component>(addedComponent: T) {
+    BaseEventSystem.addEvent(new ComponentAddedEvent(addedComponent))
   }
 
-  onComponentRemoved<T extends Component>(removedComponent: T) {
-    this.addEvent(new ComponentRemovedEvent(removedComponent))
+  static onComponentRemoved<T extends Component>(removedComponent: T) {
+    BaseEventSystem.addEvent(new ComponentRemovedEvent(removedComponent))
   }
 }

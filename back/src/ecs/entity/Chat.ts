@@ -15,11 +15,11 @@ export class Chat {
 
     this.entity.addComponent(new ChatComponent(this.entity.id))
 
-    BaseEventSystem.getInstance().addEvent(
+    BaseEventSystem.addEvent(
       new ChatMessageEvent(this.entity.id, '🖥️ [SERVER]', `Started ${new Date().toLocaleString()}`)
     )
 
-    BaseEventSystem.getInstance().addEvent(
+    BaseEventSystem.addEvent(
       new ChatMessageEvent(this.entity.id, '🖥️ [SERVER]', 'Welcome to the chat !')
     )
 

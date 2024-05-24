@@ -61,7 +61,7 @@ export class Player {
 
     this.entity.addComponent(networkDataComponent)
 
-    BaseEventSystem.getInstance().addEvent(
+    BaseEventSystem.addEvent(
       new ChatMessageEvent(
         this.entity.id,
         '🖥️ [SERVER]',

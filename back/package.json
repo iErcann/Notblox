@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "debug": "tsc-watch --onSuccess \"node --inspect=7000 dist/back/src/index.js\"",
-    "dev": "tsc-watch --onSuccess \"node dist/back/src/index.js\"",
+    "debug": "tsc-watch --onSuccess \"node --inspect=7000  dist/back/src/index.js\"",
+    "dev": "tsc-watch --onSuccess \"node  dist/back/src/index.js\"",
     "build": "tsc --build tsconfig.json",
-    "start": "tsc --build tsconfig.json && node dist/back/src/index.js"
+    "start": "tsc --build tsconfig.json && node  dist/back/src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -38,5 +38,5 @@
     "msgpackr": "^1.9.9",
     "node-three-gltf": "^1.4.0",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.43.0"
-  }
+  } 
 }

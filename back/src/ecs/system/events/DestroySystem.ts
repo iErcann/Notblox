@@ -42,12 +42,8 @@ export class DestroySystem {
     console.log('DestroySystem: update: entity', entity.type, SerializedEntityType.PLAYER)
 
     if (entity.getComponent(PlayerComponent)) {
-      BaseEventSystem.getInstance().addEvent(
-        new ChatMessageEvent(
-          BaseEventSystem.getInstance().eventQueue.entity.id,
-          '🖥️ [SERVER]',
-          `Player ${entity.id} left the game.`
-        )
+      BaseEventSystem.addEvent(
+        new ChatMessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
       )
     }
   }

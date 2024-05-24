@@ -12,7 +12,7 @@ export class RandomSizeSystem {
     for (const entity of entities) {
       if (!entity.getComponent(RandomizeComponent)) continue
 
-      const eventSystem = BaseEventSystem.getInstance()
+      const eventSystem = BaseEventSystem
       const sizeComponent = entity.getComponent(SizeComponent)
       // if (sizeComponent) {
       //   if (Math.random() < 0.01) {

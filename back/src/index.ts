@@ -71,6 +71,7 @@
 */
 
 import 'dotenv/config'
+
 import { EntityManager } from '../../shared/entity/EntityManager.js'
 import { config } from '../../shared/network/config.js'
 import { BaseEventSystem } from '../../shared/entity/EventSystem.js'

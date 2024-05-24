@@ -14,7 +14,7 @@ export class Entity {
 
     // This can be used to skip the recursion or non added events
     if (createAddedEvent) {
-      BaseEventSystem.getInstance().onComponentAdded(component)
+      BaseEventSystem.onComponentAdded(component)
     }
   }
 
