@@ -23,6 +23,7 @@ export class TrimeshColliderSystem {
       const entity = EntityManager.getEntityById(entities, event.entityId)
 
       if (!entity) {
+        console.error('TrimeshColliderSystem: Entity not found')
         continue
       }
 
@@ -93,6 +94,7 @@ export class TrimeshColliderSystem {
           )
         }
       })
+      // Apply the position component if it exists, otherwise the trimesh collider will be at the origin (0, 0, 0)
       const positionComponent = entity.getComponent(PositionComponent)
       if (positionComponent) {
         kinematicRigidBodyComponent.body.setTranslation(

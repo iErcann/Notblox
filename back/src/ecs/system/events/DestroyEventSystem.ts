@@ -10,6 +10,8 @@ import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
+import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
+import { RotationComponent } from '../../../../../shared/component/RotationComponent.js'
 /*
   The EventDestroyed is first inside the EventQueue Entity.
   Then it is added to the destroyed Player entity.
@@ -28,24 +30,22 @@ export class DestroyEventSystem {
         console.error('Update : DestroySystem: Entity not found with id', destroyedEvent.entityId)
         return
       }
-
-      if (entity.getComponent(WebSocketComponent)) {
-        // Removing WebSocketComponent to not retrigger a broadcast on this entity if its destroyed.
-        // Otherwise it throws an error.
-        entity.removeComponent(WebSocketComponent)
+      if (entity.getComponent(PlayerComponent)) {
+        BaseEventSystem.addEvent(
+          new ChatMessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
+        )
       }
+
+      // Removing all the components
+      entity.removeAllComponents()
+
+      // TODO: Make a dynamic body system
 
       // The EventDestroyed component is sent to the player
       entity.addComponent(destroyedEvent)
       const networkComponent = entity.getComponent(NetworkDataComponent)
       if (networkComponent) {
         networkComponent.addComponent(destroyedEvent)
-      }
-
-      if (entity.getComponent(PlayerComponent)) {
-        BaseEventSystem.addEvent(
-          new ChatMessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
-        )
       }
     }
   }
@@ -63,15 +63,6 @@ export class DestroyEventSystem {
         )
         return
       }
-
-      const world = PhysicsSystem.getInstance().world
-
-      const rigidbodyComponent =
-        entity.getComponent(DynamicRigidBodyComponent) ||
-        entity.getComponent(KinematicRigidBodyComponent)
-
-      if (rigidbodyComponent && rigidbodyComponent.body)
-        world.removeRigidBody(rigidbodyComponent.body)
 
       // No need to remove all the components, the entity is removed from the EntityManager, will be garbage collected.
       EntityManager.getInstance().removeEntityById(destroyedEvent.entityId)

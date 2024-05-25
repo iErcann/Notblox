@@ -18,6 +18,12 @@ export class Entity {
     }
   }
 
+  // Remove all components using the remove component function
+  removeAllComponents() {
+    this.components.forEach((c) =>
+      this.removeComponent(c.constructor as new (...args: any[]) => Component)
+    )
+  }
   // Remove a component from the entity
   removeComponent<T extends Component>(
     componentType: new (entityId: number, ...args: any[]) => T
