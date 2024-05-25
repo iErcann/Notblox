@@ -1,3 +1,4 @@
+import { ComponentWrapper } from 'shared/component/events/ComponentWrapper.js'
 import { Component } from '../component/Component.js'
 import { ComponentAddedEvent } from '../component/events/ComponentAddedEvent.js'
 import { ComponentRemovedEvent } from '../component/events/ComponentRemovedEvent.js'
@@ -38,7 +39,6 @@ export class BaseEventSystem {
   // Add an event to the event queue
   // Duplicate components (events) are authorized for this one
   static addEvent(event: Component) {
-    console.log('Adding event', event)
     BaseEventSystem.getInstance().eventQueue.entity.addComponent(event, false)
   }
 
@@ -67,8 +67,27 @@ export class BaseEventSystem {
     return BaseEventSystem.getInstance().eventQueue.entity.components
   }
 
+  /**
+   * Example usage
+   * BaseEventSystem.getEventsByType(ChatMessageEvent)
+   */
   static getEventsByType<T extends Component>(componentType: new (...args: any[]) => T): T[] {
     return BaseEventSystem.getInstance().eventQueue.entity.getComponents(componentType)
+  }
+
+  /**
+   *  Example usage
+   *  BaseEventSystem.getEventsByWrappedType(ComponentAddedEvent, ColorComponent)
+   *  BaseEventSystem.getEventsByWrappedType(ComponentRemovedEvent, ColorComponent)
+   */
+  static getEventsWrapped<E extends ComponentWrapper<T>, T extends Component>(
+    eventType: new (...args: any[]) => E,
+    componentType: new (...args: any[]) => T
+  ): E[] {
+    // Filtering by ComponentAddedEvent<T> for example
+    const events = BaseEventSystem.getEventsByType(eventType)
+    // Then filtering by its wrapped component type
+    return events.filter((event) => event.component instanceof componentType) as E[]
   }
 
   static onComponentAdded<T extends Component>(addedComponent: T) {

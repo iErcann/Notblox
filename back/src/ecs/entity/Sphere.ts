@@ -7,12 +7,12 @@ import { SerializedEntityType } from '../../../../shared/network/server/serializ
 
 import Rapier from '../../physics/rapier.js'
 import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
-import { DynamicPhysicsBodyComponent } from '../component/DynamicPhysicsBodyComponent.js'
-import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
 import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
 import { EntityManager } from '../../../../shared/entity/EntityManager.js'
 import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
+import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
+import { ColliderComponent } from '../component/physics/ColliderComponent.js'
 
 export class Sphere {
   entity: Entity
@@ -56,12 +56,12 @@ export class Sphere {
 
     let rigidBody = world.createRigidBody(rigidBodyDesc)
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false)
-    this.entity.addComponent(new DynamicPhysicsBodyComponent(this.entity.id, rigidBody))
+    this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id, rigidBody))
   }
   createCollider(world: Rapier.World) {
     // Collider
     const sizeComponent = this.entity.getComponent(SingleSizeComponent)
-    const rigidBodyComponent = this.entity.getComponent(DynamicPhysicsBodyComponent)
+    const rigidBodyComponent = this.entity.getComponent(DynamicRigidBodyComponent)
 
     if (!rigidBodyComponent) {
       console.error("BodyComponent doesn't exist on Sphere.")
@@ -76,6 +76,6 @@ export class Sphere {
     let colliderDesc = Rapier.ColliderDesc.ball(sizeComponent.size)
     let collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
 
-    this.entity.addComponent(new PhysicsColliderComponent(this.entity.id, collider))
+    this.entity.addComponent(new ColliderComponent(this.entity.id, collider))
   }
 }

@@ -1,18 +1,18 @@
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
-import { DynamicPhysicsBodyComponent } from '../../component/DynamicPhysicsBodyComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import Rapier from '../../../physics/rapier.js'
 import { SingleSizeComponent } from '../../../../../shared/component/SingleSizeComponent.js'
-import { PhysicsColliderComponent } from '../../component/PhysicsColliderComponent.js'
 import { GroundCheckComponent } from '../../component/GroundedComponent.js'
+import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
+import { ColliderComponent } from '../../component/physics/ColliderComponent.js'
 
 export class GroundedCheckSystem {
   update(entities: Entity[], world: Rapier.World) {
     for (const entity of entities) {
       const groundedComponent = entity.getComponent(GroundCheckComponent)
-      const bodyComponent = entity.getComponent(DynamicPhysicsBodyComponent)
+      const bodyComponent = entity.getComponent(DynamicRigidBodyComponent)
       const positionComponent = entity.getComponent(PositionComponent)
-      const colliderComponent = entity.getComponent(PhysicsColliderComponent)
+      const colliderComponent = entity.getComponent(ColliderComponent)
 
       if (groundedComponent && bodyComponent && positionComponent && colliderComponent) {
         const sizeComponent = entity.getComponent(SingleSizeComponent)

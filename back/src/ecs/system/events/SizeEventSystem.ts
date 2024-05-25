@@ -1,7 +1,7 @@
 import Rapier from '../../../physics/rapier.js'
 import { SizeComponent } from '../../../../../shared/component/SizeComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { PhysicsColliderComponent } from '../../component/PhysicsColliderComponent.js'
+import { ColliderComponent } from '../../component/physics/ColliderComponent.js'
 import { SizeEvent } from '../../component/events/SizeEvent.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
 import { BaseEventSystem } from 'shared/entity/EventSystem.js'
@@ -15,7 +15,7 @@ export class SizeEventSystem {
 
       if (!entity) return
 
-      const colliderComponent = entity.getComponent(PhysicsColliderComponent)
+      const colliderComponent = entity.getComponent(ColliderComponent)
 
       if (!colliderComponent) return
 

@@ -4,7 +4,7 @@ import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { BaseEventSystem } from '../../../../shared/entity/EventSystem.js'
 import Rapier from '../../physics/rapier.js'
-import { DynamicPhysicsBodyComponent } from '../component/DynamicPhysicsBodyComponent.js'
+import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { RandomizeComponent } from '../component/RandomizeComponent.js'
 import { ColorEvent } from '../component/events/ColorEvent.js'
 import { SizeEvent } from '../component/events/SizeEvent.js'
@@ -48,7 +48,7 @@ export class RandomizeSystem {
         }
       }
 
-      const rigidBodyComponent = entity.getComponent(DynamicPhysicsBodyComponent)
+      const rigidBodyComponent = entity.getComponent(DynamicRigidBodyComponent)
 
       if (rigidBodyComponent) {
         if (Math.random() < 0.05) {

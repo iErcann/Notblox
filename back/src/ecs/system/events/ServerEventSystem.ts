@@ -5,7 +5,4 @@ export class ServerEventSystem extends BaseEventSystem {
   constructor() {
     super()
   }
-  update(entities: Entity[]): void {}
-  afterUpdate(entities: Entity[]): void {}
-  initializeSubscriptions(): void {}
 }

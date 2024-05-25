@@ -13,12 +13,12 @@ import Rapier from '../../physics/rapier.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
 import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
-import { DynamicPhysicsBodyComponent } from '../component/DynamicPhysicsBodyComponent.js'
-import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
 import { WebSocketComponent } from '../component/WebsocketComponent.js'
 import { ChatMessageEvent } from '../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'
 import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
+import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
+import { ColliderComponent } from '../component/physics/ColliderComponent.js'
 
 export class Player {
   entity: Entity
@@ -83,11 +83,11 @@ export class Player {
     let rigidBody = world.createRigidBody(rigidBodyDesc)
     rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false)
 
-    this.entity.addComponent(new DynamicPhysicsBodyComponent(this.entity.id, rigidBody))
+    this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id, rigidBody))
   }
   createCollider(world: Rapier.World) {
     // Collider
-    const rigidBodyComponent = this.entity.getComponent(DynamicPhysicsBodyComponent)
+    const rigidBodyComponent = this.entity.getComponent(DynamicRigidBodyComponent)
 
     if (!rigidBodyComponent) {
       console.error("Body doesn't exist on Player.")
@@ -115,7 +115,7 @@ export class Player {
 
     let collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
 
-    this.entity.addComponent(new PhysicsColliderComponent(this.entity.id, collider))
+    this.entity.addComponent(new ColliderComponent(this.entity.id, collider))
   }
 
   // Getter for the underlying entity

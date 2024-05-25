@@ -95,12 +95,15 @@ import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { ServerEventSystem } from './ecs/system/events/ServerEventSystem.js'
 import { ColorEventSystem } from './ecs/system/events/ColorEventSystem.js'
 import { SingleSizeEventSystem } from './ecs/system/events/SingleSizeEventSystem.js'
+import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
+import { KinematicPhysicsBodySystem } from './ecs/system/physics/KinematicPhysicsBodySystem.js'
 
 // TODO: Make it wait for the websocket server to start
 BaseEventSystem.setEventSystemConstructor(ServerEventSystem)
 const eventSystem = BaseEventSystem.getInstance()
 const entityManager = EntityManager.getInstance()
 const entities = entityManager.getAllEntities()
+const kinematicPhysicsBodySystem = new KinematicPhysicsBodySystem()
 
 const colorEventSystem = new ColorEventSystem()
 const singleSizeEventSystem = new SingleSizeEventSystem()
@@ -109,6 +112,7 @@ const syncPositionSystem = new SyncPositionSystem()
 const syncRotationSystem = new SyncRotationSystem()
 
 const physicsSystem = PhysicsSystem.getInstance()
+const trimeshColliderSystem = new TrimeshColliderSystem()
 const groundedCheckSystem = new GroundedCheckSystem()
 const movementSystem = new MovementSystem()
 const networkSystem = new NetworkSystem()
@@ -166,7 +170,9 @@ async function gameLoop() {
   const now = Date.now()
   const dt = now - lastUpdateTimestamp
 
-  await trimeshSystem.update(entities, physicsSystem.world)
+  kinematicPhysicsBodySystem.update(physicsSystem.world)
+  await trimeshColliderSystem.update(entities, physicsSystem.world)
+
   randomizeSystem.update(entities)
   // Event Handlers
   sizeEventSystem.update(entities)
@@ -175,6 +181,7 @@ async function gameLoop() {
 
   groundedCheckSystem.update(entities, physicsSystem.world)
   movementSystem.update(dt, entities, physicsSystem.world)
+
   animationSystem.update(entities, physicsSystem.world)
   syncRotationSystem.update(entities)
   syncPositionSystem.update(entities)

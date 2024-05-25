@@ -4,7 +4,7 @@ import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
 import { SerializedEntityType } from '../../../../../shared/network/server/serialized.js'
 import Rapier from '../../../physics/rapier.js'
-import { PhysicsColliderComponent } from '../../component/PhysicsColliderComponent.js'
+import { ColliderComponent } from '../../component/physics/ColliderComponent.js'
 import { SingleSizeEvent } from '../../component/events/SingleSizeEvent.js'
 
 export class SingleSizeEventSystem {
@@ -16,7 +16,7 @@ export class SingleSizeEventSystem {
 
       if (!entity) return
 
-      const colliderComponent = entity.getComponent(PhysicsColliderComponent)
+      const colliderComponent = entity.getComponent(ColliderComponent)
 
       if (!colliderComponent) return
 

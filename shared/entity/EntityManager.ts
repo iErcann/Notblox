@@ -1,6 +1,7 @@
 import { Entity } from '../entity/Entity.js'
 import { SerializedEntityType } from '../network/server/serialized.js'
 import { Component } from '../component/Component.js'
+import { ComponentAddedEvent } from 'shared/component/events/ComponentAddedEvent.js'
 
 export class EntityManager {
   private static instance: EntityManager

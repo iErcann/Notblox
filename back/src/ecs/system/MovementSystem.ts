@@ -1,11 +1,10 @@
 import { InputComponent } from '../component/InputComponent.js'
-import { DynamicPhysicsBodyComponent } from '../component/DynamicPhysicsBodyComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import Rapier from '../../physics/rapier.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
-import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
 import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
+import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 
 export class MovementSystem {
   update(dt: number, entities: Entity[], world: Rapier.World): void {
@@ -16,7 +15,7 @@ export class MovementSystem {
 
   updateEntityMovement(dt: number, entity: Entity, world: Rapier.World) {
     const inputComponent = entity.getComponent(InputComponent)
-    const rigidBodyComponent = entity.getComponent(DynamicPhysicsBodyComponent)
+    const rigidBodyComponent = entity.getComponent(DynamicRigidBodyComponent)
     const positionComponent = entity.getComponent(PositionComponent)
     const groundedCheckComponent = entity.getComponent(GroundCheckComponent)
 
@@ -35,7 +34,7 @@ export class MovementSystem {
   calculateImpulse(
     dt: number,
     inputComponent: InputComponent,
-    rigidBodyComponent: DynamicPhysicsBodyComponent
+    rigidBodyComponent: DynamicRigidBodyComponent
   ) {
     const currentLinVel = rigidBodyComponent.body.linvel()
     const speed = 0.8
@@ -66,11 +65,7 @@ export class MovementSystem {
     return impulse
   }
 
-  applyImpulse(
-    dt: number,
-    rigidBodyComponent: DynamicPhysicsBodyComponent,
-    impulse: Rapier.Vector3
-  ) {
+  applyImpulse(dt: number, rigidBodyComponent: DynamicRigidBodyComponent, impulse: Rapier.Vector3) {
     rigidBodyComponent.body.setLinvel(impulse, true)
   }
 }

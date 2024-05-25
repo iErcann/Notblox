@@ -1,18 +1,22 @@
 import { EntityManager } from '../../../../shared/entity/EntityManager.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
-import { TrimeshEvent } from '../component/events/TrimeshEvent.js'
-import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
+import { TrimeshCollidersComponent } from '../component/physics/TrimeshColliderComponent.js'
+import { KinematicRigidBodyComponent } from '../component/physics/KinematicRigidBodyComponent.js'
+import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 
 export class MapWorld {
   entity: Entity
   constructor() {
     this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.WORLD)
 
-    // TODO: Use the new logic for the events.
+    this.entity.addComponent(new PositionComponent(this.entity.id, 0, 0, 0))
+
+    this.entity.addComponent(new KinematicRigidBodyComponent(this.entity.id))
+
     this.entity.addComponent(
-      new TrimeshEvent(this.entity.id, '../front/public/assets/keneeyworldled.glb')
+      new TrimeshCollidersComponent(this.entity.id, '../front/public/assets/keneeyworldled.glb')
     )
-    const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [])
+    // const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [])
   }
 }

@@ -2,18 +2,20 @@ import { PositionComponent } from '../../../../../shared/component/PositionCompo
 import { RotationComponent } from '../../../../../shared/component/RotationComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { NetworkComponent } from '../../../../../shared/network/NetworkComponent.js'
-import { DynamicPhysicsBodyComponent } from '../../component/DynamicPhysicsBodyComponent.js'
-import { KinematicPhysicsBodyComponent } from '../../component/KinematicPhysicsBodyComponent.js'
+import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
+import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 
 export class SleepCheckSystem {
   update(entities: Entity[]) {
     for (const entity of entities) {
       const bodyComponent =
-        entity.getComponent(DynamicPhysicsBodyComponent) ||
-        entity.getComponent(KinematicPhysicsBodyComponent)
+        entity.getComponent(DynamicRigidBodyComponent) ||
+        entity.getComponent(KinematicRigidBodyComponent)
+
       this.sleepNetworkComponent(entity)
+
       if (bodyComponent) {
-        const sleeping = bodyComponent.body.isSleeping()
+        const sleeping = bodyComponent.body?.isSleeping()
         const positionComponent = entity.getComponent(PositionComponent)
         if (positionComponent) {
           positionComponent.updated = !sleeping

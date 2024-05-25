@@ -8,8 +8,8 @@ import { SerializedEntityType } from '../../../../../shared/network/server/seria
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
-import { DynamicPhysicsBodyComponent } from '../../component/DynamicPhysicsBodyComponent.js'
-import { KinematicPhysicsBodyComponent } from '../../component/KinematicPhysicsBodyComponent.js'
+import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
+import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 
 /*
   The EventDestroyed is first inside the EventQueue Entity.
@@ -19,7 +19,7 @@ import { KinematicPhysicsBodyComponent } from '../../component/KinematicPhysicsB
   The after update is called after the network broadcast. And it removes the entity from the EntityManager.
 */
 
-export class EventDestroySystem {
+export class DestroyEventSystem {
   update(entities: Entity[], eventDestroyed: EntityDestroyedEvent) {
     const entity = EntityManager.getEntityById(entities, eventDestroyed.entityId)
     if (!entity) {
@@ -63,10 +63,11 @@ export class EventDestroySystem {
     const world = PhysicsSystem.getInstance().world
 
     const rigidbodyComponent =
-      entity.getComponent(DynamicPhysicsBodyComponent) ||
-      entity.getComponent(KinematicPhysicsBodyComponent)
+      entity.getComponent(DynamicRigidBodyComponent) ||
+      entity.getComponent(KinematicRigidBodyComponent)
 
-    if (rigidbodyComponent) world.removeRigidBody(rigidbodyComponent.body)
+    if (rigidbodyComponent && rigidbodyComponent.body)
+      world.removeRigidBody(rigidbodyComponent.body)
 
     // No need to remove all the components, the entity is removed from the EntityManager, will be garbage collected.
     EntityManager.getInstance().removeEntityById(eventDestroyed.entityId)
