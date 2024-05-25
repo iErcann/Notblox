@@ -11,6 +11,7 @@ import { ConnectionMessage } from '../../../../../shared/network/server/connecti
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
+import { Entity } from '../../../../../shared/entity/Entity.js'
 
 type MessageHandler = (ws: any, message: any) => void
 
@@ -92,15 +93,14 @@ export class WebsocketSystem {
   }
 
   private onClose(ws: any, code: number, message: any) {
-    const disconnectedPlayer = ws.player
+    const disconnectedPlayer: Player = ws.player
     if (!disconnectedPlayer) {
       console.error('Disconnect: Player not found?', ws)
       return
     }
 
-    const entity = disconnectedPlayer.getEntity()
     console.log('Disconnect: Player found!')
-
+    const entity = disconnectedPlayer.entity
     const entityId = entity.id
     BaseEventSystem.addEvent(new EntityDestroyedEvent(entityId))
   }
@@ -124,13 +124,13 @@ export class WebsocketSystem {
       return
     }
 
-    this.inputProcessingSystem.receiveInputPacket(player.getEntity(), message)
+    this.inputProcessingSystem.receiveInputPacket(player.entity, message)
   }
 
   private handleChatMessage(ws: any, message: ChatMessage) {
     console.log('Chat message received', message)
     const player: Player = ws.player
-    const id = player.getEntity().id
+    const id = player.entity.id
 
     const { content } = message
     if (!content || typeof content !== 'string') {

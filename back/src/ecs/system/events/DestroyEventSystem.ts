@@ -30,6 +30,7 @@ export class DestroyEventSystem {
         console.error('Update : DestroySystem: Entity not found with id', destroyedEvent.entityId)
         return
       }
+
       if (entity.getComponent(PlayerComponent)) {
         BaseEventSystem.addEvent(
           new ChatMessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
@@ -38,8 +39,6 @@ export class DestroyEventSystem {
 
       // Removing all the components
       entity.removeAllComponents()
-
-      // TODO: Make a dynamic body system
 
       // The EventDestroyed component is sent to the player
       entity.addComponent(destroyedEvent)

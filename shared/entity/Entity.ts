@@ -1,6 +1,7 @@
 import { SerializedComponentType, SerializedEntityType } from '../network/server/serialized.js'
 import { Serializable, Component } from '../component/Component.js'
 import { BaseEventSystem } from './EventSystem.js'
+import { EntityManager } from './EntityManager.js'
 
 // Define an Entity class
 export class Entity {
@@ -8,7 +9,11 @@ export class Entity {
 
   constructor(public type: SerializedEntityType = SerializedEntityType.NONE, public id: number) {}
 
-  // Add a component to the entity
+  /**
+   * Add a component to the entity
+   * @param component  The component to add
+   * @param createAddedEvent  Whether to create an added event or not, default is true, useful for skipping recursion
+   */
   addComponent<T extends Component>(component: T, createAddedEvent = true) {
     this.components.push(component)
 
@@ -24,12 +29,30 @@ export class Entity {
       this.removeComponent(c.constructor as new (...args: any[]) => Component)
     )
   }
-  // Remove a component from the entity
+  /**
+   * Remove a component from the entity
+   * @param component  The component to add
+   * @param createRemoveEvent  Whether to create an added event or not, default is true, useful for skipping recursion
+   */
   removeComponent<T extends Component>(
-    componentType: new (entityId: number, ...args: any[]) => T
+    componentType: new (entityId: number, ...args: any[]) => T,
+    createRemoveEvent = true
   ): void {
-    this.components = this.components.filter((c) => !(c instanceof componentType))
+    let removedComponent: T | null = null
+
+    this.components = this.components.filter((c) => {
+      if (c instanceof componentType) {
+        removedComponent = c
+        return false
+      }
+      return true
+    })
+
+    if (createRemoveEvent && removedComponent) {
+      BaseEventSystem.onComponentRemoved(removedComponent)
+    }
   }
+
   getAllComponents() {
     return this.components
   }

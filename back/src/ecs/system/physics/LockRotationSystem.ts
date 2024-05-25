@@ -1,0 +1,70 @@
+import Rapier from '../../../physics/rapier.js'
+import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
+import { Entity } from '../../../../../shared/entity/Entity.js'
+import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
+import { TrimeshCollidersComponent } from '../../component/physics/TrimeshColliderComponent.js'
+import { ComponentRemovedEvent } from '../../../../../shared/component/events/ComponentRemovedEvent.js'
+import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
+import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
+import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
+import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
+import { LockedRotationComponent } from '../../component/LockedRotationComponent.js'
+
+export class LockRotationSystem {
+  update(entities: Entity[]) {
+    const createEvents = BaseEventSystem.getEventsWrapped(
+      ComponentAddedEvent,
+      LockedRotationComponent
+    )
+
+    for (let event of createEvents) {
+      const entity = EntityManager.getEntityById(entities, event.entityId)
+      if (!entity) {
+        console.error('LockRotationSystem: Entity not found')
+        continue
+      }
+      this.onRotationLocked(entity)
+    }
+
+    const removedEvents = BaseEventSystem.getEventsWrapped(
+      ComponentRemovedEvent,
+      LockedRotationComponent
+    )
+
+    for (let event of removedEvents) {
+      const entity = EntityManager.getEntityById(entities, event.entityId)
+      if (!entity) {
+        console.error('LockRotationSystem: Entity not found')
+        continue
+      }
+      this.onRotationUnlocked(entity)
+    }
+  }
+  getDynamicBodyComponent(entity: Entity) {
+    const dynamicBodyComponent = entity.getComponent(DynamicRigidBodyComponent)
+    if (!dynamicBodyComponent) {
+      console.error('LockRotationSystem: Entity does not have a DynamicRigidBodyComponent')
+      return null
+    }
+    if (!dynamicBodyComponent.body) {
+      console.error('LockRotationSystem: Entity does not have a body')
+      return null
+    }
+    return dynamicBodyComponent
+  }
+  onRotationLocked(entity: Entity) {
+    const dynamicBodyComponent = this.getDynamicBodyComponent(entity)
+    if (dynamicBodyComponent && dynamicBodyComponent.body) {
+      dynamicBodyComponent.body.setLinvel(new Rapier.Vector3(0, 0, 0), true)
+      dynamicBodyComponent.body.setAngvel(new Rapier.Vector3(0, 0, 0), true)
+      dynamicBodyComponent.body.lockRotations(true, true)
+    }
+  }
+
+  onRotationUnlocked(entity: Entity) {
+    const dynamicBodyComponent = this.getDynamicBodyComponent(entity)
+    if (dynamicBodyComponent && dynamicBodyComponent.body) {
+      dynamicBodyComponent.body.setEnabledRotations(true, true, true, true)
+    }
+  }
+}

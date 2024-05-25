@@ -100,6 +100,9 @@ import { ChatEventSystem } from './ecs/system/events/ChatEventSystem.js'
 import { DestroyEventSystem } from './ecs/system/events/DestroyEventSystem.js'
 import { DynamicRigidBodySystem } from './ecs/system/physics/DynamicRigidBodySystem.js'
 import { BoxColliderSystem } from './ecs/system/physics/BoxColliderSystem.js'
+import { CapsuleColliderSystem } from './ecs/system/physics/CapsuleColliderSystem.js'
+import { LockRotationSystem } from './ecs/system/physics/LockRotationSystem.js'
+import { LockedRotationComponent } from './ecs/component/LockedRotationComponent.js'
 
 // TODO: Make it wait for the websocket server to start
 BaseEventSystem.setEventSystemConstructor(ServerEventSystem)
@@ -113,6 +116,11 @@ const rigidPhysicsBodySystem = new DynamicRigidBodySystem()
 // Physics colliders
 const trimeshColliderSystem = new TrimeshColliderSystem()
 const boxColliderSystem = new BoxColliderSystem()
+const capsuleColliderSystem = new CapsuleColliderSystem()
+
+const physicsSystem = PhysicsSystem.getInstance()
+const groundedCheckSystem = new GroundedCheckSystem()
+const lockedRotationSystem = new LockRotationSystem()
 
 const colorEventSystem = new ColorEventSystem()
 const singleSizeEventSystem = new SingleSizeEventSystem()
@@ -122,8 +130,6 @@ const syncRotationSystem = new SyncRotationSystem()
 const chatSystem = new ChatEventSystem()
 const destroyEventSystem = new DestroyEventSystem()
 
-const physicsSystem = PhysicsSystem.getInstance()
-const groundedCheckSystem = new GroundedCheckSystem()
 const movementSystem = new MovementSystem()
 const networkSystem = new NetworkSystem()
 
@@ -138,28 +144,20 @@ new Chat()
 setTimeout(() => {
   const randomCube = new Cube(0, 50, 0, 1, 1, 1)
   randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
-
-  for (let i = 0; i < 3; i++) {
-    const randomCube = new Cube(0, 50, 0, 1, 1, 1)
+  for (let i = 1; i < 13; i++) {
+    const randomCube = new Cube(0, 5, i, i / 5, i / 5, i / 5)
     randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
   }
-
   new Sphere(0, 30, 0, 1)
-
-  // Football field
-  new Sphere(-276, 52, -355.76, 1)
-  new Sphere(-276, 52, -355.76, 0.5)
-
-  for (let i = 1; i < 4; i++) {
-    const randomSphere = new Sphere(0, i * 30, 0, 1.2)
-    randomSphere.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
-  }
-
+  // for (let i = 1; i < 10; i++) {
+  //   const randomSphere = new Sphere(0, i * 30, 0, 1.2)
+  //   randomSphere.entity.addComponent(new RandomizeComponent(randomSphere.entity.id))
+  // }
   new Sphere(10, 30, 0, 4)
 }, 1000)
-setInterval(() => {
-  new Cube(0, 10, 0, 1, 1, 1)
-}, 1000)
+// setInterval(() => {
+//   new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
+// }, 1000)
 
 // let movingCubeX = 0;
 // setInterval(() => {
@@ -178,14 +176,15 @@ async function gameLoop() {
   const now = Date.now()
   const dt = now - lastUpdateTimestamp
 
+  destroyEventSystem.update(entities)
+
   // Create the bodies first.
   kinematicPhysicsBodySystem.update(physicsSystem.world)
   rigidPhysicsBodySystem.update(entities, physicsSystem.world)
   // Then handle the colliders
   await trimeshColliderSystem.update(entities, physicsSystem.world)
   boxColliderSystem.update(entities, physicsSystem.world)
-
-  destroyEventSystem.update(entities)
+  capsuleColliderSystem.update(entities, physicsSystem.world)
 
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
@@ -201,6 +200,7 @@ async function gameLoop() {
   syncPositionSystem.update(entities)
 
   boundaryCheckSystem.update(entities)
+  lockedRotationSystem.update(entities)
   networkSystem.update(entities)
 
   sleepCheckSystem.update(entities)

@@ -8,7 +8,7 @@ import { PositionComponent } from '../../../../shared/component/PositionComponen
 import Rapier from '../../physics/rapier.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
-import { ColliderComponent } from '../component/physics/ColliderComponent.js'
+import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
 
 export class AnimationSystem {
   update(entities: Entity[], world: Rapier.World): void {
@@ -16,7 +16,7 @@ export class AnimationSystem {
       const inputComponent = entity.getComponent(InputComponent)
       const rigidBodyComponent = entity.getComponent(DynamicRigidBodyComponent)
       const positionComponent = entity.getComponent(PositionComponent)
-      const colliderComponent = entity.getComponent(ColliderComponent)
+      const colliderComponent = entity.getComponent(CapsuleColliderComponent)
       const stateComponent = entity.getComponent(StateComponent)
 
       if (
@@ -44,7 +44,7 @@ export class AnimationSystem {
 
   isGrounded(
     positionComponent: PositionComponent,
-    colliderComponent: ColliderComponent,
+    colliderComponent: CapsuleColliderComponent,
     world: Rapier.World
   ): boolean {
     const ray = new Rapier.Ray(

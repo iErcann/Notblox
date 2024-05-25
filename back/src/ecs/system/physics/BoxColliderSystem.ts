@@ -13,7 +13,6 @@ import { BoxColliderComponent } from '../../component/physics/BoxColliderCompone
 export class BoxColliderSystem {
   async update(entities: Entity[], world: Rapier.World) {
     const createEvents = BaseEventSystem.getEventsWrapped(ComponentAddedEvent, BoxColliderComponent)
-    console.log('BoxColliderSystem : createEvents', createEvents)
     for (let event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
 
@@ -31,10 +30,9 @@ export class BoxColliderSystem {
     event: ComponentAddedEvent<BoxColliderComponent>,
     world: Rapier.World
   ) {
-    console.log('BoxColliderSystem : onComponentAdded')
     // Collider
     const { component: boxColliderComponent } = event
-    const sizeComponent = entity.getComponent(SizeComponent)
+    let sizeComponent = entity.getComponent(SizeComponent)
     const rigidBodyComponent =
       entity.getComponent(DynamicRigidBodyComponent) ||
       entity.getComponent(KinematicRigidBodyComponent)
@@ -45,8 +43,12 @@ export class BoxColliderSystem {
     }
 
     if (!sizeComponent) {
-      console.error('BoxColliderSystem : No SizeComponent found on entity.')
-      return
+      sizeComponent = new SizeComponent(entity.id, 1, 1, 1)
+      entity.addComponent(sizeComponent)
+
+      console.warn(
+        'BoxColliderSystem : No SizeComponent found on entity. Using a default size of 1.0.'
+      )
     }
 
     let colliderDesc = Rapier.ColliderDesc.cuboid(
@@ -54,7 +56,6 @@ export class BoxColliderSystem {
       sizeComponent.height,
       sizeComponent.depth
     )
-    console.log('BoxColliderSystem : colliderDesc', colliderDesc)
     boxColliderComponent.collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
   }
 }
