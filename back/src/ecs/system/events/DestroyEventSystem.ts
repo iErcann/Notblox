@@ -10,7 +10,6 @@ import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
-
 /*
   The EventDestroyed is first inside the EventQueue Entity.
   Then it is added to the destroyed Player entity.
@@ -20,56 +19,62 @@ import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidB
 */
 
 export class DestroyEventSystem {
-  update(entities: Entity[], eventDestroyed: EntityDestroyedEvent) {
-    const entity = EntityManager.getEntityById(entities, eventDestroyed.entityId)
-    if (!entity) {
-      console.error('Update : DestroySystem: Entity not found with id', eventDestroyed.entityId)
-      return
-    }
+  update(entities: Entity[]) {
+    const destroyedEvents = BaseEventSystem.getEventsByType(EntityDestroyedEvent)
 
-    if (entity.getComponent(WebSocketComponent)) {
-      // Entity is a player
-      // Removing WebSocketComponent to not retrigger a broadcast on this entity if its destroyed.
-      // Otherwise it throws an error.
-      entity.removeComponent(WebSocketComponent)
-    }
+    for (const destroyedEvent of destroyedEvents) {
+      const entity = EntityManager.getEntityById(entities, destroyedEvent.entityId)
+      if (!entity) {
+        console.error('Update : DestroySystem: Entity not found with id', destroyedEvent.entityId)
+        return
+      }
 
-    // The EventDestroyed component is sent to the player
-    entity.addComponent(eventDestroyed)
-    const networkComponent = entity.getComponent(NetworkDataComponent)
-    if (networkComponent) {
-      networkComponent.addComponent(eventDestroyed)
-    }
-    console.log('DestroySystem: update: entity', entity.type, SerializedEntityType.PLAYER)
+      if (entity.getComponent(WebSocketComponent)) {
+        // Removing WebSocketComponent to not retrigger a broadcast on this entity if its destroyed.
+        // Otherwise it throws an error.
+        entity.removeComponent(WebSocketComponent)
+      }
 
-    if (entity.getComponent(PlayerComponent)) {
-      BaseEventSystem.addEvent(
-        new ChatMessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
-      )
+      // The EventDestroyed component is sent to the player
+      entity.addComponent(destroyedEvent)
+      const networkComponent = entity.getComponent(NetworkDataComponent)
+      if (networkComponent) {
+        networkComponent.addComponent(destroyedEvent)
+      }
+
+      if (entity.getComponent(PlayerComponent)) {
+        BaseEventSystem.addEvent(
+          new ChatMessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
+        )
+      }
     }
   }
 
   // Removing it after so client can receives the NetworkDataComponent
-  afterUpdate(entities: Entity[], eventDestroyed: EntityDestroyedEvent) {
-    const entity = EntityManager.getEntityById(entities, eventDestroyed.entityId)
-    if (!entity) {
-      console.error(
-        'After Update : DestroySystem: Entity not found with id',
-        eventDestroyed.entityId
-      )
-      return
+  afterUpdate(entities: Entity[]) {
+    const destroyedEvents = BaseEventSystem.getEventsByType(EntityDestroyedEvent)
+
+    for (const destroyedEvent of destroyedEvents) {
+      const entity = EntityManager.getEntityById(entities, destroyedEvent.entityId)
+      if (!entity) {
+        console.error(
+          'After Update : DestroySystem: Entity not found with id',
+          destroyedEvent.entityId
+        )
+        return
+      }
+
+      const world = PhysicsSystem.getInstance().world
+
+      const rigidbodyComponent =
+        entity.getComponent(DynamicRigidBodyComponent) ||
+        entity.getComponent(KinematicRigidBodyComponent)
+
+      if (rigidbodyComponent && rigidbodyComponent.body)
+        world.removeRigidBody(rigidbodyComponent.body)
+
+      // No need to remove all the components, the entity is removed from the EntityManager, will be garbage collected.
+      EntityManager.getInstance().removeEntityById(destroyedEvent.entityId)
     }
-
-    const world = PhysicsSystem.getInstance().world
-
-    const rigidbodyComponent =
-      entity.getComponent(DynamicRigidBodyComponent) ||
-      entity.getComponent(KinematicRigidBodyComponent)
-
-    if (rigidbodyComponent && rigidbodyComponent.body)
-      world.removeRigidBody(rigidbodyComponent.body)
-
-    // No need to remove all the components, the entity is removed from the EntityManager, will be garbage collected.
-    EntityManager.getInstance().removeEntityById(eventDestroyed.entityId)
   }
 }

@@ -19,9 +19,9 @@ export class EntityManager {
 
   // Create a new entity and add it to the list
   createEntity(type: SerializedEntityType, id?: number): Entity {
-    console.log('Creating entity', id, 'of type', type)
     const entityId = id ?? EntityManager.nextId++
     const entity = new Entity(type, entityId)
+    console.log('Creating entity', entityId, 'of type', type)
     this.entities.push(entity)
     return entity
   }

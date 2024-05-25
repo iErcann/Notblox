@@ -96,6 +96,8 @@ import { ColorEventSystem } from './ecs/system/events/ColorEventSystem.js'
 import { SingleSizeEventSystem } from './ecs/system/events/SingleSizeEventSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
 import { KinematicPhysicsBodySystem } from './ecs/system/physics/KinematicPhysicsBodySystem.js'
+import { ChatEventSystem } from './ecs/system/events/ChatEventSystem.js'
+import { DestroyEventSystem } from './ecs/system/events/DestroyEventSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 BaseEventSystem.setEventSystemConstructor(ServerEventSystem)
@@ -109,6 +111,8 @@ const singleSizeEventSystem = new SingleSizeEventSystem()
 const sizeEventSystem = new SingleSizeEventSystem()
 const syncPositionSystem = new SyncPositionSystem()
 const syncRotationSystem = new SyncRotationSystem()
+const chatSystem = new ChatEventSystem()
+const destroyEventSystem = new DestroyEventSystem()
 
 const physicsSystem = PhysicsSystem.getInstance()
 const trimeshColliderSystem = new TrimeshColliderSystem()
@@ -169,9 +173,12 @@ async function gameLoop() {
   // Then handle the colliders
   await trimeshColliderSystem.update(entities, physicsSystem.world)
 
+  destroyEventSystem.update(entities)
+
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
   singleSizeEventSystem.update(entities)
+  chatSystem.update(entities)
   colorEventSystem.update(entities)
 
   groundedCheckSystem.update(entities, physicsSystem.world)
@@ -188,6 +195,7 @@ async function gameLoop() {
   physicsSystem.update()
 
   // Useful for DestroySystem
+  destroyEventSystem.afterUpdate(entities)
   eventSystem.afterUpdate(entities)
   lastUpdateTimestamp = now
 }

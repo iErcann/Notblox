@@ -65,7 +65,11 @@ export class NetworkSystem {
     for (const entity of entities) {
       const websocketComponent = entity.getComponent(WebSocketComponent)
       if (websocketComponent) {
-        websocketComponent.ws.send(message, true)
+        if (!websocketComponent.ws) {
+          console.error('Websocket not found', websocketComponent)
+        } else {
+          websocketComponent.ws.send(message, true)
+        }
       }
     }
   }

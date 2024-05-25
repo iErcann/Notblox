@@ -88,7 +88,6 @@ export class TrimeshColliderSystem {
           })
 
           const collider = world.createCollider(trimeshDesc, kinematicRigidBodyComponent.body)
-
           physicsTrimeshCollidersComponent.colliders?.push(
             new TrimeshColliderComponent(event.entityId, collider)
           )

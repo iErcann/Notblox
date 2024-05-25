@@ -7,12 +7,13 @@ import { ColorEvent } from '../../component/events/ColorEvent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 
 export class BoundaryCheckSystem {
+  lowerBound = -40
   update(entities: Entity[]) {
     for (const entity of entities) {
       const bodyComponent = entity.getComponent(DynamicRigidBodyComponent)
       const positionComponent = entity.getComponent(PositionComponent)
 
-      if (bodyComponent && positionComponent && positionComponent.y < -40) {
+      if (bodyComponent && positionComponent && positionComponent.y < this.lowerBound) {
         bodyComponent.body.setTranslation(
           {
             x: 0,
