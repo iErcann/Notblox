@@ -51,6 +51,9 @@ export class RandomizeSystem {
       const rigidBodyComponent = entity.getComponent(DynamicRigidBodyComponent)
 
       if (rigidBodyComponent) {
+        if (!rigidBodyComponent.body) {
+          continue
+        }
         if (Math.random() < 0.05) {
           rigidBodyComponent.body.applyImpulse(
             new Rapier.Vector3(

@@ -36,6 +36,9 @@ export class MovementSystem {
     inputComponent: InputComponent,
     rigidBodyComponent: DynamicRigidBodyComponent
   ) {
+    if (!rigidBodyComponent.body) {
+      return new Rapier.Vector3(0, 0, 0)
+    }
     const currentLinVel = rigidBodyComponent.body.linvel()
     const speed = 0.8
     const lookingYAngle = inputComponent.lookingYAngle
@@ -66,6 +69,9 @@ export class MovementSystem {
   }
 
   applyImpulse(dt: number, rigidBodyComponent: DynamicRigidBodyComponent, impulse: Rapier.Vector3) {
+    if (!rigidBodyComponent.body) {
+      return
+    }
     rigidBodyComponent.body.setLinvel(impulse, true)
   }
 }

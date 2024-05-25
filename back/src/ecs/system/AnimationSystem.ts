@@ -106,6 +106,10 @@ export class AnimationSystem {
   }
 
   rotatePlayer(rigidBodyComponent: DynamicRigidBodyComponent, quaternion: THREE.Quaternion): void {
+    if (!rigidBodyComponent.body) {
+      console.error('AnimationSystem: BodyComponent.body not  initialized')
+      return
+    }
     rigidBodyComponent.body.setRotation(
       {
         x: quaternion.x,

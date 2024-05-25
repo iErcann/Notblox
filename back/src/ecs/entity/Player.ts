@@ -48,7 +48,7 @@ export class Player {
     const stateComponent = new StateComponent(this.entity.id, SerializedStateType.IDLE)
     this.entity.addComponent(stateComponent)
 
-    this.createRigidBody(world)
+    // this.createRigidBody(world)
     this.createCollider(world)
 
     // Network

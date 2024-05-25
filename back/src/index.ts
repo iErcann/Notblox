@@ -95,16 +95,24 @@ import { ServerEventSystem } from './ecs/system/events/ServerEventSystem.js'
 import { ColorEventSystem } from './ecs/system/events/ColorEventSystem.js'
 import { SingleSizeEventSystem } from './ecs/system/events/SingleSizeEventSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
-import { KinematicPhysicsBodySystem } from './ecs/system/physics/KinematicPhysicsBodySystem.js'
+import { KinematicRigidBodySystem } from './ecs/system/physics/KinematicRigidBodySystem.js'
 import { ChatEventSystem } from './ecs/system/events/ChatEventSystem.js'
 import { DestroyEventSystem } from './ecs/system/events/DestroyEventSystem.js'
+import { DynamicRigidBodySystem } from './ecs/system/physics/DynamicRigidBodySystem.js'
+import { BoxColliderSystem } from './ecs/system/physics/BoxColliderSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 BaseEventSystem.setEventSystemConstructor(ServerEventSystem)
 const eventSystem = BaseEventSystem.getInstance()
 const entityManager = EntityManager.getInstance()
 const entities = entityManager.getAllEntities()
-const kinematicPhysicsBodySystem = new KinematicPhysicsBodySystem()
+
+// Physics bodies
+const kinematicPhysicsBodySystem = new KinematicRigidBodySystem()
+const rigidPhysicsBodySystem = new DynamicRigidBodySystem()
+// Physics colliders
+const trimeshColliderSystem = new TrimeshColliderSystem()
+const boxColliderSystem = new BoxColliderSystem()
 
 const colorEventSystem = new ColorEventSystem()
 const singleSizeEventSystem = new SingleSizeEventSystem()
@@ -115,7 +123,6 @@ const chatSystem = new ChatEventSystem()
 const destroyEventSystem = new DestroyEventSystem()
 
 const physicsSystem = PhysicsSystem.getInstance()
-const trimeshColliderSystem = new TrimeshColliderSystem()
 const groundedCheckSystem = new GroundedCheckSystem()
 const movementSystem = new MovementSystem()
 const networkSystem = new NetworkSystem()
@@ -150,6 +157,9 @@ setTimeout(() => {
 
   new Sphere(10, 30, 0, 4)
 }, 1000)
+setInterval(() => {
+  new Cube(0, 10, 0, 1, 1, 1)
+}, 1000)
 
 // let movingCubeX = 0;
 // setInterval(() => {
@@ -170,8 +180,10 @@ async function gameLoop() {
 
   // Create the bodies first.
   kinematicPhysicsBodySystem.update(physicsSystem.world)
+  rigidPhysicsBodySystem.update(entities, physicsSystem.world)
   // Then handle the colliders
   await trimeshColliderSystem.update(entities, physicsSystem.world)
+  boxColliderSystem.update(entities, physicsSystem.world)
 
   destroyEventSystem.update(entities)
 

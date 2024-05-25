@@ -12,6 +12,7 @@ import { NetworkDataComponent } from '../../../../shared/component/NetworkDataCo
 import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { ColliderComponent } from '../component/physics/ColliderComponent.js'
+import { BoxColliderComponent } from '../component/physics/BoxColliderComponent.js'
 
 export class Cube {
   entity: Entity
@@ -33,8 +34,8 @@ export class Cube {
     const colorComponent = new ColorComponent(this.entity.id, '#ff0000')
     this.entity.addComponent(colorComponent)
 
-    this.createRigidBody(world)
-    this.createCollider(world)
+    this.entity.addComponent(new BoxColliderComponent(this.entity.id))
+    this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
 
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [
       positionComponent,
@@ -43,41 +44,5 @@ export class Cube {
       colorComponent,
     ])
     this.entity.addComponent(networkDataComponent)
-  }
-  getPosition() {
-    return this.entity.getComponent<PositionComponent>(PositionComponent)!
-  }
-  createRigidBody(world: Rapier.World) {
-    const { x, y, z } = this.getPosition()
-    // Rigidbody
-    let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic()
-
-    let rigidBody = world.createRigidBody(rigidBodyDesc)
-    rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false)
-    this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id, rigidBody))
-  }
-  createCollider(world: Rapier.World) {
-    // Collider
-    const sizeComponent = this.entity.getComponent(SizeComponent)
-    const rigidBodyComponent = this.entity.getComponent(DynamicRigidBodyComponent)
-
-    if (!rigidBodyComponent) {
-      console.error("BodyComponent doesn't exist on Cube.")
-      return
-    }
-
-    if (!sizeComponent) {
-      console.error("SizeComponent doesn't exist on Cube.")
-      return
-    }
-
-    let colliderDesc = Rapier.ColliderDesc.cuboid(
-      sizeComponent.width,
-      sizeComponent.height,
-      sizeComponent.depth
-    )
-    let collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
-
-    this.entity.addComponent(new ColliderComponent(this.entity.id, collider))
   }
 }

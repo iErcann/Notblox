@@ -1,8 +1,8 @@
 import Rapier from '../../../physics/rapier.js'
 import { Component } from '../../../../../shared/component/Component.js'
 
-export class DynamicRigidBodyComponent extends Component {
-  constructor(entityId: number, public body?: Rapier.RigidBody) {
+export class BoxColliderComponent extends Component {
+  constructor(entityId: number, public collider?: Rapier.Collider) {
     super(entityId)
   }
 }

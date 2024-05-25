@@ -1,12 +1,10 @@
 import Rapier from '../../../physics/rapier.js'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
-import { Entity } from '../../../../../shared/entity/Entity.js'
 import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
-import { TrimeshCollidersComponent } from '../../component/physics/TrimeshColliderComponent.js'
 import { ComponentRemovedEvent } from '../../../../../shared/component/events/ComponentRemovedEvent.js'
 
-export class KinematicPhysicsBodySystem {
+export class KinematicRigidBodySystem {
   update(world: Rapier.World) {
     const createEvents = BaseEventSystem.getEventsWrapped(
       ComponentAddedEvent,
@@ -30,7 +28,6 @@ export class KinematicPhysicsBodySystem {
     // No position component here, we move the body directly, so it's at the origin
     const physicsBodyComponent = event.component
     const kinematic = Rapier.RigidBodyDesc.kinematicPositionBased()
-
     physicsBodyComponent.body = world.createRigidBody(kinematic)
   }
 
