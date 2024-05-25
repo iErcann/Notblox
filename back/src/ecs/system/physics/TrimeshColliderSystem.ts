@@ -42,7 +42,9 @@ export class TrimeshColliderSystem {
       return
     }
     if (!kinematicRigidBodyComponent.body) {
-      console.error('TrimeshColliderSystem: KinematicRigidBodyComponent hasnt been initialized')
+      console.error(
+        'TrimeshColliderSystem: KinematicRigidBodyComponent exist, but it hasnt been initialized, check the order of the systems.'
+      )
       return
     }
 

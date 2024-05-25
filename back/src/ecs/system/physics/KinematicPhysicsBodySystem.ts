@@ -17,6 +17,7 @@ export class KinematicPhysicsBodySystem {
     }
   }
   onComponentAdded(event: ComponentAddedEvent<KinematicRigidBodyComponent>, world: Rapier.World) {
+    // No position component here, we move the body directly, so it's at the origin
     const physicsBodyComponent = event.component
     const kinematic = Rapier.RigidBodyDesc.kinematicPositionBased()
 

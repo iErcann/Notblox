@@ -84,7 +84,6 @@ import { Sphere } from './ecs/entity/Sphere.js'
 import { AnimationSystem } from './ecs/system/AnimationSystem.js'
 import { MovementSystem } from './ecs/system/MovementSystem.js'
 import { RandomizeSystem } from './ecs/system/RandomizeSystem.js'
-import { TrimeshEventSystem } from './ecs/system/events/TrimeshEventSystem.js'
 import { NetworkSystem } from './ecs/system/network/NetworkSystem.js'
 import { BoundaryCheckSystem } from './ecs/system/physics/BoundaryCheckSystem.js'
 import { GroundedCheckSystem } from './ecs/system/physics/GroundedCheckSystem.js'
@@ -116,8 +115,6 @@ const trimeshColliderSystem = new TrimeshColliderSystem()
 const groundedCheckSystem = new GroundedCheckSystem()
 const movementSystem = new MovementSystem()
 const networkSystem = new NetworkSystem()
-
-const trimeshSystem = new TrimeshEventSystem()
 
 const animationSystem = new AnimationSystem()
 const sleepCheckSystem = new SleepCheckSystem()
@@ -162,19 +159,17 @@ setTimeout(() => {
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
 let lastUpdateTimestamp = Date.now()
 
-// Either : setImmediate, setTimeout or setInterval
-// Check https://github.com/timetocode/node-game-loop/issues/3#issuecomment-382130083
-
 async function gameLoop() {
   setTimeout(gameLoop, 1000 / config.SERVER_TICKRATE)
   const now = Date.now()
   const dt = now - lastUpdateTimestamp
 
+  // Create the bodies first.
   kinematicPhysicsBodySystem.update(physicsSystem.world)
+  // Then handle the colliders
   await trimeshColliderSystem.update(entities, physicsSystem.world)
 
   randomizeSystem.update(entities)
-  // Event Handlers
   sizeEventSystem.update(entities)
   singleSizeEventSystem.update(entities)
   colorEventSystem.update(entities)
@@ -186,18 +181,9 @@ async function gameLoop() {
   syncRotationSystem.update(entities)
   syncPositionSystem.update(entities)
 
-  // TODO:  This make the rigidbody wake up so it will always be sent even if its supposed to sleep..
   boundaryCheckSystem.update(entities)
   networkSystem.update(entities)
 
-  // TODO: Sleep system should reset all the other Component (like ColorComponent only need to be sent when its changed)
-  // Check the order of things then so it doesnt reset after sending
-
-  // IMPORTANT : Sleeping check should be at the end.
-  // A SizeComponent inherits NetworkComponent that has updated to true by default
-  // It is then sent to the players once
-  // Then it becomes false
-  // If it is modified, we changed the updated to true
   sleepCheckSystem.update(entities)
   physicsSystem.update()
 

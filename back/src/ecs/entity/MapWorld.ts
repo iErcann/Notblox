@@ -17,6 +17,5 @@ export class MapWorld {
     this.entity.addComponent(
       new TrimeshCollidersComponent(this.entity.id, '../front/public/assets/keneeyworldled.glb')
     )
-    // const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [])
   }
 }
