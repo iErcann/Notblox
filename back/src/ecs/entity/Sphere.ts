@@ -13,15 +13,15 @@ import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComp
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { ColliderComponent } from '../component/physics/ColliderComponent.js'
+import { SphereColliderComponent } from '../component/physics/SphereColliderComponent.js'
 
 export class Sphere {
   entity: Entity
 
   constructor(x: number, y: number, z: number, size: number) {
-    this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.SPHERE)
+    this.entity = EntityManager.createEntity(SerializedEntityType.SPHERE)
     const world = PhysicsSystem.getInstance().world
 
-    // Adding a PositionComponent with initial position
     const positionComponent = new PositionComponent(this.entity.id, x, y, z)
     this.entity.addComponent(positionComponent)
 
@@ -34,8 +34,8 @@ export class Sphere {
     const colorComponent = new ColorComponent(this.entity.id, '#FFFFFF')
     this.entity.addComponent(colorComponent)
 
-    this.createRigidBody(world)
-    this.createCollider(world)
+    this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
+    this.entity.addComponent(new SphereColliderComponent(this.entity.id))
 
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [
       positionComponent,
@@ -47,35 +47,5 @@ export class Sphere {
   }
   getPosition() {
     return this.entity.getComponent<PositionComponent>(PositionComponent)!
-  }
-  createRigidBody(world: Rapier.World) {
-    const { x, y, z } = this.getPosition()
-    // Rigidbody
-    let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic()
-    rigidBodyDesc.setLinearDamping(1)
-
-    let rigidBody = world.createRigidBody(rigidBodyDesc)
-    rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false)
-    this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id, rigidBody))
-  }
-  createCollider(world: Rapier.World) {
-    // Collider
-    const sizeComponent = this.entity.getComponent(SingleSizeComponent)
-    const rigidBodyComponent = this.entity.getComponent(DynamicRigidBodyComponent)
-
-    if (!rigidBodyComponent) {
-      console.error("BodyComponent doesn't exist on Sphere.")
-      return
-    }
-
-    if (!sizeComponent) {
-      console.error("SizeComponent doesn't exist on Sphere.")
-      return
-    }
-
-    let colliderDesc = Rapier.ColliderDesc.ball(sizeComponent.size)
-    let collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
-
-    this.entity.addComponent(new ColliderComponent(this.entity.id, collider))
   }
 }

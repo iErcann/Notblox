@@ -18,10 +18,11 @@ export class EntityManager {
   }
 
   // Create a new entity and add it to the list
-  createEntity(type: SerializedEntityType, id?: number): Entity {
+  static createEntity(type: SerializedEntityType, id?: number): Entity {
+    const entityManager = EntityManager.getInstance()
     const entityId = id ?? EntityManager.nextId++
     const entity = new Entity(type, entityId)
-    this.entities.push(entity)
+    entityManager.entities.push(entity)
     return entity
   }
 
@@ -54,19 +55,23 @@ export class EntityManager {
   }
 
   // Remove an entity
-  removeEntity(entity: Entity): void {
-    const index = this.entities.indexOf(entity)
+  static removeEntity(entity: Entity): void {
+    const entityManager = EntityManager.getInstance()
+
+    const index = entityManager.entities.indexOf(entity)
     if (index !== -1) {
-      this.entities.splice(index, 1)
+      entityManager.entities.splice(index, 1)
     }
   }
 
   // Remove an entity by id
-  removeEntityById(id: number): void {
-    const index = this.entities.findIndex((entity) => entity.id === id)
+  static removeEntityById(id: number): void {
+    const entityManager = EntityManager.getInstance()
+
+    const index = entityManager.entities.findIndex((entity) => entity.id === id)
     console.log('Removing entity', id, 'from EntityManager')
     if (index !== -1) {
-      this.entities.splice(index, 1)
+      entityManager.entities.splice(index, 1)
     }
   }
 }

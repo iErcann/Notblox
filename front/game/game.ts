@@ -23,7 +23,7 @@ import { BaseEventSystem } from '@shared/system/EventSystem'
 
 export class Game {
   private static instance: Game
-  entityManager = EntityManager.getInstance()
+  entityManager = EntityManager
   currentPlayerEntityId: number | undefined
   private lastRenderTime = Date.now()
   private loopFunction: () => void = this.loop.bind(this)
@@ -83,7 +83,7 @@ export class Game {
   private lastTickTime = 0
 
   private loop() {
-    const entities = this.entityManager.getAllEntities()
+    const entities = EntityManager.getInstance().getAllEntities()
     const now = Date.now()
     this.inputManager.sendInput()
     const deltaTime = now - this.lastRenderTime

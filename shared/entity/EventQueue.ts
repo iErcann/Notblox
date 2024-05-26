@@ -5,7 +5,7 @@ import { NetworkDataComponent } from '../network/NetworkDataComponent.js'
 export class EventQueue {
   entity: Entity
   constructor() {
-    this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.EVENT_QUEUE)
+    this.entity = EntityManager.createEntity(SerializedEntityType.EVENT_QUEUE)
 
     this.entity.addComponent(new NetworkDataComponent(this.entity.id, this.entity.type, []), false)
     console.log('EventQueue created')

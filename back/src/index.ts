@@ -31,6 +31,8 @@ import { BoxColliderSystem } from './ecs/system/physics/BoxColliderSystem.js'
 import { CapsuleColliderSystem } from './ecs/system/physics/CapsuleColliderSystem.js'
 import { LockRotationSystem } from './ecs/system/physics/LockRotationSystem.js'
 import { LockedRotationComponent } from './ecs/component/LockedRotationComponent.js'
+import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
+import { SphereColliderSystem } from './ecs/system/physics/SphereColliderSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 BaseEventSystem.setEventSystemConstructor(ServerEventSystem)
@@ -45,6 +47,7 @@ const rigidPhysicsBodySystem = new DynamicRigidBodySystem()
 const trimeshColliderSystem = new TrimeshColliderSystem()
 const boxColliderSystem = new BoxColliderSystem()
 const capsuleColliderSystem = new CapsuleColliderSystem()
+const sphereColliderSystem = new SphereColliderSystem()
 
 const physicsSystem = PhysicsSystem.getInstance()
 const groundedCheckSystem = new GroundedCheckSystem()
@@ -78,25 +81,26 @@ function runTestEntities() {
       randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
     }
     new Sphere(0, 30, 0, 1)
-    // for (let i = 1; i < 10; i++) {
-    //   const randomSphere = new Sphere(0, i * 30, 0, 1.2)
-    //   randomSphere.entity.addComponent(new RandomizeComponent(randomSphere.entity.id))
-    // }
+    for (let i = 1; i < 10; i++) {
+      const randomSphere = new Sphere(0, i * 30, 0, 1.2)
+      randomSphere.entity.addComponent(new RandomizeComponent(randomSphere.entity.id))
+    }
     new Sphere(10, 30, 0, 4)
   }, 1000)
   setInterval(() => {
     new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
   }, 1000)
 
-  // let movingCubeX = 0
-  // setInterval(() => {
-  //   movingCubeX = (movingCubeX + 5) % 1000
-  //   const big = new Cube(movingCubeX, 10, 0, 10, 10, 10)
-  //   setTimeout(() => {
-  //     eventSystem.addEvent(new EventDestroyed(big.entity.id))
-  //   }, 1000)
-  // }, 2000)
+  let movingCubeZ = 0
+  setInterval(() => {
+    movingCubeZ = (movingCubeZ + 5) % 1000
+    const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
+    setTimeout(() => {
+      BaseEventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
+    }, 1000)
+  }, 2000)
 }
+runTestEntities()
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
 let lastUpdateTimestamp = Date.now()
 
@@ -114,6 +118,7 @@ async function gameLoop() {
   await trimeshColliderSystem.update(entities, physicsSystem.world)
   boxColliderSystem.update(entities, physicsSystem.world)
   capsuleColliderSystem.update(entities, physicsSystem.world)
+  sphereColliderSystem.update(entities, physicsSystem.world)
 
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
@@ -136,7 +141,6 @@ async function gameLoop() {
   physicsSystem.update()
 
   // Useful for DestroySystem
-  destroyEventSystem.afterUpdate(entities)
   eventSystem.afterUpdate(entities)
   lastUpdateTimestamp = now
 }

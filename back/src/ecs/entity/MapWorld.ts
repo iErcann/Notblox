@@ -8,7 +8,7 @@ import { PositionComponent } from '../../../../shared/component/PositionComponen
 export class MapWorld {
   entity: Entity
   constructor() {
-    this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.WORLD)
+    this.entity = EntityManager.createEntity(SerializedEntityType.WORLD)
 
     this.entity.addComponent(new PositionComponent(this.entity.id, 0, 0, 0))
 

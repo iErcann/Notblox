@@ -31,24 +31,7 @@ export class DestroyEventSystem {
       }
 
       entity.removeAllComponents()
-    }
-  }
-
-  afterUpdate(entities: Entity[]) {
-    const destroyedEvents = BaseEventSystem.getEventsByType(EntityDestroyedEvent)
-
-    for (const destroyedEvent of destroyedEvents) {
-      const entity = EntityManager.getEntityById(entities, destroyedEvent.entityId)
-      if (!entity) {
-        console.error(
-          'After Update : DestroySystem: Entity not found with id',
-          destroyedEvent.entityId
-        )
-        continue
-      }
-
-      // No need to remove all the components, the entity is removed from the EntityManager, will be garbage collected.
-      EntityManager.getInstance().removeEntityById(destroyedEvent.entityId)
+      EntityManager.removeEntityById(destroyedEvent.entityId)
     }
   }
 }

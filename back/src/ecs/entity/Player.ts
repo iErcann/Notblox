@@ -24,7 +24,7 @@ export class Player {
   entity: Entity
 
   constructor(ws: WebSocket, initialX: number, initialY: number, initialZ: number) {
-    this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.PLAYER)
+    this.entity = EntityManager.createEntity(SerializedEntityType.PLAYER)
 
     const sizeComponent = new SingleSizeComponent(this.entity.id, 1 + Math.random())
     this.entity.addComponent(sizeComponent)

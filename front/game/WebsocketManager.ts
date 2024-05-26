@@ -6,6 +6,7 @@ import { ConnectionMessage } from '@shared/network/server/connection'
 import { ClientMessage } from '@shared/network/client/base'
 
 import { isNativeAccelerationEnabled } from 'msgpackr'
+import { EntityManager } from '@shared/entity/EntityManager'
 if (!isNativeAccelerationEnabled)
   console.warn('Native acceleration not enabled, verify that install finished properly')
 
@@ -29,7 +30,7 @@ export class WebSocketManager {
     this.addMessageHandler(ServerMessageType.SNAPSHOT, (message) => {
       this.timeSinceLastServerUpdate = 0
       const snapshotMessage = message as SnapshotMessage
-      game.syncComponentSystem.update(game.entityManager.getAllEntities(), snapshotMessage)
+      game.syncComponentSystem.update(EntityManager.getInstance().getAllEntities(), snapshotMessage)
     })
   }
 

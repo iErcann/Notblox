@@ -11,7 +11,7 @@ export class Chat {
   entity: Entity
 
   constructor() {
-    this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.CHAT)
+    this.entity = EntityManager.createEntity(SerializedEntityType.CHAT)
 
     this.entity.addComponent(new ChatComponent(this.entity.id))
 
