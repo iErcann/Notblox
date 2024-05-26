@@ -3,7 +3,7 @@ import { ChatListComponent } from '../../../../../shared/component/ChatComponent
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { ChatComponent } from '../../component/tag/TagChatComponent.js'
-import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 
 export class ChatEventSystem {
   private MAX_MESSAGES: number = 20

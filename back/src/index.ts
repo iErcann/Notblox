@@ -1,80 +1,8 @@
-/*
-  Constraints : 
-    EntityManager.OnPlayerConnect(entities, connectedPlayerEntity)
-    EntityManager.OnPlayerDisconnect(entities, disconnectedPlayerEntity)
-
-    EntityManager.Game.OnStart(entities)
-    EntityManager.Game.OnEnd(entities)
-    EntityManager.Game.OnTick(entities, dt)
-
-    OnComponentAdded(entityId, component)
-    OnComponentRemoved(entityId, component)
-    OnComponentUpdated(entityId, component)
-
-    EntityManager.OnEntityAdded(entity)
-    EntityManager.OnEntityRemoved(entity)
-
-    const player = new Entity()
-    player.addComponent(new PlayerComponent())
-    player.addComponent(new PositionComponent())
-    player.addComponent(new RotationComponent())
-    player.addComponent(new NetworkComponent())
-    player.addComponent(new PhysicsComponent())
-    player.addComponent(new SizeComponent())
-
-    player.addComponent(new ColorComponent())
-
-  // class OnComponentAdded extends Component {
-    constructor(component: Component) {
-      super(entityId)
-    }    
-  }
-   // this will create a OnComponentAdded on EventManager event queue
-   // that will be dispatched to a system like
-  class ColorSystem {
-    constructor() {
-      eventSystem.addEventCallback(ComponentAddedEvent, this.onComponentAdded)
-    }
-
-
-
-    onComponentAdded(event: ComponentAddedEvent) {
-      if (event.component instanceof ColorComponent) {
-        // do something
-      }
-    }
-    onComponentRemoved(event: ComponentRemovedEvent) {
-      if (event.component instanceof ColorComponent) {
-        // do something
-      }
-    }
-  }
-
-   
-
-    player.addComponent(new HealthComponent())
-    player.addComponent(new ScoreComponent())
-
-    // This will need to be triggered by like a CollisionSystem that trigger  
-    // the event when a collision is detected
-    // same for OnCollisionExit, OnCollisionEnter
-
-    player.addComponent(new OnCollision(
-      (entity, otherEntity) => {
-        if (otherEntity.hasComponent(HealthComponent)) {
-          otherEntity.getComponent(HealthComponent).health -= 10
-        }
-      }
-    ))
-
-
-*/
-
 import 'dotenv/config'
 
 import { EntityManager } from '../../shared/entity/EntityManager.js'
 import { config } from '../../shared/network/config.js'
-import { BaseEventSystem } from '../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../shared/system/EventSystem.js'
 
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { Chat } from './ecs/entity/Chat.js'
@@ -141,33 +69,34 @@ const boundaryCheckSystem = new BoundaryCheckSystem()
 new MapWorld()
 new Chat()
 
-setTimeout(() => {
-  const randomCube = new Cube(0, 50, 0, 1, 1, 1)
-  randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
-  for (let i = 1; i < 13; i++) {
-    const randomCube = new Cube(0, 5, i, i / 5, i / 5, i / 5)
+function runTestEntities() {
+  setTimeout(() => {
+    const randomCube = new Cube(0, 50, 0, 1, 1, 1)
     randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
-  }
-  new Sphere(0, 30, 0, 1)
-  // for (let i = 1; i < 10; i++) {
-  //   const randomSphere = new Sphere(0, i * 30, 0, 1.2)
-  //   randomSphere.entity.addComponent(new RandomizeComponent(randomSphere.entity.id))
-  // }
-  new Sphere(10, 30, 0, 4)
-}, 1000)
-// setInterval(() => {
-//   new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
-// }, 1000)
+    for (let i = 1; i < 13; i++) {
+      const randomCube = new Cube(0, 5, i, i / 5, i / 5, i / 5)
+      randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
+    }
+    new Sphere(0, 30, 0, 1)
+    // for (let i = 1; i < 10; i++) {
+    //   const randomSphere = new Sphere(0, i * 30, 0, 1.2)
+    //   randomSphere.entity.addComponent(new RandomizeComponent(randomSphere.entity.id))
+    // }
+    new Sphere(10, 30, 0, 4)
+  }, 1000)
+  setInterval(() => {
+    new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
+  }, 1000)
 
-// let movingCubeX = 0;
-// setInterval(() => {
-//   movingCubeX = (movingCubeX + 5) % 1000;
-//   const big = new Cube(movingCubeX, 10, 0, 10, 10, 10);
-//   setTimeout(() => {
-//     eventSystem.addEvent(new EventDestroyed(big.entity.id));
-//   }, 1000);
-// }, 2000);
-
+  // let movingCubeX = 0
+  // setInterval(() => {
+  //   movingCubeX = (movingCubeX + 5) % 1000
+  //   const big = new Cube(movingCubeX, 10, 0, 10, 10, 10)
+  //   setTimeout(() => {
+  //     eventSystem.addEvent(new EventDestroyed(big.entity.id))
+  //   }, 1000)
+  // }, 2000)
+}
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
 let lastUpdateTimestamp = Date.now()
 

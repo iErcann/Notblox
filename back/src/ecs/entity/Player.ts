@@ -4,7 +4,7 @@ import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComp
 import { StateComponent } from '../../../../shared/component/StateComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../shared/entity/EntityManager.js'
-import { BaseEventSystem } from '../../../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../shared/system/EventSystem.js'
 import {
   SerializedEntityType,
   SerializedStateType,
@@ -24,7 +24,6 @@ export class Player {
   entity: Entity
 
   constructor(ws: WebSocket, initialX: number, initialY: number, initialZ: number) {
-    const world = PhysicsSystem.getInstance().world
     this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.PLAYER)
 
     const sizeComponent = new SingleSizeComponent(this.entity.id, 1 + Math.random())

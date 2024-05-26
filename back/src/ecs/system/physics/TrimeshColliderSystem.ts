@@ -1,7 +1,7 @@
 import { Mesh } from 'three'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import { GLTFLoaderManager } from '../../../GLTFLoaderManager.js'
 import {
   TrimeshColliderComponent,

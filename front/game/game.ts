@@ -1,5 +1,4 @@
 import { EntityManager } from '@shared/entity/EntityManager'
-import { BaseEventSystem } from '@shared/entity/EventSystem'
 import { config } from '@shared/network/config'
 import * as THREE from 'three'
 import { InputManager } from './InputManager'
@@ -10,7 +9,6 @@ import {
   ChatSystem,
   ClientEventSystem,
   DestroySystem,
-  OrbitCameraFollowSystem,
   SleepCheckSystem,
   SyncColorSystem,
   SyncComponentsSystem,
@@ -21,6 +19,7 @@ import {
 } from './ecs/system'
 import { Hud } from './hud'
 import { Renderer } from './renderer'
+import { BaseEventSystem } from '@shared/system/EventSystem'
 
 export class Game {
   private static instance: Game

@@ -2,6 +2,8 @@ import { Game } from '@/game/game'
 import { Entity } from '@shared/entity/Entity'
 import { Cube } from '../entity/Cube'
 import { Player } from '../entity/Player'
+import { Sphere } from '../entity/Sphere'
+import { Chat } from '../entity/Chat'
 
 import {
   SerializedComponent,
@@ -23,93 +25,125 @@ import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEv
 import { MeshComponent } from '../component/MeshComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
-import { Chat } from '../entity/Chat'
-import { Sphere } from '../entity/Sphere'
+import { BaseEventSystem } from '@shared/system/EventSystem'
 
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
+
   update(entities: Entity[], snapshotMessage: SnapshotMessage) {
     const serializedEntities = snapshotMessage.e
     for (const serializedEntity of serializedEntities) {
-      // Find the replicated entity
       let entity = entities.find((entity) => entity.id === serializedEntity.id)
 
       if (!entity) {
-        // If the entity doesn't exist, we create it
-        const createdEntity = this.createEntity(serializedEntity)
-        if (!createdEntity) {
+        entity = this.createEntity(serializedEntity)
+        if (!entity) {
           console.error("Can't create entity, add it to createEntity")
-          continue
+          return
         }
-        entity = createdEntity
       }
 
-      // Find the replicated components
-      const serializedComponents = serializedEntity.c
-      for (const serializedComponent of serializedComponents) {
-        // We have to do the t! because NetworkData adds the type property after
-
-        const component = entity.getComponentBySerializedType(serializedComponent.t!)
-        if (component) {
-          // Deserialize the component (this updates the component)
-          component.deserialize(serializedComponent)
-          ;(component as NetworkComponent).updated = true
-        } else {
-          // If the component doesn't exist, we create it
-          const createdComponent = this.createComponent(serializedComponent, entity.id)
-
-          if (createdComponent) entity.addComponent(createdComponent)
-          else console.error("Can't create received component, add it to createComponent.")
-        }
+      for (const serializedComponent of serializedEntity.c) {
+        this.updateOrCreateComponent(entity!, serializedComponent)
       }
     }
   }
 
-  createEntity(serializedEntity: SerializedEntity) {
-    if (serializedEntity.t === SerializedEntityType.PLAYER) {
-      const player = new Player(serializedEntity.id, this.game)
+  updateOrCreateComponent(entity: Entity, serializedComponent: SerializedComponent) {
+    // Find the replicated components
+    const component = entity.getComponentBySerializedType(serializedComponent.t!)
 
-      this.game.renderer.scene.add(player.entity.getComponent(MeshComponent)!.mesh)
-
-      return player.entity
-    } else if (serializedEntity.t === SerializedEntityType.CUBE) {
-      const cube = new Cube(serializedEntity.id, this.game)
-
-      this.game.renderer.scene.add(cube.entity.getComponent(MeshComponent)!.mesh)
-
-      return cube.entity
-    } else if (serializedEntity.t === SerializedEntityType.SPHERE) {
-      const sphere = new Sphere(serializedEntity.id, this.game)
-
-      this.game.renderer.scene.add(sphere.entity.getComponent(MeshComponent)!.mesh)
-
-      return sphere.entity
-    } else if (serializedEntity.t === SerializedEntityType.CHAT) {
-      return new Chat(serializedEntity.id, this.game).entity
+    if (component) {
+      // If the NetworkComponent exists, we update it
+      const networkComponent = component as NetworkComponent
+      networkComponent.deserialize(serializedComponent)
+      networkComponent.updated = true
+    } else {
+      // If the NetworkComponent doesn't exist, create it
+      const newComponent = this.createComponent(serializedComponent, entity.id)
+      if (newComponent) {
+        entity.addComponent(newComponent)
+      } else {
+        console.error(
+          `Can't create received NetworkComponent of type ${serializedComponent.t}, add it to the createComponent function.`
+        )
+      }
     }
   }
-  createComponent(serializedComponent: SerializedComponent, entityId: number) {
-    let createdComponent: NetworkComponent | undefined = undefined
-    if (serializedComponent.t === SerializedComponentType.POSITION) {
-      createdComponent = new PositionComponent(entityId, 1, 1, 1)
-    } else if (serializedComponent.t === SerializedComponentType.ROTATION) {
-      createdComponent = new RotationComponent(entityId, 1, 1, 1, 1)
-    } else if (serializedComponent.t === SerializedComponentType.SIZE) {
-      createdComponent = new SizeComponent(entityId, 1, 1, 1)
-    } else if (serializedComponent.t === SerializedComponentType.DESTROYED) {
-      createdComponent = new EntityDestroyedEvent(entityId)
-    } else if (serializedComponent.t === SerializedComponentType.COLOR) {
-      createdComponent = new ColorComponent(entityId, '0xffffff')
-    } else if (serializedComponent.t === SerializedComponentType.SINGLE_SIZE) {
-      createdComponent = new SingleSizeComponent(entityId, 0)
-    } else if (serializedComponent.t === SerializedComponentType.STATE) {
-      createdComponent = new StateComponent(entityId, SerializedStateType.IDLE)
-    } else if (serializedComponent.t === SerializedComponentType.CHAT_LIST) {
-      createdComponent = new ChatListComponent(entityId, [])
+
+  handleEventEntity() {
+    // The back can send us events
+    // They are serialized as an EventEntity
+  }
+
+  createEntity(serializedEntity: SerializedEntity): Entity | undefined {
+    let newEntity: Entity | undefined
+
+    switch (serializedEntity.t) {
+      case SerializedEntityType.PLAYER:
+        const player = new Player(serializedEntity.id, this.game)
+        newEntity = player.entity
+        this.game.renderer.scene.add(player.entity.getComponent(MeshComponent)!.mesh)
+        break
+      case SerializedEntityType.CUBE:
+        const cube = new Cube(serializedEntity.id, this.game)
+        newEntity = cube.entity
+        this.game.renderer.scene.add(cube.entity.getComponent(MeshComponent)!.mesh)
+        break
+      case SerializedEntityType.SPHERE:
+        const sphere = new Sphere(serializedEntity.id, this.game)
+        newEntity = sphere.entity
+        this.game.renderer.scene.add(sphere.entity.getComponent(MeshComponent)!.mesh)
+        break
+      case SerializedEntityType.CHAT:
+        newEntity = new Chat(serializedEntity.id, this.game).entity
+        break
+      case SerializedEntityType.EVENT:
+        newEntity = BaseEventSystem.getInstance().eventQueue.entity
+        break
+      default:
+        console.error("Unknown entity type, can't create entity")
     }
-    if (createdComponent) {
-      createdComponent.deserialize(serializedComponent)
+
+    return newEntity
+  }
+
+  createComponent(
+    serializedComponent: SerializedComponent,
+    entityId: number
+  ): NetworkComponent | undefined {
+    let component: NetworkComponent | undefined
+
+    switch (serializedComponent.t) {
+      case SerializedComponentType.POSITION:
+        component = new PositionComponent(entityId, 1, 1, 1)
+        break
+      case SerializedComponentType.ROTATION:
+        component = new RotationComponent(entityId, 1, 1, 1, 1)
+        break
+      case SerializedComponentType.SIZE:
+        component = new SizeComponent(entityId, 1, 1, 1)
+        break
+      case SerializedComponentType.DESTROYED_EVENT:
+        component = new EntityDestroyedEvent(entityId)
+        break
+      case SerializedComponentType.COLOR:
+        component = new ColorComponent(entityId, '0xffffff')
+        break
+      case SerializedComponentType.SINGLE_SIZE:
+        component = new SingleSizeComponent(entityId, 0)
+        break
+      case SerializedComponentType.STATE:
+        component = new StateComponent(entityId, SerializedStateType.IDLE)
+        break
+      case SerializedComponentType.CHAT_LIST:
+        component = new ChatListComponent(entityId, [])
+        break
+      default:
+        console.error("Unknown component type, can't create component")
     }
-    return createdComponent
+
+    component?.deserialize(serializedComponent)
+    return component
   }
 }

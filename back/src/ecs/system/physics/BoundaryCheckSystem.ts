@@ -1,7 +1,7 @@
 import { ColorComponent } from '../../../../../shared/component/ColorComponent.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { LockedRotationComponent } from '../../component/LockedRotationComponent.js'
 import { ColorEvent } from '../../component/events/ColorEvent.js'

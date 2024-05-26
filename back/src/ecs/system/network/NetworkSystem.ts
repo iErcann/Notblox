@@ -1,11 +1,13 @@
 import { Packr, pack, unpack } from 'msgpackr'
 import { WebSocketComponent } from '../../component/WebsocketComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { SerializedEntity } from '../../../../../shared/network/server/serialized.js'
+import {
+  SerializedEntity,
+  SerializedEntityType,
+} from '../../../../../shared/network/server/serialized.js'
 import { NetworkDataComponent } from '../../../../../shared/component/NetworkDataComponent.js'
 import { ServerMessageType } from '../../../../../shared/network/server/base.js'
 import { WebsocketSystem } from './WebsocketSystem.js'
-import { readFileSync, writeFileSync } from 'fs'
 
 export class NetworkSystem {
   //  Serializes the given entities.
@@ -16,10 +18,11 @@ export class NetworkSystem {
 
     for (const entity of entities) {
       const networkDataComponent = entity.getComponent(NetworkDataComponent)
-
       if (networkDataComponent) {
-        const _serializedEntities = networkDataComponent.serialize(serializeAll)
+        /*         if (entity.type === SerializedEntityType.EVENT)
+          console.log('Found NetworkDataComponent', networkDataComponent) */
 
+        const _serializedEntities = networkDataComponent.serialize(serializeAll)
         // Skip entities without any components to reduce bandwidth
         if (_serializedEntities != null) {
           serializedEntities.push(_serializedEntities)

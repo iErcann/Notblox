@@ -19,7 +19,6 @@ export class Cube {
 
   constructor(x: number, y: number, z: number, width: number, height: number, depth: number) {
     this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.CUBE)
-    const world = PhysicsSystem.getInstance().world
 
     // Adding a PositionComponent with initial position
     const positionComponent = new PositionComponent(this.entity.id, x, y, z)

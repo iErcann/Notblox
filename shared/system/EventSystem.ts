@@ -1,11 +1,12 @@
-import { ComponentWrapper } from 'shared/component/events/ComponentWrapper.js'
+import { ComponentWrapper } from '../component/events/ComponentWrapper.js'
 import { Component } from '../component/Component.js'
 import { ComponentAddedEvent } from '../component/events/ComponentAddedEvent.js'
 import { ComponentRemovedEvent } from '../component/events/ComponentRemovedEvent.js'
-import { ComponentUpdatedEvent } from '../component/events/ComponentUpdatedEvent.js'
 
-import { Entity } from './Entity.js'
-import { EventQueue } from './EventQueue.js'
+import { Entity } from '../entity/Entity.js'
+import { EventQueue } from '../entity/EventQueue.js'
+import { NetworkDataComponent } from '../component/NetworkDataComponent.js'
+import { NetworkComponent } from '../network/NetworkComponent.js'
 
 /* See https://gamedev.stackexchange.com/a/194135 */
 export class BaseEventSystem {
@@ -42,6 +43,17 @@ export class BaseEventSystem {
     BaseEventSystem.getInstance().eventQueue.entity.addComponent(event, false)
   }
 
+  /**
+   * Add a network event to the event queue
+   * Also add the event to the NetworkDataComponent so it can be sent to the client and replicated
+   */
+  static addNetworkEvent(event: NetworkComponent) {
+    console.log('Adding network event', event)
+    const eventQueueEntity = BaseEventSystem.getInstance().eventQueue.entity
+
+    eventQueueEntity.addComponent(event, false)
+    eventQueueEntity.getComponent(NetworkDataComponent)?.addComponent(event)
+  }
   private cleanProcessedEvents() {
     // TODO: Check if asynchroneous events are processed correctly (ChatMessageEvent, etc.)
     // Removing all events for now

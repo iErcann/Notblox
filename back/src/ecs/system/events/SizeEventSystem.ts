@@ -4,7 +4,7 @@ import { Entity } from '../../../../../shared/entity/Entity.js'
 import { ColliderComponent } from '../../component/physics/ColliderComponent.js'
 import { SizeEvent } from '../../component/events/SizeEvent.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
-import { BaseEventSystem } from 'shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 
 export class SizeEventSystem {
   update(entities: Entity[]) {

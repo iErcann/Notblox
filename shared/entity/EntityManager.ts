@@ -21,7 +21,6 @@ export class EntityManager {
   createEntity(type: SerializedEntityType, id?: number): Entity {
     const entityId = id ?? EntityManager.nextId++
     const entity = new Entity(type, entityId)
-    console.log('Creating entity', entityId, 'of type', type)
     this.entities.push(entity)
     return entity
   }

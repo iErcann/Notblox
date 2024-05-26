@@ -2,7 +2,7 @@ import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComp
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../shared/system/EventSystem.js'
 import Rapier from '../../physics/rapier.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { RandomizeComponent } from '../component/RandomizeComponent.js'

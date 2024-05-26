@@ -1,5 +1,5 @@
 import { Entity } from '@shared/entity/Entity.js'
-import { BaseEventSystem } from '@shared/entity/EventSystem.js'
+import { BaseEventSystem } from '@shared/system/EventSystem'
 
 export class ClientEventSystem extends BaseEventSystem {
   constructor() {

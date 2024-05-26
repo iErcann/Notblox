@@ -5,7 +5,7 @@ import { ChatMessage } from '../../../../../shared/network/client/chatMessage.js
 import { InputMessage } from '../../../../../shared/network/client/input.js'
 
 import { pack, unpack } from 'msgpackr'
-import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ServerMessageType } from '../../../../../shared/network/server/base.js'
 import { ConnectionMessage } from '../../../../../shared/network/server/connection.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'

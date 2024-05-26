@@ -7,18 +7,11 @@ import { PhysicsSystem } from '../physics/PhysicsSystem.js'
 import { SerializedEntityType } from '../../../../../shared/network/server/serialized.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
-import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { RotationComponent } from '../../../../../shared/component/RotationComponent.js'
-/*
-  The EventDestroyed is first inside the EventQueue Entity.
-  Then it is added to the destroyed Player entity.
-  The destroyed Player entity is then sent to all the other clients with its EventDestroyed component.  
-  -> So front end knows which entity to remove.
-  The after update is called after the network broadcast. And it removes the entity from the EntityManager.
-*/
 
 export class DestroyEventSystem {
   update(entities: Entity[]) {
@@ -37,15 +30,11 @@ export class DestroyEventSystem {
         )
       }
 
-      // Removing all the components
       entity.removeAllComponents()
 
       // The EventDestroyed component is sent to the player
-      entity.addComponent(destroyedEvent)
-      const networkComponent = entity.getComponent(NetworkDataComponent)
-      if (networkComponent) {
-        networkComponent.addComponent(destroyedEvent)
-      }
+      console.log('DestroyEventSystem: update: destroyedEvent', destroyedEvent)
+      BaseEventSystem.addNetworkEvent(destroyedEvent)
     }
   }
 

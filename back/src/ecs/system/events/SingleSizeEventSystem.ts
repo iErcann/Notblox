@@ -1,4 +1,4 @@
-import { BaseEventSystem } from '../../../../../shared/entity/EventSystem.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import { SingleSizeComponent } from '../../../../../shared/component/SingleSizeComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'

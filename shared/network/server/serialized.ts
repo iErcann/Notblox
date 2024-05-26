@@ -6,7 +6,7 @@ export enum SerializedComponentType {
   ROTATION = 2,
   SIZE = 3,
   COLOR = 4,
-  DESTROYED = 5,
+  DESTROYED_EVENT = 5,
   SINGLE_SIZE = 6,
 
   // Used for animations mostly
