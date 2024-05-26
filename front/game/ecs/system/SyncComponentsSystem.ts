@@ -33,6 +33,13 @@ export class SyncComponentsSystem {
   update(entities: Entity[], snapshotMessage: SnapshotMessage) {
     const serializedEntities = snapshotMessage.e
     for (const serializedEntity of serializedEntities) {
+      // The event entity already exist on the client, we don't need to create it
+      // We just need to handle the events by adding them to the event queue on the  BaseEventSystem instance
+      if (serializedEntity.t === SerializedEntityType.EVENT) {
+        this.handleEventEntity(serializedEntity)
+        continue
+      }
+
       let entity = entities.find((entity) => entity.id === serializedEntity.id)
 
       if (!entity) {
@@ -47,6 +54,11 @@ export class SyncComponentsSystem {
         this.updateOrCreateComponent(entity!, serializedComponent)
       }
     }
+  }
+
+  handleEventEntity(serializedEntity: SerializedEntity) {
+    // The back can send us events
+    // They are serialized as an EventEntity
   }
 
   updateOrCreateComponent(entity: Entity, serializedComponent: SerializedComponent) {
@@ -69,11 +81,6 @@ export class SyncComponentsSystem {
         )
       }
     }
-  }
-
-  handleEventEntity() {
-    // The back can send us events
-    // They are serialized as an EventEntity
   }
 
   createEntity(serializedEntity: SerializedEntity): Entity | undefined {
