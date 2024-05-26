@@ -22,7 +22,7 @@ export class WebsocketSystem {
 
   constructor() {
     const isProduction = process.env.NODE_ENV === 'production'
-
+    const acceptedOrigin: string | undefined = process.env.FRONTEND_URL
     const app = isProduction
       ? SSLApp({
           key_file_name: '/etc/letsencrypt/live/npm-1/privkey.pem',
@@ -39,6 +39,22 @@ export class WebsocketSystem {
       open: this.onConnect.bind(this),
       drain: this.onDrain.bind(this),
       close: this.onClose.bind(this),
+      upgrade: (res, req, context) => {
+        // Only accept connections from the frontend
+        const origin = req.getHeader('origin')
+        if (isProduction && acceptedOrigin && origin !== acceptedOrigin) {
+          res.writeStatus('403 Forbidden').end()
+          return
+        }
+
+        res.upgrade(
+          {}, // WebSocket handler will go here
+          req.getHeader('sec-websocket-key'),
+          req.getHeader('sec-websocket-protocol'),
+          req.getHeader('sec-websocket-extensions'),
+          context
+        )
+      },
     })
 
     app.listen(this.port, (listenSocket: any) => {
