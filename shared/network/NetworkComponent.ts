@@ -1,12 +1,18 @@
-import { Component, Serializable } from '../component/Component.js'
+import { Component } from '../component/Component.js'
 import { SerializedComponentType } from './server/serialized.js'
 
-export class NetworkComponent extends Component implements Serializable {
-  // By default, a network component is always sent
-  // But it can happen that some NetworkComponent aren't sent each tick but rather when a change arrives
-  // A WebsocketComponent can have a "initialSent" value which determines if its the first connection => then whe sould broadcast everything so the user as an initial copy of the components
+/**
+ * `NetworkComponent` is an abstract class for components that need network synchronization.
+ * It extends the base `Component` class.
+ *
+ * It has an `updated` property which, when true, indicates the component needs to be sent over the network.
+ * The `SleepCheckSystem` resets this property to false at the end of each ECS loop.
+ *
+ * Always set `updated` to true when the component changes to ensure it is synchronized.
+ *
+ */
+export abstract class NetworkComponent extends Component {
   updated: boolean = true
-
   constructor(
     entityId: number,
     public type: SerializedComponentType = SerializedComponentType.NONE
@@ -14,10 +20,6 @@ export class NetworkComponent extends Component implements Serializable {
     super(entityId)
   }
 
-  serialize() {
-    throw new Error('Method not implemented.')
-  }
-  deserialize(data: any): void {
-    throw new Error('Method not implemented.')
-  }
+  abstract serialize(): any
+  abstract deserialize(data: any): void
 }

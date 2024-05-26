@@ -4,9 +4,9 @@ import {
   SerializedEntity,
   SerializedEntityType,
 } from '../network/server/serialized.js'
-import { Component, Serializable } from './Component.js'
+import { Component } from './Component.js'
 
-export class NetworkDataComponent extends Component implements Serializable {
+export class NetworkDataComponent extends Component {
   type = SerializedComponentType.NONE
 
   constructor(
@@ -15,9 +15,6 @@ export class NetworkDataComponent extends Component implements Serializable {
     public components: NetworkComponent[]
   ) {
     super(entityId)
-  }
-  deserialize(data: any): void {
-    throw new Error('Method not implemented.')
   }
 
   getComponents(): NetworkComponent[] {
@@ -37,7 +34,7 @@ export class NetworkDataComponent extends Component implements Serializable {
     const components = this.getComponents()
     const serializedComponents = components
       .filter((component) => serializeAll || component.updated === true)
-      .map((component: Serializable) => {
+      .map((component: NetworkComponent) => {
         return { t: component.type, ...component.serialize() }
       })
 

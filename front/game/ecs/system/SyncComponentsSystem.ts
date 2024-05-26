@@ -51,7 +51,7 @@ export class SyncComponentsSystem {
 
   updateOrCreateComponent(entity: Entity, serializedComponent: SerializedComponent) {
     // Find the replicated components
-    const component = entity.getComponentBySerializedType(serializedComponent.t!)
+    const component = entity.getNetworkComponentBySerializedType(serializedComponent.t!)
 
     if (component) {
       // If the NetworkComponent exists, we update it

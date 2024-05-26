@@ -1,7 +1,8 @@
 import { SerializedComponentType, SerializedEntityType } from '../network/server/serialized.js'
-import { Serializable, Component } from '../component/Component.js'
+import { Component } from '../component/Component.js'
 import { BaseEventSystem } from '../system/EventSystem.js'
 import { EntityManager } from './EntityManager.js'
+import { NetworkComponent } from '../../shared/network/NetworkComponent.js'
 
 // Define an Entity class
 export class Entity {
@@ -70,12 +71,11 @@ export class Entity {
     return this.components.filter((c) => c instanceof componentType) as T[]
   }
 
-  // TODO: Remove the Serializable interface, put the NetworkComponent as abstract
   // This is used by the client only !
-  // We assume that the clients will only have serializable components so they will have a type!
-  getComponentBySerializedType(componentType: SerializedComponentType) {
-    return this.components.find((c) => 'type' in c && c.type === componentType) as
-      | Serializable
-      | undefined
+  getNetworkComponentBySerializedType(componentType: SerializedComponentType) {
+    // Find NetworkComponent by type
+    return this.components.find(
+      (c) => c instanceof NetworkComponent && c.type === componentType
+    ) as NetworkComponent
   }
 }
