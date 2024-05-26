@@ -6,7 +6,7 @@ import { Entity } from '../../../../shared/entity/Entity.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 
 import Rapier from '../../physics/rapier.js'
-import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
+import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
 import { EntityManager } from '../../../../shared/entity/EntityManager.js'
 import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'

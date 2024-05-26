@@ -1,17 +1,27 @@
 import { SerializedComponentType } from '../../network/server/serialized.js'
-
 import { NetworkComponent } from '../../network/NetworkComponent.js'
 
+/**
+ * NetworkEvent that is sent when an entity is destroyed
+ *
+ * Used to clean up the entity on the client side (remove mesh, etc)
+ */
 export class EntityDestroyedEvent extends NetworkComponent {
   constructor(entityId: number) {
     super(entityId, SerializedComponentType.DESTROYED_EVENT)
   }
 
-  deserialize(data: any): void {
-    console.log('EntityDestroyedEvent.deserialize()')
+  deserialize(data: SerializedEntityDestroyedEvent): void {
+    this.entityId = data.id
   }
-  serialize(): any {
-    console.log('EntityDestroyedEvent.serialize()')
-    return {}
+  serialize(): SerializedEntityDestroyedEvent {
+    return {
+      id: this.entityId,
+    }
   }
+}
+
+export interface SerializedEntityDestroyedEvent {
+  // Destroyed entity id
+  id: number
 }

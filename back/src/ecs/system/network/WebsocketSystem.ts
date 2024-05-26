@@ -40,21 +40,6 @@ export class WebsocketSystem {
       open: this.onConnect.bind(this),
       drain: this.onDrain.bind(this),
       close: this.onClose.bind(this),
-      upgrade: (res, req, context) => {
-        const origin = req.getHeader('origin')
-        // Just to prevent domain spoofing
-        if (isProduction && origin !== 'https://www.notblox.online') {
-          res.writeStatus('403 Forbidden').end()
-          return
-        }
-        res.upgrade(
-          { url: req.getUrl() },
-          req.getHeader('sec-websocket-key'),
-          req.getHeader('sec-websocket-protocol'),
-          req.getHeader('sec-websocket-extensions'),
-          context
-        )
-      },
     })
 
     app.listen(this.port, (listenSocket: any) => {
@@ -117,7 +102,8 @@ export class WebsocketSystem {
     console.log('Disconnect: Player found!')
     const entity = disconnectedPlayer.entity
     const entityId = entity.id
-    BaseEventSystem.addEvent(new EntityDestroyedEvent(entityId))
+
+    BaseEventSystem.addNetworkEvent(new EntityDestroyedEvent(entityId))
   }
 
   private async handleInputMessage(ws: any, message: InputMessage) {

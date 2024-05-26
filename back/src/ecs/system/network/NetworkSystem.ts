@@ -5,7 +5,7 @@ import {
   SerializedEntity,
   SerializedEntityType,
 } from '../../../../../shared/network/server/serialized.js'
-import { NetworkDataComponent } from '../../../../../shared/component/NetworkDataComponent.js'
+import { NetworkDataComponent } from '../../../../../shared/network/NetworkDataComponent.js'
 import { ServerMessageType } from '../../../../../shared/network/server/base.js'
 import { WebsocketSystem } from './WebsocketSystem.js'
 
@@ -50,7 +50,6 @@ export class NetworkSystem {
         if (!fullSnapshotMessage) {
           const fullSerializedEntities = this.serialize(entities, true)
           fullSnapshotMessage = this.buildSnapshotMessage(fullSerializedEntities)
-          console.log("Hasn't sent the first snapshot")
         }
         websocketComponent.ws.send(fullSnapshotMessage, true)
         websocketComponent.isFirstSnapshotSent = true

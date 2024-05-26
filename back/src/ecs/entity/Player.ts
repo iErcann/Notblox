@@ -11,7 +11,7 @@ import {
 } from '../../../../shared/network/server/serialized.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
-import { NetworkDataComponent } from '../../../../shared/component/NetworkDataComponent.js'
+import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 import { WebSocketComponent } from '../component/WebsocketComponent.js'
 import { ChatMessageEvent } from '../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'

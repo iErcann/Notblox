@@ -5,8 +5,9 @@ import { ComponentRemovedEvent } from '../component/events/ComponentRemovedEvent
 
 import { Entity } from '../entity/Entity.js'
 import { EventQueue } from '../entity/EventQueue.js'
-import { NetworkDataComponent } from '../component/NetworkDataComponent.js'
+import { NetworkDataComponent } from '../network/NetworkDataComponent.js'
 import { NetworkComponent } from '../network/NetworkComponent.js'
+import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 
 /* See https://gamedev.stackexchange.com/a/194135 */
 export class BaseEventSystem {
@@ -24,6 +25,7 @@ export class BaseEventSystem {
   }
   constructor() {
     this.eventQueue = new EventQueue()
+    console.log('Event queue entity', this.eventQueue.entity)
   }
 
   static getInstance(): BaseEventSystem {
@@ -48,16 +50,35 @@ export class BaseEventSystem {
    * Also add the event to the NetworkDataComponent so it can be sent to the client and replicated
    */
   static addNetworkEvent(event: NetworkComponent) {
-    console.log('Adding network event', event)
     const eventQueueEntity = BaseEventSystem.getInstance().eventQueue.entity
+    if (!eventQueueEntity) {
+      console.error('EventQueue entity not found')
+      return
+    }
 
     eventQueueEntity.addComponent(event, false)
-    eventQueueEntity.getComponent(NetworkDataComponent)?.addComponent(event)
+    const networkDataComponent = eventQueueEntity.getComponent(NetworkDataComponent)
+
+    if (!networkDataComponent) {
+      console.error('NetworkDataComponent not found on the EventQueue entity')
+      return
+    }
+    networkDataComponent.addComponent(event)
   }
   private cleanProcessedEvents() {
     // TODO: Check if asynchroneous events are processed correctly (ChatMessageEvent, etc.)
-    // Removing all events for now
-    this.eventQueue.entity.components = []
+    // Removing all components except NetworkDataComponent
+    for (const component of this.eventQueue.entity.components) {
+      if (!(component instanceof NetworkDataComponent)) {
+        this.eventQueue.entity.removeComponent(
+          component.constructor as new (...args: any[]) => Component,
+          false
+        )
+      }
+    }
+    this.eventQueue.entity.getComponent(NetworkDataComponent)?.removeAllComponents()
+
+    // TODO : Clear the NetworkDataComponent of EventQueue entity
 
     // for (const event of this.processedEvents) {
     //   this.eventQueue.entity.components.splice(this.eventQueue.entity.components.indexOf(event), 1)

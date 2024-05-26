@@ -1,10 +1,10 @@
-import { NetworkComponent } from 'shared/network/NetworkComponent.js'
+import { NetworkComponent } from './NetworkComponent.js'
 import {
   SerializedComponentType,
   SerializedEntity,
   SerializedEntityType,
-} from '../network/server/serialized.js'
-import { Component } from './Component.js'
+} from './server/serialized.js'
+import { Component } from '../component/Component.js'
 
 export class NetworkDataComponent extends Component {
   type = SerializedComponentType.NONE
@@ -25,9 +25,12 @@ export class NetworkDataComponent extends Component {
     this.components = this.components.filter((c) => !(c instanceof componentType))
   }
 
-  // Add a component to the entity
   addComponent(component: NetworkComponent) {
     this.components.push(component)
+  }
+
+  removeAllComponents() {
+    this.components = []
   }
 
   serialize(serializeAll = false): SerializedEntity | null {

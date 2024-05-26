@@ -98,7 +98,7 @@ export class Game {
     this.syncColorSystem.update(entities)
     this.syncSizeSystem.update(entities)
     this.animationSystem.update(deltaTime, entities)
-    this.destroySystem.update(entities, this.entityManager, this.renderer)
+    this.destroySystem.update(entities, this.renderer)
     this.sleepCheckSystem.update(entities)
     this.renderer.update(deltaTime, entities, this.inputManager.inputState)
     this.eventSystem.afterUpdate(entities)

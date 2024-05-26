@@ -30,12 +30,20 @@ import { BaseEventSystem } from '@shared/system/EventSystem'
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
 
+  handleEventEntity(serializedEventQueueEntity: SerializedEntity) {
+    console.log('Handling event entity')
+    const eventEntity = BaseEventSystem.getInstance().eventQueue.entity
+
+    for (const serializedComponent of serializedEventQueueEntity.c) {
+      this.updateOrCreateComponent(eventEntity, serializedComponent)
+    }
+  }
   update(entities: Entity[], snapshotMessage: SnapshotMessage) {
     const serializedEntities = snapshotMessage.e
     for (const serializedEntity of serializedEntities) {
-      // The event entity already exist on the client, we don't need to create it
-      // We just need to handle the events by adding them to the event queue on the  BaseEventSystem instance
-      if (serializedEntity.t === SerializedEntityType.EVENT) {
+      // The EventQueue entity already exist on the client (BaseEventSystem instance constructor creates it), we don't need to create it
+      // We  need to handle the events by adding them to the event queue on the BaseEventSystem instance
+      if (serializedEntity.t === SerializedEntityType.EVENT_QUEUE) {
         this.handleEventEntity(serializedEntity)
         continue
       }
@@ -54,11 +62,6 @@ export class SyncComponentsSystem {
         this.updateOrCreateComponent(entity!, serializedComponent)
       }
     }
-  }
-
-  handleEventEntity(serializedEntity: SerializedEntity) {
-    // The back can send us events
-    // They are serialized as an EventEntity
   }
 
   updateOrCreateComponent(entity: Entity, serializedComponent: SerializedComponent) {
@@ -105,7 +108,7 @@ export class SyncComponentsSystem {
       case SerializedEntityType.CHAT:
         newEntity = new Chat(serializedEntity.id, this.game).entity
         break
-      case SerializedEntityType.EVENT:
+      case SerializedEntityType.EVENT_QUEUE:
         newEntity = BaseEventSystem.getInstance().eventQueue.entity
         break
       default:
