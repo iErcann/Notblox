@@ -10,6 +10,7 @@ export default function Home() {
       <NextSeo
         title="NotBlox - Play multiplayer games in your browser"
         description="Play multiplayer games in your browser. Create your own games and share them with your friends."
+        canonical="https://www.notblox.online/"
         openGraph={{
           title: 'NotBlox - Play multiplayer games in your browser',
           description:

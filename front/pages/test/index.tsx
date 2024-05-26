@@ -32,6 +32,7 @@ export default function TestServer() {
       <NextSeo
         title="Play Test World - NotBlox Development Server"
         description="Test server for NotBlox Online"
+        canonical="https://www.notblox.online/test"
         openGraph={{
           title: "Play Test World - NotBlox Development Server",
           description: "Test server for NotBlox Online",
