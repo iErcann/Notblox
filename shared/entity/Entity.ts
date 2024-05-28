@@ -64,6 +64,7 @@ export class Entity {
   ): T | undefined {
     return this.components.find((c) => c instanceof componentType) as T | undefined
   }
+
   // Get all components of a certain type
   getComponents<T extends Component>(
     componentType: new (entityId: number, ...args: any[]) => T
