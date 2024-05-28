@@ -31,7 +31,10 @@ export class KinematicRigidBodySystem {
     physicsBodyComponent.body = world.createRigidBody(kinematic)
   }
 
-  onComonentRemoved(event: ComponentAddedEvent<KinematicRigidBodyComponent>, world: Rapier.World) {
+  onComonentRemoved(
+    event: ComponentRemovedEvent<KinematicRigidBodyComponent>,
+    world: Rapier.World
+  ) {
     const physicsBodyComponent = event.component
     if (physicsBodyComponent.body) world.removeRigidBody(physicsBodyComponent.body)
   }

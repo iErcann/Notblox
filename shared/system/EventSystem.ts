@@ -16,21 +16,13 @@ export class BaseEventSystem {
   private processedEvents: Component[] = []
   eventQueue: EventQueue
 
-  // Client and server will have different event systems
-  // But they share the same BaseEventSystem
-  // We inject the event system constructor to create the right event system
-  // So we don't have to import the server side code client side & vise versa
-  static setEventSystemConstructor(eventSystemConstructor: new () => BaseEventSystem) {
-    BaseEventSystem.eventSystemConstructor = eventSystemConstructor
-  }
-  constructor() {
+  private constructor() {
     this.eventQueue = new EventQueue()
-    console.log('Event queue entity', this.eventQueue.entity)
   }
 
   static getInstance(): BaseEventSystem {
     if (!BaseEventSystem.instance) {
-      BaseEventSystem.instance = new BaseEventSystem.eventSystemConstructor()
+      BaseEventSystem.instance = new BaseEventSystem()
     }
     return BaseEventSystem.instance
   }

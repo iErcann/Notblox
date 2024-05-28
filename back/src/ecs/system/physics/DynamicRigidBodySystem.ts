@@ -60,7 +60,7 @@ export class DynamicRigidBodySystem {
   }
 
   // TODO: Check if we need to remove the colliders too.
-  onComponentRemoved(event: ComponentAddedEvent<DynamicRigidBodyComponent>, world: Rapier.World) {
+  onComponentRemoved(event: ComponentRemovedEvent<DynamicRigidBodyComponent>, world: Rapier.World) {
     console.log('DynamicRigidBodySystem: Component removed')
     const physicsBodyComponent = event.component
     if (physicsBodyComponent.body) {

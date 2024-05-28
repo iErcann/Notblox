@@ -4,6 +4,7 @@ import { EntityManager } from '../../shared/entity/EntityManager.js'
 import { config } from '../../shared/network/config.js'
 import { BaseEventSystem } from '../../shared/system/EventSystem.js'
 
+import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { Chat } from './ecs/entity/Chat.js'
 import { Cube } from './ecs/entity/Cube.js'
@@ -12,30 +13,27 @@ import { Sphere } from './ecs/entity/Sphere.js'
 import { AnimationSystem } from './ecs/system/AnimationSystem.js'
 import { MovementSystem } from './ecs/system/MovementSystem.js'
 import { RandomizeSystem } from './ecs/system/RandomizeSystem.js'
+import { ChatEventSystem } from './ecs/system/events/ChatEventSystem.js'
+import { ColorEventSystem } from './ecs/system/events/ColorEventSystem.js'
+import { DestroyEventSystem } from './ecs/system/events/DestroyEventSystem.js'
+import { SingleSizeEventSystem } from './ecs/system/events/SingleSizeEventSystem.js'
+import { SizeEventSystem } from './ecs/system/events/SizeEventSystem.js'
 import { NetworkSystem } from './ecs/system/network/NetworkSystem.js'
 import { BoundaryCheckSystem } from './ecs/system/physics/BoundaryCheckSystem.js'
-import { GroundedCheckSystem } from './ecs/system/physics/GroundedCheckSystem.js'
-import { PhysicsSystem } from './ecs/system/physics/PhysicsSystem.js'
-import { SleepCheckSystem } from './ecs/system/physics/SleepCheckSystem.js'
-import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
-import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
-import { ServerEventSystem } from './ecs/system/events/ServerEventSystem.js'
-import { ColorEventSystem } from './ecs/system/events/ColorEventSystem.js'
-import { SingleSizeEventSystem } from './ecs/system/events/SingleSizeEventSystem.js'
-import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
-import { KinematicRigidBodySystem } from './ecs/system/physics/KinematicRigidBodySystem.js'
-import { ChatEventSystem } from './ecs/system/events/ChatEventSystem.js'
-import { DestroyEventSystem } from './ecs/system/events/DestroyEventSystem.js'
-import { DynamicRigidBodySystem } from './ecs/system/physics/DynamicRigidBodySystem.js'
 import { BoxColliderSystem } from './ecs/system/physics/BoxColliderSystem.js'
 import { CapsuleColliderSystem } from './ecs/system/physics/CapsuleColliderSystem.js'
+import { DynamicRigidBodySystem } from './ecs/system/physics/DynamicRigidBodySystem.js'
+import { GroundedCheckSystem } from './ecs/system/physics/GroundedCheckSystem.js'
+import { KinematicRigidBodySystem } from './ecs/system/physics/KinematicRigidBodySystem.js'
 import { LockRotationSystem } from './ecs/system/physics/LockRotationSystem.js'
-import { LockedRotationComponent } from './ecs/component/LockedRotationComponent.js'
-import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
+import { PhysicsSystem } from './ecs/system/physics/PhysicsSystem.js'
+import { SleepCheckSystem } from './ecs/system/physics/SleepCheckSystem.js'
 import { SphereColliderSystem } from './ecs/system/physics/SphereColliderSystem.js'
+import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
+import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
+import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
 
 // TODO: Make it wait for the websocket server to start
-BaseEventSystem.setEventSystemConstructor(ServerEventSystem)
 const eventSystem = BaseEventSystem.getInstance()
 const entityManager = EntityManager.getInstance()
 const entities = entityManager.getAllEntities()
@@ -55,7 +53,7 @@ const lockedRotationSystem = new LockRotationSystem()
 
 const colorEventSystem = new ColorEventSystem()
 const singleSizeEventSystem = new SingleSizeEventSystem()
-const sizeEventSystem = new SingleSizeEventSystem()
+const sizeEventSystem = new SizeEventSystem()
 const syncPositionSystem = new SyncPositionSystem()
 const syncRotationSystem = new SyncRotationSystem()
 const chatSystem = new ChatEventSystem()
@@ -76,29 +74,29 @@ function runTestEntities() {
   setTimeout(() => {
     const randomCube = new Cube(0, 50, 0, 1, 1, 1)
     randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
-    for (let i = 1; i < 13; i++) {
-      const randomCube = new Cube(0, 5, i, i / 5, i / 5, i / 5)
+    for (let i = 1; i < 3; i++) {
+      const randomCube = new Cube(0, 5, 5 * i, i / 5, i / 5, i / 5)
       randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
     }
     new Sphere(0, 30, 0, 1)
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i < 3; i++) {
       const randomSphere = new Sphere(0, i * 30, 0, 1.2)
       randomSphere.entity.addComponent(new RandomizeComponent(randomSphere.entity.id))
     }
     new Sphere(10, 30, 0, 4)
   }, 1000)
-  setInterval(() => {
-    new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
-  }, 1000)
+  // setInterval(() => {
+  //   new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
+  // }, 1000)
 
   let movingCubeZ = 0
-  setInterval(() => {
-    movingCubeZ = (movingCubeZ + 5) % 1000
-    const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
-    setTimeout(() => {
-      BaseEventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
-    }, 1000)
-  }, 2000)
+  // setInterval(() => {
+  //   movingCubeZ = (movingCubeZ + 5) % 1000
+  //   const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
+  //   setTimeout(() => {
+  //     BaseEventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
+  //   }, 1000)
+  // }, 2000)
 }
 runTestEntities()
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)

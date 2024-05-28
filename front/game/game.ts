@@ -7,7 +7,6 @@ import { WebSocketManager } from './WebsocketManager'
 import {
   AnimationSystem,
   ChatSystem,
-  ClientEventSystem,
   DestroySystem,
   SleepCheckSystem,
   SyncColorSystem,
@@ -33,7 +32,7 @@ export class Game {
   private syncColorSystem: SyncColorSystem
   private syncSizeSystem: SyncSizeSystem
   private topCameraFollowSystem: TopCameraFollowSystem
-  private eventSystem: ClientEventSystem
+  private eventSystem: BaseEventSystem
   websocketManager: WebSocketManager
   private animationSystem: AnimationSystem
   private sleepCheckSystem: SleepCheckSystem
@@ -57,7 +56,6 @@ export class Game {
     this.chatSystem = new ChatSystem()
     this.destroySystem = new DestroySystem()
 
-    BaseEventSystem.setEventSystemConstructor(ClientEventSystem)
     this.eventSystem = BaseEventSystem.getInstance()
 
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager)

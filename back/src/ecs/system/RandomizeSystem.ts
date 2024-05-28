@@ -15,13 +15,11 @@ export class RandomizeSystem {
     for (const entity of entities) {
       if (!entity.getComponent(RandomizeComponent)) continue
 
-      const eventSystem = BaseEventSystem
       const sizeComponent = entity.getComponent(SizeComponent)
       if (sizeComponent) {
         if (Math.random() < 0.01) {
-          const { width, height, depth } = sizeComponent
-          eventSystem.addEvent(
-            new SizeEvent(entity.id, (width + 0.5) % 5, (height + 0.5) % 5, (depth + 0.5) % 5)
+          BaseEventSystem.addEvent(
+            new SizeEvent(entity.id, Math.random() * 4, Math.random() * 4, Math.random() * 4)
           )
         }
       }
@@ -29,13 +27,7 @@ export class RandomizeSystem {
       const singleSizeComponent = entity.getComponent(SingleSizeComponent)
       if (singleSizeComponent) {
         if (Math.random() < 0.05) {
-          const { size } = singleSizeComponent
-          const eventSizeComponent = new SingleSizeEvent(
-            entity.id,
-            Math.max(0.5, Math.random() * 3)
-          )
-
-          eventSystem.addEvent(eventSizeComponent)
+          BaseEventSystem.addEvent(new SingleSizeEvent(entity.id, Math.max(0.5, Math.random() * 3)))
         }
       }
 
@@ -44,7 +36,7 @@ export class RandomizeSystem {
       if (colorComponent) {
         if (Math.random() < 0.01) {
           const randomHex = Math.floor(Math.random() * 16777215).toString(16)
-          eventSystem.addEvent(new ColorEvent(entity.id, '#' + randomHex))
+          BaseEventSystem.addEvent(new ColorEvent(entity.id, '#' + randomHex))
         }
       }
 

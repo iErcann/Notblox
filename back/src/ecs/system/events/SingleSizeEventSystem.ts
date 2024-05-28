@@ -6,6 +6,8 @@ import { SerializedEntityType } from '../../../../../shared/network/server/seria
 import Rapier from '../../../physics/rapier.js'
 import { ColliderComponent } from '../../component/physics/ColliderComponent.js'
 import { SingleSizeEvent } from '../../component/events/SingleSizeEvent.js'
+import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
+import { SphereColliderComponent } from '../../component/physics/SphereColliderComponent.js'
 
 export class SingleSizeEventSystem {
   update(entities: Entity[]) {
@@ -14,26 +16,32 @@ export class SingleSizeEventSystem {
     for (const eventSingleSize of eventSizes) {
       const entity = EntityManager.getEntityById(entities, eventSingleSize.entityId)
 
-      if (!entity) return
-
-      const colliderComponent = entity.getComponent(ColliderComponent)
-
-      if (!colliderComponent) return
+      if (!entity) continue
+      // Request new size
+      const { size: newSize } = eventSingleSize
 
       const singleSizeComponent = entity.getComponent(SingleSizeComponent)
+      if (!singleSizeComponent) {
+        console.error('SingleSizeComponent not found')
+        continue
+      }
 
-      if (singleSizeComponent && eventSingleSize) {
-        // TODO: Create a SphereComponent and EventSphere instead of relying on SerializedEntityType
-        if (entity.type === SerializedEntityType.SPHERE) {
-          const { size } = eventSingleSize
-          singleSizeComponent.size = size
+      const boxColliderComponent = entity.getComponent(BoxColliderComponent)
+      if (boxColliderComponent) {
+        const colliderDesc = Rapier.ColliderDesc.cuboid(newSize, newSize, newSize)
+        boxColliderComponent.collider?.setShape(colliderDesc.shape)
+      }
 
-          let colliderDesc = Rapier.ColliderDesc.ball(size)
-          colliderComponent.collider.setShape(colliderDesc.shape)
+      const sphereColliderComponent = entity.getComponent(SphereColliderComponent)
+      if (sphereColliderComponent) {
+        const colliderDesc = Rapier.ColliderDesc.ball(newSize)
+        sphereColliderComponent.collider?.setShape(colliderDesc.shape)
+      }
 
-          // This will rebroadcast the update to all clients.
-          singleSizeComponent.updated = true
-        }
+      // This will rebroadcast the update to all clients.
+      if (singleSizeComponent) {
+        singleSizeComponent.size = newSize
+        singleSizeComponent.updated = true
       }
     }
   }
