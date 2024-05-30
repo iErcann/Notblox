@@ -2,18 +2,17 @@ import { InputComponent } from '../component/InputComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import Rapier from '../../physics/rapier.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
-import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 
 export class MovementSystem {
-  update(dt: number, entities: Entity[], world: Rapier.World): void {
+  update(dt: number, entities: Entity[]): void {
     for (const entity of entities) {
-      this.updateEntityMovement(dt, entity, world)
+      this.updateEntityMovement(dt, entity)
     }
   }
 
-  updateEntityMovement(dt: number, entity: Entity, world: Rapier.World) {
+  updateEntityMovement(dt: number, entity: Entity) {
     const inputComponent = entity.getComponent(InputComponent)
     const rigidBodyComponent = entity.getComponent(DynamicRigidBodyComponent)
     const positionComponent = entity.getComponent(PositionComponent)

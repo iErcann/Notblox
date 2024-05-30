@@ -1,14 +1,12 @@
-import Rapier from '../../../physics/rapier.js'
+import { SizeComponent } from '../../../../../shared/component/SizeComponent.js'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
-import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
-import { TrimeshCollidersComponent } from '../../component/physics/TrimeshColliderComponent.js'
-import { ComponentRemovedEvent } from '../../../../../shared/component/events/ComponentRemovedEvent.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
-import { SizeComponent } from '../../../../../shared/component/SizeComponent.js'
-import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import Rapier from '../../../physics/rapier.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
+import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
+import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 
 export class BoxColliderSystem {
   async update(entities: Entity[], world: Rapier.World) {

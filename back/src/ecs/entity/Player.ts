@@ -15,7 +15,6 @@ import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComp
 import { WebSocketComponent } from '../component/WebsocketComponent.js'
 import { ChatMessageEvent } from '../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'
-import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { LockedRotationComponent } from '../component/LockedRotationComponent.js'
 import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'

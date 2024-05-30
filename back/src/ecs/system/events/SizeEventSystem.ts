@@ -1,10 +1,9 @@
-import Rapier from '../../../physics/rapier.js'
 import { SizeComponent } from '../../../../../shared/component/SizeComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { ColliderComponent } from '../../component/physics/ColliderComponent.js'
-import { SizeEvent } from '../../component/events/SizeEvent.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
 import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import Rapier from '../../../physics/rapier.js'
+import { SizeEvent } from '../../component/events/SizeEvent.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
 
 export class SizeEventSystem {

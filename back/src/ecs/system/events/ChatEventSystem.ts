@@ -29,7 +29,8 @@ export class ChatEventSystem {
     for (const chatMessageEvent of chatMessageEvents) {
       const chatListComponent = chatEntity.getComponent(ChatListComponent)
       if (chatListComponent) {
-        let { content, sender } = chatMessageEvent
+        let content = chatMessageEvent.content
+        const sender = chatMessageEvent.sender
 
         // TODO : Create NameComponent and add it to the player entity
         // Limit history to maxMessages

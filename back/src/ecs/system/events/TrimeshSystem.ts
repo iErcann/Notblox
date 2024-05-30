@@ -12,7 +12,7 @@ export class TrimeshSystem {
     this.gltfLoader.setDRACOLoader(new DRACOLoader())
   }
 
-  async loadGLTFModel(url: string): Promise<any> {
+  async loadGLTFModel(url: string): Promise<GLTF> {
     return new Promise((resolve, reject) => {
       this.gltfLoader.load(
         url,

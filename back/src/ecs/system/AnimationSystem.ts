@@ -11,7 +11,7 @@ import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBody
 import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
 
 export class AnimationSystem {
-  update(entities: Entity[], world: Rapier.World): void {
+  update(entities: Entity[]): void {
     entities.forEach((entity) => {
       const inputComponent = entity.getComponent(InputComponent)
       const rigidBodyComponent = entity.getComponent(DynamicRigidBodyComponent)

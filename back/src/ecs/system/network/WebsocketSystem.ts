@@ -1,4 +1,12 @@
-import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from 'uWebSockets.js'
+import {
+  App,
+  DEDICATED_COMPRESSOR_3KB,
+  HttpRequest,
+  HttpResponse,
+  SSLApp,
+  us_listen_socket,
+  us_socket_context_t,
+} from 'uWebSockets.js'
 import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
 import { ClientMessage, ClientMessageType } from '../../../../../shared/network/client/base.js'
 import { ChatMessage } from '../../../../../shared/network/client/chatMessage.js'
@@ -11,7 +19,6 @@ import { ConnectionMessage } from '../../../../../shared/network/server/connecti
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
-import { Entity } from '../../../../../shared/entity/Entity.js'
 
 type MessageHandler = (ws: any, message: any) => void
 
@@ -22,6 +29,11 @@ export class WebsocketSystem {
   private inputProcessingSystem: InputProcessingSystem = new InputProcessingSystem()
 
   constructor() {
+    this.initializeServer()
+    this.initializeMessageHandlers()
+  }
+
+  private initializeServer() {
     const isProduction = process.env.NODE_ENV === 'production'
     const acceptedOrigin: string | undefined = process.env.FRONTEND_URL
     const app = isProduction
@@ -40,33 +52,41 @@ export class WebsocketSystem {
       open: this.onConnect.bind(this),
       drain: this.onDrain.bind(this),
       close: this.onClose.bind(this),
-      upgrade: (res, req, context) => {
-        // Only accept connections from the frontend
-        const origin = req.getHeader('origin')
-        if (isProduction && acceptedOrigin && origin !== acceptedOrigin) {
-          res.writeStatus('403 Forbidden').end()
-          return
-        }
-
-        res.upgrade(
-          {}, // WebSocket handler will go here
-          req.getHeader('sec-websocket-key'),
-          req.getHeader('sec-websocket-protocol'),
-          req.getHeader('sec-websocket-extensions'),
-          context
-        )
-      },
+      upgrade: this.upgradeHandler.bind(this, isProduction, acceptedOrigin),
     })
 
-    app.listen(this.port, (listenSocket: any) => {
-      if (listenSocket) {
-        console.log(`WebSocket server listening on port ${this.port}`)
-      } else {
-        console.error(`Failed to listen on port ${this.port}`)
-      }
-    })
+    app.listen(this.port, this.listenHandler.bind(this))
+  }
 
-    this.initializeMessageHandlers()
+  private upgradeHandler(
+    isProduction: boolean,
+    acceptedOrigin: string | undefined,
+    res: HttpResponse,
+    req: HttpRequest,
+    context: us_socket_context_t
+  ) {
+    // Only accept connections from the frontend
+    const origin = req.getHeader('origin')
+    if (isProduction && acceptedOrigin && origin !== acceptedOrigin) {
+      res.writeStatus('403 Forbidden').end()
+      return
+    }
+
+    res.upgrade(
+      {}, // WebSocket handler will go here
+      req.getHeader('sec-websocket-key'),
+      req.getHeader('sec-websocket-protocol'),
+      req.getHeader('sec-websocket-extensions'),
+      context
+    )
+  }
+
+  private listenHandler(listenSocket: us_listen_socket) {
+    if (listenSocket) {
+      console.log(`WebSocket server listening on port ${this.port}`)
+    } else {
+      console.error(`Failed to listen on port ${this.port}`)
+    }
   }
 
   private initializeMessageHandlers() {
@@ -82,7 +102,7 @@ export class WebsocketSystem {
     this.messageHandlers.delete(type)
   }
 
-  private onMessage(ws: any, message: any, isBinary: boolean) {
+  private onMessage(ws: any, message: any) {
     const clientMessage: ClientMessage = unpack(message)
     const handler = this.messageHandlers.get(clientMessage.t)
     if (handler) {
@@ -108,7 +128,7 @@ export class WebsocketSystem {
     console.log('WebSocket backpressure: ' + ws.getBufferedAmount())
   }
 
-  private onClose(ws: any, code: number, message: any) {
+  private onClose(ws: any) {
     const disconnectedPlayer: Player = ws.player
     if (!disconnectedPlayer) {
       console.error('Disconnect: Player not found?', ws)

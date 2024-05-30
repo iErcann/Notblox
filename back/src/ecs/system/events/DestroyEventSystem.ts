@@ -1,17 +1,9 @@
-import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
+import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
-import { NetworkDataComponent } from '../../../../../shared/network/NetworkDataComponent.js'
-import { WebSocketComponent } from '../../component/WebsocketComponent.js'
-import { PhysicsSystem } from '../physics/PhysicsSystem.js'
-import { SerializedEntityType } from '../../../../../shared/network/server/serialized.js'
+import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
-import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
-import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
-import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
-import { RotationComponent } from '../../../../../shared/component/RotationComponent.js'
 
 export class DestroyEventSystem {
   update(entities: Entity[]) {

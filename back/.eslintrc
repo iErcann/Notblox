@@ -8,7 +8,9 @@
         "ecmaVersion": 2022,
         "sourceType": "module"
     },
-    "rules": {},
+    "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+    },
     "settings": {
         "import/resolver": {
             "typescript": {

@@ -124,9 +124,9 @@ async function gameLoop() {
   colorEventSystem.update(entities)
 
   groundedCheckSystem.update(entities, physicsSystem.world)
-  movementSystem.update(dt, entities, physicsSystem.world)
+  movementSystem.update(dt, entities)
 
-  animationSystem.update(entities, physicsSystem.world)
+  animationSystem.update(entities)
   syncRotationSystem.update(entities)
   syncPositionSystem.update(entities)
 

@@ -1,12 +1,11 @@
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
+import { SingleSizeComponent } from '../../../../../shared/component/SingleSizeComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import Rapier from '../../../physics/rapier.js'
-import { SingleSizeComponent } from '../../../../../shared/component/SingleSizeComponent.js'
 import { GroundCheckComponent } from '../../component/GroundedComponent.js'
-import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
-import { ColliderComponent } from '../../component/physics/ColliderComponent.js'
-import { CapsuleColliderComponent } from '../../component/physics/CapsuleColliderComponent.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
+import { CapsuleColliderComponent } from '../../component/physics/CapsuleColliderComponent.js'
+import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 
 export class GroundedCheckSystem {
   update(entities: Entity[], world: Rapier.World) {

@@ -7,12 +7,9 @@ import { SerializedEntityType } from '../../../../shared/network/server/serializ
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
 import { EntityManager } from '../../../../shared/entity/EntityManager.js'
-import Rapier from '../../physics/rapier.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
-import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
-import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
-import { ColliderComponent } from '../component/physics/ColliderComponent.js'
 import { BoxColliderComponent } from '../component/physics/BoxColliderComponent.js'
+import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 
 export class Cube {
   entity: Entity

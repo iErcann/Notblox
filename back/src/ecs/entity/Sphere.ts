@@ -1,18 +1,14 @@
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import { RotationComponent } from '../../../../shared/component/RotationComponent.js'
-import { EntityDestroyedEvent } from '../../../../shared/component/events/EntityDestroyedEvent.js'
 
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 
-import Rapier from '../../physics/rapier.js'
-import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
-import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
-import { EntityManager } from '../../../../shared/entity/EntityManager.js'
-import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
+import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
+import { EntityManager } from '../../../../shared/entity/EntityManager.js'
+import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
-import { ColliderComponent } from '../component/physics/ColliderComponent.js'
 import { SphereColliderComponent } from '../component/physics/SphereColliderComponent.js'
 
 export class Sphere {
@@ -20,7 +16,6 @@ export class Sphere {
 
   constructor(x: number, y: number, z: number, size: number) {
     this.entity = EntityManager.createEntity(SerializedEntityType.SPHERE)
-    const world = PhysicsSystem.getInstance().world
 
     const positionComponent = new PositionComponent(this.entity.id, x, y, z)
     this.entity.addComponent(positionComponent)
