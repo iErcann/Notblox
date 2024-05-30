@@ -19,7 +19,7 @@ export class TrimeshColliderSystem {
       TrimeshCollidersComponent
     )
 
-    for (let event of createEvents) {
+    for (const event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
 
       if (!entity) {

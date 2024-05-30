@@ -11,7 +11,7 @@ export class KinematicRigidBodySystem {
       KinematicRigidBodyComponent
     )
 
-    for (let event of createEvents) {
+    for (const event of createEvents) {
       this.onComponentAdded(event, world)
     }
 
@@ -20,7 +20,7 @@ export class KinematicRigidBodySystem {
       KinematicRigidBodyComponent
     )
 
-    for (let event of removedEvents) {
+    for (const event of removedEvents) {
       this.onComonentRemoved(event, world)
     }
   }

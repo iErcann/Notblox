@@ -16,7 +16,7 @@ export class DynamicRigidBodySystem {
       DynamicRigidBodyComponent
     )
 
-    for (let event of createEvents) {
+    for (const event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
       if (!entity) {
         console.error('DynamicRigidBodySystem: Entity not found')
@@ -30,7 +30,7 @@ export class DynamicRigidBodySystem {
       DynamicRigidBodyComponent
     )
 
-    for (let event of removedEvents) {
+    for (const event of removedEvents) {
       this.onComponentRemoved(event, world)
     }
   }

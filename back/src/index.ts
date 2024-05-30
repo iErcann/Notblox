@@ -4,7 +4,6 @@ import { EntityManager } from '../../shared/entity/EntityManager.js'
 import { config } from '../../shared/network/config.js'
 import { BaseEventSystem } from '../../shared/system/EventSystem.js'
 
-import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { Chat } from './ecs/entity/Chat.js'
 import { Cube } from './ecs/entity/Cube.js'
@@ -89,7 +88,7 @@ function runTestEntities() {
   //   new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
   // }, 1000)
 
-  let movingCubeZ = 0
+  // const movingCubeZ = 0
   // setInterval(() => {
   //   movingCubeZ = (movingCubeZ + 5) % 1000
   //   const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
@@ -113,7 +112,7 @@ async function gameLoop() {
   kinematicPhysicsBodySystem.update(physicsSystem.world)
   rigidPhysicsBodySystem.update(entities, physicsSystem.world)
   // Then handle the colliders
-  await trimeshColliderSystem.update(entities, physicsSystem.world)
+  trimeshColliderSystem.update(entities, physicsSystem.world)
   boxColliderSystem.update(entities, physicsSystem.world)
   capsuleColliderSystem.update(entities, physicsSystem.world)
   sphereColliderSystem.update(entities, physicsSystem.world)

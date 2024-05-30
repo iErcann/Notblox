@@ -14,7 +14,7 @@ export class CapsuleColliderSystem {
       ComponentAddedEvent,
       CapsuleColliderComponent
     )
-    for (let event of createEvents) {
+    for (const event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
 
       if (!entity) {
@@ -52,7 +52,7 @@ export class CapsuleColliderSystem {
       )
     }
 
-    let colliderDesc = Rapier.ColliderDesc.capsule(sizeComponent.size / 2, sizeComponent.size)
+    const colliderDesc = Rapier.ColliderDesc.capsule(sizeComponent.size / 2, sizeComponent.size)
     // Set the friction combine rule to control how friction is combined with other contacts
     colliderDesc.setFrictionCombineRule(Rapier.CoefficientCombineRule.Max)
     // Set restitution to control how bouncy the player is when colliding with surfaces

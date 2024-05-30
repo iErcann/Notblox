@@ -14,7 +14,7 @@ export class SphereColliderSystem {
       ComponentAddedEvent,
       SphereColliderComponent
     )
-    for (let event of createEvents) {
+    for (const event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
 
       if (!entity) {
@@ -51,7 +51,7 @@ export class SphereColliderSystem {
       )
     }
 
-    let colliderDesc = Rapier.ColliderDesc.ball(singleSizeComponent.size)
+    const colliderDesc = Rapier.ColliderDesc.ball(singleSizeComponent.size)
     sphereColliderComponent.collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
   }
 }

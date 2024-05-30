@@ -13,7 +13,7 @@ import { BoxColliderComponent } from '../../component/physics/BoxColliderCompone
 export class BoxColliderSystem {
   async update(entities: Entity[], world: Rapier.World) {
     const createEvents = BaseEventSystem.getEventsWrapped(ComponentAddedEvent, BoxColliderComponent)
-    for (let event of createEvents) {
+    for (const event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
 
       if (!entity) {
@@ -51,7 +51,7 @@ export class BoxColliderSystem {
       )
     }
 
-    let colliderDesc = Rapier.ColliderDesc.cuboid(
+    const colliderDesc = Rapier.ColliderDesc.cuboid(
       sizeComponent.width,
       sizeComponent.height,
       sizeComponent.depth

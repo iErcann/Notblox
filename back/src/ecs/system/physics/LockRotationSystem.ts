@@ -2,12 +2,9 @@ import Rapier from '../../../physics/rapier.js'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
-import { TrimeshCollidersComponent } from '../../component/physics/TrimeshColliderComponent.js'
 import { ComponentRemovedEvent } from '../../../../../shared/component/events/ComponentRemovedEvent.js'
 import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
-import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
-import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 import { LockedRotationComponent } from '../../component/LockedRotationComponent.js'
 
 export class LockRotationSystem {
@@ -17,7 +14,7 @@ export class LockRotationSystem {
       LockedRotationComponent
     )
 
-    for (let event of createEvents) {
+    for (const event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
       if (!entity) {
         console.error('LockRotationSystem: Entity not found')
@@ -31,7 +28,7 @@ export class LockRotationSystem {
       LockedRotationComponent
     )
 
-    for (let event of removedEvents) {
+    for (const event of removedEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
       if (!entity) {
         console.error('LockRotationSystem: Entity not found')
