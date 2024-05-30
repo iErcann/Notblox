@@ -7,6 +7,8 @@ import { ClientMessage } from '@shared/network/client/base'
 
 import { isNativeAccelerationEnabled } from 'msgpackr'
 import { EntityManager } from '@shared/entity/EntityManager'
+import pako from 'pako'
+
 if (!isNativeAccelerationEnabled)
   console.warn('Native acceleration not enabled, verify that install finished properly')
 
@@ -93,7 +95,10 @@ export class WebSocketManager {
 
   private async onMessage(event: MessageEvent) {
     const buffer = await event.data.arrayBuffer()
-    const message: ServerMessage = unpack(buffer)
+    // Decompress the zlib first
+    const decompressed = pako.inflate(buffer)
+    // Then decompress the msgpackr
+    const message: ServerMessage = unpack(decompressed)
 
     const handler = this.messageHandlers.get(message.t)
     if (handler) {

@@ -11,15 +11,15 @@ import { EntityDestroyedEvent } from '../../../../../shared/component/events/Ent
 import { ClientMessage, ClientMessageType } from '../../../../../shared/network/client/base.js'
 import { ChatMessage } from '../../../../../shared/network/client/chatMessage.js'
 import { InputMessage } from '../../../../../shared/network/client/input.js'
+import { ConnectionMessage } from '../../../../../shared/network/server/connection.js'
 
 import { pack, unpack } from 'msgpackr'
 import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
-import { ServerMessageType } from '../../../../../shared/network/server/base.js'
-import { ConnectionMessage } from '../../../../../shared/network/server/connection.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
-
+import { ServerMessageType } from '../../../../../shared/network/server/base.js'
+import { NetworkSystem } from './NetworkSystem.js'
 type MessageHandler = (ws: any, message: any) => void
 
 export class WebsocketSystem {
@@ -120,7 +120,7 @@ export class WebsocketSystem {
       id: player.entity.id,
     }
     ws.player = player
-    ws.send(pack(connectionMessage), true)
+    ws.send(NetworkSystem.compress(connectionMessage), true)
     this.players.push(player)
   }
 

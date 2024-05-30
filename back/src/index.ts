@@ -73,14 +73,12 @@ function runTestEntities() {
   setTimeout(() => {
     const randomCube = new Cube(0, 50, 0, 1, 1, 1)
     randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
-    for (let i = 1; i < 3; i++) {
-      const randomCube = new Cube(0, 5, 5 * i, i / 5, i / 5, i / 5)
-      randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
+    for (let i = 1; i < 5; i++) {
+      new Cube(0, 5, 5 * i, i / 5, i / 5, i / 5)
     }
     new Sphere(0, 30, 0, 1)
-    for (let i = 1; i < 3; i++) {
-      const randomSphere = new Sphere(0, i * 30, 0, 1.2)
-      randomSphere.entity.addComponent(new RandomizeComponent(randomSphere.entity.id))
+    for (let i = 1; i < 1; i++) {
+      new Sphere(0, i * 30, 0, 1.2)
     }
     new Sphere(10, 30, 0, 4)
   }, 1000)
