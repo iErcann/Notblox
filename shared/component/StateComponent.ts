@@ -6,10 +6,7 @@ import {
 } from '../network/server/serialized.js'
 
 export class StateComponent extends NetworkComponent {
-  constructor(
-    entityId: number,
-    public state: SerializedStateType
-  ) {
+  constructor(entityId: number, public state: SerializedStateType) {
     super(entityId, SerializedComponentType.STATE)
   }
   deserialize(data: SerializedStateComponent) {
