@@ -42,8 +42,8 @@ export class Player {
     const isCurrentPlayer = this.entity.id === game.currentPlayerEntityId
     if (isCurrentPlayer) {
       this.entity.addComponent(new FollowComponent(entityId, game.renderer.camera))
-      const pointLight = new THREE.PointLight(0xe1afd1, 5, 130)
-      mesh.add(pointLight)
+      // const pointLight = new THREE.PointLight(0xe1afd1, 5, 130)
+      // mesh.add(pointLight)
     } else {
       const textComponent = new TextComponent(entityId, 'Player ' + entityId)
       this.entity.addComponent(textComponent)
