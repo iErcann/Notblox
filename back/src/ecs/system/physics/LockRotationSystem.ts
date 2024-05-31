@@ -3,7 +3,7 @@ import { ComponentAddedEvent } from '../../../../../shared/component/events/Comp
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ComponentRemovedEvent } from '../../../../../shared/component/events/ComponentRemovedEvent.js'
-import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 import { LockedRotationComponent } from '../../component/LockedRotationComponent.js'
 

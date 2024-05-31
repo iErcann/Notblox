@@ -1,6 +1,6 @@
 import { ChatListComponent } from '../../../../shared/component/ChatComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
-import { EntityManager } from '../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { BaseEventSystem } from '../../../../shared/system/EventSystem.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'

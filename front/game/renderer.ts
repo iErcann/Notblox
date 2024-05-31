@@ -1,21 +1,15 @@
 import * as THREE from 'three'
-import { Camera } from './camera'
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { LoadManager } from './LoadManager'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { Sky } from 'three/examples/jsm/objects/Sky.js'
+import { LoadManager } from './LoadManager'
+import { Camera } from './camera'
 
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
-import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js'
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
-import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
-import { Entity } from '@shared/entity/Entity'
-import { EntityManager } from '@shared/entity/EntityManager'
-import { FollowComponent } from './ecs/component/FollowComponent'
 import { PositionComponent } from '@shared/component/PositionComponent'
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+import { Entity } from '@shared/entity/Entity'
 import { InputMessage } from '@shared/network/client/input'
+import { EntityManager } from '@shared/system/EntityManager'
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
+import { FollowComponent } from './ecs/component/FollowComponent'
 
 export interface Renderable {
   mesh: THREE.Mesh

@@ -6,7 +6,7 @@ import { SerializedEntityType } from '../../../../shared/network/server/serializ
 
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
-import { EntityManager } from '../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 import { BoxColliderComponent } from '../component/physics/BoxColliderComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'

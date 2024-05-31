@@ -1,7 +1,7 @@
 import { SingleSizeComponent } from '../../../../../shared/component/SingleSizeComponent.js'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'

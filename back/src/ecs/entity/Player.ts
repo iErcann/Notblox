@@ -3,7 +3,7 @@ import { RotationComponent } from '../../../../shared/component/RotationComponen
 import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
 import { StateComponent } from '../../../../shared/component/StateComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
-import { EntityManager } from '../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { BaseEventSystem } from '../../../../shared/system/EventSystem.js'
 import {
   SerializedEntityType,

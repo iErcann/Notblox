@@ -1,12 +1,11 @@
 import { SerializedComponentType, SerializedEntityType } from '../network/server/serialized.js'
-import { Component } from '../component/Component.js'
+import { Component, ComponentConstructor } from '../component/Component.js'
 import { BaseEventSystem } from '../system/EventSystem.js'
-import { EntityManager } from './EntityManager.js'
 import { NetworkComponent } from '../../shared/network/NetworkComponent.js'
 
 // Define an Entity class
 export class Entity {
-  components: Component[] = []
+  components: Map<ComponentConstructor, Component> = new Map()
 
   constructor(public type: SerializedEntityType = SerializedEntityType.NONE, public id: number) {}
 
@@ -16,7 +15,7 @@ export class Entity {
    * @param createAddedEvent  Whether to create an added event or not, default is true, useful for skipping recursion
    */
   addComponent<T extends Component>(component: T, createAddedEvent = true) {
-    this.components.push(component)
+    this.components.set(component.constructor as ComponentConstructor, component)
 
     // This can be used to skip the recursion or non added events
     if (createAddedEvent) {
@@ -26,57 +25,45 @@ export class Entity {
 
   // Remove all components using the remove component function
   removeAllComponents() {
-    this.components.forEach((c) =>
-      this.removeComponent(c.constructor as new (...args: any[]) => Component)
+    Array.from(this.components.keys()).forEach((componentType) =>
+      this.removeComponent(componentType)
     )
   }
+
   /**
    * Remove a component from the entity
-   * @param component  The component to add
-   * @param createRemoveEvent  Whether to create an added event or not, default is true, useful for skipping recursion
+   * @param componentType  The type of component to remove
+   * @param createRemoveEvent  Whether to create a remove event or not, default is true, useful for skipping recursion
    */
-  removeComponent<T extends Component>(
-    componentType: new (entityId: number, ...args: any[]) => T,
-    createRemoveEvent = true
-  ): void {
-    let removedComponent: T | null = null
-
-    this.components = this.components.filter((c) => {
-      if (c instanceof componentType) {
-        removedComponent = c
-        return false
+  removeComponent(componentType: ComponentConstructor, createRemoveEvent = true): void {
+    const removedComponent = this.components.get(componentType)
+    if (removedComponent) {
+      this.components.delete(componentType)
+      if (createRemoveEvent) {
+        BaseEventSystem.onComponentRemoved(removedComponent)
       }
-      return true
-    })
-
-    if (createRemoveEvent && removedComponent) {
-      BaseEventSystem.onComponentRemoved(removedComponent)
     }
   }
 
-  getAllComponents() {
-    return this.components
+  getAllComponents(): Component[] {
+    return Array.from(this.components.values())
   }
 
   // Get a component from the entity
-  getComponent<T extends Component>(
-    componentType: new (entityId: number, ...args: any[]) => T
-  ): T | undefined {
-    return this.components.find((c) => c instanceof componentType) as T | undefined
+  getComponent<T extends Component>(componentType: ComponentConstructor<T>): T | undefined {
+    return this.components.get(componentType) as T | undefined
   }
 
-  // Get all components of a certain type
-  getComponents<T extends Component>(
-    componentType: new (entityId: number, ...args: any[]) => T
-  ): T[] {
-    return this.components.filter((c) => c instanceof componentType) as T[]
-  }
-
-  // This is used by the client only !
-  getNetworkComponentBySerializedType(componentType: SerializedComponentType) {
+  // This is used by the client only!
+  getNetworkComponentBySerializedType(
+    componentType: SerializedComponentType
+  ): NetworkComponent | undefined {
     // Find NetworkComponent by type
-    return this.components.find(
-      (c) => c instanceof NetworkComponent && c.type === componentType
-    ) as NetworkComponent
+    for (const component of this.components.values()) {
+      if (component instanceof NetworkComponent && component.type === componentType) {
+        return component as NetworkComponent
+      }
+    }
+    return undefined
   }
 }

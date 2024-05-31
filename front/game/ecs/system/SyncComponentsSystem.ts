@@ -26,16 +26,25 @@ import { MeshComponent } from '../component/MeshComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
 import { BaseEventSystem } from '@shared/system/EventSystem'
+import { EventListComponent } from '@shared/component/events/EventListComponent'
 
 export class SyncComponentsSystem {
   constructor(public game: Game) {}
 
   handleEventEntity(serializedEventQueueEntity: SerializedEntity) {
-    console.log('Handling event entity')
     const eventEntity = BaseEventSystem.getInstance().eventQueue.entity
+    const eventListComponent = eventEntity.getComponent(EventListComponent)
 
     for (const serializedComponent of serializedEventQueueEntity.c) {
-      this.updateOrCreateComponent(eventEntity, serializedComponent)
+      const eventComponent = this.createComponent(serializedComponent, eventEntity.id)
+      if (!eventComponent) {
+        console.error(
+          "Can't create event component, add it to createComponent",
+          serializedComponent
+        )
+        continue
+      }
+      eventListComponent?.addEvent(eventComponent)
     }
   }
   update(entities: Entity[], snapshotMessage: SnapshotMessage) {

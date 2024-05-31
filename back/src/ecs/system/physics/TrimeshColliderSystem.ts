@@ -8,7 +8,7 @@ import {
   TrimeshCollidersComponent,
 } from '../../component/physics/TrimeshColliderComponent.js'
 import Rapier from '../../../physics/rapier.js'
-import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 

@@ -6,7 +6,7 @@ import { ConnectionMessage } from '@shared/network/server/connection'
 import { ClientMessage } from '@shared/network/client/base'
 
 import { isNativeAccelerationEnabled } from 'msgpackr'
-import { EntityManager } from '@shared/entity/EntityManager'
+import { EntityManager } from '@shared/system/EntityManager'
 import pako from 'pako'
 
 if (!isNativeAccelerationEnabled)

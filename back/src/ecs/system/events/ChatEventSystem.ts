@@ -1,4 +1,4 @@
-import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { ChatListComponent } from '../../../../../shared/component/ChatComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
@@ -10,7 +10,7 @@ export class ChatEventSystem {
   private MAX_CONTENT_LENGTH: number = 128
 
   update(entities: Entity[]) {
-    const chatMessageEvents = BaseEventSystem.getEventsByType(ChatMessageEvent)
+    const chatMessageEvents = BaseEventSystem.getEvents(ChatMessageEvent)
 
     // Check if there are any chat messages to process
     if (chatMessageEvents.length === 0) {

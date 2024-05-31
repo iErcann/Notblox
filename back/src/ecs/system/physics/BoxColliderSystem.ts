@@ -1,7 +1,7 @@
 import { SizeComponent } from '../../../../../shared/component/SizeComponent.js'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { EntityManager } from '../../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'

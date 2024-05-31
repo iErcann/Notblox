@@ -1,4 +1,4 @@
-import { EntityManager } from '@shared/entity/EntityManager'
+import { EntityManager } from '@shared/system/EntityManager'
 import { config } from '@shared/network/config'
 import * as THREE from 'three'
 import { InputManager } from './InputManager'

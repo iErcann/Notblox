@@ -1,4 +1,4 @@
-import { EntityManager } from '../../../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 import { TrimeshCollidersComponent } from '../component/physics/TrimeshColliderComponent.js'

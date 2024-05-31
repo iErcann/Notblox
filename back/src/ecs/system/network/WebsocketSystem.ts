@@ -13,12 +13,12 @@ import { ChatMessage } from '../../../../../shared/network/client/chatMessage.js
 import { InputMessage } from '../../../../../shared/network/client/input.js'
 import { ConnectionMessage } from '../../../../../shared/network/server/connection.js'
 
-import { pack, unpack } from 'msgpackr'
+import { unpack } from 'msgpackr'
+import { ServerMessageType } from '../../../../../shared/network/server/base.js'
 import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
-import { ServerMessageType } from '../../../../../shared/network/server/base.js'
 import { NetworkSystem } from './NetworkSystem.js'
 type MessageHandler = (ws: any, message: any) => void
 

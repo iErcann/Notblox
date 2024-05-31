@@ -39,7 +39,7 @@ export class MovementSystem {
       return new Rapier.Vector3(0, 0, 0)
     }
     const currentLinVel = rigidBodyComponent.body.linvel()
-    const speed = 0.8
+    const speed = 1.8
     const lookingYAngle = inputComponent.lookingYAngle
 
     const impulse = new Rapier.Vector3(0, currentLinVel.y - 0.1 * dt, 0)

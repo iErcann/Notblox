@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { EntityManager } from '../../shared/entity/EntityManager.js'
+import { EntityManager } from '../../shared/system/EntityManager.js'
 import { config } from '../../shared/network/config.js'
 import { BaseEventSystem } from '../../shared/system/EventSystem.js'
 
@@ -31,6 +31,7 @@ import { SphereColliderSystem } from './ecs/system/physics/SphereColliderSystem.
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
+import { EventListComponent } from '../../shared/component/events/EventListComponent.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = BaseEventSystem.getInstance()
@@ -74,11 +75,13 @@ function runTestEntities() {
     const randomCube = new Cube(0, 50, 0, 1, 1, 1)
     randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
     for (let i = 1; i < 5; i++) {
-      new Cube(0, 5, 5 * i, i / 5, i / 5, i / 5)
+      const c2 = new Cube(0, 5, 5 * i, i / 5, i / 5, i / 5)
+      c2.entity.addComponent(new RandomizeComponent(c2.entity.id))
     }
     new Sphere(0, 30, 0, 1)
     for (let i = 1; i < 1; i++) {
-      new Sphere(0, i * 30, 0, 1.2)
+      const s = new Sphere(0, i * 30, 0, 1.2)
+      s.entity.addComponent(new RandomizeComponent(s.entity.id))
     }
     new Sphere(10, 30, 0, 4)
   }, 1000)

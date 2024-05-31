@@ -1,5 +1,5 @@
 import { MeshComponent } from '../component/MeshComponent.js'
-import { EntityManager } from '@shared/entity/EntityManager.js'
+import { EntityManager } from '@shared/system/EntityManager.js'
 import { Renderer } from '@/game/renderer.js'
 import { TextComponent } from '../component/TextComponent.js'
 import { SerializedComponent } from '@shared/network/server/serialized.js'
@@ -9,9 +9,8 @@ import { BaseEventSystem } from '@shared/system/EventSystem.js'
 
 export class DestroySystem {
   update(entities: Entity[], renderer: Renderer) {
-    const destroyedEvents = BaseEventSystem.getEventsByType(EntityDestroyedEvent)
+    const destroyedEvents = BaseEventSystem.getEvents(EntityDestroyedEvent)
 
-    console.log(EntityManager.getInstance().getAllEntities())
     for (const destroyedEvent of destroyedEvents) {
       const entity = EntityManager.getEntityById(entities, destroyedEvent.entityId)
       if (!entity) {
