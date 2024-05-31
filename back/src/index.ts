@@ -31,7 +31,7 @@ import { SphereColliderSystem } from './ecs/system/physics/SphereColliderSystem.
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
-import { EventListComponent } from '../../shared/component/events/EventListComponent.js'
+// import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = BaseEventSystem.getInstance()
@@ -89,7 +89,7 @@ function runTestEntities() {
   //   new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
   // }, 1000)
 
-  // const movingCubeZ = 0
+  // let movingCubeZ = 0
   // setInterval(() => {
   //   movingCubeZ = (movingCubeZ + 5) % 1000
   //   const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
