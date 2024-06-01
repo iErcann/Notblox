@@ -23,7 +23,7 @@ export class Player {
     this.entity.addComponent(meshComponent)
     let mesh: THREE.Mesh = meshComponent.mesh
 
-    // Capsule debug wireframe
+    // Capsule  debug wireframe
     // if (this.debug) {
     //   const geometry = new THREE.CapsuleGeometry(1, 1, 32)
     //   const material = new THREE.MeshBasicMaterial({ wireframe: true })
@@ -31,13 +31,17 @@ export class Player {
     //   mesh.material = material
     // }
 
-    game.loadManager.glTFLoad('assets/Character.glb').then((gtlf: GLTF) => {
-      mesh.add(gtlf.scene)
-      mesh.animations = gtlf.animations
-      this.activateShadows()
+    game.loadManager
+      .glTFLoad(
+        'https://rawcdn.githack.com/iErcann/Notblox-Assets/0ac6d49540b8fb924bef1b126fbdfd965d733c3a/Character.glb'
+      )
+      .then((gtlf: GLTF) => {
+        mesh.add(gtlf.scene)
+        mesh.animations = gtlf.animations
+        this.activateShadows()
 
-      this.entity.addComponent(new AnimationComponent(this.entity.id, mesh, gtlf.animations))
-    })
+        this.entity.addComponent(new AnimationComponent(this.entity.id, mesh, gtlf.animations))
+      })
 
     const isCurrentPlayer = this.entity.id === game.currentPlayerEntityId
     if (isCurrentPlayer) {
