@@ -24,12 +24,12 @@ export class Player {
     let mesh: THREE.Mesh = meshComponent.mesh
 
     // Capsule debug wireframe
-    if (this.debug) {
-      const geometry = new THREE.CapsuleGeometry(1, 1, 32)
-      const material = new THREE.MeshBasicMaterial({ wireframe: true })
-      mesh.geometry = geometry
-      mesh.material = material
-    }
+    // if (this.debug) {
+    //   const geometry = new THREE.CapsuleGeometry(1, 1, 32)
+    //   const material = new THREE.MeshBasicMaterial({ wireframe: true })
+    //   mesh.geometry = geometry
+    //   mesh.material = material
+    // }
 
     game.loadManager.glTFLoad('assets/Character.glb').then((gtlf: GLTF) => {
       mesh.add(gtlf.scene)

@@ -41,6 +41,8 @@ export class Renderer extends THREE.WebGLRenderer {
     this.css2DRenderer.domElement.style.top = '0'
     this.css2DRenderer.domElement.style.pointerEvents = 'none'
 
+    // Prevent right click context menu
+    this.domElement.addEventListener('contextmenu', (event) => event.preventDefault())
     this.addLight()
     this.addDirectionnalLight()
     this.addWorld(loadManager)

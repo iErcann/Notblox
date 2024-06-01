@@ -14,11 +14,11 @@ export class InputProcessingSystem {
     }
 
     // Update the InputComponent based on the received packet
-    inputComponent.down = inputMessage.down
-    inputComponent.up = inputMessage.up
-    inputComponent.left = inputMessage.left
-    inputComponent.right = inputMessage.right
-    inputComponent.space = inputMessage.space
-    inputComponent.lookingYAngle = inputMessage.angleY
+    inputComponent.down = inputMessage.d
+    inputComponent.up = inputMessage.u
+    inputComponent.left = inputMessage.l
+    inputComponent.right = inputMessage.r
+    inputComponent.space = inputMessage.s
+    inputComponent.lookingYAngle = inputMessage.y
   }
 }

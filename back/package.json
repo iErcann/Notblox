@@ -45,6 +45,7 @@
     "msgpackr": "^1.9.9",
     "node-three-gltf": "^1.4.0",
     "pako": "^2.1.0",
+    "rate-limiter-flexible": "^5.0.3",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.43.0"
   }
 }

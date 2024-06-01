@@ -20,6 +20,8 @@ import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
 import { NetworkSystem } from './NetworkSystem.js'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
+
 type MessageHandler = (ws: any, message: any) => void
 
 export class WebsocketSystem {
@@ -27,10 +29,22 @@ export class WebsocketSystem {
   private players: Player[] = []
   private messageHandlers: Map<ClientMessageType, MessageHandler> = new Map()
   private inputProcessingSystem: InputProcessingSystem = new InputProcessingSystem()
+  private limiter = new RateLimiterMemory({
+    points: 10, // Max 10 points per second
+    duration: 1, // Each point expires after 1 second
+  })
 
   constructor() {
     this.initializeServer()
     this.initializeMessageHandlers()
+  }
+  private async isRateLimited(ip: string): Promise<boolean> {
+    try {
+      await this.limiter.consume(ip) // Use a unique identifier for each WebSocket connection
+      return false // Not rate limited
+    } catch (rejRes) {
+      return true // Rate limited
+    }
   }
 
   private initializeServer() {
@@ -113,7 +127,13 @@ export class WebsocketSystem {
   // TODO: Create EventOnPlayerConnect and EventOnPlayerDisconnect to respects ECS
   // Might be useful to query the chat and send a message to all players when a player connects or disconnects
   // Also could append scriptable events to be triggered on connect/disconnect depending on the game
-  private onConnect(ws: any) {
+  private async onConnect(ws: any) {
+    const ipBuffer = ws.getRemoteAddressAsText() as ArrayBuffer
+    const ip = Buffer.from(ipBuffer).toString()
+    if (await this.isRateLimited(ip)) {
+      // Respond to the client indicating that the connection is rate limited
+      return ws.close(429, 'Rate limit exceeded')
+    }
     const player = new Player(ws, 10 + Math.random() * 3, 10, 20 + Math.random() * 3)
     const connectionMessage: ConnectionMessage = {
       t: ServerMessageType.FIRST_CONNECTION,
@@ -149,7 +169,7 @@ export class WebsocketSystem {
       console.error(`Player with WS ${ws} not found.`)
       return
     }
-    const { up, down, left, right, space, angleY } = message
+    const { u: up, d: down, l: left, r: right, s: space, y: angleY } = message
     if (
       typeof up !== 'boolean' ||
       typeof down !== 'boolean' ||

@@ -14,7 +14,6 @@ import {
   SyncPositionSystem,
   SyncRotationSystem,
   SyncSizeSystem,
-  TopCameraFollowSystem,
 } from './ecs/system'
 import { Hud } from './hud'
 import { Renderer } from './renderer'
@@ -32,7 +31,6 @@ export class Game {
   private syncRotationSystem: SyncRotationSystem
   private syncColorSystem: SyncColorSystem
   private syncSizeSystem: SyncSizeSystem
-  private topCameraFollowSystem: TopCameraFollowSystem
   private eventSystem: BaseEventSystem
   websocketManager: WebSocketManager
   private animationSystem: AnimationSystem
@@ -50,7 +48,6 @@ export class Game {
     this.syncRotationSystem = new SyncRotationSystem()
     this.syncColorSystem = new SyncColorSystem()
     this.syncSizeSystem = new SyncSizeSystem()
-    this.topCameraFollowSystem = new TopCameraFollowSystem()
     this.websocketManager = new WebSocketManager(this)
     this.animationSystem = new AnimationSystem()
     this.loadManager = new LoadManager()

@@ -23,7 +23,7 @@ export class OrbitCameraFollowSystem {
     this.cameraControls.dollyDragInverted = true
 
     this.cameraControls.mouseButtons.middle = CameraControls.ACTION.ZOOM
-    this.cameraControls.mouseButtons.right = CameraControls.ACTION.NONE
+    this.cameraControls.mouseButtons.right = CameraControls.ACTION.ROTATE
 
     // this.cameraControls.mouseButtons.middle = CameraControls.ACTION.NONE
     this.cameraControls.touches.two = CameraControls.ACTION.TOUCH_DOLLY
@@ -38,6 +38,7 @@ export class OrbitCameraFollowSystem {
       const followComponent = entity.getComponent(FollowComponent)
 
       if (followComponent && positionComponent) {
+        this.cameraControls.setFocalOffset(0, 0, 0, true)
         const newTargetPosition = new THREE.Vector3(
           positionComponent.x,
           positionComponent.y + this.offset.y,
@@ -58,7 +59,7 @@ export class OrbitCameraFollowSystem {
           this.cameraControls.camera.position.z - newTargetPosition.z,
           this.cameraControls.camera.position.x - newTargetPosition.x
         )
-        input.angleY = angle
+        input.y = angle
       }
     }
   }
