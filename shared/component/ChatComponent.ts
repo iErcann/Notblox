@@ -27,7 +27,6 @@ export class ChatListComponent extends NetworkComponent {
     super(entityId, SerializedComponentType.CHAT_LIST)
   }
   deserialize(data: SerializedChatListComponent): void {
-    console.log('Deserializing ChatListComponent')
     this.list = data.messages.map((message) => new ChatMessageComponent(this.entityId, message))
   }
   serialize(): SerializedChatListComponent {

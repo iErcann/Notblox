@@ -5,6 +5,7 @@ import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { SingleSizeEvent } from '../../component/events/SingleSizeEvent.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
+import { CapsuleColliderComponent } from '../../component/physics/CapsuleColliderComponent.js'
 import { SphereColliderComponent } from '../../component/physics/SphereColliderComponent.js'
 
 export class SingleSizeEventSystem {
@@ -34,6 +35,12 @@ export class SingleSizeEventSystem {
       if (sphereColliderComponent) {
         const colliderDesc = Rapier.ColliderDesc.ball(newSize)
         sphereColliderComponent.collider?.setShape(colliderDesc.shape)
+      }
+
+      const capsuleColliderComponent = entity.getComponent(CapsuleColliderComponent)
+      if (capsuleColliderComponent) {
+        const colliderDesc = Rapier.ColliderDesc.capsule(newSize, newSize)
+        capsuleColliderComponent.collider?.setShape(colliderDesc.shape)
       }
 
       // This will rebroadcast the update to all clients.

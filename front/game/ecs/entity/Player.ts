@@ -14,7 +14,7 @@ import { TextComponent } from '../component/TextComponent'
 
 export class Player {
   entity: Entity
-  debug: boolean = false
+  debug: boolean = true
 
   constructor(entityId: number, game: Game) {
     this.entity = game.entityManager.createEntity(SerializedEntityType.PLAYER, entityId)

@@ -11,31 +11,6 @@ export class LoadManager {
     this.gltfLoader.setDRACOLoader(this.dracoLoader)
   }
 
-  dracoLoad(path: string): Promise<THREE.Mesh> {
-    return new Promise((resolve, reject) => {
-      // Load a Draco geometry
-      this.dracoLoader.load(
-        // resource URL
-        path,
-        // called when the resource is loaded
-        (geometry) => {
-          const material = new THREE.MeshStandardMaterial({ color: 0x606060 })
-          const mesh = new THREE.Mesh(geometry, material)
-          resolve(mesh)
-        },
-        // called as loading progresses
-        (xhr) => {
-          console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
-        },
-        // called when loading has errors
-        (error) => {
-          console.error('An error happened', error)
-          reject(error)
-        }
-      )
-    })
-  }
-
   glTFLoad(path: string): Promise<GLTF> {
     return new Promise((resolve, reject) => {
       // Load a GLTF model

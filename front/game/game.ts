@@ -19,6 +19,7 @@ import {
 import { Hud } from './hud'
 import { Renderer } from './renderer'
 import { BaseEventSystem } from '@shared/system/EventSystem'
+import { MeshSystem } from './ecs/system/MeshSystem'
 
 export class Game {
   private static instance: Game
@@ -40,6 +41,7 @@ export class Game {
   private chatSystem: ChatSystem
   loadManager: LoadManager
   private inputManager: InputManager
+  private meshSystem: MeshSystem
   renderer: Renderer
   hud: Hud
   private constructor() {
@@ -55,6 +57,7 @@ export class Game {
     this.sleepCheckSystem = new SleepCheckSystem()
     this.chatSystem = new ChatSystem()
     this.destroySystem = new DestroySystem()
+    this.meshSystem = new MeshSystem()
 
     this.eventSystem = BaseEventSystem.getInstance()
 
@@ -84,6 +87,9 @@ export class Game {
     const entities = EntityManager.getInstance().getAllEntities()
     const now = Date.now()
     this.inputManager.sendInput()
+    this.syncComponentSystem.update(entities)
+    this.destroySystem.update(entities, this.renderer)
+    this.meshSystem.update(entities, this.renderer)
     const deltaTime = now - this.lastRenderTime
     // Interp factor is wrong here
     // const interpolationFactor =
@@ -92,15 +98,15 @@ export class Game {
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
     this.syncPositionSystem.update(entities, positionInterpFactor)
     this.syncRotationSystem.update(entities, 0.5)
-    this.chatSystem.update(entities, this.hud)
     this.syncColorSystem.update(entities)
+    this.chatSystem.update(entities, this.hud)
     this.syncSizeSystem.update(entities)
     this.animationSystem.update(deltaTime, entities)
-    this.destroySystem.update(entities, this.renderer)
-    this.sleepCheckSystem.update(entities)
-    this.renderer.update(deltaTime, entities, this.inputManager.inputState)
     this.eventSystem.afterUpdate(entities)
-    this.lastRenderTime = now
+    this.renderer.update(deltaTime, entities, this.inputManager.inputState)
+    this.sleepCheckSystem.update(entities)
+    this.destroySystem.afterUpdate(entities)
     this.websocketManager.timeSinceLastServerUpdate += deltaTime
+    this.lastRenderTime = now
   }
 }

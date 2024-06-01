@@ -119,6 +119,7 @@ export class WebsocketSystem {
       t: ServerMessageType.FIRST_CONNECTION,
       id: player.entity.id,
     }
+    // player.entity.addComponent(new RandomizeComponent(player.entity.id))
     ws.player = player
     ws.send(NetworkSystem.compress(connectionMessage), true)
     this.players.push(player)

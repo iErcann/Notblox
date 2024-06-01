@@ -18,6 +18,7 @@ import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { LockedRotationComponent } from '../component/LockedRotationComponent.js'
 import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
+import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 
 export class Player {
   entity: Entity
@@ -31,6 +32,12 @@ export class Player {
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))
 
     this.entity.addComponent(new PlayerComponent(this.entity.id))
+    const colorComponent = new ColorComponent(
+      this.entity.id,
+      `#${Math.floor(Math.random() * 16777215).toString(16)}`
+    )
+
+    this.entity.addComponent(colorComponent)
 
     // Adding a PositionComponent with initial position
     const positionComponent = new PositionComponent(this.entity.id, initialX, initialY, initialZ)
@@ -55,6 +62,7 @@ export class Player {
       positionComponent,
       rotationComponent,
       sizeComponent,
+      colorComponent,
       stateComponent,
     ])
 

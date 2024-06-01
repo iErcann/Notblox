@@ -1,5 +1,5 @@
 import { ComponentWrapper } from '../component/events/ComponentWrapper.js'
-import { Component } from '../component/Component.js'
+import { Component, ComponentConstructor } from '../component/Component.js'
 import { ComponentAddedEvent } from '../component/events/ComponentAddedEvent.js'
 import { ComponentRemovedEvent } from '../component/events/ComponentRemovedEvent.js'
 
@@ -106,7 +106,7 @@ export class BaseEventSystem {
    * @param componentType The type of the event component to get
    * @returns Array of event components of the specified type
    */
-  static getEvents<T extends Component>(componentType: new (...args: any[]) => T): T[] {
+  static getEvents<T extends Component>(componentType: ComponentConstructor<T>): T[] {
     const eventListComponent =
       BaseEventSystem.getInstance().eventQueue.entity.getComponent(EventListComponent)!
     return eventListComponent.getEvents(componentType)
@@ -123,14 +123,20 @@ export class BaseEventSystem {
    *  BaseEventSystem.getEventsWrapped(ComponentRemovedEvent, ChatMessageComponent)
    * ```
    */
+
+  // TODO: Fine a way to infer subtypes
   static getEventsWrapped<E extends ComponentWrapper<T>, T extends Component>(
     eventType: new (...args: any[]) => E,
-    componentType: new (...args: any[]) => T
+    componentType: ComponentConstructor<T>
   ): E[] {
     // Filtering by eventType (e.g., ComponentAddedEvent)
-    const events = BaseEventSystem.getEvents(eventType)
+    const events: E[] = BaseEventSystem.getEvents(eventType)
+
     // Then filtering by its wrapped component type
-    return events.filter((event) => event.component instanceof componentType) as E[]
+    const eventsWrapped = events.filter(
+      (event: E): event is E => event.component instanceof componentType
+    )
+    return eventsWrapped
   }
 
   /**

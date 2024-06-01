@@ -18,19 +18,24 @@ export class DestroySystem {
         continue
       }
 
-      // TODO: Use the life cycle of the MeshComponent to remove the mesh
-      // Example : ComponentRemovedEvent<MeshComponent>
-      const meshComponent = entity.getComponent(MeshComponent)
-      if (meshComponent) {
-        renderer.scene.remove(meshComponent.mesh)
-      }
-
       const textComponent = entity.getComponent(TextComponent)
       if (textComponent) {
         textComponent.textObject.element.remove()
       }
 
       entity.removeAllComponents()
+    }
+  }
+  afterUpdate(entities: Entity[]) {
+    const destroyedEvents = BaseEventSystem.getEvents(EntityDestroyedEvent)
+
+    for (const destroyedEvent of destroyedEvents) {
+      const entity = EntityManager.getEntityById(entities, destroyedEvent.entityId)
+      if (!entity) {
+        console.error('Update : DestroySystem: Entity not found with id', destroyedEvent.entityId)
+        continue
+      }
+
       EntityManager.removeEntity(entity)
     }
   }

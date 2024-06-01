@@ -29,8 +29,11 @@ import { BaseEventSystem } from '@shared/system/EventSystem'
 import { EventListComponent } from '@shared/component/events/EventListComponent'
 
 export class SyncComponentsSystem {
+  private snapshotMessages: SnapshotMessage[] = []
   constructor(public game: Game) {}
-
+  addSnapshotMessage(snapshotMessage: SnapshotMessage) {
+    this.snapshotMessages.push(snapshotMessage)
+  }
   handleEventEntity(serializedEventQueueEntity: SerializedEntity) {
     const eventEntity = BaseEventSystem.getInstance().eventQueue.entity
     const eventListComponent = eventEntity.getComponent(EventListComponent)
@@ -47,29 +50,33 @@ export class SyncComponentsSystem {
       eventListComponent?.addEvent(eventComponent)
     }
   }
-  update(entities: Entity[], snapshotMessage: SnapshotMessage) {
-    const serializedEntities = snapshotMessage.e
-    for (const serializedEntity of serializedEntities) {
-      // The EventQueue entity already exist on the client (BaseEventSystem instance constructor creates it), we don't need to create it
-      // We  need to handle the events by adding them to the event queue on the BaseEventSystem instance
-      if (serializedEntity.t === SerializedEntityType.EVENT_QUEUE) {
-        this.handleEventEntity(serializedEntity)
-        continue
-      }
+  update(entities: Entity[]) {
+    for (const [index, snapshotMessage] of this.snapshotMessages.entries()) {
+      const serializedEntities = snapshotMessage.e
+      for (const serializedEntity of serializedEntities) {
+        // The EventQueue entity already exist on the client (BaseEventSystem instance constructor creates it), we don't need to create it
+        // We  need to handle the events by adding them to the event queue on the BaseEventSystem instance
+        if (serializedEntity.t === SerializedEntityType.EVENT_QUEUE) {
+          this.handleEventEntity(serializedEntity)
+          continue
+        }
 
-      let entity = entities.find((entity) => entity.id === serializedEntity.id)
+        let entity = entities.find((entity) => entity.id === serializedEntity.id)
 
-      if (!entity) {
-        entity = this.createEntity(serializedEntity)
         if (!entity) {
-          console.error("Can't create entity, add it to createEntity")
-          return
+          entity = this.createEntity(serializedEntity)
+          if (!entity) {
+            console.error("Can't create entity, add it to createEntity")
+            return
+          }
+        }
+
+        for (const serializedComponent of serializedEntity.c) {
+          this.updateOrCreateComponent(entity!, serializedComponent)
         }
       }
-
-      for (const serializedComponent of serializedEntity.c) {
-        this.updateOrCreateComponent(entity!, serializedComponent)
-      }
+      // Remove the processed snapshotMessage from the array
+      this.snapshotMessages.splice(index, 1)
     }
   }
 
