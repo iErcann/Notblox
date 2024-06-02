@@ -10,8 +10,8 @@ import { NetworkComponent } from '../network/NetworkComponent.js'
 import { EventListComponent } from '../../shared/component/events/EventListComponent.js'
 
 /* See https://gamedev.stackexchange.com/a/194135 */
-export class BaseEventSystem {
-  private static instance: BaseEventSystem
+export class EventSystem {
+  private static instance: EventSystem
   eventQueue: EventQueue
 
   private constructor() {
@@ -21,11 +21,11 @@ export class BaseEventSystem {
   /**
    * Singleton pattern to get the instance of BaseEventSystem
    */
-  static getInstance(): BaseEventSystem {
-    if (!BaseEventSystem.instance) {
-      BaseEventSystem.instance = new BaseEventSystem()
+  static getInstance(): EventSystem {
+    if (!EventSystem.instance) {
+      EventSystem.instance = new EventSystem()
     }
-    return BaseEventSystem.instance
+    return EventSystem.instance
   }
 
   /**
@@ -41,7 +41,7 @@ export class BaseEventSystem {
    * @param event The event component to add
    */
   static addEvent(event: Component) {
-    const eventQueueEntity = BaseEventSystem.getInstance().eventQueue.entity
+    const eventQueueEntity = EventSystem.getInstance().eventQueue.entity
     if (!eventQueueEntity) {
       console.error('EventQueue entity not found')
       return
@@ -62,13 +62,13 @@ export class BaseEventSystem {
    * @param event  The network event component to add
    */
   static addNetworkEvent(event: NetworkComponent) {
-    const eventQueueEntity = BaseEventSystem.getInstance().eventQueue.entity
+    const eventQueueEntity = EventSystem.getInstance().eventQueue.entity
     if (!eventQueueEntity) {
       console.error('EventQueue entity not found')
       return
     }
 
-    BaseEventSystem.addEvent(event)
+    EventSystem.addEvent(event)
 
     const networkDataComponent = eventQueueEntity.getComponent(NetworkDataComponent)
     if (!networkDataComponent) {
@@ -98,7 +98,7 @@ export class BaseEventSystem {
    * @returns Array of components
    */
   static getAllEvents() {
-    return BaseEventSystem.getInstance().eventQueue.entity.components
+    return EventSystem.getInstance().eventQueue.entity.components
   }
 
   /**
@@ -108,7 +108,7 @@ export class BaseEventSystem {
    */
   static getEvents<T extends Component>(componentType: ComponentConstructor<T>): T[] {
     const eventListComponent =
-      BaseEventSystem.getInstance().eventQueue.entity.getComponent(EventListComponent)!
+      EventSystem.getInstance().eventQueue.entity.getComponent(EventListComponent)!
     return eventListComponent.getEvents(componentType)
   }
 
@@ -130,7 +130,7 @@ export class BaseEventSystem {
     componentType: ComponentConstructor<T>
   ): E[] {
     // Filtering by eventType (e.g., ComponentAddedEvent)
-    const events: E[] = BaseEventSystem.getEvents(eventType)
+    const events: E[] = EventSystem.getEvents(eventType)
 
     // Then filtering by its wrapped component type
     const eventsWrapped = events.filter(
@@ -144,7 +144,7 @@ export class BaseEventSystem {
    * @param addedComponent The component that was added
    */
   static onComponentAdded<T extends Component>(addedComponent: T) {
-    BaseEventSystem.addEvent(new ComponentAddedEvent(addedComponent))
+    EventSystem.addEvent(new ComponentAddedEvent(addedComponent))
   }
 
   /**
@@ -152,6 +152,6 @@ export class BaseEventSystem {
    * @param removedComponent The component that was removed
    */
   static onComponentRemoved<T extends Component>(removedComponent: T) {
-    BaseEventSystem.addEvent(new ComponentRemovedEvent(removedComponent))
+    EventSystem.addEvent(new ComponentRemovedEvent(removedComponent))
   }
 }

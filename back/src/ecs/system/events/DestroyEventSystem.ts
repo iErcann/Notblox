@@ -1,13 +1,13 @@
 import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 
 export class DestroyEventSystem {
   update(entities: Entity[]) {
-    const destroyedEvents = BaseEventSystem.getEvents(EntityDestroyedEvent)
+    const destroyedEvents = EventSystem.getEvents(EntityDestroyedEvent)
 
     for (const destroyedEvent of destroyedEvents) {
       const entity = EntityManager.getEntityById(entities, destroyedEvent.entityId)
@@ -17,7 +17,7 @@ export class DestroyEventSystem {
       }
 
       if (entity.getComponent(PlayerComponent)) {
-        BaseEventSystem.addEvent(
+        EventSystem.addEvent(
           new ChatMessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
         )
       }

@@ -15,7 +15,7 @@ import { ConnectionMessage } from '../../../../../shared/network/server/connecti
 
 import { unpack } from 'msgpackr'
 import { ServerMessageType } from '../../../../../shared/network/server/base.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
@@ -142,6 +142,14 @@ export class WebsocketSystem {
     // player.entity.addComponent(new RandomizeComponent(player.entity.id))
     ws.player = player
     ws.send(NetworkSystem.compress(connectionMessage), true)
+
+    EventSystem.addEvent(
+      new ChatMessageEvent(
+        player.entity.id,
+        '🖥️ [SERVER]',
+        `Player ${player.entity.id} joined at ${new Date().toLocaleString()}`
+      )
+    )
     this.players.push(player)
   }
 
@@ -160,7 +168,7 @@ export class WebsocketSystem {
     const entity = disconnectedPlayer.entity
     const entityId = entity.id
 
-    BaseEventSystem.addNetworkEvent(new EntityDestroyedEvent(entityId))
+    EventSystem.addNetworkEvent(new EntityDestroyedEvent(entityId))
   }
 
   private async handleInputMessage(ws: any, message: InputMessage) {
@@ -195,6 +203,6 @@ export class WebsocketSystem {
       console.error(`Invalid chat message, sent from ${player}`, message)
       return
     }
-    BaseEventSystem.addEvent(new ChatMessageEvent(id, `Player ${id}`, content))
+    EventSystem.addEvent(new ChatMessageEvent(id, `Player ${id}`, content))
   }
 }

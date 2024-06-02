@@ -1,7 +1,7 @@
 import Rapier from '../../../physics/rapier.js'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ComponentRemovedEvent } from '../../../../../shared/component/events/ComponentRemovedEvent.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
@@ -9,10 +9,7 @@ import { LockedRotationComponent } from '../../component/LockedRotationComponent
 
 export class LockRotationSystem {
   update(entities: Entity[]) {
-    const createEvents = BaseEventSystem.getEventsWrapped(
-      ComponentAddedEvent,
-      LockedRotationComponent
-    )
+    const createEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, LockedRotationComponent)
 
     for (const event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
@@ -23,7 +20,7 @@ export class LockRotationSystem {
       this.onRotationLocked(entity)
     }
 
-    const removedEvents = BaseEventSystem.getEventsWrapped(
+    const removedEvents = EventSystem.getEventsWrapped(
       ComponentRemovedEvent,
       LockedRotationComponent
     )

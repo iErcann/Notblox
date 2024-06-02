@@ -1,7 +1,7 @@
 import { ColorComponent } from '../../../../../shared/component/ColorComponent.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { LockedRotationComponent } from '../../component/LockedRotationComponent.js'
 import { ColorEvent } from '../../component/events/ColorEvent.js'
@@ -30,7 +30,7 @@ export class BoundaryCheckSystem {
         const colorComponent = entity.getComponent(ColorComponent)
         if (colorComponent) {
           const randomHex = Math.floor(Math.random() * 16777215).toString(16)
-          BaseEventSystem.addEvent(new ColorEvent(entity.id, '#' + randomHex))
+          EventSystem.addEvent(new ColorEvent(entity.id, '#' + randomHex))
         }
         bodyComponent.body.setLinvel(new Rapier.Vector3(0, 0, 0), true)
 

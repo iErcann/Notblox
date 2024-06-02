@@ -1,7 +1,7 @@
 import { SingleSizeComponent } from '../../../../../shared/component/SingleSizeComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { SingleSizeEvent } from '../../component/events/SingleSizeEvent.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
@@ -10,7 +10,7 @@ import { SphereColliderComponent } from '../../component/physics/SphereColliderC
 
 export class SingleSizeEventSystem {
   update(entities: Entity[]) {
-    const eventSizes = BaseEventSystem.getEvents(SingleSizeEvent)
+    const eventSizes = EventSystem.getEvents(SingleSizeEvent)
 
     for (const eventSingleSize of eventSizes) {
       const entity = EntityManager.getEntityById(entities, eventSingleSize.entityId)

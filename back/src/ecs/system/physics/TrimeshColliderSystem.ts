@@ -1,7 +1,7 @@
 import { Mesh } from 'three'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { GLTFLoaderManager } from '../../../GLTFLoaderManager.js'
 import {
   TrimeshColliderComponent,
@@ -14,7 +14,7 @@ import { PositionComponent } from '../../../../../shared/component/PositionCompo
 
 export class TrimeshColliderSystem {
   async update(entities: Entity[], world: Rapier.World) {
-    const createEvents = BaseEventSystem.getEventsWrapped(
+    const createEvents = EventSystem.getEventsWrapped(
       ComponentAddedEvent,
       TrimeshCollidersComponent
     )

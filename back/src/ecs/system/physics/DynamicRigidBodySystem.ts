@@ -1,7 +1,7 @@
 import Rapier from '../../../physics/rapier.js'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ComponentRemovedEvent } from '../../../../../shared/component/events/ComponentRemovedEvent.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
@@ -10,7 +10,7 @@ import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 
 export class DynamicRigidBodySystem {
   update(entities: Entity[], world: Rapier.World) {
-    const createEvents = BaseEventSystem.getEventsWrapped(
+    const createEvents = EventSystem.getEventsWrapped(
       ComponentAddedEvent,
       DynamicRigidBodyComponent
     )
@@ -24,7 +24,7 @@ export class DynamicRigidBodySystem {
       this.onComponentAdded(entity, event, world)
     }
 
-    const removedEvents = BaseEventSystem.getEventsWrapped(
+    const removedEvents = EventSystem.getEventsWrapped(
       ComponentRemovedEvent,
       DynamicRigidBodyComponent
     )

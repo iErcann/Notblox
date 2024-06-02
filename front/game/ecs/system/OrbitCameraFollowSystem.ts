@@ -14,7 +14,7 @@ export class OrbitCameraFollowSystem {
     CameraControls.install({ THREE: THREE })
     this.cameraControls = new CameraControls(camera, renderer.domElement)
     this.cameraControls.minDistance = 1
-    this.cameraControls.maxDistance = 100
+    this.cameraControls.maxDistance = 1000
     this.cameraControls.azimuthRotateSpeed = 0.3 // negative value to invert rotation direction
     this.cameraControls.polarRotateSpeed = 0.2 // negative value to invert rotation direction
     this.cameraControls.minPolarAngle = 30 * THREE.MathUtils.DEG2RAD
@@ -31,6 +31,9 @@ export class OrbitCameraFollowSystem {
     // Pointerlock
   }
 
+  private isDragging(): boolean {
+    return this.cameraControls.currentAction === CameraControls.ACTION.OFFSET
+  }
   update(dt: number, entities: Entity[], input: InputMessage) {
     this.cameraControls.update(dt)
     for (const entity of entities) {

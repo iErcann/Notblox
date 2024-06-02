@@ -5,15 +5,12 @@ import { TextComponent } from '../component/TextComponent.js'
 import { SerializedComponent } from '@shared/network/server/serialized.js'
 import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEvent.js'
 import { Entity } from '@shared/entity/Entity.js'
-import { BaseEventSystem } from '@shared/system/EventSystem.js'
+import { EventSystem } from '@shared/system/EventSystem.js'
 import { ComponentRemovedEvent } from '@shared/component/events/ComponentRemovedEvent'
 
 export class MeshSystem {
   update(entities: Entity[], renderer: Renderer) {
-    const destroyedMeshEvents = BaseEventSystem.getEventsWrapped(
-      ComponentRemovedEvent,
-      MeshComponent
-    )
+    const destroyedMeshEvents = EventSystem.getEventsWrapped(ComponentRemovedEvent, MeshComponent)
     for (const destroyedEvent of destroyedMeshEvents) {
       const meshComponent = destroyedEvent.component as MeshComponent
       if (meshComponent) {

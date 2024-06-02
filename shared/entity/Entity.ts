@@ -1,6 +1,6 @@
 import { SerializedComponentType, SerializedEntityType } from '../network/server/serialized.js'
 import { Component, ComponentConstructor } from '../component/Component.js'
-import { BaseEventSystem } from '../system/EventSystem.js'
+import { EventSystem } from '../system/EventSystem.js'
 import { NetworkComponent } from '../../shared/network/NetworkComponent.js'
 
 // Define an Entity class
@@ -19,7 +19,7 @@ export class Entity {
 
     // This can be used to skip the recursion or non added events
     if (createAddedEvent) {
-      BaseEventSystem.onComponentAdded(component)
+      EventSystem.onComponentAdded(component)
     }
   }
 
@@ -40,7 +40,7 @@ export class Entity {
     if (removedComponent) {
       this.components.delete(componentType)
       if (createRemoveEvent) {
-        BaseEventSystem.onComponentRemoved(removedComponent)
+        EventSystem.onComponentRemoved(removedComponent)
       }
     }
   }

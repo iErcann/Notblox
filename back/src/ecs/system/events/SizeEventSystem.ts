@@ -1,14 +1,14 @@
 import { SizeComponent } from '../../../../../shared/component/SizeComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { SizeEvent } from '../../component/events/SizeEvent.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
 
 export class SizeEventSystem {
   update(entities: Entity[]) {
-    const eventSizes = BaseEventSystem.getEvents(SizeEvent)
+    const eventSizes = EventSystem.getEvents(SizeEvent)
 
     for (const eventSize of eventSizes) {
       const entity = EntityManager.getEntityById(entities, eventSize.entityId)

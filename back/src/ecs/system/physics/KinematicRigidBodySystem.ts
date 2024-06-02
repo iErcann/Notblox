@@ -1,12 +1,12 @@
 import Rapier from '../../../physics/rapier.js'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 import { ComponentRemovedEvent } from '../../../../../shared/component/events/ComponentRemovedEvent.js'
 
 export class KinematicRigidBodySystem {
   update(world: Rapier.World) {
-    const createEvents = BaseEventSystem.getEventsWrapped(
+    const createEvents = EventSystem.getEventsWrapped(
       ComponentAddedEvent,
       KinematicRigidBodyComponent
     )
@@ -15,7 +15,7 @@ export class KinematicRigidBodySystem {
       this.onComponentAdded(event, world)
     }
 
-    const removedEvents = BaseEventSystem.getEventsWrapped(
+    const removedEvents = EventSystem.getEventsWrapped(
       ComponentRemovedEvent,
       KinematicRigidBodyComponent
     )

@@ -4,7 +4,6 @@ import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComp
 import { StateComponent } from '../../../../shared/component/StateComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../shared/system/EntityManager.js'
-import { BaseEventSystem } from '../../../../shared/system/EventSystem.js'
 import {
   SerializedEntityType,
   SerializedStateType,
@@ -13,7 +12,6 @@ import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 import { WebSocketComponent } from '../component/WebsocketComponent.js'
-import { ChatMessageEvent } from '../component/events/ChatMessageEvent.js'
 import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { LockedRotationComponent } from '../component/LockedRotationComponent.js'
@@ -67,13 +65,5 @@ export class Player {
     ])
 
     this.entity.addComponent(networkDataComponent)
-
-    BaseEventSystem.addEvent(
-      new ChatMessageEvent(
-        this.entity.id,
-        '🖥️ [SERVER]',
-        `Player ${this.entity.id} joined at ${new Date().toLocaleString()}`
-      )
-    )
   }
 }

@@ -17,7 +17,7 @@ import {
 } from './ecs/system'
 import { Hud } from './hud'
 import { Renderer } from './renderer'
-import { BaseEventSystem } from '@shared/system/EventSystem'
+import { EventSystem } from '@shared/system/EventSystem'
 import { MeshSystem } from './ecs/system/MeshSystem'
 
 export class Game {
@@ -31,14 +31,14 @@ export class Game {
   private syncRotationSystem: SyncRotationSystem
   private syncColorSystem: SyncColorSystem
   private syncSizeSystem: SyncSizeSystem
-  private eventSystem: BaseEventSystem
+  private eventSystem: EventSystem
   websocketManager: WebSocketManager
   private animationSystem: AnimationSystem
   private sleepCheckSystem: SleepCheckSystem
   private destroySystem: DestroySystem
   private chatSystem: ChatSystem
   loadManager: LoadManager
-  private inputManager: InputManager
+  inputManager: InputManager
   private meshSystem: MeshSystem
   renderer: Renderer
   hud: Hud
@@ -56,7 +56,7 @@ export class Game {
     this.destroySystem = new DestroySystem()
     this.meshSystem = new MeshSystem()
 
-    this.eventSystem = BaseEventSystem.getInstance()
+    this.eventSystem = EventSystem.getInstance()
 
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager)
     this.inputManager = new InputManager(this.websocketManager)

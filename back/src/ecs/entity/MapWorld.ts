@@ -15,7 +15,7 @@ export class MapWorld {
     this.entity.addComponent(new KinematicRigidBodyComponent(this.entity.id))
 
     this.entity.addComponent(
-      new TrimeshCollidersComponent(this.entity.id, '../front/public/assets/keneeyworldled.glb')
+      new TrimeshCollidersComponent(this.entity.id, '../front/public/assets/basic.glb')
     )
   }
 }

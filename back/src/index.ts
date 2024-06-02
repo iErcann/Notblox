@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 import { EntityManager } from '../../shared/system/EntityManager.js'
 import { config } from '../../shared/network/config.js'
-import { BaseEventSystem } from '../../shared/system/EventSystem.js'
+import { EventSystem } from '../../shared/system/EventSystem.js'
 
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { Chat } from './ecs/entity/Chat.js'
@@ -35,7 +35,7 @@ import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestro
 // import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 
 // TODO: Make it wait for the websocket server to start
-const eventSystem = BaseEventSystem.getInstance()
+const eventSystem = EventSystem.getInstance()
 const entityManager = EntityManager.getInstance()
 const entities = entityManager.getAllEntities()
 
@@ -95,7 +95,7 @@ function runTestEntities() {
     movingCubeZ = (movingCubeZ + 5) % 1000
     const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
     setTimeout(() => {
-      BaseEventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
+      EventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
     }, 1000)
   }, 2000)
 }

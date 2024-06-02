@@ -15,7 +15,6 @@
     "msgpackr": "^1.9.9",
     "next": "latest",
     "next-seo": "^6.5.0",
-    "nipplejs": "^0.10.2",
     "pako": "^2.1.0",
     "react": "latest",
     "react-dom": "latest",

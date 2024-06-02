@@ -25,7 +25,7 @@ import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEv
 import { MeshComponent } from '../component/MeshComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
-import { BaseEventSystem } from '@shared/system/EventSystem'
+import { EventSystem } from '@shared/system/EventSystem'
 import { EventListComponent } from '@shared/component/events/EventListComponent'
 
 export class SyncComponentsSystem {
@@ -35,7 +35,7 @@ export class SyncComponentsSystem {
     this.snapshotMessages.push(snapshotMessage)
   }
   handleEventEntity(serializedEventQueueEntity: SerializedEntity) {
-    const eventEntity = BaseEventSystem.getInstance().eventQueue.entity
+    const eventEntity = EventSystem.getInstance().eventQueue.entity
     const eventListComponent = eventEntity.getComponent(EventListComponent)
 
     for (const serializedComponent of serializedEventQueueEntity.c) {
@@ -125,7 +125,7 @@ export class SyncComponentsSystem {
         newEntity = new Chat(serializedEntity.id, this.game).entity
         break
       case SerializedEntityType.EVENT_QUEUE:
-        newEntity = BaseEventSystem.getInstance().eventQueue.entity
+        newEntity = EventSystem.getInstance().eventQueue.entity
         break
       default:
         console.error("Unknown entity type, can't create entity")

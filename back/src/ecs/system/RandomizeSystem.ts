@@ -2,7 +2,7 @@ import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComp
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
-import { BaseEventSystem } from '../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../shared/system/EventSystem.js'
 import Rapier from '../../physics/rapier.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { RandomizeComponent } from '../component/RandomizeComponent.js'
@@ -18,7 +18,7 @@ export class RandomizeSystem {
       const sizeComponent = entity.getComponent(SizeComponent)
       if (sizeComponent) {
         if (Math.random() < 0.01) {
-          BaseEventSystem.addEvent(
+          EventSystem.addEvent(
             new SizeEvent(entity.id, Math.random() * 4, Math.random() * 4, Math.random() * 4)
           )
         }
@@ -27,7 +27,7 @@ export class RandomizeSystem {
       const singleSizeComponent = entity.getComponent(SingleSizeComponent)
       if (singleSizeComponent) {
         if (Math.random() < 0.05) {
-          BaseEventSystem.addEvent(new SingleSizeEvent(entity.id, Math.max(0.5, Math.random() * 3)))
+          EventSystem.addEvent(new SingleSizeEvent(entity.id, Math.max(0.5, Math.random() * 3)))
         }
       }
 
@@ -36,7 +36,7 @@ export class RandomizeSystem {
       if (colorComponent) {
         if (Math.random() < 0.01) {
           const randomHex = Math.floor(Math.random() * 16777215).toString(16)
-          BaseEventSystem.addEvent(new ColorEvent(entity.id, '#' + randomHex))
+          EventSystem.addEvent(new ColorEvent(entity.id, '#' + randomHex))
         }
       }
 

@@ -115,7 +115,7 @@ export class Renderer extends THREE.WebGLRenderer {
 
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemiLight = new THREE.HemisphereLight(0xc0fafc, 0x9563ff, 1)
+    const hemiLight = new THREE.HemisphereLight(0xc0fafc, 0x9563ff, 1.5)
     hemiLight.color.setHSL(0.59, 0.4, 0.6)
     hemiLight.groundColor.setHSL(0.095, 0.2, 0.75)
     hemiLight.position.set(0, 50, 0)
@@ -138,20 +138,17 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   private addWorld(loadManager: LoadManager) {
-    loadManager
-      // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
-      .glTFLoad('assets/keneeyworldled.glb')
-      .then((gtlf: GLTF) => {
-        this.scene.add(gtlf.scene)
-        gtlf.scene.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            // Metal Shadow fix https://discourse.threejs.org/t/solved-glb-model-is-very-dark/6258/7
-            child.material.metalness = 0
-            child.castShadow = true // Make the child mesh cast shadows
-            child.receiveShadow = true // Make the child mesh receive shadows
-          }
-        })
+    loadManager.glTFLoad('assets/basic.glb').then((gtlf: GLTF) => {
+      this.scene.add(gtlf.scene)
+      gtlf.scene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          // Metal Shadow fix https://discourse.threejs.org/t/solved-glb-model-is-very-dark/6258/7
+          child.material.metalness = 0
+          child.castShadow = true // Make the child mesh cast shadows
+          child.receiveShadow = true // Make the child mesh receive shadows
+        }
       })
+    })
   }
   update(deltaTime: number, entities: Entity[], inputMessage: InputMessage) {
     const followedEntity = EntityManager.getFirstEntityWithComponent(entities, FollowComponent)

@@ -3,14 +3,14 @@ import { ChatListComponent } from '../../../../../shared/component/ChatComponent
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { ChatComponent } from '../../component/tag/TagChatComponent.js'
-import { BaseEventSystem } from '../../../../../shared/system/EventSystem.js'
+import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 
 export class ChatEventSystem {
   private MAX_MESSAGES: number = 20
   private MAX_CONTENT_LENGTH: number = 128
 
   update(entities: Entity[]) {
-    const chatMessageEvents = BaseEventSystem.getEvents(ChatMessageEvent)
+    const chatMessageEvents = EventSystem.getEvents(ChatMessageEvent)
 
     // Check if there are any chat messages to process
     if (chatMessageEvents.length === 0) {
