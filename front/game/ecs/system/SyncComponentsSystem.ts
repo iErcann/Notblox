@@ -22,6 +22,8 @@ import { SingleSizeComponent } from '@shared/component/SingleSizeComponent'
 import { SizeComponent } from '@shared/component/SizeComponent'
 import { StateComponent } from '@shared/component/StateComponent'
 import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEvent'
+import { ServerMeshComponent } from '@shared/component/ServerMeshComponent'
+
 import { MeshComponent } from '../component/MeshComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
@@ -109,7 +111,6 @@ export class SyncComponentsSystem {
       case SerializedEntityType.PLAYER:
         const player = new Player(serializedEntity.id, this.game)
         newEntity = player.entity
-        this.game.renderer.scene.add(player.entity.getComponent(MeshComponent)!.mesh)
         break
       case SerializedEntityType.CUBE:
         const cube = new Cube(serializedEntity.id, this.game)
@@ -165,10 +166,13 @@ export class SyncComponentsSystem {
       case SerializedComponentType.CHAT_LIST:
         component = new ChatListComponent(entityId, [])
         break
+      case SerializedComponentType.SERVER_MESH:
+        component = new ServerMeshComponent(entityId, '')
+        break
       default:
         console.error("Unknown component type, can't create component")
     }
-
+    // Default values will be overwritten by the serialized values
     component?.deserialize(serializedComponent)
     return component
   }

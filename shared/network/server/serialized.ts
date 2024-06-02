@@ -14,6 +14,8 @@ export enum SerializedComponentType {
 
   CHAT_LIST = 8,
   CHAT_MESSAGE = 9,
+
+  SERVER_MESH = 10,
 }
 
 export enum SerializedEntityType {

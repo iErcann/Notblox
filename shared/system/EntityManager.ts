@@ -60,6 +60,8 @@ export class EntityManager {
     const index = entityManager.entities.indexOf(entity)
     if (index !== -1) {
       entityManager.entities.splice(index, 1)
+    } else {
+      console.error('Entity not found in EntityManager')
     }
   }
 

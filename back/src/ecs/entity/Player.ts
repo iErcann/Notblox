@@ -17,40 +17,48 @@ import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBody
 import { LockedRotationComponent } from '../component/LockedRotationComponent.js'
 import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
+import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
 
 export class Player {
   entity: Entity
 
   constructor(ws: WebSocket, initialX: number, initialY: number, initialZ: number) {
     this.entity = EntityManager.createEntity(SerializedEntityType.PLAYER)
-
-    const sizeComponent = new SingleSizeComponent(this.entity.id, 1 + Math.random())
-    this.entity.addComponent(sizeComponent)
-
-    this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))
-
+    // Tag
     this.entity.addComponent(new PlayerComponent(this.entity.id))
-    const colorComponent = new ColorComponent(
-      this.entity.id,
-      `#${Math.floor(Math.random() * 16777215).toString(16)}`
-    )
 
-    this.entity.addComponent(colorComponent)
-
-    // Adding a PositionComponent with initial position
     const positionComponent = new PositionComponent(this.entity.id, initialX, initialY, initialZ)
     this.entity.addComponent(positionComponent)
 
     const rotationComponent = new RotationComponent(this.entity.id, 0, 1, 2)
     this.entity.addComponent(rotationComponent)
 
-    this.entity.addComponent(new InputComponent(this.entity.id))
+    const sizeComponent = new SingleSizeComponent(this.entity.id, 1 + Math.random())
+    this.entity.addComponent(sizeComponent)
 
-    this.entity.addComponent(new GroundCheckComponent(this.entity.id))
+    this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))
+
+    // Components used for rendering by the client
+    const colorComponent = new ColorComponent(
+      this.entity.id,
+      `#${Math.floor(Math.random() * 16777215).toString(16)}`
+    )
+    this.entity.addComponent(colorComponent)
 
     const stateComponent = new StateComponent(this.entity.id, SerializedStateType.IDLE)
     this.entity.addComponent(stateComponent)
 
+    const serverMeshComponent = new ServerMeshComponent(
+      this.entity.id,
+      'https://rawcdn.githack.com/iErcann/Notblox-Assets/0ac6d49540b8fb924bef1b126fbdfd965d733c3a/Character.glb'
+    )
+    this.entity.addComponent(serverMeshComponent)
+
+    // Hold input data
+    this.entity.addComponent(new InputComponent(this.entity.id))
+
+    // Physics
+    this.entity.addComponent(new GroundCheckComponent(this.entity.id))
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
     this.entity.addComponent(new LockedRotationComponent(this.entity.id))
     this.entity.addComponent(new CapsuleColliderComponent(this.entity.id))
@@ -62,6 +70,7 @@ export class Player {
       sizeComponent,
       colorComponent,
       stateComponent,
+      serverMeshComponent,
     ])
 
     this.entity.addComponent(networkDataComponent)

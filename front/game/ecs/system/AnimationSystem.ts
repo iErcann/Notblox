@@ -18,26 +18,21 @@ export class AnimationSystem {
 
         if (stateComponent.updated || isNotPlaying) {
           // Find the animation that corresponds to the current state
-          const animationName = stateComponent.state
-          const animation = animations.find((clip) => clip.name === animationName)
+          const requestAnimationName = stateComponent.state
 
-          if (animation) {
-            for (const clip of animations) {
-              const action = animationComponent.mixer.clipAction(clip)
-              if (clip !== animation) {
-                // Fade out all animations except the one corresponding to the current state
-                action.fadeOut(0.2)
-              } else {
-                // Fade in and play the animation corresponding to the current state
-                action.reset()
+          for (const clip of animations) {
+            const action = animationComponent.mixer.clipAction(clip)
+            if (clip.name !== requestAnimationName) {
+              // Fade out all animations except the one corresponding to the current state
+              action.fadeOut(0.2)
+            } else {
+              // Fade in and play the animation corresponding to the current state
+              action.reset()
 
-                action.fadeIn(0.1)
+              action.fadeIn(0.1)
 
-                action.play()
-              }
+              action.play()
             }
-          } else {
-            console.error('Animation not found for state: ' + stateComponent.state, animations)
           }
         }
 

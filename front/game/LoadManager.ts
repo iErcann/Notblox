@@ -3,6 +3,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 export class LoadManager {
+  private static instance: LoadManager
   dracoLoader = new DRACOLoader()
   gltfLoader = new GLTFLoader()
 
@@ -11,10 +12,17 @@ export class LoadManager {
     this.gltfLoader.setDRACOLoader(this.dracoLoader)
   }
 
-  glTFLoad(path: string): Promise<GLTF> {
+  static getInstance(): LoadManager {
+    if (!LoadManager.instance) {
+      LoadManager.instance = new LoadManager()
+    }
+    return LoadManager.instance
+  }
+
+  static glTFLoad(path: string): Promise<GLTF> {
     return new Promise((resolve, reject) => {
       // Load a GLTF model
-      this.gltfLoader.load(
+      LoadManager.getInstance().gltfLoader.load(
         path,
         (gltf) => {
           // You can access the loaded model directly using gltf.scene or gltf.scenes[0]

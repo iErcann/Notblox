@@ -19,10 +19,6 @@ export class Player {
   constructor(entityId: number, game: Game) {
     this.entity = game.entityManager.createEntity(SerializedEntityType.PLAYER, entityId)
 
-    const meshComponent = new MeshComponent(entityId)
-    this.entity.addComponent(meshComponent)
-    let mesh: THREE.Mesh = meshComponent.mesh
-
     // Capsule  debug wireframe
     // if (this.debug) {
     //   const geometry = new THREE.CapsuleGeometry(1, 1, 32)
@@ -31,45 +27,16 @@ export class Player {
     //   mesh.material = material
     // }
 
-    game.loadManager
-      .glTFLoad(
-        'https://rawcdn.githack.com/iErcann/Notblox-Assets/0ac6d49540b8fb924bef1b126fbdfd965d733c3a/Character.glb'
-      )
-      .then((gtlf: GLTF) => {
-        mesh.add(gtlf.scene)
-        mesh.animations = gtlf.animations
-        this.activateShadows()
+    // LoadManager
+    //   .glTFLoad(
+    //     'https://rawcdn.githack.com/iErcann/Notblox-Assets/0ac6d49540b8fb924bef1b126fbdfd965d733c3a/Character.glb'
+    //   )
+    //   .then((gtlf: GLTF) => {
+    //     mesh.add(gtlf.scene)
+    //     mesh.animations = gtlf.animations
+    //     this.activateShadows()
 
-        this.entity.addComponent(new AnimationComponent(this.entity.id, mesh, gtlf.animations))
-      })
-
-    const isCurrentPlayer = this.entity.id === game.currentPlayerEntityId
-    if (isCurrentPlayer) {
-      this.entity.addComponent(new FollowComponent(entityId, game.renderer.camera))
-      // const pointLight = new THREE.PointLight(0xe1afd1, 5, 130)
-      // mesh.add(pointLight)
-    } else {
-      const textComponent = new TextComponent(entityId, 'Player ' + entityId)
-      this.entity.addComponent(textComponent)
-      textComponent.setFollowedMesh(mesh)
-    }
-  }
-
-  activateShadows() {
-    const meshComponent = this.entity.getComponent(MeshComponent)
-
-    if (meshComponent) {
-      const object3D = meshComponent.mesh
-      object3D.castShadow = true // Make the mesh cast shadows
-      object3D.receiveShadow = true // Make the mesh receive shadows
-
-      // Enable shadows for all child meshes
-      object3D.traverse(function (child) {
-        if (child instanceof THREE.Mesh) {
-          child.castShadow = true // Make the child mesh cast shadows
-          child.receiveShadow = true // Make the child mesh receive shadows
-        }
-      })
-    }
+    //     this.entity.addComponent(new AnimationComponent(this.entity.id, mesh, gtlf.animations))
+    //   })
   }
 }

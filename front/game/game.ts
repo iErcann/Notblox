@@ -19,6 +19,8 @@ import { Hud } from './hud'
 import { Renderer } from './renderer'
 import { EventSystem } from '@shared/system/EventSystem'
 import { MeshSystem } from './ecs/system/MeshSystem'
+import { ServerMeshSystem } from './ecs/system/ServerMeshSystem'
+import { IdentifyFollowedMeshSystem } from './ecs/system/IdentifyFollowedMeshSystem'
 
 export class Game {
   private static instance: Game
@@ -40,8 +42,10 @@ export class Game {
   loadManager: LoadManager
   inputManager: InputManager
   private meshSystem: MeshSystem
+  private serverMeshSystem: ServerMeshSystem
   renderer: Renderer
   hud: Hud
+  private identifyFollowedMeshSystem: IdentifyFollowedMeshSystem
   private constructor() {
     this.syncComponentSystem = new SyncComponentsSystem(this)
     this.syncPositionSystem = new SyncPositionSystem()
@@ -55,7 +59,8 @@ export class Game {
     this.chatSystem = new ChatSystem()
     this.destroySystem = new DestroySystem()
     this.meshSystem = new MeshSystem()
-
+    this.serverMeshSystem = new ServerMeshSystem()
+    this.identifyFollowedMeshSystem = new IdentifyFollowedMeshSystem()
     this.eventSystem = EventSystem.getInstance()
 
     this.renderer = new Renderer(new THREE.Scene(), this.loadManager)
@@ -85,6 +90,8 @@ export class Game {
     const now = Date.now()
     this.inputManager.sendInput()
     this.syncComponentSystem.update(entities)
+    // This load the mesh from the ServerMeshComponent, we wait for the mesh to be loaded
+    this.serverMeshSystem.update(entities)
     this.destroySystem.update(entities, this.renderer)
     this.meshSystem.update(entities, this.renderer)
     const deltaTime = now - this.lastRenderTime
@@ -98,11 +105,12 @@ export class Game {
     this.syncColorSystem.update(entities)
     this.chatSystem.update(entities, this.hud)
     this.syncSizeSystem.update(entities)
+    this.identifyFollowedMeshSystem.update(entities, this)
     this.animationSystem.update(deltaTime, entities)
+    this.destroySystem.afterUpdate(entities)
     this.eventSystem.afterUpdate(entities)
     this.renderer.update(deltaTime, entities, this.inputManager.inputState)
     this.sleepCheckSystem.update(entities)
-    this.destroySystem.afterUpdate(entities)
     this.websocketManager.timeSinceLastServerUpdate += deltaTime
     this.lastRenderTime = now
   }

@@ -33,7 +33,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.setSize(window.innerWidth, window.innerHeight)
     this.setPixelRatio(window.devicePixelRatio)
     this.toneMapping = THREE.CineonToneMapping
-    this.toneMappingExposure = 0.3
+    this.toneMappingExposure = 0.6
 
     this.css2DRenderer = new CSS2DRenderer()
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight)
@@ -138,7 +138,7 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   private addWorld(loadManager: LoadManager) {
-    loadManager.glTFLoad('assets/basic.glb').then((gtlf: GLTF) => {
+    LoadManager.glTFLoad('assets/basic.glb').then((gtlf: GLTF) => {
       this.scene.add(gtlf.scene)
       gtlf.scene.traverse((child) => {
         if (child instanceof THREE.Mesh) {

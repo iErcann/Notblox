@@ -1,22 +1,46 @@
-import { MeshComponent } from '../component/MeshComponent.js'
-import { EntityManager } from '@shared/system/EntityManager.js'
 import { Renderer } from '@/game/renderer.js'
-import { TextComponent } from '../component/TextComponent.js'
-import { SerializedComponent } from '@shared/network/server/serialized.js'
-import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEvent.js'
 import { Entity } from '@shared/entity/Entity.js'
 import { EventSystem } from '@shared/system/EventSystem.js'
-import { ComponentRemovedEvent } from '@shared/component/events/ComponentRemovedEvent'
+import { MeshComponent } from '../component/MeshComponent.js'
+import { ComponentAddedEvent } from '@shared/component/events/ComponentAddedEvent.js'
+import { ComponentRemovedEvent } from '@shared/component/events/ComponentRemovedEvent.js'
+import * as THREE from 'three'
 
 export class MeshSystem {
   update(entities: Entity[], renderer: Renderer) {
-    const destroyedMeshEvents = EventSystem.getEventsWrapped(ComponentRemovedEvent, MeshComponent)
-    for (const destroyedEvent of destroyedMeshEvents) {
-      const meshComponent = destroyedEvent.component as MeshComponent
+    // Handle added components
+    const addedMeshEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, MeshComponent)
+    for (const addedEvent of addedMeshEvents) {
+      const meshComponent = addedEvent.component as MeshComponent
       if (meshComponent) {
-        console.log('destroyedEvent', destroyedEvent)
+        console.log('MeshSystem: Adding mesh to scene')
+        this.activateShadows(meshComponent)
+        renderer.scene.add(meshComponent.mesh)
+      }
+    }
+
+    // Handle removed components
+    const removedMeshEvents = EventSystem.getEventsWrapped(ComponentRemovedEvent, MeshComponent)
+    for (const removedEvent of removedMeshEvents) {
+      const meshComponent = removedEvent.component as MeshComponent
+      if (meshComponent) {
         renderer.scene.remove(meshComponent.mesh)
       }
+    }
+  }
+  activateShadows(meshComponent: MeshComponent) {
+    if (meshComponent) {
+      const object3D = meshComponent.mesh
+      object3D.castShadow = true // Make the mesh cast shadows
+      object3D.receiveShadow = true // Make the mesh receive shadows
+
+      // Enable shadows for all child meshes
+      object3D.traverse(function (child) {
+        if (child instanceof THREE.Mesh) {
+          child.castShadow = true // Make the child mesh cast shadows
+          child.receiveShadow = true // Make the child mesh receive shadows
+        }
+      })
     }
   }
 }

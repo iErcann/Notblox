@@ -80,7 +80,7 @@ function runTestEntities() {
       c2.entity.addComponent(new RandomizeComponent(c2.entity.id))
     }
     new Sphere(0, 30, 0, 1)
-    for (let i = 1; i < 1; i++) {
+    for (let i = 1; i < 5; i++) {
       const s = new Sphere(0, i * 30, 0, 1.2)
       s.entity.addComponent(new RandomizeComponent(s.entity.id))
     }
@@ -99,7 +99,7 @@ function runTestEntities() {
     }, 1000)
   }, 2000)
 }
-runTestEntities()
+// runTestEntities()
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
 let lastUpdateTimestamp = Date.now()
 
