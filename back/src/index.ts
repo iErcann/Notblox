@@ -89,17 +89,16 @@ function runTestEntities() {
   // setInterval(() => {
   //   new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
   // }, 1000)
-
-  let movingCubeZ = 0
-  setInterval(() => {
-    movingCubeZ = (movingCubeZ + 5) % 1000
-    const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
-    setTimeout(() => {
-      EventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
-    }, 1000)
-  }, 2000)
+  // let movingCubeZ = 0
+  // setInterval(() => {
+  //   movingCubeZ = (movingCubeZ + 5) % 1000
+  //   const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
+  //   setTimeout(() => {
+  //     EventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
+  //   }, 1000)
+  // }, 2000)
 }
-// runTestEntities()
+runTestEntities()
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
 let lastUpdateTimestamp = Date.now()
 

@@ -44,7 +44,6 @@ export class Cube {
       rotationComponent,
       sizeComponent,
       colorComponent,
-      serverMeshComponent,
     ])
     this.entity.addComponent(networkDataComponent)
   }

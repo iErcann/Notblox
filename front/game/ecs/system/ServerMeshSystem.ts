@@ -32,19 +32,17 @@ export class ServerMeshSystem {
     const serverMeshComponent = event.component
 
     // Load the mesh from the serverMeshComponent
-    const gltf = await LoadManager.glTFLoad(serverMeshComponent.filePath)
-    const meshComponent = new MeshComponent(entity.id)
+    const mesh = await LoadManager.glTFLoad(serverMeshComponent.filePath)
+    const meshComponent = new MeshComponent(entity.id, mesh)
 
     // // Debug : Add a box helper around the mesh
     // const geometry = new THREE.CapsuleGeometry(1, 1, 32)
     // const material = new THREE.MeshBasicMaterial({ wireframe: true })
     // meshComponent.mesh.geometry = geometry
     // meshComponent.mesh.material = material
-    meshComponent.mesh.add(gltf.scene)
     entity.addComponent(meshComponent)
 
-    if (gltf.animations && gltf.animations.length > 0) {
-      meshComponent.mesh.animations = gltf.animations
+    if (mesh.animations && mesh.animations.length > 0) {
       entity.addComponent(
         new AnimationComponent(entity.id, meshComponent.mesh, meshComponent.mesh.animations)
       )

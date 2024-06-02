@@ -122,36 +122,6 @@ export class Renderer extends THREE.WebGLRenderer {
     this.scene.add(hemiLight)
   }
 
-  private addGround() {
-    // Create a simple colored ground
-    const groundMaterial = new THREE.MeshPhongMaterial({
-      color: 0xbdbdbd, // Adjust the color as needed (green in this case)
-    })
-
-    const groundGeometry = new THREE.PlaneGeometry(1000, 1000)
-    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial)
-    groundMesh.receiveShadow = true
-    groundMesh.castShadow = true
-    groundMesh.rotation.x = -Math.PI / 2
-
-    this.scene.add(groundMesh)
-  }
-
-  private addWorld(loadManager: LoadManager) {
-    LoadManager.glTFLoad(
-      'https://rawcdn.githack.com/iErcann/Notblox-Assets/47ad0607fd45aceb7b62bc141c692333fa8cd972/BasicWorld.glb'
-    ).then((gtlf: GLTF) => {
-      this.scene.add(gtlf.scene)
-      gtlf.scene.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          // Metal Shadow fix https://discourse.threejs.org/t/solved-glb-model-is-very-dark/6258/7
-          child.material.metalness = 0
-          child.castShadow = true // Make the child mesh cast shadows
-          child.receiveShadow = true // Make the child mesh receive shadows
-        }
-      })
-    })
-  }
   update(deltaTime: number, entities: Entity[], inputMessage: InputMessage) {
     const followedEntity = EntityManager.getFirstEntityWithComponent(entities, FollowComponent)
     if (followedEntity && this.directionalLight) {

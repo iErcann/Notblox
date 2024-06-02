@@ -19,25 +19,5 @@ export class Player {
 
   constructor(entityId: number) {
     this.entity = EntityManager.createEntity(SerializedEntityType.PLAYER, entityId)
-
-    // Capsule  debug wireframe
-    // if (this.debug) {
-    //   const geometry = new THREE.CapsuleGeometry(1, 1, 32)
-    //   const material = new THREE.MeshBasicMaterial({ wireframe: true })
-    //   mesh.geometry = geometry
-    //   mesh.material = material
-    // }
-
-    // LoadManager
-    //   .glTFLoad(
-    //     'https://rawcdn.githack.com/iErcann/Notblox-Assets/0ac6d49540b8fb924bef1b126fbdfd965d733c3a/Character.glb'
-    //   )
-    //   .then((gtlf: GLTF) => {
-    //     mesh.add(gtlf.scene)
-    //     mesh.animations = gtlf.animations
-    //     this.activateShadows()
-
-    //     this.entity.addComponent(new AnimationComponent(this.entity.id, mesh, gtlf.animations))
-    //   })
   }
 }

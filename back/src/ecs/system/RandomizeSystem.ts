@@ -19,7 +19,12 @@ export class RandomizeSystem {
       if (sizeComponent) {
         if (Math.random() < 0.01) {
           EventSystem.addEvent(
-            new SizeEvent(entity.id, Math.random() * 4, Math.random() * 4, Math.random() * 4)
+            new SizeEvent(
+              entity.id,
+              1 + Math.random() * 4,
+              1 + Math.random() * 4,
+              1 + Math.random() * 4
+            )
           )
         }
       }
@@ -27,7 +32,7 @@ export class RandomizeSystem {
       const singleSizeComponent = entity.getComponent(SingleSizeComponent)
       if (singleSizeComponent) {
         if (Math.random() < 0.05) {
-          EventSystem.addEvent(new SingleSizeEvent(entity.id, Math.max(0.5, Math.random() * 3)))
+          EventSystem.addEvent(new SingleSizeEvent(entity.id, Math.max(2, Math.random() * 3)))
         }
       }
 
