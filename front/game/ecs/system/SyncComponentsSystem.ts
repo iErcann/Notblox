@@ -29,6 +29,7 @@ import { MeshComponent } from '../component/MeshComponent'
 import { NetworkComponent } from '@shared/network/NetworkComponent'
 import { EventSystem } from '@shared/system/EventSystem'
 import { EventListComponent } from '@shared/component/events/EventListComponent'
+import { EntityManager } from '@shared/system/EntityManager'
 
 export class SyncComponentsSystem {
   private snapshotMessages: SnapshotMessage[] = []
@@ -56,8 +57,8 @@ export class SyncComponentsSystem {
     for (const [index, snapshotMessage] of this.snapshotMessages.entries()) {
       const serializedEntities = snapshotMessage.e
       for (const serializedEntity of serializedEntities) {
-        // The EventQueue entity already exist on the client (BaseEventSystem instance constructor creates it), we don't need to create it
-        // We  need to handle the events by adding them to the event queue on the BaseEventSystem instance
+        // The EventQueue entity already exist on the client (EventSystem instance constructor creates it), we don't need to create it
+        // We need to handle the events by adding them to the EventQueue entity on the EventSystem instance
         if (serializedEntity.t === SerializedEntityType.EVENT_QUEUE) {
           this.handleEventEntity(serializedEntity)
           continue
@@ -74,7 +75,7 @@ export class SyncComponentsSystem {
         }
 
         for (const serializedComponent of serializedEntity.c) {
-          this.updateOrCreateComponent(entity!, serializedComponent)
+          this.updateOrCreateComponent(entity, serializedComponent)
         }
       }
       // Remove the processed snapshotMessage from the array
@@ -109,27 +110,29 @@ export class SyncComponentsSystem {
 
     switch (serializedEntity.t) {
       case SerializedEntityType.PLAYER:
-        const player = new Player(serializedEntity.id, this.game)
+        const player = new Player(serializedEntity.id)
         newEntity = player.entity
         break
       case SerializedEntityType.CUBE:
-        const cube = new Cube(serializedEntity.id, this.game)
+        const cube = new Cube(serializedEntity.id)
         newEntity = cube.entity
         this.game.renderer.scene.add(cube.entity.getComponent(MeshComponent)!.mesh)
         break
       case SerializedEntityType.SPHERE:
-        const sphere = new Sphere(serializedEntity.id, this.game)
+        const sphere = new Sphere(serializedEntity.id)
         newEntity = sphere.entity
         this.game.renderer.scene.add(sphere.entity.getComponent(MeshComponent)!.mesh)
         break
       case SerializedEntityType.CHAT:
-        newEntity = new Chat(serializedEntity.id, this.game).entity
+        newEntity = new Chat(serializedEntity.id).entity
         break
       case SerializedEntityType.EVENT_QUEUE:
         newEntity = EventSystem.getInstance().eventQueue.entity
         break
       default:
-        console.error("Unknown entity type, can't create entity")
+        newEntity = EntityManager.createEntity(serializedEntity.t, serializedEntity.id)
+        console.warn("Unknown entity type, can't create entity")
+        break
     }
 
     return newEntity

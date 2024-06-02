@@ -68,19 +68,19 @@ const sleepCheckSystem = new SleepCheckSystem()
 const randomizeSystem = new RandomizeSystem()
 const boundaryCheckSystem = new BoundaryCheckSystem()
 
-new MapWorld()
 new Chat()
+new MapWorld()
 
 function runTestEntities() {
   setTimeout(() => {
     const randomCube = new Cube(0, 50, 0, 1, 1, 1)
     randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
     for (let i = 1; i < 5; i++) {
-      const c2 = new Cube(0, 5, 5 * i, i / 5, i / 5, i / 5)
-      c2.entity.addComponent(new RandomizeComponent(c2.entity.id))
+      new Cube(0, 5, 5 * i, i, i, i)
+      // c2.entity.addComponent(new RandomizeComponent(c2.entity.id))
     }
     new Sphere(0, 30, 0, 1)
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < 10; i++) {
       const s = new Sphere(0, i * 30, 0, 1.2)
       s.entity.addComponent(new RandomizeComponent(s.entity.id))
     }

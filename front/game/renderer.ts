@@ -45,7 +45,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.domElement.addEventListener('contextmenu', (event) => event.preventDefault())
     this.addLight()
     this.addDirectionnalLight()
-    this.addWorld(loadManager)
+    // this.addWorld(loadManager)
     this.addSky()
     // this.addGround();
     // Use arrow function to ensure 'this' refers to the class instance
@@ -138,7 +138,9 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   private addWorld(loadManager: LoadManager) {
-    LoadManager.glTFLoad('assets/basic.glb').then((gtlf: GLTF) => {
+    LoadManager.glTFLoad(
+      'https://rawcdn.githack.com/iErcann/Notblox-Assets/47ad0607fd45aceb7b62bc141c692333fa8cd972/BasicWorld.glb'
+    ).then((gtlf: GLTF) => {
       this.scene.add(gtlf.scene)
       gtlf.scene.traverse((child) => {
         if (child instanceof THREE.Mesh) {

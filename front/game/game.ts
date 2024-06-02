@@ -82,23 +82,28 @@ export class Game {
     this.renderer.setAnimationLoop(this.loopFunction)
   }
 
-  private interpolationFactor = 0.1
-  private lastTickTime = 0
+  private loadingPromise: Promise<void> | null = null
 
-  private loop() {
+  private async loop() {
     const entities = EntityManager.getInstance().getAllEntities()
     const now = Date.now()
-    this.inputManager.sendInput()
     this.syncComponentSystem.update(entities)
-    // This load the mesh from the ServerMeshComponent, we wait for the mesh to be loaded
-    this.serverMeshSystem.update(entities)
+
+    // Server can send us ServerMeshComponents to load.
+    // This await is necessary to wait for the loading to finish before updating the entities
+    // This will also delay all the other event operations until the loading is finished
+    if (!this.loadingPromise) {
+      this.loadingPromise = this.serverMeshSystem.update(entities)
+    }
+
+    // Wait for the loading operation to finish
+    await this.loadingPromise
+    this.loadingPromise = null
+
+    this.inputManager.sendInput()
     this.destroySystem.update(entities, this.renderer)
     this.meshSystem.update(entities, this.renderer)
     const deltaTime = now - this.lastRenderTime
-    // Interp factor is wrong here
-    // const interpolationFactor =
-    //   this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
-
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
     this.syncPositionSystem.update(entities, positionInterpFactor)
     this.syncRotationSystem.update(entities, 0.5)

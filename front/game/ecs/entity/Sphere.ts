@@ -3,11 +3,12 @@ import { Entity } from '@shared/entity/Entity'
 import { MeshComponent } from '../component/MeshComponent.js'
 import * as THREE from 'three'
 import { Game } from '@/game/game.js'
+import { EntityManager } from '@shared/system/EntityManager.js'
 
 export class Sphere {
   entity: Entity
-  constructor(entityId: number, game: Game) {
-    this.entity = game.entityManager.createEntity(SerializedEntityType.SPHERE, entityId)
+  constructor(entityId: number) {
+    this.entity = EntityManager.createEntity(SerializedEntityType.SPHERE, entityId)
 
     const meshComponent = new MeshComponent(entityId)
     this.entity.addComponent(meshComponent)

@@ -10,6 +10,7 @@ import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 import { BoxColliderComponent } from '../component/physics/BoxColliderComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
+import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
 
 export class Cube {
   entity: Entity
@@ -22,6 +23,12 @@ export class Cube {
 
     const rotationComponent = new RotationComponent(this.entity.id, 0, 0, 0, 0)
     this.entity.addComponent(rotationComponent)
+
+    const serverMeshComponent = new ServerMeshComponent(
+      this.entity.id,
+      'https://rawcdn.githack.com/iErcann/Notblox-Assets/0ac6d49540b8fb924bef1b126fbdfd965d733c3a/Character.glb'
+    )
+    this.entity.addComponent(serverMeshComponent)
 
     const sizeComponent = new SizeComponent(this.entity.id, width, height, depth)
     this.entity.addComponent(sizeComponent)
@@ -37,6 +44,7 @@ export class Cube {
       rotationComponent,
       sizeComponent,
       colorComponent,
+      serverMeshComponent,
     ])
     this.entity.addComponent(networkDataComponent)
   }

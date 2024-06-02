@@ -35,8 +35,9 @@ export class MeshSystem {
       object3D.receiveShadow = true // Make the mesh receive shadows
 
       // Enable shadows for all child meshes
-      object3D.traverse(function (child) {
+      object3D.traverse((child) => {
         if (child instanceof THREE.Mesh) {
+          child.material.metalness = 0
           child.castShadow = true // Make the child mesh cast shadows
           child.receiveShadow = true // Make the child mesh receive shadows
         }

@@ -19,7 +19,7 @@ export class EventSystem {
   }
 
   /**
-   * Singleton pattern to get the instance of BaseEventSystem
+   * Singleton pattern to get the instance of EventSystem
    */
   static getInstance(): EventSystem {
     if (!EventSystem.instance) {
@@ -119,8 +119,8 @@ export class EventSystem {
    * @returns Array of wrapped event components
    * @example
    * ```typescript
-   *  BaseEventSystem.getEventsWrapped(ComponentAddedEvent, ChatMessageComponent)
-   *  BaseEventSystem.getEventsWrapped(ComponentRemovedEvent, ChatMessageComponent)
+   *  EventSystem.getEventsWrapped(ComponentAddedEvent, ChatMessageComponent)
+   *  EventSystem.getEventsWrapped(ComponentRemovedEvent, ChatMessageComponent)
    * ```
    */
 

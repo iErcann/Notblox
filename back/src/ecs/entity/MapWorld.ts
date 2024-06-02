@@ -4,18 +4,26 @@ import { SerializedEntityType } from '../../../../shared/network/server/serializ
 import { TrimeshCollidersComponent } from '../component/physics/TrimeshColliderComponent.js'
 import { KinematicRigidBodyComponent } from '../component/physics/KinematicRigidBodyComponent.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
+import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
+import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 
 export class MapWorld {
   entity: Entity
   constructor() {
     this.entity = EntityManager.createEntity(SerializedEntityType.WORLD)
+    const mapUrl =
+      'https://rawcdn.githack.com/iErcann/Notblox-Assets/47ad0607fd45aceb7b62bc141c692333fa8cd972/BasicWorld.glb'
+
+    const serverMeshComponent = new ServerMeshComponent(this.entity.id, mapUrl)
+    this.entity.addComponent(serverMeshComponent)
 
     this.entity.addComponent(new PositionComponent(this.entity.id, 0, 0, 0))
 
     this.entity.addComponent(new KinematicRigidBodyComponent(this.entity.id))
 
+    this.entity.addComponent(new TrimeshCollidersComponent(this.entity.id, mapUrl))
     this.entity.addComponent(
-      new TrimeshCollidersComponent(this.entity.id, '../front/public/assets/basic.glb')
+      new NetworkDataComponent(this.entity.id, this.entity.type, [serverMeshComponent])
     )
   }
 }
