@@ -1,25 +1,23 @@
-import { Packr, pack, unpack } from 'msgpackr'
-import { WebSocketComponent } from '../../component/WebsocketComponent.js'
+import { Packr } from 'msgpackr'
 import { Entity } from '../../../../../shared/entity/Entity.js'
+import { NetworkDataComponent } from '../../../../../shared/network/NetworkDataComponent.js'
+import { ServerMessage, ServerMessageType } from '../../../../../shared/network/server/base.js'
 import { SerializedEntity } from '../../../../../shared/network/server/serialized.js'
-import { NetworkDataComponent } from '../../component/NetworkDataComponent.js'
-import { ServerMessageType } from '../../../../../shared/network/server/base.js'
+import { WebSocketComponent } from '../../component/WebsocketComponent.js'
 import { WebsocketSystem } from './WebsocketSystem.js'
-import { readFileSync, writeFileSync } from 'fs'
+import pako from 'pako'
 
 export class NetworkSystem {
   //  Serializes the given entities.
-  private packr = new Packr({})
+  private static packr = new Packr({})
   private websocketSystem = new WebsocketSystem()
   private serialize(entities: Entity[], serializeAll: boolean): SerializedEntity[] {
     const serializedEntities: SerializedEntity[] = []
 
     for (const entity of entities) {
       const networkDataComponent = entity.getComponent(NetworkDataComponent)
-
       if (networkDataComponent) {
         const _serializedEntities = networkDataComponent.serialize(serializeAll)
-
         // Skip entities without any components to reduce bandwidth
         if (_serializedEntities != null) {
           serializedEntities.push(_serializedEntities)
@@ -29,9 +27,14 @@ export class NetworkSystem {
     return serializedEntities
   }
 
+  static compress<T extends ServerMessage>(message: T): Uint8Array {
+    const msgpackrCompressed = NetworkSystem.packr.pack(message)
+    return pako.deflate(msgpackrCompressed)
+  }
+
   // Builds a snapshot message to send to the clients.
   private buildSnapshotMessage(serializedEntities: SerializedEntity[]) {
-    return this.packr.pack({
+    return NetworkSystem.compress({
       t: ServerMessageType.SNAPSHOT,
       e: serializedEntities,
     })
@@ -40,14 +43,13 @@ export class NetworkSystem {
   // Updates the network state and sends snapshots to clients.
   update(entities: Entity[]): void {
     // Send full snapshot to newly connected clients
-    let fullSnapshotMessage: Buffer | undefined
+    let fullSnapshotMessage: Uint8Array | undefined
     for (const entity of entities) {
       const websocketComponent = entity.getComponent(WebSocketComponent)
       if (websocketComponent && !websocketComponent.isFirstSnapshotSent) {
         if (!fullSnapshotMessage) {
           const fullSerializedEntities = this.serialize(entities, true)
           fullSnapshotMessage = this.buildSnapshotMessage(fullSerializedEntities)
-          console.log("Hasn't sent the first snapshot")
         }
         websocketComponent.ws.send(fullSnapshotMessage, true)
         websocketComponent.isFirstSnapshotSent = true
@@ -65,7 +67,11 @@ export class NetworkSystem {
     for (const entity of entities) {
       const websocketComponent = entity.getComponent(WebSocketComponent)
       if (websocketComponent) {
-        websocketComponent.ws.send(message, true)
+        if (!websocketComponent.ws) {
+          console.error('Websocket not found', websocketComponent)
+        } else {
+          websocketComponent.ws.send(message, true)
+        }
       }
     }
   }

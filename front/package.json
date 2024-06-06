@@ -15,12 +15,14 @@
     "msgpackr": "^1.9.9",
     "next": "latest",
     "next-seo": "^6.5.0",
+    "pako": "^2.1.0",
     "react": "latest",
     "react-dom": "latest",
     "three": "^0.156.1"
   },
   "devDependencies": {
     "@types/node": "latest",
+    "@types/pako": "^2.0.3",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "autoprefixer": "latest",

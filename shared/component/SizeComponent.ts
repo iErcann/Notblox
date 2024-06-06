@@ -3,12 +3,7 @@ import { SerializedComponent, SerializedComponentType } from '../network/server/
 import { NetworkComponent } from '../network/NetworkComponent.js'
 
 export class SizeComponent extends NetworkComponent {
-  constructor(
-    entityId: number,
-    public width: number,
-    public height: number,
-    public depth: number
-  ) {
+  constructor(entityId: number, public width: number, public height: number, public depth: number) {
     super(entityId, SerializedComponentType.SIZE)
   }
   deserialize(data: SerializedSizeComponent): void {

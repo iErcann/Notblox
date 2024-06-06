@@ -2,9 +2,7 @@ import * as THREE from 'three'
 import { Component } from '@shared/component/Component'
 
 export class MeshComponent extends Component {
-  mesh: THREE.Mesh
-  constructor(entityId: number) {
+  constructor(entityId: number, public mesh = new THREE.Mesh()) {
     super(entityId)
-    this.mesh = new THREE.Mesh()
   }
 }

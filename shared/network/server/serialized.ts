@@ -6,7 +6,7 @@ export enum SerializedComponentType {
   ROTATION = 2,
   SIZE = 3,
   COLOR = 4,
-  DESTROYED = 5,
+  DESTROYED_EVENT = 5,
   SINGLE_SIZE = 6,
 
   // Used for animations mostly
@@ -14,6 +14,8 @@ export enum SerializedComponentType {
 
   CHAT_LIST = 8,
   CHAT_MESSAGE = 9,
+
+  SERVER_MESH = 10,
 }
 
 export enum SerializedEntityType {
@@ -23,7 +25,7 @@ export enum SerializedEntityType {
   WORLD = 3,
   SPHERE = 4,
   CHAT = 5,
-  EVENT = 6,
+  EVENT_QUEUE = 6,
 }
 
 export enum SerializedStateType {

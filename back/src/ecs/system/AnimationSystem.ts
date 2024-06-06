@@ -1,22 +1,22 @@
 // AnimationSystem.js
-import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
 import * as THREE from 'three'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { StateComponent } from '../../../../shared/component/StateComponent.js'
 import { SerializedStateType } from '../../../../shared/network/server/serialized.js'
-import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import Rapier from '../../physics/rapier.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
+import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
+import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
 
 export class AnimationSystem {
-  update(entities: Entity[], world: Rapier.World): void {
+  update(entities: Entity[]): void {
     entities.forEach((entity) => {
       const inputComponent = entity.getComponent(InputComponent)
-      const rigidBodyComponent = entity.getComponent(PhysicsBodyComponent)
+      const rigidBodyComponent = entity.getComponent(DynamicRigidBodyComponent)
       const positionComponent = entity.getComponent(PositionComponent)
-      const colliderComponent = entity.getComponent(PhysicsColliderComponent)
+      const colliderComponent = entity.getComponent(CapsuleColliderComponent)
       const stateComponent = entity.getComponent(StateComponent)
 
       if (
@@ -44,7 +44,7 @@ export class AnimationSystem {
 
   isGrounded(
     positionComponent: PositionComponent,
-    colliderComponent: PhysicsColliderComponent,
+    colliderComponent: CapsuleColliderComponent,
     world: Rapier.World
   ): boolean {
     const ray = new Rapier.Ray(
@@ -105,7 +105,11 @@ export class AnimationSystem {
     )
   }
 
-  rotatePlayer(rigidBodyComponent: PhysicsBodyComponent, quaternion: THREE.Quaternion): void {
+  rotatePlayer(rigidBodyComponent: DynamicRigidBodyComponent, quaternion: THREE.Quaternion): void {
+    if (!rigidBodyComponent.body) {
+      console.error('AnimationSystem: BodyComponent.body not  initialized')
+      return
+    }
     rigidBodyComponent.body.setRotation(
       {
         x: quaternion.x,

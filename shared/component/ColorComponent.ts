@@ -3,10 +3,7 @@ import { NetworkComponent } from '../network/NetworkComponent.js'
 
 // Define a ColorComponent class
 export class ColorComponent extends NetworkComponent {
-  constructor(
-    entityId: number,
-    public color: string
-  ) {
+  constructor(entityId: number, public color: string) {
     super(entityId, SerializedComponentType.COLOR) // Call the parent constructor with the entityId
   }
   deserialize(data: SerializedColorComponent): void {

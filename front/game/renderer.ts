@@ -1,21 +1,15 @@
 import * as THREE from 'three'
-import { Camera } from './camera'
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { LoadManager } from './LoadManager'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { Sky } from 'three/examples/jsm/objects/Sky.js'
+import { LoadManager } from './LoadManager'
+import { Camera } from './camera'
 
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
-import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js'
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
-import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
-import { Entity } from '@shared/entity/Entity'
-import { EntityManager } from '@shared/entity/EntityManager'
-import { FollowComponent } from './ecs/component/FollowComponent'
 import { PositionComponent } from '@shared/component/PositionComponent'
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+import { Entity } from '@shared/entity/Entity'
 import { InputMessage } from '@shared/network/client/input'
+import { EntityManager } from '@shared/system/EntityManager'
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
+import { FollowComponent } from './ecs/component/FollowComponent'
 
 export interface Renderable {
   mesh: THREE.Mesh
@@ -26,7 +20,7 @@ export class Renderer extends THREE.WebGLRenderer {
   scene: THREE.Scene
   css2DRenderer: CSS2DRenderer
   private directionalLight: THREE.DirectionalLight | undefined
-  constructor(scene: THREE.Scene, loadManager: LoadManager) {
+  constructor(scene: THREE.Scene) {
     super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
 
     this.camera = new Camera(this)
@@ -39,20 +33,18 @@ export class Renderer extends THREE.WebGLRenderer {
     this.setSize(window.innerWidth, window.innerHeight)
     this.setPixelRatio(window.devicePixelRatio)
     this.toneMapping = THREE.CineonToneMapping
-    this.toneMappingExposure = 0.3
-
+    this.toneMappingExposure = 0.5
     this.css2DRenderer = new CSS2DRenderer()
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight)
     this.css2DRenderer.domElement.style.position = 'absolute'
     this.css2DRenderer.domElement.style.top = '0'
     this.css2DRenderer.domElement.style.pointerEvents = 'none'
 
+    // Prevent right click context menu
+    this.domElement.addEventListener('contextmenu', (event) => event.preventDefault())
     this.addLight()
     this.addDirectionnalLight()
-    this.addWorld(loadManager)
     this.addSky()
-    // this.addGround();
-    // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener('resize', this.onWindowResize.bind(this), false)
   }
 
@@ -89,14 +81,18 @@ export class Renderer extends THREE.WebGLRenderer {
     // Create a directional light for shadows and highlights
     // Create a directional light with a different color and intensity
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.5)
+    this.directionalLight.position.set(100, 100, 100)
 
     // Configure shadow properties with different values
-    this.directionalLight.shadow.mapSize.height = 1024
+    this.directionalLight.shadow.mapSize.height = 2048
+    this.directionalLight.shadow.mapSize.width = 2048
     const shadowSideLength = 75
     this.directionalLight.shadow.camera.top = shadowSideLength
     this.directionalLight.shadow.camera.bottom = -shadowSideLength
     this.directionalLight.shadow.camera.left = -shadowSideLength
     this.directionalLight.shadow.camera.right = shadowSideLength
+    this.directionalLight.shadow.camera.near = 0.5
+    this.directionalLight.shadow.camera.far = 500
     this.directionalLight.shadow.normalBias = 0.06
     // Enable shadow casting
     this.directionalLight.castShadow = true
@@ -109,8 +105,8 @@ export class Renderer extends THREE.WebGLRenderer {
     this.scene.add(this.directionalLight, lightTarget)
 
     // Uncomment the following lines to add a helper for visualization
-    const helper = new THREE.DirectionalLightHelper(this.directionalLight, 10)
-    this.scene.add(helper)
+    // const helper = new THREE.DirectionalLightHelper(this.directionalLight, 10)
+    // this.scene.add(helper)
   }
 
   private addLight() {
@@ -122,37 +118,6 @@ export class Renderer extends THREE.WebGLRenderer {
     this.scene.add(hemiLight)
   }
 
-  private addGround() {
-    // Create a simple colored ground
-    const groundMaterial = new THREE.MeshPhongMaterial({
-      color: 0xbdbdbd, // Adjust the color as needed (green in this case)
-    })
-
-    const groundGeometry = new THREE.PlaneGeometry(1000, 1000)
-    const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial)
-    groundMesh.receiveShadow = true
-    groundMesh.castShadow = true
-    groundMesh.rotation.x = -Math.PI / 2
-
-    this.scene.add(groundMesh)
-  }
-
-  private addWorld(loadManager: LoadManager) {
-    loadManager
-      // .glTFLoad("https://myaudio.nyc3.cdn.digitaloceanspaces.com/world_1-1.glb")
-      .glTFLoad('assets/keneeyworldled.glb')
-      .then((gtlf: GLTF) => {
-        this.scene.add(gtlf.scene)
-        gtlf.scene.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            // Metal Shadow fix https://discourse.threejs.org/t/solved-glb-model-is-very-dark/6258/7
-            child.material.metalness = 0
-            child.castShadow = true // Make the child mesh cast shadows
-            child.receiveShadow = true // Make the child mesh receive shadows
-          }
-        })
-      })
-  }
   update(deltaTime: number, entities: Entity[], inputMessage: InputMessage) {
     const followedEntity = EntityManager.getFirstEntityWithComponent(entities, FollowComponent)
     if (followedEntity && this.directionalLight) {

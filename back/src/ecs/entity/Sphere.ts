@@ -1,27 +1,23 @@
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import { RotationComponent } from '../../../../shared/component/RotationComponent.js'
-import { EventDestroyed } from '../../../../shared/component/events/EventDestroyed.js'
 
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 
-import Rapier from '../../physics/rapier.js'
-import { NetworkDataComponent } from '../component/NetworkDataComponent.js'
-import { PhysicsBodyComponent } from '../component/PhysicsBodyComponent.js'
-import { PhysicsColliderComponent } from '../component/PhysicsColliderComponent.js'
-import { PhysicsSystem } from '../system/physics/PhysicsSystem.js'
-import { EntityManager } from '../../../../shared/entity/EntityManager.js'
-import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
+import { SingleSizeComponent } from '../../../../shared/component/SingleSizeComponent.js'
+import { EntityManager } from '../../../../shared/system/EntityManager.js'
+import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
+import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
+import { SphereColliderComponent } from '../component/physics/SphereColliderComponent.js'
+import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
 
 export class Sphere {
   entity: Entity
 
   constructor(x: number, y: number, z: number, size: number) {
-    this.entity = EntityManager.getInstance().createEntity(SerializedEntityType.SPHERE)
-    const world = PhysicsSystem.getInstance().world
+    this.entity = EntityManager.createEntity(SerializedEntityType.NONE)
 
-    // Adding a PositionComponent with initial position
     const positionComponent = new PositionComponent(this.entity.id, x, y, z)
     this.entity.addComponent(positionComponent)
 
@@ -34,48 +30,24 @@ export class Sphere {
     const colorComponent = new ColorComponent(this.entity.id, '#FFFFFF')
     this.entity.addComponent(colorComponent)
 
-    this.createRigidBody(world)
-    this.createCollider(world)
+    const serverMeshComponent = new ServerMeshComponent(
+      this.entity.id,
+      'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
+    )
+    this.entity.addComponent(serverMeshComponent)
+    this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
+    this.entity.addComponent(new SphereColliderComponent(this.entity.id))
 
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [
       positionComponent,
       rotationComponent,
       sizeComponent,
       colorComponent,
+      serverMeshComponent,
     ])
     this.entity.addComponent(networkDataComponent)
   }
   getPosition() {
     return this.entity.getComponent<PositionComponent>(PositionComponent)!
-  }
-  createRigidBody(world: Rapier.World) {
-    const { x, y, z } = this.getPosition()
-    // Rigidbody
-    let rigidBodyDesc = Rapier.RigidBodyDesc.dynamic()
-    rigidBodyDesc.setLinearDamping(1)
-
-    let rigidBody = world.createRigidBody(rigidBodyDesc)
-    rigidBody.setTranslation(new Rapier.Vector3(x, y, z), false)
-    this.entity.addComponent(new PhysicsBodyComponent(this.entity.id, rigidBody))
-  }
-  createCollider(world: Rapier.World) {
-    // Collider
-    const sizeComponent = this.entity.getComponent(SingleSizeComponent)
-    const rigidBodyComponent = this.entity.getComponent(PhysicsBodyComponent)
-
-    if (!rigidBodyComponent) {
-      console.error("BodyComponent doesn't exist on Sphere.")
-      return
-    }
-
-    if (!sizeComponent) {
-      console.error("SizeComponent doesn't exist on Sphere.")
-      return
-    }
-
-    let colliderDesc = Rapier.ColliderDesc.ball(sizeComponent.size)
-    let collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
-
-    this.entity.addComponent(new PhysicsColliderComponent(this.entity.id, collider))
   }
 }

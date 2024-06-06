@@ -17,16 +17,22 @@ export class AnimationSystem {
         const isNotPlaying = animationComponent.mixer.time === 0
 
         if (stateComponent.updated || isNotPlaying) {
-          // find the animation that corresponds to the current state
-          const animationName = stateComponent.state
-          const animation = animations.find((clip) => clip.name === animationName)
+          // Find the animation that corresponds to the current state
+          const requestAnimationName = stateComponent.state
 
-          if (animation) {
-            animationComponent.mixer.stopAllAction()
-            const action = animationComponent.mixer.clipAction(animation)
-            action.play()
-          } else {
-            console.error('Animation not found for state: ' + stateComponent.state, animations)
+          for (const clip of animations) {
+            const action = animationComponent.mixer.clipAction(clip)
+            if (clip.name !== requestAnimationName) {
+              // Fade out all animations except the one corresponding to the current state
+              action.fadeOut(0.2)
+            } else {
+              // Fade in and play the animation corresponding to the current state
+              action.reset()
+
+              action.fadeIn(0.1)
+
+              action.play()
+            }
           }
         }
 

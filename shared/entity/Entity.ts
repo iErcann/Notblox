@@ -1,47 +1,69 @@
 import { SerializedComponentType, SerializedEntityType } from '../network/server/serialized.js'
-import { Serializable, Component } from '../component/Component.js'
+import { Component, ComponentConstructor } from '../component/Component.js'
+import { EventSystem } from '../system/EventSystem.js'
+import { NetworkComponent } from '../../shared/network/NetworkComponent.js'
 
 // Define an Entity class
 export class Entity {
-  private static nextId = 1
-  components: Component[] = []
+  components: Map<ComponentConstructor, Component> = new Map()
 
   constructor(public type: SerializedEntityType = SerializedEntityType.NONE, public id: number) {}
 
-  // Add a component to the entity
-  addComponent(component: Component) {
-    this.components.push(component)
+  /**
+   * Add a component to the entity
+   * @param component  The component to add
+   * @param createAddedEvent  Whether to create an added event or not, default is true, useful for skipping recursion
+   */
+  addComponent<T extends Component>(component: T, createAddedEvent = true) {
+    this.components.set(component.constructor as ComponentConstructor, component)
+
+    // This can be used to skip the recursion or non added events
+    if (createAddedEvent) {
+      EventSystem.onComponentAdded(component)
+    }
   }
 
-  // Remove a component from the entity
-
-  removeComponent<T extends Component>(
-    componentType: new (entityId: number, ...args: any[]) => T
-  ): void {
-    this.components = this.components.filter((c) => !(c instanceof componentType))
+  // Remove all components using the remove component function
+  removeAllComponents() {
+    Array.from(this.components.keys()).forEach((componentType) =>
+      this.removeComponent(componentType)
+    )
   }
-  getAllComponents() {
-    return this.components
+
+  /**
+   * Remove a component from the entity
+   * @param componentType  The type of component to remove
+   * @param createRemoveEvent  Whether to create a remove event or not, default is true, useful for skipping recursion
+   */
+  removeComponent(componentType: ComponentConstructor, createRemoveEvent = true): void {
+    const removedComponent = this.components.get(componentType)
+    if (removedComponent) {
+      this.components.delete(componentType)
+      if (createRemoveEvent) {
+        EventSystem.onComponentRemoved(removedComponent)
+      }
+    }
+  }
+
+  getAllComponents(): Component[] {
+    return Array.from(this.components.values())
   }
 
   // Get a component from the entity
-  getComponent<T extends Component>(
-    componentType: new (entityId: number, ...args: any[]) => T
-  ): T | undefined {
-    return this.components.find((c) => c instanceof componentType) as T | undefined
-  }
-  // Get all components of a certain type
-  getComponents<T extends Component>(
-    componentType: new (entityId: number, ...args: any[]) => T
-  ): T[] {
-    return this.components.filter((c) => c instanceof componentType) as T[]
+  getComponent<T extends Component>(componentType: ComponentConstructor<T>): T | undefined {
+    return this.components.get(componentType) as T | undefined
   }
 
-  // This is used by the client only !
-  // We assume that the clients will only have serializable component so they will have a type!
-  getComponentByType(componentType: SerializedComponentType) {
-    return this.components.find((c) => 'type' in c && c.type === componentType) as
-      | Serializable
-      | undefined
+  // This is used by the client only!
+  getNetworkComponentBySerializedType(
+    componentType: SerializedComponentType
+  ): NetworkComponent | undefined {
+    // Find NetworkComponent by type
+    for (const component of this.components.values()) {
+      if (component instanceof NetworkComponent && component.type === componentType) {
+        return component as NetworkComponent
+      }
+    }
+    return undefined
   }
 }

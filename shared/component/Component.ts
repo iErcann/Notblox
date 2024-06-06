@@ -1,10 +1,7 @@
-import { SerializedComponentType } from '../network/server/serialized.js'
-
-export interface Serializable {
-  type: SerializedComponentType
-  serialize(): any
-  deserialize(data: any): void
-}
+export type ComponentConstructor<T extends Component = Component> = new (
+  entityId: number,
+  ...args: any[]
+) => T
 
 export class Component {
   constructor(public entityId: number) {}

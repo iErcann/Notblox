@@ -1,30 +1,30 @@
-import * as THREE from 'three'
-import { EntityManager } from '@shared/entity/EntityManager'
-import { WebSocketManager } from './WebsocketManager'
-import { InputManager } from './InputManager'
+import { EntityManager } from '@shared/system/EntityManager'
 import { config } from '@shared/network/config'
+import * as THREE from 'three'
+import { InputManager } from './InputManager'
 import { LoadManager } from './LoadManager'
-import { Renderer } from './renderer'
+import { WebSocketManager } from './WebsocketManager'
 import {
+  AnimationSystem,
+  ChatSystem,
+  DestroySystem,
+  SleepCheckSystem,
+  SyncColorSystem,
   SyncComponentsSystem,
   SyncPositionSystem,
   SyncRotationSystem,
-  SyncColorSystem,
   SyncSizeSystem,
-  TopCameraFollowSystem,
-  AnimationSystem,
-  DestroySystem,
 } from './ecs/system'
-import { Camera } from './camera'
-import { SleepCheckSystem } from './ecs/system/SleepCheckSystem'
-import { Chat } from './ecs/entity/Chat'
-import { ChatSystem } from './ecs/system/ChatSystem'
 import { Hud } from './hud'
-import { OrbitCameraFollowSystem } from './ecs/system/OrbitCameraFollowSystem'
+import { Renderer } from './renderer'
+import { EventSystem } from '@shared/system/EventSystem'
+import { MeshSystem } from './ecs/system/MeshSystem'
+import { ServerMeshSystem } from './ecs/system/ServerMeshSystem'
+import { IdentifyFollowedMeshSystem } from './ecs/system/IdentifyFollowedMeshSystem'
 
 export class Game {
   private static instance: Game
-  entityManager = EntityManager.getInstance()
+  entityManager = EntityManager
   currentPlayerEntityId: number | undefined
   private lastRenderTime = Date.now()
   private loopFunction: () => void = this.loop.bind(this)
@@ -33,32 +33,35 @@ export class Game {
   private syncRotationSystem: SyncRotationSystem
   private syncColorSystem: SyncColorSystem
   private syncSizeSystem: SyncSizeSystem
-  private topCameraFollowSystem: TopCameraFollowSystem
-  private orbitCameraFollowSystem: OrbitCameraFollowSystem
+  private eventSystem: EventSystem
   websocketManager: WebSocketManager
   private animationSystem: AnimationSystem
   private sleepCheckSystem: SleepCheckSystem
   private destroySystem: DestroySystem
   private chatSystem: ChatSystem
-  loadManager: LoadManager
-  private inputManager: InputManager
+  inputManager: InputManager
+  private meshSystem: MeshSystem
+  private serverMeshSystem: ServerMeshSystem
   renderer: Renderer
   hud: Hud
+  private identifyFollowedMeshSystem: IdentifyFollowedMeshSystem
   private constructor() {
     this.syncComponentSystem = new SyncComponentsSystem(this)
     this.syncPositionSystem = new SyncPositionSystem()
     this.syncRotationSystem = new SyncRotationSystem()
     this.syncColorSystem = new SyncColorSystem()
     this.syncSizeSystem = new SyncSizeSystem()
-    this.topCameraFollowSystem = new TopCameraFollowSystem()
-    this.orbitCameraFollowSystem = new OrbitCameraFollowSystem()
     this.websocketManager = new WebSocketManager(this)
     this.animationSystem = new AnimationSystem()
-    this.loadManager = new LoadManager()
     this.sleepCheckSystem = new SleepCheckSystem()
     this.chatSystem = new ChatSystem()
     this.destroySystem = new DestroySystem()
-    this.renderer = new Renderer(new THREE.Scene(), this.loadManager)
+    this.meshSystem = new MeshSystem()
+    this.serverMeshSystem = new ServerMeshSystem()
+    this.identifyFollowedMeshSystem = new IdentifyFollowedMeshSystem()
+    this.eventSystem = EventSystem.getInstance()
+
+    this.renderer = new Renderer(new THREE.Scene())
     this.inputManager = new InputManager(this.websocketManager)
     this.hud = new Hud()
   }
@@ -77,36 +80,41 @@ export class Game {
     this.renderer.setAnimationLoop(this.loopFunction)
   }
 
-  private interpolationFactor = 0.1
-  private lastTickTime = 0
+  private loadingPromise: Promise<void> | null = null
 
-  private loop() {
-    const entities = this.entityManager.getAllEntities()
+  private async loop() {
+    const entities = EntityManager.getInstance().getAllEntities()
     const now = Date.now()
-    this.inputManager.sendInput()
-    const deltaTime = now - this.lastRenderTime
-    // Interp factor is wrong here
-    // const interpolationFactor =
-    //   this.websocketManager.timeSinceLastServerUpdate / (1000 / this.tickRate);
+    this.syncComponentSystem.update(entities)
 
+    // Server can send us ServerMeshComponents to load.
+    // This await is necessary to wait for the loading to finish before updating the entities
+    // This will also delay all the other event operations until the loading is finished
+    if (!this.loadingPromise) {
+      this.loadingPromise = this.serverMeshSystem.update(entities)
+    }
+
+    // Wait for the loading operation to finish
+    await this.loadingPromise
+    this.loadingPromise = null
+
+    this.inputManager.sendInput()
+    this.destroySystem.update(entities, this.renderer)
+    this.meshSystem.update(entities, this.renderer)
+    const deltaTime = now - this.lastRenderTime
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
     this.syncPositionSystem.update(entities, positionInterpFactor)
     this.syncRotationSystem.update(entities, 0.5)
-    this.chatSystem.update(entities, this.hud)
     this.syncColorSystem.update(entities)
+    this.chatSystem.update(entities, this.hud)
     this.syncSizeSystem.update(entities)
-    // this.orbitCameraFollowSystem.update(
-    //   deltaTime,
-    //   entities,
-    //   this.renderer.camera.controls,
-    //   this.inputManager.inputState
-    // )
-    // this.topCameraFollowSystem.update(deltaTime, entities, this.inputManager.inputState)
+    this.identifyFollowedMeshSystem.update(entities, this)
     this.animationSystem.update(deltaTime, entities)
-    this.destroySystem.update(entities, this.entityManager, this.renderer)
-    this.sleepCheckSystem.update(entities)
+    this.destroySystem.afterUpdate(entities)
+    this.eventSystem.afterUpdate(entities)
     this.renderer.update(deltaTime, entities, this.inputManager.inputState)
-    this.lastRenderTime = now
+    this.sleepCheckSystem.update(entities)
     this.websocketManager.timeSinceLastServerUpdate += deltaTime
+    this.lastRenderTime = now
   }
 }

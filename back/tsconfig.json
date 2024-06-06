@@ -15,8 +15,5 @@
       "rootDir": "..",
       "baseUrl": "..",
       "typeRoots": ["node_modules/@types"],
-      "paths": {
-        "@shared/*": ["../shared/*"]
-      },
     }
   }

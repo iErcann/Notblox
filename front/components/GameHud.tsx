@@ -19,7 +19,10 @@ export default function GameHud({ chatList, sendMessage }: GameHudProps) {
     scrollToBottom()
   }, [chatList?.list])
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-0 text-white p-4 z-50 pointer-events-none">
+    <div
+      id="hud"
+      className="fixed inset-0 bg-gray-800 bg-opacity-0 text-white p-4 z-50 pointer-events-none"
+    >
       <div className="flex justify-between items-center ">
         <div className="flex items-center space-x-4">
           <div>

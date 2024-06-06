@@ -1,23 +1,29 @@
 {
-  "name": "NotBlox.Online",
+  "name": "notblox.online",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "debug": "tsc-watch --onSuccess \"node --inspect=7000 dist/back/src/index.js\"",
-    "dev": "tsc-watch --onSuccess \"node dist/back/src/index.js\"",
+    "debug": "tsc-watch --onSuccess \"node --inspect=7000  dist/back/src/index.js\"",
+    "dev": "tsc-watch --onSuccess \"node  dist/back/src/index.js\"",
     "build": "tsc --build tsconfig.json",
-    "start": "tsc --build tsconfig.json && node dist/back/src/index.js"
+    "start": "tsc --build tsconfig.json &&  node dist/back/src/index.js",
+    "lint": "eslint src/**/*.ts",
+    "format": "eslint src/**/*.ts --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@eslint/js": "^9.2.0",
+    "@eslint/js": "^9.3.0",
     "@types/fossil-delta": "^1.0.0",
     "@types/node": "^20.12.12",
+    "@types/pako": "^2.0.3",
     "@types/three": "^0.157.0",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
     "eslint": "^8.57.0",
+    "globals": "^15.3.0",
     "nodemon": "^3.1.0",
     "three": "^0.157.0",
     "ts-node": "^10.9.2",
@@ -25,18 +31,21 @@
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.9.1",
     "typescript": "^5.4.5",
-    "typescript-eslint": "^7.8.0"
+    "typescript-eslint": "^7.11.0"
   },
   "type": "module",
   "dependencies": {
     "@dimforge/rapier3d": "^0.11.2",
     "@dimforge/rapier3d-compat": "^0.11.2",
+    "@types/uws": "^0.13.6",
     "dimforge": "file:../../../../../rapier3d",
     "dotenv": "^16.3.1",
     "fossil-delta": "^1.0.2",
     "jsondiffpatch": "^0.5.0",
     "msgpackr": "^1.9.9",
     "node-three-gltf": "^1.4.0",
+    "pako": "^2.1.0",
+    "rate-limiter-flexible": "^5.0.3",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.43.0"
   }
 }

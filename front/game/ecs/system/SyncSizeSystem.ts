@@ -12,21 +12,15 @@ export class SyncSizeSystem {
       const sizeComponent = entity.getComponent(SizeComponent)
       if (!meshComponent) continue
       if (sizeComponent && sizeComponent.updated) {
-        if (entity.type === SerializedEntityType.CUBE) {
-          meshComponent.mesh.geometry.dispose() // Avoids memory leak.
-          meshComponent.mesh.geometry = new BoxGeometry(
-            sizeComponent.width * 2,
-            sizeComponent.height * 2,
-            sizeComponent.depth * 2
-          )
-        }
+        // Scale the mesh to the new size.
+        meshComponent.mesh.scale.set(sizeComponent.width, sizeComponent.height, sizeComponent.depth)
       }
       const singleSizeComponent = entity.getComponent(SingleSizeComponent)
       if (singleSizeComponent && singleSizeComponent.updated) {
         if (entity.type === SerializedEntityType.SPHERE) {
           meshComponent.mesh.geometry.dispose() // Avoids memory leak.
           meshComponent.mesh.geometry = new SphereGeometry(singleSizeComponent.size, 32, 16)
-        } else if (entity.type === SerializedEntityType.PLAYER) {
+        } else {
           meshComponent.mesh.scale.set(
             singleSizeComponent.size,
             singleSizeComponent.size,

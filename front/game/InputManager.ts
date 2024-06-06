@@ -9,14 +9,12 @@ export enum KeyboardLanguage {
 export class InputManager {
   inputState: InputMessage = {
     t: ClientMessageType.INPUT,
-    up: false,
-    down: false,
-    left: false,
-    right: false,
-    space: false,
-    cameraLeft: false,
-    cameraRight: false,
-    angleY: 0,
+    u: false,
+    d: false,
+    l: false,
+    r: false,
+    s: false,
+    y: 0,
   }
 
   private keyboardLanguage: KeyboardLanguage = KeyboardLanguage.EN
@@ -44,33 +42,25 @@ export class InputManager {
           case 'ArrowUp':
           case 'W':
           case 'w':
-            this.inputState.up = true
+            this.inputState.u = true
             break
           case 'ArrowDown':
           case 'S':
           case 's':
-            this.inputState.down = true
+            this.inputState.d = true
             break
           case 'ArrowLeft':
           case 'A':
           case 'a':
-            this.inputState.left = true
+            this.inputState.l = true
             break
           case 'ArrowRight':
           case 'D':
           case 'd':
-            this.inputState.right = true
+            this.inputState.r = true
             break
           case ' ':
-            this.inputState.space = true
-            break
-          case 'Q':
-          case 'q':
-            this.inputState.cameraLeft = true
-            break
-          case 'E':
-          case 'e':
-            this.inputState.cameraRight = true
+            this.inputState.s = true
             break
         }
         break
@@ -79,33 +69,25 @@ export class InputManager {
           case 'ArrowUp':
           case 'Z':
           case 'z':
-            this.inputState.up = true
+            this.inputState.u = true
             break
           case 'ArrowDown':
           case 'S':
           case 's':
-            this.inputState.down = true
+            this.inputState.d = true
             break
           case 'ArrowLeft':
           case 'Q':
           case 'q':
-            this.inputState.left = true
+            this.inputState.l = true
             break
           case 'ArrowRight':
           case 'D':
           case 'd':
-            this.inputState.right = true
+            this.inputState.r = true
             break
           case ' ':
-            this.inputState.space = true
-            break
-          case 'A':
-          case 'a':
-            this.inputState.cameraLeft = true
-            break
-          case 'E':
-          case 'e':
-            this.inputState.cameraRight = true
+            this.inputState.s = true
             break
         }
         break
@@ -119,34 +101,27 @@ export class InputManager {
           case 'ArrowUp':
           case 'W':
           case 'w':
-            this.inputState.up = false
+            this.inputState.u = false
             break
           case 'ArrowDown':
           case 'S':
           case 's':
-            this.inputState.down = false
+            this.inputState.d = false
             break
           case 'ArrowLeft':
           case 'A':
           case 'a':
-            this.inputState.left = false
+            this.inputState.l = false
             break
           case 'ArrowRight':
           case 'D':
           case 'd':
-            this.inputState.right = false
+            this.inputState.r = false
             break
           case ' ':
-            this.inputState.space = false
+            this.inputState.s = false
             break
           case 'Q':
-          case 'q':
-            this.inputState.cameraLeft = false
-            break
-          case 'E':
-          case 'e':
-            this.inputState.cameraRight = false
-            break
         }
         break
       case KeyboardLanguage.FR:
@@ -154,33 +129,25 @@ export class InputManager {
           case 'ArrowUp':
           case 'Z':
           case 'z':
-            this.inputState.up = false
+            this.inputState.u = false
             break
           case 'ArrowDown':
           case 'S':
           case 's':
-            this.inputState.down = false
+            this.inputState.d = false
             break
           case 'ArrowLeft':
           case 'Q':
           case 'q':
-            this.inputState.left = false
+            this.inputState.l = false
             break
           case 'ArrowRight':
           case 'D':
           case 'd':
-            this.inputState.right = false
+            this.inputState.r = false
             break
           case ' ':
-            this.inputState.space = false
-            break
-          case 'A':
-          case 'a':
-            this.inputState.cameraLeft = false
-            break
-          case 'E':
-          case 'e':
-            this.inputState.cameraRight = false
+            this.inputState.s = false
             break
         }
         break
@@ -206,14 +173,12 @@ export class InputManager {
 
   private areInputStatesEqual(state1: InputMessage, state2: InputMessage): boolean {
     return (
-      state1.up === state2.up &&
-      state1.down === state2.down &&
-      state1.left === state2.left &&
-      state1.right === state2.right &&
-      state1.space === state2.space &&
-      state1.cameraLeft === state2.cameraLeft &&
-      state1.cameraRight === state2.cameraRight &&
-      state1.angleY === state2.angleY
+      state1.u === state2.u &&
+      state1.d === state2.d &&
+      state1.l === state2.l &&
+      state1.r === state2.r &&
+      state1.s === state2.s &&
+      state1.y === state2.y
     )
   }
 }
