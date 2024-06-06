@@ -39,7 +39,6 @@ export class Game {
   private sleepCheckSystem: SleepCheckSystem
   private destroySystem: DestroySystem
   private chatSystem: ChatSystem
-  loadManager: LoadManager
   inputManager: InputManager
   private meshSystem: MeshSystem
   private serverMeshSystem: ServerMeshSystem
@@ -62,7 +61,7 @@ export class Game {
     this.identifyFollowedMeshSystem = new IdentifyFollowedMeshSystem()
     this.eventSystem = EventSystem.getInstance()
 
-    this.renderer = new Renderer(new THREE.Scene(), this.loadManager)
+    this.renderer = new Renderer(new THREE.Scene())
     this.inputManager = new InputManager(this.websocketManager)
     this.hud = new Hud()
   }

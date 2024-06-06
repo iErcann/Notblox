@@ -20,7 +20,7 @@ export class Renderer extends THREE.WebGLRenderer {
   scene: THREE.Scene
   css2DRenderer: CSS2DRenderer
   private directionalLight: THREE.DirectionalLight | undefined
-  constructor(scene: THREE.Scene, loadManager: LoadManager) {
+  constructor(scene: THREE.Scene) {
     super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
 
     this.camera = new Camera(this)
@@ -33,7 +33,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.setSize(window.innerWidth, window.innerHeight)
     this.setPixelRatio(window.devicePixelRatio)
     this.toneMapping = THREE.CineonToneMapping
-    this.toneMappingExposure = 0.6
+    this.toneMappingExposure = 0.5
     this.css2DRenderer = new CSS2DRenderer()
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight)
     this.css2DRenderer.domElement.style.position = 'absolute'
@@ -111,7 +111,7 @@ export class Renderer extends THREE.WebGLRenderer {
 
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemiLight = new THREE.HemisphereLight(0xc0fafc, 0x9563ff, 1.5)
+    const hemiLight = new THREE.HemisphereLight(0xc0fafc, 0x9563ff, 1)
     hemiLight.color.setHSL(0.59, 0.4, 0.6)
     hemiLight.groundColor.setHSL(0.095, 0.2, 0.75)
     hemiLight.position.set(0, 50, 0)
