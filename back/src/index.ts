@@ -31,7 +31,6 @@ import { SphereColliderSystem } from './ecs/system/physics/SphereColliderSystem.
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
-import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 // import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 
 // TODO: Make it wait for the websocket server to start
@@ -76,8 +75,7 @@ function runTestEntities() {
     const randomCube = new Cube(0, 50, 0, 1, 1, 1)
     randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
     for (let i = 1; i < 5; i++) {
-      new Cube(0, 5, 5 * i, i, i, i)
-      // c2.entity.addComponent(new RandomizeComponent(c2.entity.id))
+      new Cube(0, 5, 5 * i, 1, 1, 1)
     }
     new Sphere(0, 30, 0, 1)
     for (let i = 1; i < 10; i++) {
@@ -96,6 +94,18 @@ function runTestEntities() {
   //   setTimeout(() => {
   //     EventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
   //   }, 1000)
+
+  //   // Real-time mesh change test
+  //   // if (movingCubeZ % 2 === 0) {
+  //   //   console.log('Changing to crate')
+  //   //   mapworld.entity.getComponent(ServerMeshComponent)!.filePath =
+  //   //     'https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb'
+  //   // } else {
+  //   //   console.log('Changing to sphere')
+  //   //   mapworld.entity.getComponent(ServerMeshComponent)!.filePath =
+  //   //     'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
+  //   // }
+  //   // mapworld.entity.getComponent(ServerMeshComponent)!.updated = true
   // }, 2000)
 }
 runTestEntities()

@@ -11,8 +11,7 @@ export class MapWorld {
   entity: Entity
   constructor() {
     this.entity = EntityManager.createEntity(SerializedEntityType.WORLD)
-    const mapUrl =
-      'https://rawcdn.githack.com/iErcann/Notblox-Assets/47ad0607fd45aceb7b62bc141c692333fa8cd972/BasicWorld.glb'
+    const mapUrl = 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/testWorld3.glb'
 
     const serverMeshComponent = new ServerMeshComponent(this.entity.id, mapUrl)
     this.entity.addComponent(serverMeshComponent)

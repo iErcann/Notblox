@@ -11,7 +11,5 @@ export class EventQueue {
 
     this.entity.addComponent(new EventListComponent(this.entity.id), false)
     this.entity.addComponent(new NetworkDataComponent(this.entity.id, this.entity.type, []), false)
-    console.log('EventQueue created')
-    console.log(this.entity)
   }
 }

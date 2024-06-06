@@ -119,12 +119,12 @@ export class EventSystem {
    * @returns Array of wrapped event components
    * @example
    * ```typescript
-   *  EventSystem.getEventsWrapped(ComponentAddedEvent, ChatMessageComponent)
-   *  EventSystem.getEventsWrapped(ComponentRemovedEvent, ChatMessageComponent)
+   *  EventSystem.getEventsWrapped(ComponentAddedEvent, BoxColliderComponent)
+   *  EventSystem.getEventsWrapped(ComponentRemovedEvent, BoxColliderComponent)
    * ```
    */
 
-  // TODO: Fine a way to infer subtypes
+  // TODO: Find a way to infer subtypes
   static getEventsWrapped<E extends ComponentWrapper<T>, T extends Component>(
     eventType: new (...args: any[]) => E,
     componentType: ComponentConstructor<T>

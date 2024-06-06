@@ -31,7 +31,7 @@ export class RandomizeSystem {
 
       const singleSizeComponent = entity.getComponent(SingleSizeComponent)
       if (singleSizeComponent) {
-        if (Math.random() < 0.05) {
+        if (Math.random() < 0.01) {
           EventSystem.addEvent(new SingleSizeEvent(entity.id, Math.max(2, Math.random() * 3)))
         }
       }

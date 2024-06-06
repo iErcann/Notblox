@@ -54,7 +54,6 @@ export class Game {
     this.syncSizeSystem = new SyncSizeSystem()
     this.websocketManager = new WebSocketManager(this)
     this.animationSystem = new AnimationSystem()
-    this.loadManager = new LoadManager()
     this.sleepCheckSystem = new SleepCheckSystem()
     this.chatSystem = new ChatSystem()
     this.destroySystem = new DestroySystem()

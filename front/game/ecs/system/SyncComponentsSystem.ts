@@ -39,7 +39,6 @@ export class SyncComponentsSystem {
   }
   handleEventEntity(serializedEventQueueEntity: SerializedEntity) {
     const eventEntity = EventSystem.getInstance().eventQueue.entity
-    const eventListComponent = eventEntity.getComponent(EventListComponent)
 
     for (const serializedComponent of serializedEventQueueEntity.c) {
       const eventComponent = this.createComponent(serializedComponent, eventEntity.id)
@@ -50,7 +49,7 @@ export class SyncComponentsSystem {
         )
         continue
       }
-      eventListComponent?.addEvent(eventComponent)
+      EventSystem.addEvent(eventComponent)
     }
   }
   update(entities: Entity[]) {
@@ -116,12 +115,10 @@ export class SyncComponentsSystem {
       case SerializedEntityType.CUBE:
         const cube = new Cube(serializedEntity.id)
         newEntity = cube.entity
-        this.game.renderer.scene.add(cube.entity.getComponent(MeshComponent)!.mesh)
         break
       case SerializedEntityType.SPHERE:
         const sphere = new Sphere(serializedEntity.id)
         newEntity = sphere.entity
-        this.game.renderer.scene.add(sphere.entity.getComponent(MeshComponent)!.mesh)
         break
       case SerializedEntityType.CHAT:
         newEntity = new Chat(serializedEntity.id).entity

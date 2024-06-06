@@ -17,9 +17,6 @@ export class NetworkSystem {
     for (const entity of entities) {
       const networkDataComponent = entity.getComponent(NetworkDataComponent)
       if (networkDataComponent) {
-        /*         if (entity.type === SerializedEntityType.EVENT)
-          console.log('Found NetworkDataComponent', networkDataComponent) */
-
         const _serializedEntities = networkDataComponent.serialize(serializeAll)
         // Skip entities without any components to reduce bandwidth
         if (_serializedEntities != null) {

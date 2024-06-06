@@ -26,15 +26,15 @@ export class Cube {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      'https://rawcdn.githack.com/iErcann/Notblox-Assets/0ac6d49540b8fb924bef1b126fbdfd965d733c3a/Character.glb'
+      'https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 
     const sizeComponent = new SizeComponent(this.entity.id, width, height, depth)
     this.entity.addComponent(sizeComponent)
 
-    const colorComponent = new ColorComponent(this.entity.id, '#ff0000')
-    this.entity.addComponent(colorComponent)
+    // const colorComponent = new ColorComponent(this.entity.id, '#ff0000')
+    // this.entity.addComponent(colorComponent)
 
     this.entity.addComponent(new BoxColliderComponent(this.entity.id))
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
@@ -43,7 +43,8 @@ export class Cube {
       positionComponent,
       rotationComponent,
       sizeComponent,
-      colorComponent,
+      // colorComponent,
+      serverMeshComponent,
     ])
     this.entity.addComponent(networkDataComponent)
   }

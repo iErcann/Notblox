@@ -34,7 +34,6 @@ export class Renderer extends THREE.WebGLRenderer {
     this.setPixelRatio(window.devicePixelRatio)
     this.toneMapping = THREE.CineonToneMapping
     this.toneMappingExposure = 0.6
-
     this.css2DRenderer = new CSS2DRenderer()
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight)
     this.css2DRenderer.domElement.style.position = 'absolute'
@@ -45,10 +44,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.domElement.addEventListener('contextmenu', (event) => event.preventDefault())
     this.addLight()
     this.addDirectionnalLight()
-    // this.addWorld(loadManager)
     this.addSky()
-    // this.addGround();
-    // Use arrow function to ensure 'this' refers to the class instance
     window.addEventListener('resize', this.onWindowResize.bind(this), false)
   }
 
@@ -109,8 +105,8 @@ export class Renderer extends THREE.WebGLRenderer {
     this.scene.add(this.directionalLight, lightTarget)
 
     // Uncomment the following lines to add a helper for visualization
-    const helper = new THREE.DirectionalLightHelper(this.directionalLight, 10)
-    this.scene.add(helper)
+    // const helper = new THREE.DirectionalLightHelper(this.directionalLight, 10)
+    // this.scene.add(helper)
   }
 
   private addLight() {
