@@ -116,6 +116,7 @@ async function gameLoop() {
   setTimeout(gameLoop, 1000 / config.SERVER_TICKRATE)
   const now = Date.now()
   const dt = now - lastUpdateTimestamp
+  console.log('tickrate', 1000 / dt)
 
   destroyEventSystem.update(entities)
 

@@ -25,7 +25,7 @@ export class MovementSystem {
     const impulse = this.calculateImpulse(dt, inputComponent, rigidBodyComponent)
     // If the space key is pressed and the entity is grounded, apply an impulse
     if (inputComponent.space && groundedCheckComponent && groundedCheckComponent.grounded) {
-      impulse.y = 1.5 * dt
+      impulse.y = 0.8 * dt
     }
     this.applyImpulse(dt, rigidBodyComponent, impulse)
   }
@@ -39,10 +39,10 @@ export class MovementSystem {
       return new Rapier.Vector3(0, 0, 0)
     }
     const currentLinVel = rigidBodyComponent.body.linvel()
-    const speed = 0.8
+    const speed = 0.27
     const lookingYAngle = inputComponent.lookingYAngle
 
-    const impulse = new Rapier.Vector3(0, currentLinVel.y - 0.1 * dt, 0)
+    const impulse = new Rapier.Vector3(0, currentLinVel.y - 0 * dt, 0)
 
     if (inputComponent.up) {
       impulse.z += -speed * Math.sin(lookingYAngle)
