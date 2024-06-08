@@ -29,7 +29,7 @@ Hosted on an european server, there is no client side prediction, so the game ma
 - Interpolation
 - Fast to load (small assets)
 - Shared code between server and client (useful for component replication)
-- Trimesh Collider
+- Trimesh Collider 
 
  
 ## Why ?
@@ -72,7 +72,70 @@ Uncomment the `NEXT_PUBLIC_SERVER_URL` variable in `front/.env.local`, it will d
   npm run dev
 ```
 
+## How to change the map
 
+A map is a GLB/GLTF file. The backend will approximate a Trimesh Collider based on it, and it is then rendered by the client.
+
+Go to the file : `back/src/ecs/entity/MapWorld.ts`
+
+```typescript
+export class MapWorld {
+  entity: Entity
+  constructor() {
+    this.entity = EntityManager.createEntity(SerializedEntityType.WORLD)
+
+    // URL of the GLB/GLTF file (Change this)
+    const mapUrl = 'https://rawcdn.githack.com/iErcann/Notblox-Assets/610c6492aa88e5a6b5107a38e1a7c34cc43d9e81/KenneyWorld.glb'
+
+    // Server-side mesh for rendering
+    const serverMeshComponent = new ServerMeshComponent(this.entity.id, mapUrl)
+    this.entity.addComponent(serverMeshComponent)
+
+    // Static (kinematic) property for the map
+    this.entity.addComponent(new KinematicRigidBodyComponent(this.entity.id))
+
+    // Trimesh collider approximation based on the map
+    this.entity.addComponent(new TrimeshCollidersComponent(this.entity.id, mapUrl))
+
+    // Sending only the visual data (mesh URL file)
+    this.entity.addComponent(
+      new NetworkDataComponent(this.entity.id, this.entity.type, [serverMeshComponent])
+    )
+  }
+}
+
+```
+
+### Blender: How to Export a Map Correctly
+
+**1. Apply All Transforms**
+
+- Press `CTRL-A` and select "All Transforms" to apply all transformations.
+
+![Apply All Transforms](https://github.com/iErcann/Notblox/assets/25112067/226d1af8-87ee-4831-b379-86bc7ed0d536)
+
+**2. Clear Parents**
+
+- Press `A` to select all objects, then `CTRL-P` and choose "Clear Parent" to remove all parent relationships.
+
+![Clear Parents](https://github.com/iErcann/Notblox/assets/25112067/c253deea-0d8f-44e2-8020-a90668d2af06)
+
+**3. Export with Compression**
+
+- Choose GLB/GLTF export.
+
+![Choose GLB/GLTF Export](https://github.com/iErcann/Notblox/assets/25112067/0f199544-32e6-4420-b161-ee0c9561bde7)
+
+- Activate compression.
+
+![Activate Compression](https://github.com/iErcann/Notblox/assets/25112067/36de3e8c-798c-47b8-bab5-2f99ffd1bea2)
+
+### Free asset hosting
+Github Repo + Githack : 
+
+https://gist.github.com/jcubic/a8b8c979d200ffde13cc08505f7a6436#how-to-setup-a-literally-free-cdn
+
+ 
 ## Current Event system (might change!)
  
 [Is it better design to store event effects within an Entity itself, or within a system?](https://gamedev.stackexchange.com/questions/194133/is-it-better-design-to-store-event-effects-within-an-entity-itself-or-within-a)
@@ -96,37 +159,31 @@ The back-end need to pass some events; This is achieved with the event component
 
 ```js
 // Creating a color change event on the back
-const eventSystem = EventSystem.getInstance();
-eventSystem.addEvent(new EventColor(yourEntity.id, "#FFFFFF"));
+EventSystem.addEvent(new ColorEvent(yourEntity.id, "#FFFFFF"));
 ```
-It is then received by its subscribers, here `SyncColorSystem`
-```
-class EventSystem {
-...
-this.subscriptions.set(EventColor.name, [new SyncColorSystem()]);
-...
-}
+It can be received by any system, here `ColorEventSystem` : 
 
-```
 The `ColorComponent` is updated:
 ```js
-export class SyncColorSystem {
-  update(entities: Entity[], eventColor: EventColor) {
-    const entity = EntityManager.getEntityById(entities, eventColor.entityId);
-    if (!entity) return;
+export class ColorEventSystem {
+  update(entities: Entity[]) {
+    const eventColors = EventSystem.getEvents(ColorEvent)
 
-    const colorComponent = entity.getComponent(ColorComponent);
-    if (!colorComponent) return;
+    for (const eventColor of eventColors) {
+      const entity = EntityManager.getEntityById(entities, eventColor.entityId)
+      if (!entity) return
 
-    if (colorComponent && eventColor) {
-      colorComponent.color = eventColor.color;
-      colorComponent.updated = true; // If this is set to true, the ColorComponent (which is a NetworkComponent) will be broadcasted to the clients
+      const colorComponent = entity.getComponent(ColorComponent)
+      if (!colorComponent) return
+
+      if (colorComponent && eventColor) {
+        colorComponent.color = eventColor.color
+        colorComponent.updated = true
+      }
     }
   }
 }
 ```
-The `EventColorComponent` is then destroyed by the EventSystem
-
 
 ### Client (front-end)
 The component is replicated by the client with the `SyncComponentsSystem.ts`, then it uses the front-end version of `SyncColorSystem` to actually change the color of the mesh, you could incorporate more checks here depending on other components
@@ -146,6 +203,8 @@ export class SyncColorSystem {
   }
 }
 ```
+
+
 
 ## You like this project or want to talk about Three.js games ? 
 Discord  https://discord.gg/aEBXPtFwgU 👀
