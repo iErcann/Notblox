@@ -29,7 +29,7 @@ Hosted on an european server, there is no client side prediction, so the game ma
 - Interpolation
 - Fast to load (small assets)
 - Shared code between server and client (useful for component replication)
-- Trimesh Collider
+- Trimesh Collider 
 
  
 ## Why ?
@@ -96,37 +96,31 @@ The back-end need to pass some events; This is achieved with the event component
 
 ```js
 // Creating a color change event on the back
-const eventSystem = EventSystem.getInstance();
-eventSystem.addEvent(new EventColor(yourEntity.id, "#FFFFFF"));
+EventSystem.addEvent(new ColorEvent(yourEntity.id, "#FFFFFF"));
 ```
-It is then received by its subscribers, here `SyncColorSystem`
-```
-class EventSystem {
-...
-this.subscriptions.set(EventColor.name, [new SyncColorSystem()]);
-...
-}
+It can be received by any system, here `ColorEventSystem` : 
 
-```
 The `ColorComponent` is updated:
 ```js
-export class SyncColorSystem {
-  update(entities: Entity[], eventColor: EventColor) {
-    const entity = EntityManager.getEntityById(entities, eventColor.entityId);
-    if (!entity) return;
+export class ColorEventSystem {
+  update(entities: Entity[]) {
+    const eventColors = EventSystem.getEvents(ColorEvent)
 
-    const colorComponent = entity.getComponent(ColorComponent);
-    if (!colorComponent) return;
+    for (const eventColor of eventColors) {
+      const entity = EntityManager.getEntityById(entities, eventColor.entityId)
+      if (!entity) return
 
-    if (colorComponent && eventColor) {
-      colorComponent.color = eventColor.color;
-      colorComponent.updated = true; // If this is set to true, the ColorComponent (which is a NetworkComponent) will be broadcasted to the clients
+      const colorComponent = entity.getComponent(ColorComponent)
+      if (!colorComponent) return
+
+      if (colorComponent && eventColor) {
+        colorComponent.color = eventColor.color
+        colorComponent.updated = true
+      }
     }
   }
 }
 ```
-The `EventColorComponent` is then destroyed by the EventSystem
-
 
 ### Client (front-end)
 The component is replicated by the client with the `SyncComponentsSystem.ts`, then it uses the front-end version of `SyncColorSystem` to actually change the color of the mesh, you could incorporate more checks here depending on other components
@@ -146,6 +140,8 @@ export class SyncColorSystem {
   }
 }
 ```
+
+
 
 ## You like this project or want to talk about Three.js games ? 
 Discord  https://discord.gg/aEBXPtFwgU 👀
