@@ -19,7 +19,7 @@ export default function KeyboardLayout() {
   }
 
   return (
-    <div className="flex flex-col border p-4 space-y-4 rounded-2xl items-center ">
+    <div className="flex w-full md:w-fit flex-col border p-4 space-y-4 rounded-2xl items-center ">
       <p className="text-lg font-bold">
         Current controls {keyboardLayout === KeyboardLanguage.EN ? 'QWERTY' : 'AZERTY (French)'}
       </p>

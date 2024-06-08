@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <main className="pb-4 area">
+    <main className="p-4 area">
       <NextSeo
         title="NotBlox - Play multiplayer games in your browser"
         description="Play multiplayer games in your browser. Create your own games and share them with your friends."
