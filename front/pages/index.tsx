@@ -47,13 +47,13 @@ export default function Home() {
         <div className="flex flex-wrap items-center justify-around max-w-4xl sm:w-full space-y-8 ">
           <Image src="/Logo-Removed.png" alt={'Logo'} width={200} height={300} />
 
-          <Link
+          <a
             href={'/test'}
             className="flex items-center justify-center w-full px-8 py-3 font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-700 md:py-4 md:text-lg md:px-10"
           >
             <Play className="mr-2" />
             Play Now
-          </Link>
+          </a>
         </div>
 
         <KeyboardLayout />

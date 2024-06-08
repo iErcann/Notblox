@@ -21,6 +21,7 @@ import { EventSystem } from '@shared/system/EventSystem'
 import { MeshSystem } from './ecs/system/MeshSystem'
 import { ServerMeshSystem } from './ecs/system/ServerMeshSystem'
 import { IdentifyFollowedMeshSystem } from './ecs/system/IdentifyFollowedMeshSystem'
+import { MutableRefObject } from 'react'
 
 export class Game {
   private static instance: Game
@@ -45,7 +46,7 @@ export class Game {
   renderer: Renderer
   hud: Hud
   private identifyFollowedMeshSystem: IdentifyFollowedMeshSystem
-  private constructor() {
+  private constructor(gameContainerRef: MutableRefObject<any>) {
     this.syncComponentSystem = new SyncComponentsSystem(this)
     this.syncPositionSystem = new SyncPositionSystem()
     this.syncRotationSystem = new SyncRotationSystem()
@@ -61,14 +62,14 @@ export class Game {
     this.identifyFollowedMeshSystem = new IdentifyFollowedMeshSystem()
     this.eventSystem = EventSystem.getInstance()
 
-    this.renderer = new Renderer(new THREE.Scene())
+    this.renderer = new Renderer(gameContainerRef)
     this.inputManager = new InputManager(this.websocketManager)
     this.hud = new Hud()
   }
 
-  static getInstance(): Game {
+  static getInstance(gameContainerRef: MutableRefObject<any>): Game {
     if (!Game.instance) {
-      Game.instance = new Game()
+      Game.instance = new Game(gameContainerRef)
     }
     return Game.instance
   }

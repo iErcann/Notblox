@@ -10,6 +10,7 @@ import { InputMessage } from '@shared/network/client/input'
 import { EntityManager } from '@shared/system/EntityManager'
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
 import { FollowComponent } from './ecs/component/FollowComponent'
+import { MutableRefObject } from 'react'
 
 export interface Renderable {
   mesh: THREE.Mesh
@@ -20,12 +21,12 @@ export class Renderer extends THREE.WebGLRenderer {
   scene: THREE.Scene
   css2DRenderer: CSS2DRenderer
   private directionalLight: THREE.DirectionalLight | undefined
-  constructor(scene: THREE.Scene) {
+  constructor(public gameContainerRef: MutableRefObject<any>) {
     super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
 
     this.camera = new Camera(this)
 
-    this.scene = scene
+    this.scene = new THREE.Scene()
 
     this.shadowMap.enabled = true
     this.shadowMap.type = THREE.PCFSoftShadowMap //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
@@ -49,7 +50,8 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   appendChild() {
-    document.body.appendChild(this.domElement)
+    console.log(this.gameContainerRef)
+    this.gameContainerRef.current.appendChild(this.domElement)
     if (this.css2DRenderer) document.body.appendChild(this.css2DRenderer.domElement)
     else console.error("Can't append child CSS3DRenderer")
   }

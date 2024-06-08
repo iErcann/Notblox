@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Game } from '@/game/game'
 import GameHud from '@/components/GameHud'
 import LoadingScreen from '@/components/LoadingScreen'
@@ -10,10 +10,11 @@ export default function TestServer() {
   const [isLoading, setIsLoading] = useState(true)
   const [chat, updateChat] = useState<ChatListComponent>()
   const [game, setGame] = useState<Game>()
+  const refContainer = useRef(null)
 
   useEffect(() => {
     async function initializeGame() {
-      const game = Game.getInstance()
+      const game = Game.getInstance(refContainer)
       game.hud.passChatState(updateChat)
       setGame(game)
       try {
@@ -60,11 +61,10 @@ export default function TestServer() {
           cardType: 'summary_large_image',
         }}
       />
-      {isLoading ? (
-        <LoadingScreen />
-      ) : (
+      {isLoading && <LoadingScreen />}
+      <div ref={refContainer}>
         <GameHud chatList={chat} sendMessage={game?.hud.sendMessageToServer!} />
-      )}
+      </div>
     </>
   )
 }
