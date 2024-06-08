@@ -1,5 +1,4 @@
 import { ChatListComponent } from '@shared/component/ChatComponent'
-import { Github } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 
@@ -38,7 +37,9 @@ export default function GameHud({ chatList, sendMessage }: GameHudProps) {
         </div> */}
         <div className="shadow-4xl p-4 rounded-lg space-y-1 bg-gray-800 bg-opacity-20">
           <p className="text-sm">👋 Welcome to </p>
-          <p className="text-sm md:text-2xl font-bold">NotBlox.Online</p>
+          <p className="text-sm md:text-2xl font-bold">
+            NotBlox<span className=" font-thin ">.online</span>
+          </p>
           <div className="space-x-4 text-sm">
             <Link className="pointer-events-auto" href={'https://discord.gg/aEBXPtFwgU'}>
               Discord

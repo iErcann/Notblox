@@ -67,8 +67,11 @@ export class Game {
     this.hud = new Hud()
   }
 
-  static getInstance(gameContainerRef: MutableRefObject<any>): Game {
+  static getInstance(gameContainerRef?: MutableRefObject<any>): Game {
     if (!Game.instance) {
+      if (!gameContainerRef) {
+        throw new Error('Game instance not initialized with gameContainerRef')
+      }
       Game.instance = new Game(gameContainerRef)
     }
     return Game.instance
