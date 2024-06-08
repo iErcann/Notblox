@@ -33,7 +33,7 @@ export class Player {
     const rotationComponent = new RotationComponent(this.entity.id, 0, 1, 2)
     this.entity.addComponent(rotationComponent)
 
-    const sizeComponent = new SingleSizeComponent(this.entity.id, 1 + Math.random())
+    const sizeComponent = new SingleSizeComponent(this.entity.id, 1.5 + Math.random())
     this.entity.addComponent(sizeComponent)
 
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))

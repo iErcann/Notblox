@@ -24,7 +24,7 @@ export default function GameHud({ chatList, sendMessage }: GameHudProps) {
       className="fixed inset-0 bg-gray-800 bg-opacity-0 text-white p-4 z-50 pointer-events-none"
     >
       <div className="flex justify-between items-center ">
-        <div className="flex items-center space-x-4">
+        {/* <div className="flex items-center space-x-4">
           <div>
             <p className="text-sm">Health:</p>
             <div className="h-4 w-48 bg-red-500 rounded-full overflow-hidden">
@@ -35,7 +35,7 @@ export default function GameHud({ chatList, sendMessage }: GameHudProps) {
             <p className="text-sm">Score:</p>
             <p className="text-lg font-bold">00000</p>
           </div>
-        </div>
+        </div> */}
         <div className="shadow-4xl p-4 rounded-lg space-y-1 bg-gray-800 bg-opacity-20">
           <p className="text-sm">👋 Welcome to </p>
           <p className="text-sm md:text-2xl font-bold">NotBlox.Online</p>

@@ -8,6 +8,7 @@ import { ServerMeshComponent } from '@shared/component/ServerMeshComponent'
 import { EntityManager } from '@shared/system/EntityManager'
 import { LoadManager } from '@/game/LoadManager'
 import { AnimationComponent } from '../component/AnimationComponent'
+import { SerializedEntityType } from '@shared/network/server/serialized'
 
 export class ServerMeshSystem {
   async update(entities: Entity[]): Promise<void> {
@@ -18,6 +19,12 @@ export class ServerMeshSystem {
       if (!entity) {
         console.error('ServerMeshSystem: Entity not found')
         return Promise.resolve() // Return a resolved promise if the entity is not found
+      }
+      // Hack to load the world in parallel
+      // Initial load is faster
+      if (entity.type === SerializedEntityType.WORLD) {
+        this.onServerMeshReceived(event, entity)
+        return Promise.resolve()
       }
       return this.onServerMeshReceived(event, entity)
     })
@@ -35,7 +42,7 @@ export class ServerMeshSystem {
     const mesh = await LoadManager.glTFLoad(serverMeshComponent.filePath)
     const meshComponent = new MeshComponent(entity.id, mesh)
 
-    // // Debug : Add a box helper around the mesh
+    // // Debug : Add a box helper around the mesh (if player)
     // const geometry = new THREE.CapsuleGeometry(1, 1, 32)
     // const material = new THREE.MeshBasicMaterial({ wireframe: true })
     // meshComponent.mesh.geometry = geometry

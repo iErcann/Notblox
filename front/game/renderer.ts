@@ -33,7 +33,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.setSize(window.innerWidth, window.innerHeight)
     this.setPixelRatio(window.devicePixelRatio)
     this.toneMapping = THREE.CineonToneMapping
-    this.toneMappingExposure = 0.5
+    this.toneMappingExposure = 0.8
     this.css2DRenderer = new CSS2DRenderer()
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight)
     this.css2DRenderer.domElement.style.position = 'absolute'

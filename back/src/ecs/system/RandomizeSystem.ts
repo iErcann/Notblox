@@ -54,9 +54,9 @@ export class RandomizeSystem {
         if (Math.random() < 0.05) {
           rigidBodyComponent.body.applyImpulse(
             new Rapier.Vector3(
-              (Math.random() - 1 / 2) * 750,
-              (Math.random() - 1 / 2) * 750,
-              (Math.random() - 1 / 2) * 750
+              (Math.random() - 1 / 2) * 500,
+              (Math.random() - 1 / 2) * 500,
+              (Math.random() - 1 / 2) * 500
             ),
             true
           )
