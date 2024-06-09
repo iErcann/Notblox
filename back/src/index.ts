@@ -4,11 +4,8 @@ import { EntityManager } from '../../shared/system/EntityManager.js'
 import { config } from '../../shared/network/config.js'
 import { EventSystem } from '../../shared/system/EventSystem.js'
 
-import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { Chat } from './ecs/entity/Chat.js'
 import { Cube } from './ecs/entity/Cube.js'
-import { MapWorld } from './ecs/entity/MapWorld.js'
-import { Sphere } from './ecs/entity/Sphere.js'
 import { AnimationSystem } from './ecs/system/AnimationSystem.js'
 import { MovementSystem } from './ecs/system/MovementSystem.js'
 import { RandomizeSystem } from './ecs/system/RandomizeSystem.js'
@@ -32,7 +29,6 @@ import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
 import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
-// import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -69,47 +65,6 @@ const randomizeSystem = new RandomizeSystem()
 const boundaryCheckSystem = new BoundaryCheckSystem()
 
 new Chat()
-new MapWorld()
-
-function runTestEntities() {
-  setTimeout(() => {
-    const randomCube = new Cube(0, 50, 0, 1, 1, 1)
-    randomCube.entity.addComponent(new RandomizeComponent(randomCube.entity.id))
-    for (let i = 1; i < 5; i++) {
-      new Cube(0, 5, 5 * i, 1, 1, 1)
-    }
-    new Sphere(0, 30, 0, 1)
-    for (let i = 1; i < 10; i++) {
-      const s = new Sphere(0, i * 30, 0, 1.2)
-      s.entity.addComponent(new RandomizeComponent(s.entity.id))
-    }
-    new Sphere(10, 30, 0, 4)
-  }, 1000)
-  // setInterval(() => {
-  //   new Cube(0, 10, 0, Math.random(), Math.random(), Math.random())
-  // }, 1000)
-  // let movingCubeZ = 0
-  // setInterval(() => {
-  //   movingCubeZ = (movingCubeZ + 5) % 1000
-  //   const big = new Cube(0, 50, movingCubeZ, 2, 2, 2)
-  //   setTimeout(() => {
-  //     EventSystem.addNetworkEvent(new EntityDestroyedEvent(big.entity.id))
-  //   }, 1000)
-
-  //   // Real-time mesh change test
-  //   // if (movingCubeZ % 2 === 0) {
-  //   //   console.log('Changing to crate')
-  //   //   mapworld.entity.getComponent(ServerMeshComponent)!.filePath =
-  //   //     'https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb'
-  //   // } else {
-  //   //   console.log('Changing to sphere')
-  //   //   mapworld.entity.getComponent(ServerMeshComponent)!.filePath =
-  //   //     'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
-  //   // }
-  //   // mapworld.entity.getComponent(ServerMeshComponent)!.updated = true
-  // }, 2000)
-}
-runTestEntities()
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
 let lastUpdateTimestamp = Date.now()
 
@@ -121,6 +76,7 @@ async function gameLoop() {
   // Idle mode if no players
   if (!playersExists()) {
     console.log('No players, waiting...')
+    lastUpdateTimestamp = Date.now()
     setTimeout(gameLoop, 1000)
     return
   }
@@ -164,8 +120,10 @@ async function gameLoop() {
   lastUpdateTimestamp = now
 }
 
-try {
-  gameLoop()
-} catch (error) {
-  console.error('Error in game loop:', error)
+export function startGameLoop() {
+  try {
+    gameLoop()
+  } catch (error) {
+    console.error('Error in game loop:', error)
+  }
 }

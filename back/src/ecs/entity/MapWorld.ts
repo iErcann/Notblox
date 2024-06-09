@@ -9,9 +9,8 @@ import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComp
 
 export class MapWorld {
   entity: Entity
-  constructor() {
+  constructor(mapUrl: string) {
     this.entity = EntityManager.createEntity(SerializedEntityType.WORLD)
-    const mapUrl = 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/aqsworld.glb'
 
     const serverMeshComponent = new ServerMeshComponent(this.entity.id, mapUrl)
     this.entity.addComponent(serverMeshComponent)

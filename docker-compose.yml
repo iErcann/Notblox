@@ -31,6 +31,16 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
 
+  back2:
+    build: .
+    environment:
+    - GAME_SCRIPT=parkourScript.js  
+    ports:
+      - '8002:8001'
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+    restart: unless-stopped
+
 networks:
   my_network:
     driver: bridge

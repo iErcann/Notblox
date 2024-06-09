@@ -1,3 +1,4 @@
+# Build stage
 FROM node:20 as build
 
 WORKDIR /app
@@ -10,13 +11,10 @@ RUN rm -rf package-lock.json
 RUN npm install
 RUN npm run build
 
-# FROM node:20-alpine 
+# Production stage
 FROM node:20 
 
 WORKDIR /app/back
-
-# https://github.com/uNetworking/uWebSockets.js/discussions/346#discussioncomment-1137301
-# RUN apk add --no-cache libc6-compat git
 
 COPY --from=build /app/back/package.json .
 

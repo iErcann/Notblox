@@ -2,12 +2,14 @@
     {
       "title": "Test Server 2",
       "imageUrl": "/PreviewTestGame.webp",
+      "websocketPort": "",
       "serverName": "Test Server",
       "description": "This is a test server for development purposes. Feel free to join and test the game."
     },
     {
       "title": "Test Server",
       "imageUrl": "/BigPreview.webp",
+      "websocketUrl": "8082",
       "serverName": "Test Server",
       "description": "This is a test server for development purposes. Feel free to join and test the game."
     }

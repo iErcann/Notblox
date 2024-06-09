@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "debug": "tsc-watch --onSuccess \"node --inspect=7000  dist/back/src/index.js\"",
-    "dev": "tsc-watch --onSuccess \"node  dist/back/src/index.js\"",
+    "dev": "tsc-watch --onSuccess \"node  dist/back/src/sandbox.js\"",
     "build": "tsc --build tsconfig.json",
     "start": "tsc --build tsconfig.json &&  node dist/back/src/index.js",
     "lint": "eslint src/**/*.ts",
