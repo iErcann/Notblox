@@ -2,11 +2,12 @@ import GameCard from '@/components/GameCard'
 import KeyboardLayout from '@/components/KeyboardLayout'
 import Navbar from '@/components/Navbar'
 import { ExternalLink, GithubIcon, Play, TwitterIcon } from 'lucide-react'
-import { GetStaticProps } from 'next'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { NextSeo } from 'next-seo'
 import Link from 'next/link'
+import serverData from '../public/serverData.json'
 
-interface GameInfo {
+interface Server {
   title: string
   imageUrl: string
   serverName: string
@@ -14,33 +15,21 @@ interface GameInfo {
 }
 
 interface HomeProps {
-  games: GameInfo[]
+  servers: Server[]
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  console.log(serverData)
   return {
     props: {
-      games: [
-        {
-          title: 'Test Server',
-          imageUrl: '/PreviewTestGame.webp',
-          serverName: 'Test Server',
-          description:
-            'This is a test server for development purposes. Feel free to join and test the game.',
-        },
-        {
-          title: 'Test Server',
-          imageUrl: '/BigPreview.webp',
-          serverName: 'Test Server',
-          description:
-            'This is a test server for development purposes. Feel free to join and test the game.',
-        },
-      ],
+      servers: serverData,
     },
+    revalidate: 5,
   }
 }
 
-export default function Home({ games }: HomeProps) {
+// Infer the `StaticProps` type from `getStaticProps`
+export default function Home({ servers }: HomeProps) {
   return (
     <main className="p-4 area">
       <NextSeo
@@ -80,15 +69,16 @@ export default function Home({ games }: HomeProps) {
         <Navbar />
         <p className="text-2xl">Play multiplayer games in your browser</p>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {games.map((game, index) => (
-            <GameCard
-              key={index}
-              title={game.title}
-              imageUrl={game.imageUrl}
-              serverName={game.serverName}
-              description={game.description}
-            />
-          ))}
+          {servers &&
+            servers.map((server, index) => (
+              <GameCard
+                key={index}
+                title={server.title}
+                imageUrl={server.imageUrl}
+                serverName={server.serverName}
+                description={server.description}
+              />
+            ))}
         </div>
         <KeyboardLayout />
 

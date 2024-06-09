@@ -31,6 +31,7 @@ import { SphereColliderSystem } from './ecs/system/physics/SphereColliderSystem.
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
+import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
 // import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 
 // TODO: Make it wait for the websocket server to start
@@ -112,11 +113,20 @@ runTestEntities()
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
 let lastUpdateTimestamp = Date.now()
 
+function playersExists() {
+  const player = EntityManager.getFirstEntityWithComponent(entities, PlayerComponent)
+  return player !== undefined
+}
 async function gameLoop() {
+  // Idle mode if no players
+  if (!playersExists()) {
+    console.log('No players, waiting...')
+    setTimeout(gameLoop, 1000)
+    return
+  }
   setTimeout(gameLoop, 1000 / config.SERVER_TICKRATE)
   const now = Date.now()
   const dt = now - lastUpdateTimestamp
-  console.log('tickrate', 1000 / dt)
 
   destroyEventSystem.update(entities)
 

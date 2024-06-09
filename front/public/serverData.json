@@ -1,0 +1,15 @@
+[
+    {
+      "title": "Test Server 2",
+      "imageUrl": "/PreviewTestGame.webp",
+      "serverName": "Test Server",
+      "description": "This is a test server for development purposes. Feel free to join and test the game."
+    },
+    {
+      "title": "Test Server",
+      "imageUrl": "/BigPreview.webp",
+      "serverName": "Test Server",
+      "description": "This is a test server for development purposes. Feel free to join and test the game."
+    }
+  ]
+  
