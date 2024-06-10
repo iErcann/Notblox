@@ -2,14 +2,32 @@
     {
       "title": "Test Server",
       "imageUrl": "/PreviewTestGame.webp",
+      "images": [
+        {
+          "url": "/Logo.png",
+          "width": 800,
+          "height": 600,
+          "alt": "NotBlox Logo",
+          "type": "image/png" 
+        } 
+      ],
       "websocketPort": 8001,
       "slug": "test",
       "metaDescription": "This is a test server for development purposes. Feel free to join and test the game."
     },
     {
       "title": "Obby Online Parkour",
-      "imageUrl": "/BigPreview.webp",
+      "imageUrl": "/obby.webp",
       "slug": "obby",
+      "images": [
+        {
+          "url": "/obby.webp",
+          "width": 1920,
+          "height": 1080,
+          "alt": "NotBlox Logo",
+          "type": "image/webp" 
+        } 
+      ],
       "websocketPort": 8002,
       "metaDescription": "Play Obby NotBlox Parkour, a fun and challenging multiplayer parkour game. Compete with others to reach the top of the map."
     }

@@ -6,26 +6,19 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { NextSeo } from 'next-seo'
 import Link from 'next/link'
 import gameData from '../public/gameData.json'
-
-export interface GameInfo {
-  title: string
-  slug: string
-  imageUrl: string
-  websocketPort: number
-  metaDescription: string
-}
+import { GameInfo } from './[slug]'
 
 interface HomeProps {
   games: GameInfo[]
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  console.log(gameData)
   return {
     props: {
       games: gameData,
     },
-    revalidate: 5,
+    // Re-generate the page every 5 minutes
+    revalidate: 5 * 60,
   }
 }
 
@@ -69,7 +62,7 @@ export default function Home({ games }: HomeProps) {
       <div className="space-y-8  flex flex-col items-center">
         <Navbar />
         <p className="text-2xl">Play multiplayer games in your browser</p>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 w-1/2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 w-full lg:w-[1000px]">
           {games && games.map((game, index) => <GameCard key={index} {...game} />)}
         </div>
         <KeyboardLayout />
