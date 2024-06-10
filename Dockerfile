@@ -24,4 +24,4 @@ COPY --from=build /app/back/dist /app/back/dist
 COPY --from=build /app/front/public/assets /app/front/public/assets
 COPY --from=build /app/back/.env . 
 
-CMD ["node", "dist/back/src/index.js"]
+CMD ["node", "dist/back/src/sandbox.js"]

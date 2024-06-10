@@ -22,7 +22,7 @@ export class Renderer extends THREE.WebGLRenderer {
   css2DRenderer: CSS2DRenderer
   private directionalLight: THREE.DirectionalLight | undefined
   constructor(public gameContainerRef: MutableRefObject<any>) {
-    super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
+    super({ antialias: true, stencil: false, powerPreference: 'high-performance' })
 
     this.camera = new Camera(this)
 

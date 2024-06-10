@@ -28,6 +28,7 @@ services:
     ports:
       - '8001:8001'
     volumes:
+      - /app/back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
 
@@ -38,6 +39,7 @@ services:
     ports:
       - '8002:8001'
     volumes:
+      - /app/back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
 
