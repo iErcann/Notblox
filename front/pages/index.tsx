@@ -6,7 +6,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { NextSeo } from 'next-seo'
 import Link from 'next/link'
 import gameData from '../public/gameData.json'
-import { GameInfo } from './[slug]'
+import { GameInfo } from './play/[slug]'
 
 interface HomeProps {
   games: GameInfo[]

@@ -1,9 +1,9 @@
-import { GameInfo } from '@/pages/[slug]'
+import { GameInfo } from '@/pages/play/[slug]'
 
 export default function GameCard({ title, imageUrl, slug, metaDescription }: GameInfo) {
   return (
     <a
-      href={slug}
+      href={`/play/${slug}`}
       className="relative overflow-hidden rounded-2xl  bg-gray-900/90 hover:scale-105 transform transition-transform duration-300 drop-shadow-4 "
     >
       <img alt={title} src={imageUrl} className="absolute inset-0 h-full w-full object-cover" />

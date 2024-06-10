@@ -6,7 +6,7 @@ import GameHud from '@/components/GameHud'
 import LoadingScreen from '@/components/LoadingScreen'
 import { ChatListComponent } from '@shared/component/ChatComponent'
 import { NextSeo } from 'next-seo'
-import gameData from '../public/gameData.json'
+import gameData from '../../public/gameData.json'
 
 export interface GameInfo {
   title: string
