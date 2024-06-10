@@ -1,0 +1,17 @@
+[
+    {
+      "title": "Test Server",
+      "imageUrl": "/PreviewTestGame.webp",
+      "websocketPort": 8001,
+      "slug": "test",
+      "metaDescription": "This is a test server for development purposes. Feel free to join and test the game."
+    },
+    {
+      "title": "Obby Online Parkour",
+      "imageUrl": "/BigPreview.webp",
+      "slug": "obby",
+      "websocketPort": 8002,
+      "metaDescription": "Play Obby NotBlox Parkour, a fun and challenging multiplayer parkour game. Compete with others to reach the top of the map."
+    }
+  ]
+  

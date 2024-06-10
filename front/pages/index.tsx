@@ -5,31 +5,32 @@ import { ExternalLink, GithubIcon, Play, TwitterIcon } from 'lucide-react'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { NextSeo } from 'next-seo'
 import Link from 'next/link'
-import serverData from '../public/serverData.json'
+import gameData from '../public/gameData.json'
 
-interface Server {
+export interface GameInfo {
   title: string
+  slug: string
   imageUrl: string
-  serverName: string
-  description: string
+  websocketPort: number
+  metaDescription: string
 }
 
 interface HomeProps {
-  servers: Server[]
+  games: GameInfo[]
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  console.log(serverData)
+  console.log(gameData)
   return {
     props: {
-      servers: serverData,
+      games: gameData,
     },
     revalidate: 5,
   }
 }
 
 // Infer the `StaticProps` type from `getStaticProps`
-export default function Home({ servers }: HomeProps) {
+export default function Home({ games }: HomeProps) {
   return (
     <main className="p-4 area">
       <NextSeo
@@ -65,20 +66,11 @@ export default function Home({ servers }: HomeProps) {
         }}
       />
 
-      <div className="space-y-8  flex flex-col items-center circles">
+      <div className="space-y-8  flex flex-col items-center">
         <Navbar />
         <p className="text-2xl">Play multiplayer games in your browser</p>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {servers &&
-            servers.map((server, index) => (
-              <GameCard
-                key={index}
-                title={server.title}
-                imageUrl={server.imageUrl}
-                serverName={server.serverName}
-                description={server.description}
-              />
-            ))}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 w-1/2">
+          {games && games.map((game, index) => <GameCard key={index} {...game} />)}
         </div>
         <KeyboardLayout />
 
