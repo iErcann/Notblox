@@ -46,7 +46,7 @@ export class Game {
   renderer: Renderer
   hud: Hud
   private identifyFollowedMeshSystem: IdentifyFollowedMeshSystem
-  private constructor(gameContainerRef: MutableRefObject<any>, port: number) {
+  private constructor(gameContainerRef: MutableRefObject<any>, port?: number) {
     this.syncComponentSystem = new SyncComponentsSystem(this)
     this.syncPositionSystem = new SyncPositionSystem()
     this.syncRotationSystem = new SyncRotationSystem()
@@ -67,7 +67,7 @@ export class Game {
     this.hud = new Hud()
   }
 
-  static getInstance(port: number, gameContainerRef?: MutableRefObject<any>): Game {
+  static getInstance(port?: number, gameContainerRef?: MutableRefObject<any>): Game {
     if (!Game.instance) {
       if (!gameContainerRef) {
         throw new Error('Game instance not initialized with gameContainerRef')
