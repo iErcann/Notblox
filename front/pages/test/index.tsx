@@ -14,7 +14,7 @@ export default function TestServer() {
 
   useEffect(() => {
     async function initializeGame() {
-      const game = Game.getInstance(refContainer)
+      const game = Game.getInstance(8001, refContainer)
       game.hud.passChatState(updateChat)
       setGame(game)
       try {

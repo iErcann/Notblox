@@ -17,10 +17,12 @@ export class WebSocketManager {
   private websocket: WebSocket | null = null
   private messageHandlers: Map<ServerMessageType, MessageHandler> = new Map()
   private serverUrl: string
+
   timeSinceLastServerUpdate: number = 0
-  constructor(game: Game) {
+  constructor(game: Game, port: number = 8001) {
     // Set the serverUrl based on the environment
-    this.serverUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'ws://localhost:8001'
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'ws://localhost'
+    this.serverUrl = `${baseUrl}:${port}`
 
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
       const connectionMessage = message as ConnectionMessage
