@@ -5,14 +5,19 @@ import CameraControls from 'camera-controls'
 import * as THREE from 'three'
 import { FollowComponent } from '../component/FollowComponent'
 import { InputMessage } from '@shared/network/client/input'
+import { MeshComponent } from '../component/MeshComponent'
 
-/* https://github.com/yomotsu/meshwalk/blob/master/src/TPS/TPSCameraControls.ts */
 export class OrbitCameraFollowSystem {
   private cameraControls: CameraControls
   private offset = new THREE.Vector3(0, 1, 0)
+
   constructor(camera: Camera, renderer: THREE.WebGLRenderer) {
     CameraControls.install({ THREE: THREE })
     this.cameraControls = new CameraControls(camera, renderer.domElement)
+    this.initializeCameraControls()
+  }
+
+  private initializeCameraControls(): void {
     this.cameraControls.minDistance = 1
     this.cameraControls.maxDistance = 1000
     this.cameraControls.azimuthRotateSpeed = 0.3 // negative value to invert rotation direction
@@ -25,45 +30,74 @@ export class OrbitCameraFollowSystem {
     this.cameraControls.mouseButtons.middle = CameraControls.ACTION.ZOOM
     this.cameraControls.mouseButtons.right = CameraControls.ACTION.ROTATE
 
-    // this.cameraControls.mouseButtons.middle = CameraControls.ACTION.NONE
     this.cameraControls.touches.two = CameraControls.ACTION.TOUCH_DOLLY
     this.cameraControls.touches.three = CameraControls.ACTION.TOUCH_DOLLY
-    // Pointerlock
   }
 
   private isDragging(): boolean {
     return this.cameraControls.currentAction === CameraControls.ACTION.OFFSET
   }
-  update(dt: number, entities: Entity[], input: InputMessage) {
+
+  update(dt: number, entities: Entity[], input: InputMessage): void {
     this.cameraControls.update(dt)
+
     for (const entity of entities) {
-      const positionComponent = entity.getComponent(PositionComponent)
       const followComponent = entity.getComponent(FollowComponent)
+      if (!followComponent) continue
 
-      if (followComponent && positionComponent) {
-        this.cameraControls.setFocalOffset(0, 0, 0, true)
-        const newTargetPosition = new THREE.Vector3(
-          positionComponent.x,
-          positionComponent.y + this.offset.y,
-          positionComponent.z
-        )
-        let oldTargetPosition = new THREE.Vector3() // Initialize oldTargetPosition
-        this.cameraControls.getTarget(oldTargetPosition)
-        // Lerp the target position to the new target position
-        oldTargetPosition.lerp(newTargetPosition, 0.05)
+      const newTargetPosition = this.getTargetPosition(entity)
 
-        this.cameraControls.moveTo(
-          oldTargetPosition.x,
-          oldTargetPosition.y,
-          oldTargetPosition.z,
-          true
-        )
-        const angle = Math.atan2(
-          this.cameraControls.camera.position.z - newTargetPosition.z,
-          this.cameraControls.camera.position.x - newTargetPosition.x
-        )
-        input.y = angle
-      }
+      if (!newTargetPosition) continue
+
+      this.cameraControls.setFocalOffset(0, 0, 0, true)
+
+      const oldTargetPosition = new THREE.Vector3()
+      this.cameraControls.getTarget(oldTargetPosition)
+
+      oldTargetPosition.lerp(newTargetPosition, 0.05)
+      this.cameraControls.moveTo(
+        oldTargetPosition.x,
+        oldTargetPosition.y,
+        oldTargetPosition.z,
+        true
+      )
+
+      const angle = this.calculateAngle(newTargetPosition)
+      input.y = angle
     }
+  }
+
+  /**
+   * Prefer MeshComponent over PositionComponent
+   * MeshComponent holds the visual interpolated position of the entity
+   */
+  private getTargetPosition(entity: Entity): THREE.Vector3 | null {
+    const positionComponent = entity.getComponent(PositionComponent)
+    const meshComponent = entity.getComponent(MeshComponent)
+
+    if (meshComponent) {
+      return new THREE.Vector3(
+        meshComponent.mesh.position.x,
+        meshComponent.mesh.position.y + this.offset.y,
+        meshComponent.mesh.position.z
+      )
+    }
+
+    if (positionComponent) {
+      return new THREE.Vector3(
+        positionComponent.x,
+        positionComponent.y + this.offset.y,
+        positionComponent.z
+      )
+    }
+
+    return null
+  }
+
+  private calculateAngle(targetPosition: THREE.Vector3): number {
+    return Math.atan2(
+      this.cameraControls.camera.position.z - targetPosition.z,
+      this.cameraControls.camera.position.x - targetPosition.x
+    )
   }
 }
