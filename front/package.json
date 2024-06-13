@@ -18,6 +18,7 @@
     "pako": "^2.1.0",
     "react": "latest",
     "react-dom": "latest",
+    "react-joystick-component": "^6.2.1",
     "three": "^0.156.1"
   },
   "devDependencies": {

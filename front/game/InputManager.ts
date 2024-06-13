@@ -1,6 +1,7 @@
 import { ClientMessageType } from '@shared/network/client/base'
 import { InputMessage } from '@shared/network/client/input'
 import { WebSocketManager } from './WebsocketManager'
+import { IJoystickUpdateEvent } from 'react-joystick-component/build/lib/Joystick'
 
 export enum KeyboardLanguage {
   FR = 'fr',
@@ -9,10 +10,15 @@ export enum KeyboardLanguage {
 export class InputManager {
   inputState: InputMessage = {
     t: ClientMessageType.INPUT,
+    // UP
     u: false,
+    // DOWN
     d: false,
+    // LEFT
     l: false,
+    // RIGHT
     r: false,
+    // SPACE
     s: false,
     y: 0,
   }
@@ -27,12 +33,25 @@ export class InputManager {
       : KeyboardLanguage.EN
 
     // Add event listeners to handle user input
-    window.addEventListener('keydown', this.handleKeyDown.bind(this))
-    window.addEventListener('keyup', this.handleKeyUp.bind(this))
+    // window.addEventListener('keydown', this.handleKeyDown.bind(this))
+    // window.addEventListener('keyup', this.handleKeyUp.bind(this))
   }
 
   private isGameFocused(event: KeyboardEvent) {
     return event.target === document.body
+  }
+  public handleJoystickMove(joystick: IJoystickUpdateEvent) {
+    // Calculate angle from current looking direction vs joystick direction
+    const joystickAngleRad = Math.atan2(joystick.y!, joystick.x!)
+
+    // Calculate the difference between the current looking direction and the joystick direction
+    this.inputState.y = joystickAngleRad
+    console.log(joystickAngleRad)
+    this.inputState.u = true
+  }
+
+  public handleJoystickStop(joystick: IJoystickUpdateEvent) {
+    this.inputState.u = false
   }
   private handleKeyDown(event: KeyboardEvent) {
     if (!this.isGameFocused(event)) return
@@ -153,6 +172,7 @@ export class InputManager {
         break
     }
   }
+
   private previousInputState: InputMessage | null = null
 
   // TODO: To lower the bandiwdth even more, send at a maxrate of config.SERVER_TICKRATE

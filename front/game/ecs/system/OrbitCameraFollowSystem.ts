@@ -62,7 +62,7 @@ export class OrbitCameraFollowSystem {
           this.cameraControls.camera.position.z - newTargetPosition.z,
           this.cameraControls.camera.position.x - newTargetPosition.x
         )
-        input.y = angle
+        // input.y = angle
       }
     }
   }

@@ -6,6 +6,7 @@ import GameHud from '@/components/GameHud'
 import LoadingScreen from '@/components/LoadingScreen'
 import { ChatListComponent } from '@shared/component/ChatComponent'
 import { NextSeo } from 'next-seo'
+import { Joystick } from 'react-joystick-component'
 import gameData from '../../public/gameData.json'
 
 export interface GameInfo {
@@ -87,6 +88,15 @@ export default function GamePage({ gameInfo }: InferGetStaticPropsType<typeof ge
       />
       {isLoading && <LoadingScreen />}
       <div ref={refContainer}>
+        <div style={{ position: 'absolute', bottom: '100px', left: '100px' }}>
+          <Joystick
+            size={100}
+            baseColor="gray"
+            stickColor="black"
+            move={(props) => gameInstance?.inputManager.handleJoystickMove(props)}
+            stop={(props) => gameInstance?.inputManager.handleJoystickStop(props)}
+          />
+        </div>{' '}
         <GameHud chatList={chat} sendMessage={gameInstance?.hud.sendMessageToServer!} />
       </div>
     </>
