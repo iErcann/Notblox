@@ -10,6 +10,8 @@ import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComp
 import { BoxColliderComponent } from '../component/physics/BoxColliderComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
+import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
+import { LockedRotationComponent } from '../component/LockedRotationComponent.js'
 
 export class Cube {
   entity: Entity

@@ -107,8 +107,8 @@ export class Game {
     this.meshSystem.update(entities, this.renderer)
     const deltaTime = now - this.lastRenderTime
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
-    this.syncPositionSystem.update(entities, positionInterpFactor)
-    this.syncRotationSystem.update(entities, 0.5)
+    this.syncPositionSystem.update(entities, positionInterpFactor / 2)
+    this.syncRotationSystem.update(entities, 0.7)
     this.syncColorSystem.update(entities)
     this.chatSystem.update(entities, this.hud)
     this.syncSizeSystem.update(entities)

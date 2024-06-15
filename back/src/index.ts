@@ -5,7 +5,6 @@ import { config } from '../../shared/network/config.js'
 import { EventSystem } from '../../shared/system/EventSystem.js'
 
 import { Chat } from './ecs/entity/Chat.js'
-import { Cube } from './ecs/entity/Cube.js'
 import { AnimationSystem } from './ecs/system/AnimationSystem.js'
 import { MovementSystem } from './ecs/system/MovementSystem.js'
 import { RandomizeSystem } from './ecs/system/RandomizeSystem.js'
@@ -29,6 +28,7 @@ import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
 import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
+import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -63,6 +63,7 @@ const animationSystem = new AnimationSystem()
 const sleepCheckSystem = new SleepCheckSystem()
 const randomizeSystem = new RandomizeSystem()
 const boundaryCheckSystem = new BoundaryCheckSystem()
+const zombieSystem = new ZombieSystem()
 
 new Chat()
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
@@ -94,6 +95,8 @@ async function gameLoop() {
   boxColliderSystem.update(entities, physicsSystem.world)
   capsuleColliderSystem.update(entities, physicsSystem.world)
   sphereColliderSystem.update(entities, physicsSystem.world)
+
+  zombieSystem.update(dt, entities)
 
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
