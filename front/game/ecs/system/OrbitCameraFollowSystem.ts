@@ -8,8 +8,9 @@ import { InputMessage } from '@shared/network/client/input'
 
 /* https://github.com/yomotsu/meshwalk/blob/master/src/TPS/TPSCameraControls.ts */
 export class OrbitCameraFollowSystem {
-  private cameraControls: CameraControls
+  cameraControls: CameraControls
   private offset = new THREE.Vector3(0, 1, 0)
+
   constructor(camera: Camera, renderer: THREE.WebGLRenderer) {
     CameraControls.install({ THREE: THREE })
     this.cameraControls = new CameraControls(camera, renderer.domElement)
@@ -28,12 +29,12 @@ export class OrbitCameraFollowSystem {
     // this.cameraControls.mouseButtons.middle = CameraControls.ACTION.NONE
     this.cameraControls.touches.two = CameraControls.ACTION.TOUCH_DOLLY
     this.cameraControls.touches.three = CameraControls.ACTION.TOUCH_DOLLY
-    // Pointerlock
   }
 
   private isDragging(): boolean {
     return this.cameraControls.currentAction === CameraControls.ACTION.OFFSET
   }
+
   update(dt: number, entities: Entity[], input: InputMessage) {
     this.cameraControls.update(dt)
     for (const entity of entities) {
@@ -49,6 +50,7 @@ export class OrbitCameraFollowSystem {
         )
         let oldTargetPosition = new THREE.Vector3() // Initialize oldTargetPosition
         this.cameraControls.getTarget(oldTargetPosition)
+
         // Lerp the target position to the new target position
         oldTargetPosition.lerp(newTargetPosition, 0.05)
 
@@ -62,8 +64,14 @@ export class OrbitCameraFollowSystem {
           this.cameraControls.camera.position.z - newTargetPosition.z,
           this.cameraControls.camera.position.x - newTargetPosition.x
         )
-        // input.y = angle
+        input.y = angle
       }
     }
+  }
+  y = 0
+
+  // Add this method to get the camera's azimuth angle
+  getCameraAzimuthAngle(): number {
+    return this.cameraControls.azimuthAngle
   }
 }

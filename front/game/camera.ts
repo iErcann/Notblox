@@ -5,7 +5,7 @@ import { InputMessage } from '@shared/network/client/input'
 
 export class Camera extends THREE.PerspectiveCamera {
   defaultOffset = new THREE.Vector3(0, 5, 15)
-  private controlSystem: OrbitCameraFollowSystem
+  controlSystem: OrbitCameraFollowSystem
 
   constructor(renderer: THREE.WebGLRenderer) {
     super(70, window.innerWidth / window.innerHeight)

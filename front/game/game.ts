@@ -63,7 +63,7 @@ export class Game {
     this.eventSystem = EventSystem.getInstance()
 
     this.renderer = new Renderer(gameContainerRef)
-    this.inputManager = new InputManager(this.websocketManager)
+    this.inputManager = new InputManager(this.websocketManager, this.renderer.camera.controlSystem)
     this.hud = new Hud()
   }
 
