@@ -22,7 +22,7 @@ export class Renderer extends THREE.WebGLRenderer {
   css2DRenderer: CSS2DRenderer
   private directionalLight: THREE.DirectionalLight | undefined
   constructor(public gameContainerRef: MutableRefObject<any>) {
-    super({ antialias: true, stencil: false, powerPreference: 'high-performance' })
+    super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
 
     this.camera = new Camera(this)
 
@@ -32,7 +32,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.shadowMap.type = THREE.PCFSoftShadowMap //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
 
     this.setSize(window.innerWidth, window.innerHeight)
-    this.setPixelRatio(window.devicePixelRatio)
+    this.setPixelRatio(this.getDevicePixelRatio())
     this.toneMapping = THREE.CineonToneMapping
     this.toneMappingExposure = 0.8
     this.css2DRenderer = new CSS2DRenderer()
@@ -47,6 +47,12 @@ export class Renderer extends THREE.WebGLRenderer {
     this.addDirectionnalLight()
     this.addSky()
     window.addEventListener('resize', this.onWindowResize.bind(this), false)
+  }
+
+  private getDevicePixelRatio(): number {
+    const userAgent = window.navigator.userAgent.toLowerCase()
+    const isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(userAgent)
+    return isMobile ? window.devicePixelRatio / 2 : window.devicePixelRatio / 1.2
   }
 
   appendChild() {

@@ -1,12 +1,9 @@
-// pages/[slug].tsx
 import { useEffect, useRef, useState } from 'react'
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
 import { Game } from '@/game/game'
-import GameHud from '@/components/GameHud'
+import GameHud, { ChatListComponent } from '@/components/GameHud'
 import LoadingScreen from '@/components/LoadingScreen'
-import { ChatListComponent } from '@shared/component/ChatComponent'
 import { NextSeo } from 'next-seo'
-import { Joystick } from 'react-joystick-component'
 import gameData from '../../public/gameData.json'
 
 export interface GameInfo {
@@ -26,10 +23,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const paths = gameData.map((game) => ({
     params: { slug: game.slug },
   }))
-
   return {
     paths,
-    fallback: false, // can be 'blocking' or 'true' if you want fallback behavior
+    fallback: false,
   }
 }
 
@@ -41,7 +37,6 @@ export const getStaticProps: GetStaticProps<GamePageProps> = async (context) => 
     props: {
       gameInfo: game!,
     },
-    // Re-generate the page every 5 minutes
     revalidate: 5 * 60,
   }
 }
@@ -58,8 +53,8 @@ export default function GamePage({ gameInfo }: InferGetStaticPropsType<typeof ge
       game.hud.passChatState(updateChat)
       setGameInstance(game)
       try {
-        await game.start() // Wait for WebSocket connection
-        setIsLoading(false) // Update state to stop showing "connecting" message
+        await game.start()
+        setIsLoading(false)
       } catch (error) {
         console.error('Error connecting to WebSocket:', error)
       }
@@ -73,7 +68,7 @@ export default function GamePage({ gameInfo }: InferGetStaticPropsType<typeof ge
       <NextSeo
         title={`Play ${gameInfo.title} - NotBlox`}
         description={gameInfo.metaDescription}
-        canonical={`https://www.notblox.online/${gameInfo.slug}`}
+        canonical={`https://www.notblox.online/play/${gameInfo.slug}`}
         openGraph={{
           title: `Play ${gameInfo.title} - NotBlox`,
           description: gameInfo.metaDescription,
@@ -88,16 +83,11 @@ export default function GamePage({ gameInfo }: InferGetStaticPropsType<typeof ge
       />
       {isLoading && <LoadingScreen />}
       <div ref={refContainer}>
-        <div style={{ position: 'absolute', bottom: '100px', left: '100px' }}>
-          <Joystick
-            size={100}
-            baseColor="gray"
-            stickColor="black"
-            move={(props) => gameInstance?.inputManager.handleJoystickMove(props)}
-            stop={(props) => gameInstance?.inputManager.handleJoystickStop(props)}
-          />
-        </div>{' '}
-        <GameHud chatList={chat} sendMessage={gameInstance?.hud.sendMessageToServer!} />
+        <GameHud
+          chatList={chat}
+          sendMessage={gameInstance?.hud.sendMessageToServer!}
+          gameInstance={gameInstance}
+        />
       </div>
     </>
   )

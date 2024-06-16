@@ -22,7 +22,7 @@ export class BoundaryCheckSystem {
         bodyComponent.body.setTranslation(
           {
             x: 0,
-            y: 4,
+            y: 10,
             z: 0,
           },
           true

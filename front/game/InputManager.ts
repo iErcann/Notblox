@@ -44,7 +44,6 @@ export class InputManager {
     // Add event listeners to handle user input
     window.addEventListener('keydown', this.handleKeyDown.bind(this))
     window.addEventListener('keyup', this.handleKeyUp.bind(this))
-    window.addEventListener('keypress', this.handleKeyPress.bind(this))
   }
 
   private isGameFocused(event: KeyboardEvent) {
@@ -52,7 +51,7 @@ export class InputManager {
   }
 
   public handleJoystickMove(joystick: IJoystickUpdateEvent) {
-    this.pcUser = false
+    if (this.pcUser) this.pcUser = false
     // Calculate angle from current looking direction vs joystick direction
     const joystickAngleRad = Math.atan2(joystick.x!, joystick.y!)
 
@@ -64,13 +63,16 @@ export class InputManager {
     this.inputState.u = true
   }
 
+  update() {
+    if (this.pcUser) this.inputState.y = this.cameraFollowSystem.y
+    console.log(this.pcUser)
+  }
+
   public handleJoystickStop(joystick: IJoystickUpdateEvent) {
+    // Stop moving forward
     this.inputState.u = false
   }
 
-  private handleKeyPress(event: KeyboardEvent) {
-    this.inputState.y = this.cameraFollowSystem.y
-  }
   private handleKeyDown(event: KeyboardEvent) {
     if (!this.pcUser) this.pcUser = true
     if (!this.isGameFocused(event)) return
@@ -207,6 +209,7 @@ export class InputManager {
       // Update the previous input state
       this.previousInputState = { ...this.inputState }
     }
+    // Reset the input state to avoid sending the same input state multiple times
   }
 
   private areInputStatesEqual(state1: InputMessage, state2: InputMessage): boolean {
