@@ -2,10 +2,7 @@ import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Joystick } from 'react-joystick-component'
 import { Maximize } from 'lucide-react'
-
-export interface ChatListComponent {
-  list: { message: { author: string; content: string } }[]
-}
+import { ChatListComponent } from '@shared/component/ChatComponent'
 
 export interface GameHudProps {
   chatList: ChatListComponent | undefined

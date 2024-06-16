@@ -10,6 +10,7 @@ import { InputManager } from '@/game/InputManager'
 
 export class OrbitCameraFollowSystem {
   cameraControls: CameraControls
+  y = 0
   private offset = new THREE.Vector3(0, 1, 0)
 
   constructor(camera: Camera, renderer: THREE.WebGLRenderer) {
@@ -17,7 +18,6 @@ export class OrbitCameraFollowSystem {
     this.cameraControls = new CameraControls(camera, renderer.domElement)
     this.initializeCameraControls()
   }
-  y = 0
 
   private initializeCameraControls(): void {
     this.cameraControls.minDistance = 1
@@ -101,7 +101,6 @@ export class OrbitCameraFollowSystem {
       this.cameraControls.camera.position.x - targetPosition.x
     )
   }
-  y = 0
 
   // Add this method to get the camera's azimuth angle
   getCameraAzimuthAngle(): number {

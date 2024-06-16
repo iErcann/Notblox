@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
 import { Game } from '@/game/game'
-import GameHud, { ChatListComponent } from '@/components/GameHud'
+import GameHud from '@/components/GameHud'
 import LoadingScreen from '@/components/LoadingScreen'
 import { NextSeo } from 'next-seo'
 import gameData from '../../public/gameData.json'
+import { ChatListComponent } from '@shared/component/ChatComponent'
 
 export interface GameInfo {
   title: string
