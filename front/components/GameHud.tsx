@@ -26,7 +26,7 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
     if (document.fullscreenElement) {
       document.exitFullscreen()
     } else {
-      refContainer.current?.requestFullscreen()
+      document.documentElement.requestFullscreen()
     }
   }
 
