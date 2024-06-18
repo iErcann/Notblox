@@ -52,6 +52,9 @@ export class CapsuleColliderSystem {
     const colliderDesc = Rapier.ColliderDesc.capsule(sizeComponent.size / 2, sizeComponent.size)
     // Set the friction combine rule to control how friction is combined with other contacts
     colliderDesc.setFrictionCombineRule(Rapier.CoefficientCombineRule.Max)
+    // Set friction to control how slippery the player is when colliding with surfaces
+    colliderDesc.setFriction(0.0) // Adjust the value as needed
+
     // Set restitution to control how bouncy the player is when colliding with surfaces
     // colliderDesc.setRestitution(0.0); // Adjust the value as needed
 

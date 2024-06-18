@@ -51,7 +51,7 @@ export class LockRotationSystem {
     if (dynamicBodyComponent && dynamicBodyComponent.body) {
       dynamicBodyComponent.body.setLinvel(new Rapier.Vector3(0, 0, 0), true)
       dynamicBodyComponent.body.setAngvel(new Rapier.Vector3(0, 0, 0), true)
-      dynamicBodyComponent.body.lockRotations(true, true)
+      dynamicBodyComponent.body.setEnabledRotations(false, false, false, true)
     }
   }
 

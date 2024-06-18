@@ -35,6 +35,7 @@ export class Sphere {
       'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
     )
     this.entity.addComponent(serverMeshComponent)
+    // this.entity.addComponent(new PhysicsPropertiesComponent(this.entity.id, 1000))
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
     this.entity.addComponent(new SphereColliderComponent(this.entity.id))
 

@@ -95,7 +95,7 @@ export class ZombieSystem {
     if (!rigidBodyComponent.body) {
       return
     }
-    direction.multiplyScalar(-0.3 * dt)
+    direction.multiplyScalar(0.3 * dt)
     const impulse = new Rapier.Vector3(direction.x, rigidBodyComponent.body.linvel().y, direction.z)
     rigidBodyComponent.body.setLinvel(impulse, true)
 

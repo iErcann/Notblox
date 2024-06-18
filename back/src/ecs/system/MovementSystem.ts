@@ -21,7 +21,6 @@ export class MovementSystem {
     if (!inputComponent || !rigidBodyComponent || !positionComponent || !groundedCheckComponent) {
       return // Skip processing this entity if any required component is missing
     }
-    console.log(positionComponent)
 
     const impulse = this.calculateImpulse(dt, inputComponent, rigidBodyComponent)
     // If the space key is pressed and the entity is grounded, apply an impulse
@@ -43,7 +42,7 @@ export class MovementSystem {
     const speed = 0.27
     const lookingYAngle = inputComponent.lookingYAngle
 
-    const impulse = new Rapier.Vector3(0, currentLinVel.y - 0 * dt, 0)
+    const impulse = new Rapier.Vector3(0, currentLinVel.y, 0)
 
     if (inputComponent.up) {
       impulse.z += -speed * Math.sin(lookingYAngle)

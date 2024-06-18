@@ -7,6 +7,7 @@ import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
+import { PhysicsPropertiesComponent } from '../../component/physics/PhysicsPropertiesComponent.js'
 
 export class DynamicRigidBodySystem {
   update(entities: Entity[], world: Rapier.World) {
@@ -54,6 +55,10 @@ export class DynamicRigidBodySystem {
     physicsBodyComponent.body = rigidBody
     if (entity.getComponent(PlayerComponent)) {
       physicsBodyComponent.body.enableCcd(true)
+    }
+    const physicsPropertiesComponent = entity.getComponent(PhysicsPropertiesComponent)
+    if (physicsPropertiesComponent) {
+      physicsBodyComponent.body.setAdditionalMass(physicsPropertiesComponent.mass, true)
     }
   }
 
