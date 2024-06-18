@@ -53,7 +53,6 @@ export class DynamicRigidBodySystem {
 
     physicsBodyComponent.body = rigidBody
     if (entity.getComponent(PlayerComponent)) {
-      physicsBodyComponent.body.setLinearDamping(0.1)
       physicsBodyComponent.body.enableCcd(true)
     }
   }

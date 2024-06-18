@@ -134,7 +134,7 @@ export class WebsocketSystem {
       // Respond to the client indicating that the connection is rate limited
       return ws.close(429, 'Rate limit exceeded')
     }
-    const player = new Player(ws, Math.random() * 10, 30, Math.random() * 10)
+    const player = new Player(ws, 225, 111, -1008)
     const connectionMessage: ConnectionMessage = {
       t: ServerMessageType.FIRST_CONNECTION,
       id: player.entity.id,

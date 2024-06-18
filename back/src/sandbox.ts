@@ -7,6 +7,7 @@ import { startGameLoop } from './index.js'
 import { resolve } from 'path'
 import { readFile } from 'fs/promises'
 import { ZombieComponent } from './ecs/component/ZombieComponent.js'
+import { SpawnPositionComponent } from './ecs/component/SpawnPositionComponent.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'parkourScript.js' // Default script name if not provided
@@ -15,7 +16,15 @@ async function loadGameLogic() {
   console.log(`Loading game logic from ${codePath}`)
   const code = await readFile(codePath, 'utf8')
 
-  const sandbox = { setTimeout, Cube, RandomizeComponent, Sphere, MapWorld, ZombieComponent }
+  const sandbox = {
+    setTimeout,
+    Cube,
+    RandomizeComponent,
+    Sphere,
+    MapWorld,
+    ZombieComponent,
+    SpawnPositionComponent,
+  }
   const context = createContext(sandbox)
   const script = new Script(code)
   script.runInContext(context)

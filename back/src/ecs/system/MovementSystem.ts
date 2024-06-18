@@ -21,6 +21,7 @@ export class MovementSystem {
     if (!inputComponent || !rigidBodyComponent || !positionComponent || !groundedCheckComponent) {
       return // Skip processing this entity if any required component is missing
     }
+    console.log(positionComponent)
 
     const impulse = this.calculateImpulse(dt, inputComponent, rigidBodyComponent)
     // If the space key is pressed and the entity is grounded, apply an impulse
