@@ -1,0 +1,1 @@
+{"version":3,"file":"KinematicRigidBodyComponent.js","sourceRoot":"","sources":["../../../../../../src/ecs/component/physics/KinematicRigidBodyComponent.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,SAAS,EAAE,MAAM,8CAA8C,CAAA;AAExE,MAAM,OAAO,2BAA4B,SAAQ,SAAS;IACnB;IAArC,YAAY,QAAgB,EAAS,IAAuB;QAC1D,KAAK,CAAC,QAAQ,CAAC,CAAA;QADoB,SAAI,GAAJ,IAAI,CAAmB;IAE5D,CAAC;CACF"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"ZombieComponent.js","sourceRoot":"","sources":["../../../../../src/ecs/component/ZombieComponent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,2CAA2C,CAAA;AAErE,MAAM,OAAO,eAAgB,SAAQ,SAAS;IAC5C,YAAY,QAAgB;QAC1B,KAAK,CAAC,QAAQ,CAAC,CAAA;IACjB,CAAC;CACF"}

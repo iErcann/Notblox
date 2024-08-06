@@ -1,0 +1,1 @@
+{"version":3,"file":"SingleSizeEvent.js","sourceRoot":"","sources":["../../../../../../src/ecs/component/events/SingleSizeEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,8CAA8C,CAAA;AAExE;;;GAGG;AACH,MAAM,OAAO,eAAgB,SAAQ,SAAS;IACP;IAArC,YAAY,QAAgB,EAAS,IAAY;QAC/C,KAAK,CAAC,QAAQ,CAAC,CAAA;QADoB,SAAI,GAAJ,IAAI,CAAQ;IAEjD,CAAC;CACF"}

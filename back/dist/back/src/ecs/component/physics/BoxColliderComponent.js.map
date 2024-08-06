@@ -1,0 +1,1 @@
+{"version":3,"file":"BoxColliderComponent.js","sourceRoot":"","sources":["../../../../../../src/ecs/component/physics/BoxColliderComponent.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,SAAS,EAAE,MAAM,8CAA8C,CAAA;AAExE,MAAM,OAAO,oBAAqB,SAAQ,SAAS;IACZ;IAArC,YAAY,QAAgB,EAAS,QAA0B;QAC7D,KAAK,CAAC,QAAQ,CAAC,CAAA;QADoB,aAAQ,GAAR,QAAQ,CAAkB;IAE/D,CAAC;CACF"}

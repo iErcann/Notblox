@@ -1,0 +1,1 @@
+{"version":3,"file":"ColliderComponent.js","sourceRoot":"","sources":["../../../../../../src/ecs/component/physics/ColliderComponent.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,SAAS,EAAE,MAAM,8CAA8C,CAAA;AAExE,MAAM,OAAO,iBAAkB,SAAQ,SAAS;IACT;IAArC,YAAY,QAAgB,EAAS,QAAyB;QAC5D,KAAK,CAAC,QAAQ,CAAC,CAAA;QADoB,aAAQ,GAAR,QAAQ,CAAiB;IAE9D,CAAC;CACF"}

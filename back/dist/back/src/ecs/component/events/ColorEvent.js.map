@@ -1,0 +1,1 @@
+{"version":3,"file":"ColorEvent.js","sourceRoot":"","sources":["../../../../../../src/ecs/component/events/ColorEvent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,8CAA8C,CAAA;AAExE;;;GAGG;AACH,MAAM,OAAO,UAAW,SAAQ,SAAS;IACF;IAArC,YAAY,QAAgB,EAAS,KAAa;QAChD,KAAK,CAAC,QAAQ,CAAC,CAAA;QADoB,UAAK,GAAL,KAAK,CAAQ;IAElD,CAAC;CACF"}

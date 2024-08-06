@@ -1,0 +1,1 @@
+{"version":3,"file":"InputComponent.js","sourceRoot":"","sources":["../../../../../src/ecs/component/InputComponent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,2CAA2C,CAAA;AAErE,MAAM,OAAO,cAAe,SAAQ,SAAS;IAC3C,EAAE,GAAY,KAAK,CAAA;IACnB,IAAI,GAAY,KAAK,CAAA;IACrB,IAAI,GAAY,KAAK,CAAA;IACrB,KAAK,GAAY,KAAK,CAAA;IACtB,KAAK,GAAY,KAAK,CAAA;IACtB,aAAa,GAAG,CAAC,CAAA;CAClB"}

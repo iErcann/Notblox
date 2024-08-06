@@ -1,0 +1,1 @@
+{"version":3,"file":"GroundedComponent.js","sourceRoot":"","sources":["../../../../../src/ecs/component/GroundedComponent.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,2CAA2C,CAAA;AAErE;;;;;GAKG;AACH,MAAM,OAAO,oBAAqB,SAAQ,SAAS;IACZ;IAArC,YAAY,QAAgB,EAAS,WAAoB,KAAK;QAC5D,KAAK,CAAC,QAAQ,CAAC,CAAA;QADoB,aAAQ,GAAR,QAAQ,CAAiB;IAE9D,CAAC;CACF"}
