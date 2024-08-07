@@ -11,11 +11,11 @@ export enum ClientMessageType {
 
 export interface ClientMessage {
   t: ClientMessageType
+  entityId?: number
 }
 
 export interface TransformUpdateMessage extends ClientMessage {
   t: ClientMessageType.TRANSFORM_UPDATE;
-  entityId: number;
   position: { x: number; y: number; z: number };
   rotation: { x: number; y: number; z: number };
   scale: { x: number; y: number; z: number };
@@ -23,7 +23,6 @@ export interface TransformUpdateMessage extends ClientMessage {
 
 export interface ToggleTransformControlsMessage extends ClientMessage {
   t: ClientMessageType.TOGGLE_TRANSFORM_CONTROLS;
-  entityId: number;
   enabled: boolean;
 }
 
@@ -41,6 +40,7 @@ export interface RotationUpdateMessage extends ClientMessage {
   x: number;
   y: number;
   z: number;
+  w: number;
 }
 
 export interface ScaleUpdateMessage extends ClientMessage {
