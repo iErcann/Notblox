@@ -6,8 +6,11 @@ import { Renderer } from '@/game/renderer'
 import { EventSystem } from '@shared/system/EventSystem'
 import { ComponentAddedEvent } from '@shared/component/events/ComponentAddedEvent'
 import { ComponentRemovedEvent } from '@shared/component/events/ComponentRemovedEvent'
-import { ClientMessageType } from '@shared/network/client/base'
+import { ClientMessageType, PositionUpdateMessage, RotationUpdateMessage, ScaleUpdateMessage } from '@shared/network/client/base'
 import { EntityManager } from '@shared/system/EntityManager';
+import { WebSocketManager } from '@/game/WebsocketManager';
+import { Vector3 } from 'three';
+import { CubeComponent } from '../../../components/CubeComponent'; // Make sure this path is correct
 
 export type TransformControlsMode = 'translate' | 'rotate' | 'scale';
 
@@ -15,7 +18,11 @@ export class TransformControlsSystem {
   private enabled: boolean = false;
   private mode: TransformControlsMode = 'translate';
 
-  constructor(private renderer: Renderer, private websocketManager: any) {}
+  constructor(private renderer: Renderer, private websocketManager: WebSocketManager) {
+    if (!this.websocketManager) {
+      console.error('WebSocketManager is not properly initialized in TransformControlsSystem');
+    }
+  }
 
   update(entities: Entity[]) {
     this.handleAddedComponents(entities);
@@ -92,13 +99,14 @@ export class TransformControlsSystem {
     const meshComponent = entity.getComponent(MeshComponent);
     if (meshComponent) {
       const position = meshComponent.mesh.position;
-      this.websocketManager.send({
+      const message: PositionUpdateMessage = {
         t: ClientMessageType.ENTITY_POSITION_UPDATE,
         entityId: entity.id,
         x: position.x,
         y: position.y,
         z: position.z
-      });
+      };
+      this.websocketManager.send(message);
     }
   }
 
@@ -106,14 +114,15 @@ export class TransformControlsSystem {
     const meshComponent = entity.getComponent(MeshComponent);
     if (meshComponent) {
       const rotation = meshComponent.mesh.quaternion;
-      this.websocketManager.send({
+      const message: RotationUpdateMessage = {
         t: ClientMessageType.ENTITY_ROTATION_UPDATE,
         entityId: entity.id,
         x: rotation.x,
         y: rotation.y,
         z: rotation.z,
         w: rotation.w
-      });
+      };
+      this.websocketManager.send(message);
     }
   }
 
@@ -121,25 +130,32 @@ export class TransformControlsSystem {
     const meshComponent = entity.getComponent(MeshComponent);
     if (meshComponent) {
       const scale = meshComponent.mesh.scale;
-      this.websocketManager.send({
+      const message: ScaleUpdateMessage = {
         t: ClientMessageType.ENTITY_SCALE_UPDATE,
         entityId: entity.id,
         x: scale.x,
         y: scale.y,
         z: scale.z
-      });
+      };
+      this.websocketManager.send(message);
     }
   }
 
-  handleScaleChange(entity, newScale) {
-    // Assuming the entity is a Cube
-    const cube = entity.getComponent(CubeComponent); // You might need to create this component
+  handleScaleChange(entity: Entity, newScale: Vector3) {
+    const cube = entity.getComponent(CubeComponent);
     if (cube) {
       cube.updateScale(newScale.x, newScale.y, newScale.z);
     }
 
     // Send update to server
-    // ... existing code to send update to server ...
+    const message: ScaleUpdateMessage = {
+      t: ClientMessageType.ENTITY_SCALE_UPDATE,
+      entityId: entity.id,
+      x: newScale.x,
+      y: newScale.y,
+      z: newScale.z
+    };
+    this.websocketManager.send(message);
   }
 
   toggleControls() {

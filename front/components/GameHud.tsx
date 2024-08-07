@@ -46,10 +46,10 @@ export default function GameHud({ chatList, sendMessage, gameInstance, toggleTra
             NotBlox<span className="font-thin">.online</span>
           </p>
           <div className="space-x-4 text-sm">
-            <Link className="pointer-events-auto" href="https://localhost:4000">
+            <Link className="pointer-events-auto" href="https://discord.gg/aEBXPtFwgU">
               Discord
             </Link>
-            <Link className="pointer-events-auto" href="https://localhost:4000">
+            <Link className="pointer-events-auto" href="https://github.com/iErcann/Notblox">
               Source Code
             </Link>
           </div>

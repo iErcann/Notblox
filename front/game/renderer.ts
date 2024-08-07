@@ -11,6 +11,11 @@ import { EntityManager } from '@shared/system/EntityManager'
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
 import { FollowComponent } from './ecs/component/FollowComponent'
 import { MutableRefObject } from 'react'
+import { SerializedEntityType } from '@shared/network/server/serialized'
+import { Cube } from './ecs/entity/Cube' // Adjust the import path as needed
+import { TransformControlsSystem } from './ecs/system/TransformControlsSystem'
+import { WebSocketManager } from './WebsocketManager' // Adjust the import path as needed
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export interface Renderable {
   mesh: THREE.Mesh
@@ -21,7 +26,9 @@ export class Renderer extends THREE.WebGLRenderer {
   scene: THREE.Scene
   css2DRenderer: CSS2DRenderer
   private directionalLight: THREE.DirectionalLight | undefined
-  constructor(public gameContainerRef: MutableRefObject<any>) {
+  transformControlsSystem: TransformControlsSystem
+  orbitControls: OrbitControls | null = null;
+  constructor(public gameContainerRef: MutableRefObject<any>, private websocketManager: WebSocketManager) {
     super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
 
     this.camera = new Camera(this)
@@ -48,6 +55,13 @@ export class Renderer extends THREE.WebGLRenderer {
     this.addSky()
     window.addEventListener('resize', this.onWindowResize.bind(this), false)
     this.setupClickHandler();
+    this.transformControlsSystem = new TransformControlsSystem(this, this.websocketManager)
+
+    // Initialize OrbitControls
+    this.orbitControls = new OrbitControls(this.camera, this.domElement);
+    // Configure OrbitControls as needed
+    this.orbitControls.enableDamping = true;
+    this.orbitControls.dampingFactor = 0.05;
   }
 
   private getDevicePixelRatio(): number {
@@ -145,6 +159,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.camera.update(deltaTime, entities, inputMessage)
     this.css2DRenderer.render(this.scene, this.camera)
     this.render(this.scene, this.camera)
+    this.transformControlsSystem.update(entities)
   }
 
   private onWindowResize() {
@@ -172,11 +187,19 @@ export class Renderer extends THREE.WebGLRenderer {
 
     if (intersects.length > 0) {
       const clickedObject = intersects[0].object;
-      const entity = EntityManager.getEntityByMesh(clickedObject);
-      if (entity && entity.type === SerializedEntityType.CUBE) {
-        const cube = entity as Cube;
-        cube.enableTransformControls();
+      if (clickedObject instanceof THREE.Mesh) {
+        const entity = EntityManager.getEntityByMesh(clickedObject);
+        if (entity && entity.type === SerializedEntityType.CUBE) {
+          // Toggle transform controls for the clicked cube
+          this.transformControlsSystem.toggleControls();
+          // Optionally, you can set the mode here as well
+          // this.transformControlsSystem.setMode('translate');
+        }
       }
     }
+  }
+
+  updateTransformControls(entities: Entity[]) {
+    this.transformControlsSystem.update(entities);
   }
 }

@@ -17,12 +17,16 @@ export class WebSocketManager {
   private websocket: WebSocket | null = null
   private messageHandlers: Map<ServerMessageType, MessageHandler> = new Map()
   private serverUrl: string
+  private connections: Map<number, WebSocket> = new Map();
 
   timeSinceLastServerUpdate: number = 0
+  private game: Game;
+
   constructor(game: Game, port: number = 8001) {
     // Set the serverUrl based on the environment
     const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL ?? 'ws://localhost'
     this.serverUrl = `${baseUrl}:${port}`
+    this.game = game;
 
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
       const connectionMessage = message as ConnectionMessage
@@ -57,6 +61,7 @@ export class WebSocketManager {
           } else {
             console.error('WebSocket connection abruptly closed')
           }
+          this.handleDisconnection(closeEvent.code);
         })
       } else {
         resolve() // WebSocket already exists, resolve without a value.
@@ -104,5 +109,21 @@ export class WebSocketManager {
     if (handler) {
       handler(message)
     }
+  }
+
+  handleDisconnection(playerId: number) {
+    const connection = this.connections.get(playerId);
+    if (connection) {
+      connection.close();
+      this.connections.delete(playerId);
+      // Notify the game about the disconnection
+      this.game.handlePlayerDisconnection(playerId);
+    }
+  }
+
+  // In the WebSocket message handler:
+  private onClose(playerId: number) {
+    console.log(`Player ${playerId} disconnected`);
+    this.handleDisconnection(playerId);
   }
 }

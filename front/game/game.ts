@@ -23,6 +23,7 @@ import { ServerMeshSystem } from './ecs/system/ServerMeshSystem'
 import { IdentifyFollowedMeshSystem } from './ecs/system/IdentifyFollowedMeshSystem'
 import { MutableRefObject } from 'react'
 import { TransformControlsSystem, TransformControlsMode } from './ecs/system/TransformControlsSystem'
+import { Player } from './ecs/entity/Player'
 
 export class Game {
   private static instance: Game
@@ -50,10 +51,16 @@ export class Game {
   private transformControlsSystem: TransformControlsSystem
   private systems: XRSystem[] = []
 
+  private players: Map<number, Player> = new Map()
+
   private constructor(gameContainerRef: MutableRefObject<any>, port?: number) {
-    this.renderer = new Renderer(gameContainerRef)
+    // Initialize WebSocketManager first
     this.websocketManager = new WebSocketManager(this, port)
 
+    // Then initialize Renderer with the websocketManager
+    this.renderer = new Renderer(gameContainerRef, this.websocketManager)
+
+    // Rest of the initializations
     this.syncComponentSystem = new SyncComponentsSystem(this)
     this.syncPositionSystem = new SyncPositionSystem()
     this.syncRotationSystem = new SyncRotationSystem()
@@ -132,6 +139,7 @@ export class Game {
     if (this.transformControlsSystem.isEnabled()) {
       this.transformControlsSystem.update(entities)
     }
+    this.renderer.updateTransformControls(entities)
     this.renderer.update(deltaTime, entities, this.inputManager.inputState)
     this.sleepCheckSystem.update(entities)
     this.websocketManager.timeSinceLastServerUpdate += deltaTime
@@ -144,5 +152,26 @@ export class Game {
 
   setTransformControlsMode(mode: TransformControlsMode) {
     this.transformControlsSystem.setMode(mode);
+  }
+
+  handlePlayerDisconnection(playerId: number) {
+    const player = this.players.get(playerId);
+    if (player) {
+      player.disconnect()
+      this.players.delete(playerId)
+      console.log(`Player ${playerId} removed from the game`);
+    } else {
+      console.log(`Player ${playerId} not found in the game`);
+    }
+  }
+
+  addPlayer(playerId: number) {
+    const newPlayer = new Player(playerId, this)
+    this.players.set(playerId, newPlayer)
+    return newPlayer
+  }
+
+  getPlayer(playerId: number): Player | undefined {
+    return this.players.get(playerId)
   }
 }

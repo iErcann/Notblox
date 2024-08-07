@@ -3,14 +3,21 @@ import { Component } from '@shared/component/Component'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 
 export class TextComponent extends Component {
-  textObject: CSS2DObject // Assuming you're using CSS2DObject
+  textObject: CSS2DObject
+  private _text: string
 
   constructor(entityId: number, initialText: string = '') {
     super(entityId)
+    this._text = initialText
     this.textObject = this.createTextObject(initialText)
   }
 
+  get text(): string {
+    return this._text
+  }
+
   setText(newText: string) {
+    this._text = newText
     this.textObject.element.textContent = newText
   }
 
@@ -27,6 +34,7 @@ export class TextComponent extends Component {
     cssObject.position.set(0, 3, 0) // Adjust the position as needed.
     return cssObject
   }
+
   setFollowedMesh(mesh: THREE.Mesh) {
     mesh.add(this.textObject)
   }
