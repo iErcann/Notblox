@@ -32,7 +32,7 @@ import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 import Rapier from './physics/rapier.js'
 
 // Initialize the physics world
-const gravity = { x: 0.0, y: -100.0, z: 0.0 }
+const gravity = { x: 0.0, y: -70.0, z: 0.0 }
 const world = new Rapier.World(gravity)
 
 // Physics systems

@@ -6,6 +6,7 @@ import {
   SSLApp,
   us_listen_socket,
   us_socket_context_t,
+  WebSocket
 } from 'uWebSockets.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
@@ -217,6 +218,11 @@ export class WebsocketSystem {
 
   private handlePositionUpdate(ws: any, message: PositionUpdateMessage) {
     const { entityId, x, y, z } = message
+    if (entityId === undefined) {
+      console.error('Entity ID is undefined in position update message')
+      return
+    }
+
     const entity = EntityManager.getEntityById(EntityManager.getInstance().getAllEntities(), entityId)
     
     if (entity) {
@@ -233,13 +239,18 @@ export class WebsocketSystem {
   }
 
   private handleRotationUpdate(ws: any, message: RotationUpdateMessage) {
-    const { entityId, x, y, z } = message
+    const { entityId, x, y, z, w } = message
+    if (entityId === undefined) {
+      console.error('Entity ID is undefined in rotation update message')
+      return
+    }
+
     const entity = EntityManager.getEntityById(EntityManager.getInstance().getAllEntities(), entityId)
     
     if (entity) {
       const bodyComponent = entity.getComponent(DynamicRigidBodyComponent)
       if (bodyComponent) {
-        this.dynamicRigidBodySystem.updateRotation(entity, { x, y, z, w: 1 }) // Add a default w value
+        this.dynamicRigidBodySystem.updateRotation(entity, { x, y, z, w })
         this.broadcastUpdate(message)
       } else {
         console.error(`Entity ${entityId} does not have a valid DynamicRigidBodyComponent`)
@@ -251,6 +262,11 @@ export class WebsocketSystem {
 
   private handleScaleUpdate(ws: any, message: ScaleUpdateMessage) {
     const { entityId, x, y, z } = message
+    if (entityId === undefined) {
+      console.error('Entity ID is undefined in scale update message')
+      return
+    }
+
     const entity = EntityManager.getEntityById(EntityManager.getInstance().getAllEntities(), entityId)
     
     if (entity) {
@@ -276,5 +292,49 @@ export class WebsocketSystem {
         }
       }
     })
+  }
+
+  private isConnectionInvalid(ws: any): boolean {
+    // Check if the connection is invalid based on uWebSockets.js WebSocket properties
+    // This might need adjustment based on how uWebSockets.js handles connection states
+    return ws.closed || ws.getBufferedAmount() > 0;
+  }
+
+  public update(): void {
+    // Add any necessary update logic here
+    // For example, you might want to process any queued messages or perform other periodic tasks
+  }
+
+  public updateAndCleanup(): void {
+    this.update();
+    this.removeInvalidConnections();
+  }
+
+  public removeInvalidConnections(): void {
+    const playersToRemove: Player[] = [];
+    for (const player of this.players) {
+      const wsComponent = player.entity.getComponent(WebSocketComponent);
+      if (!wsComponent || !wsComponent.ws || this.isConnectionInvalid(wsComponent.ws)) {
+        playersToRemove.push(player);
+      }
+    }
+
+    for (const player of playersToRemove) {
+      this.handleDisconnection(player.entity.id);
+    }
+  }
+
+  private handleDisconnection(playerId: number): void {
+    const playerIndex = this.players.findIndex(player => player.entity.id === playerId);
+    if (playerIndex !== -1) {
+      const player = this.players[playerIndex];
+      const wsComponent = player.entity.getComponent(WebSocketComponent);
+      if (wsComponent && wsComponent.ws) {
+        wsComponent.ws.close();
+      }
+      this.players.splice(playerIndex, 1);
+      EntityManager.removeEntity(player.entity);
+      console.log(`Player ${playerId} disconnected and removed`);
+    }
   }
 }

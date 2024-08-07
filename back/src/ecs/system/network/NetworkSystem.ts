@@ -66,6 +66,9 @@ export class NetworkSystem {
     const serializedEntities = this.serialize(entities, false)
     const snapshotMessage = this.buildSnapshotMessage(serializedEntities)
     this.broadcast(entities, snapshotMessage)
+
+    // Call the WebsocketSystem update and cleanup method
+    this.websocketSystem.updateAndCleanup();
   }
 
   // Broadcasts a message to all connected clients.

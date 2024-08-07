@@ -19,11 +19,12 @@ import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderCo
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
 import { PhysicsPropertiesComponent } from '../component/physics/PhysicsPropertiesComponent.js'
+import { WebSocket } from 'uWebSockets.js'
 
 export class Player {
   entity: Entity
 
-  constructor(ws: WebSocket, initialX: number, initialY: number, initialZ: number) {
+  constructor(ws: WebSocket<any>, initialX: number, initialY: number, initialZ: number) {
     this.entity = EntityManager.createEntity(SerializedEntityType.PLAYER)
     // Tag
     this.entity.addComponent(new PlayerComponent(this.entity.id))
