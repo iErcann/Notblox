@@ -1,4 +1,4 @@
-import { App, DEDICATED_COMPRESSOR_3KB, SSLApp, } from 'uWebSockets.js';
+import { App, DEDICATED_COMPRESSOR_3KB, SSLApp } from 'uWebSockets.js';
 import { EntityManager } from '../../../../../shared/system/EntityManager.js';
 import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js';
 import { ClientMessageType } from '../../../../../shared/network/client/base.js';
@@ -159,6 +159,10 @@ export class WebsocketSystem {
     }
     handlePositionUpdate(ws, message) {
         const { entityId, x, y, z } = message;
+        if (entityId === undefined) {
+            console.error('Entity ID is undefined in position update message');
+            return;
+        }
         const entity = EntityManager.getEntityById(EntityManager.getInstance().getAllEntities(), entityId);
         if (entity) {
             const bodyComponent = entity.getComponent(DynamicRigidBodyComponent);
@@ -175,12 +179,16 @@ export class WebsocketSystem {
         }
     }
     handleRotationUpdate(ws, message) {
-        const { entityId, x, y, z } = message;
+        const { entityId, x, y, z, w } = message;
+        if (entityId === undefined) {
+            console.error('Entity ID is undefined in rotation update message');
+            return;
+        }
         const entity = EntityManager.getEntityById(EntityManager.getInstance().getAllEntities(), entityId);
         if (entity) {
             const bodyComponent = entity.getComponent(DynamicRigidBodyComponent);
             if (bodyComponent) {
-                this.dynamicRigidBodySystem.updateRotation(entity, { x, y, z, w: 1 }); // Add a default w value
+                this.dynamicRigidBodySystem.updateRotation(entity, { x, y, z, w });
                 this.broadcastUpdate(message);
             }
             else {
@@ -193,6 +201,10 @@ export class WebsocketSystem {
     }
     handleScaleUpdate(ws, message) {
         const { entityId, x, y, z } = message;
+        if (entityId === undefined) {
+            console.error('Entity ID is undefined in scale update message');
+            return;
+        }
         const entity = EntityManager.getEntityById(EntityManager.getInstance().getAllEntities(), entityId);
         if (entity) {
             this.dynamicRigidBodySystem.updateScale(entity, { x, y, z }, false);
@@ -216,6 +228,44 @@ export class WebsocketSystem {
                 }
             }
         });
+    }
+    isConnectionInvalid(ws) {
+        // Check if the connection is invalid based on uWebSockets.js WebSocket properties
+        // This might need adjustment based on how uWebSockets.js handles connection states
+        return ws.closed || ws.getBufferedAmount() > 0;
+    }
+    update() {
+        // Add any necessary update logic here
+        // For example, you might want to process any queued messages or perform other periodic tasks
+    }
+    updateAndCleanup() {
+        this.update();
+        this.removeInvalidConnections();
+    }
+    removeInvalidConnections() {
+        const playersToRemove = [];
+        for (const player of this.players) {
+            const wsComponent = player.entity.getComponent(WebSocketComponent);
+            if (!wsComponent || !wsComponent.ws || this.isConnectionInvalid(wsComponent.ws)) {
+                playersToRemove.push(player);
+            }
+        }
+        for (const player of playersToRemove) {
+            this.handleDisconnection(player.entity.id);
+        }
+    }
+    handleDisconnection(playerId) {
+        const playerIndex = this.players.findIndex(player => player.entity.id === playerId);
+        if (playerIndex !== -1) {
+            const player = this.players[playerIndex];
+            const wsComponent = player.entity.getComponent(WebSocketComponent);
+            if (wsComponent && wsComponent.ws) {
+                wsComponent.ws.close();
+            }
+            this.players.splice(playerIndex, 1);
+            EntityManager.removeEntity(player.entity);
+            console.log(`Player ${playerId} disconnected and removed`);
+        }
     }
 }
 //# sourceMappingURL=WebsocketSystem.js.map
