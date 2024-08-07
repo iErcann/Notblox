@@ -1,0 +1,1 @@
+{"version":3,"file":"ComponentAddedEvent.js","sourceRoot":"","sources":["../../../../../shared/component/events/ComponentAddedEvent.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,gBAAgB,EAAE,MAAM,uBAAuB,CAAA;AAExD,MAAM,OAAO,mBAAyC,SAAQ,gBAAmB;IAC/E,YAAY,SAAY;QACtB,KAAK,CAAC,SAAS,CAAC,CAAA;IAClB,CAAC;CACF"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"ComponentWrapper.js","sourceRoot":"","sources":["../../../../../shared/component/events/ComponentWrapper.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,iBAAiB,CAAA;AAE3C,MAAM,OAAO,gBAAsC,SAAQ,SAAS;IAC/C;IAAnB,YAAmB,SAAY;QAC7B,KAAK,CAAC,SAAS,CAAC,QAAQ,CAAC,CAAA;QADR,cAAS,GAAT,SAAS,CAAG;IAE/B,CAAC;CACF"}

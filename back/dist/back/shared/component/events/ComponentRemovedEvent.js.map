@@ -1,0 +1,1 @@
+{"version":3,"file":"ComponentRemovedEvent.js","sourceRoot":"","sources":["../../../../../shared/component/events/ComponentRemovedEvent.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,gBAAgB,EAAE,MAAM,uBAAuB,CAAA;AAExD,MAAM,OAAO,qBAA2C,SAAQ,gBAAmB;IACjF,YAAY,SAAY;QACtB,KAAK,CAAC,SAAS,CAAC,CAAA;IAClB,CAAC;CACF"}
