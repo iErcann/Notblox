@@ -1,4 +1,15 @@
+### ⚠️ This project is not related to any crypto project
+
+There have been some modifications of Notblox running online to promote cryptocurrencies, it is not made by me
+
+The point of notblox was to show a demo of a multiplayer 3d game with three.js, fully open-source  
+
+The only version I run is notblox.online, all the other modifications are made by third-parties
+
+
 # Three JS Multiplayer Game Demo
+
+ 
 
 ![Screen](GameScreen1.webp)
 
@@ -7,6 +18,8 @@
 Small demo here : [NotBlox.online](https://www.notblox.online/)
 
 Hosted on an european server, there is no client side prediction, so the game may be laggy if you are far from the server.
+
+ 
 
 ### Controls
 
