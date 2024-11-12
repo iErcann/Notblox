@@ -1,4 +1,4 @@
-### ⚠️ This project is not related to any crypto project
+## ⚠️ This project is not related to any crypto project
 
 There have been some modifications of Notblox running online to promote cryptocurrencies, it is not made by me
 
