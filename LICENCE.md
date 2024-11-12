@@ -19,3 +19,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+**Restriction on Use in Blockchain and Cryptocurrency Technologies**
+
+This project is licensed under the MIT License, with the following additional restriction:
+
+The software may **not** be used for any purpose related to blockchain, cryptocurrency, or distributed ledger technologies. This includes, but is not limited to:
+   - Creating, mining, trading, or promoting cryptocurrencies.
+   - Using in any application that facilitates cryptocurrency transactions.
+   - Employing the software in mining, staking, or token-related activities.
+
+Any use of this project in the cryptocurrency or blockchain industry is strictly prohibited without prior written consent from the author.
