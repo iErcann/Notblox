@@ -65,7 +65,6 @@ export class InputManager {
 
   update() {
     if (this.pcUser) this.inputState.y = this.cameraFollowSystem.y
-    console.log(this.pcUser)
   }
 
   public handleJoystickStop(joystick: IJoystickUpdateEvent) {
