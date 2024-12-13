@@ -35,8 +35,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@dimforge/rapier3d": "^0.11.2",
-    "@dimforge/rapier3d-compat": "^0.11.2",
+    "@dimforge/rapier3d": "^0.14.0",
+    "@dimforge/rapier3d-compat": "^0.14.0",
     "@types/uws": "^0.13.6",
     "dimforge": "file:../../../../../rapier3d",
     "dotenv": "^16.3.1",
