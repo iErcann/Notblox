@@ -41,7 +41,7 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.setSize(window.innerWidth, window.innerHeight)
     this.setPixelRatio(this.getDevicePixelRatio())
-  
+
     this.css2DRenderer = new CSS2DRenderer()
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight)
     this.css2DRenderer.domElement.style.position = 'absolute'

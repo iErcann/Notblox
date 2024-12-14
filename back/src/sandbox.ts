@@ -1,29 +1,36 @@
-import { Script, createContext } from 'node:vm'
-import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
-import { Cube } from './ecs/entity/Cube.js'
-import { Sphere } from './ecs/entity/Sphere.js'
-import { MapWorld } from './ecs/entity/MapWorld.js'
-import { startGameLoop } from './index.js'
-import { resolve } from 'path'
 import { readFile } from 'fs/promises'
-import { ZombieComponent } from './ecs/component/ZombieComponent.js'
-import { SpawnPositionComponent } from './ecs/component/SpawnPositionComponent.js'
-import { RotationComponent } from '../../shared/component/RotationComponent.js'
+import { Script, createContext } from 'node:vm'
+import { resolve } from 'path'
 import { ColorComponent } from '../../shared/component/ColorComponent.js'
+import { PositionComponent } from '../../shared/component/PositionComponent.js'
+import { RotationComponent } from '../../shared/component/RotationComponent.js'
+import { EntityManager } from '../../shared/system/EntityManager.js'
+import { EventSystem } from '../../shared/system/EventSystem.js'
 import { InputComponent } from './ecs/component/InputComponent.js'
+import { LockedRotationComponent } from './ecs/component/LockedRotationComponent.js'
+import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
+import { SpawnPositionComponent } from './ecs/component/SpawnPositionComponent.js'
+import { ZombieComponent } from './ecs/component/ZombieComponent.js'
+import { ChatMessageEvent } from './ecs/component/events/ChatMessageEvent.js'
 import { OnCollisionEnterEvent } from './ecs/component/events/OnCollisionEnterEvent.js'
 import { OnCollisionExitEvent } from './ecs/component/events/OnCollisionExitEvent.js'
-import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
-import { ChatComponent } from './ecs/component/tag/TagChatComponent.js'
 import { BoxColliderComponent } from './ecs/component/physics/BoxColliderComponent.js'
 import { CapsuleColliderComponent } from './ecs/component/physics/CapsuleColliderComponent.js'
 import { DynamicRigidBodyComponent } from './ecs/component/physics/DynamicRigidBodyComponent.js'
+import { KinematicRigidBodyComponent } from './ecs/component/physics/KinematicRigidBodyComponent.js'
 import { PhysicsPropertiesComponent } from './ecs/component/physics/PhysicsPropertiesComponent.js'
 import { SphereColliderComponent } from './ecs/component/physics/SphereColliderComponent.js'
 import { TrimeshColliderComponent } from './ecs/component/physics/TrimeshColliderComponent.js'
-import { LockedRotationComponent } from './ecs/component/LockedRotationComponent.js'
-import { PositionComponent } from '../../shared/component/PositionComponent.js'
-import { KinematicRigidBodyComponent } from './ecs/component/physics/KinematicRigidBodyComponent.js'
+import { ChatComponent } from './ecs/component/tag/TagChatComponent.js'
+import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
+import { Cube } from './ecs/entity/Cube.js'
+import { MapWorld } from './ecs/entity/MapWorld.js'
+import { Sphere } from './ecs/entity/Sphere.js'
+import { startGameLoop } from './index.js'
+import { ColorEvent } from './ecs/component/events/ColorEvent.js'
+import { SizeEvent } from './ecs/component/events/SizeEvent.js'
+import { SingleSizeEvent } from './ecs/component/events/SingleSizeEvent.js'
+import Rapier from './physics/rapier.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
@@ -33,29 +40,49 @@ async function loadGameLogic() {
   const code = await readFile(codePath, 'utf8')
 
   const sandbox = {
+    // Core Systems
+    EntityManager,
+    EventSystem,
     setTimeout,
-    Cube,
-    RandomizeComponent,
-    Sphere,
-    MapWorld,
-    ZombieComponent,
-    SpawnPositionComponent,
+    setInterval,
+    console,
+    Rapier,
+
+    // Base Components
+    PositionComponent,
     RotationComponent,
     ColorComponent,
-    PositionComponent,
-    LockedRotationComponent,
     InputComponent,
-    OnCollisionEnterEvent,
-    OnCollisionExitEvent,
-    PlayerComponent,
-    ChatComponent,
+    SpawnPositionComponent,
+    LockedRotationComponent,
+    RandomizeComponent,
+    ZombieComponent,
+
+    // Physics Components
     BoxColliderComponent,
     CapsuleColliderComponent,
+    SphereColliderComponent,
+    TrimeshColliderComponent,
     DynamicRigidBodyComponent,
     KinematicRigidBodyComponent,
     PhysicsPropertiesComponent,
-    SphereColliderComponent,
-    TrimeshColliderComponent,
+
+    // Tag Components
+    PlayerComponent,
+    ChatComponent,
+
+    // Events
+    OnCollisionEnterEvent,
+    OnCollisionExitEvent,
+    ChatMessageEvent,
+    ColorEvent,
+    SizeEvent,
+    SingleSizeEvent,
+
+    // Entities
+    Cube,
+    Sphere,
+    MapWorld,
   }
   const context = createContext(sandbox)
   const script = new Script(code)

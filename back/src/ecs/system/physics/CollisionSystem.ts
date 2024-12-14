@@ -13,24 +13,17 @@ export class CollisionSystem {
     const handleToEntityMap = new Map<number, Entity>()
 
     for (const entity of entities) {
-      if (entity.getComponent(BoxColliderComponent)) {
-        const handle = entity.getComponent(BoxColliderComponent)?.collider?.handle
-        if (handle) {
-          handleToEntityMap.set(handle, entity)
-        }
-      }
+      const colliderTypes = [
+        BoxColliderComponent,
+        SphereColliderComponent,
+        CapsuleColliderComponent,
+      ]
 
-      if (entity.getComponent(SphereColliderComponent)) {
-        const handle = entity.getComponent(SphereColliderComponent)?.collider?.handle
-        if (handle) {
+      for (const ColliderType of colliderTypes) {
+        const handle = entity.getComponent(ColliderType)?.collider?.handle
+        if (handle != null) {
           handleToEntityMap.set(handle, entity)
-        }
-      }
-
-      if (entity.getComponent(CapsuleColliderComponent)) {
-        const handle = entity.getComponent(CapsuleColliderComponent)?.collider?.handle
-        if (handle) {
-          handleToEntityMap.set(handle, entity)
+          break
         }
       }
     }
