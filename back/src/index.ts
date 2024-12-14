@@ -116,7 +116,7 @@ async function gameLoop() {
   networkSystem.update(entities)
 
   sleepCheckSystem.update(entities)
-  physicsSystem.update()
+  physicsSystem.update(entities)
 
   // Useful for DestroySystem
   eventSystem.afterUpdate(entities)

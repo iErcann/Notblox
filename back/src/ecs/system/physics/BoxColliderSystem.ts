@@ -54,6 +54,8 @@ export class BoxColliderSystem {
       sizeComponent.height,
       sizeComponent.depth
     )
+
+    colliderDesc.setActiveEvents(Rapier.ActiveEvents.COLLISION_EVENTS)
     boxColliderComponent.collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
   }
 }

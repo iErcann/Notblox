@@ -49,6 +49,7 @@ export class SphereColliderSystem {
     }
 
     const colliderDesc = Rapier.ColliderDesc.ball(singleSizeComponent.size)
+    colliderDesc.setActiveEvents(Rapier.ActiveEvents.COLLISION_EVENTS)
     sphereColliderComponent.collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
   }
 }
