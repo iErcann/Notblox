@@ -11,8 +11,8 @@ import { SpawnPositionComponent } from './ecs/component/SpawnPositionComponent.j
 import { RotationComponent } from '../../shared/component/RotationComponent.js'
 import { ColorComponent } from '../../shared/component/ColorComponent.js'
 import { InputComponent } from './ecs/component/InputComponent.js'
-import { OnCollisionEnterComponent } from './ecs/component/OnCollisionEnterComponent.js'
-import { OnCollisionExitComponent } from './ecs/component/OnCollisionExitComponent.js'
+import { OnCollisionEnterEvent } from './ecs/component/events/OnCollisionEnterEvent.js'
+import { OnCollisionExitEvent } from './ecs/component/events/OnCollisionExitEvent.js'
 import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
 import { ChatComponent } from './ecs/component/tag/TagChatComponent.js'
 import { BoxColliderComponent } from './ecs/component/physics/BoxColliderComponent.js'
@@ -45,8 +45,8 @@ async function loadGameLogic() {
     PositionComponent,
     LockedRotationComponent,
     InputComponent,
-    OnCollisionEnterComponent,
-    OnCollisionExitComponent,
+    OnCollisionEnterEvent,
+    OnCollisionExitEvent,
     PlayerComponent,
     ChatComponent,
     BoxColliderComponent,

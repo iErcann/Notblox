@@ -1,7 +1,7 @@
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import Rapier from '../../../physics/rapier.js'
-import { OnCollisionEnterComponent } from '../../component/OnCollisionEnterComponent.js'
-import { OnCollisionExitComponent } from '../../component/OnCollisionExitComponent.js'
+import { OnCollisionEnterEvent } from '../../component/events/OnCollisionEnterEvent.js'
+import { OnCollisionExitEvent } from '../../component/events/OnCollisionExitEvent.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
 import { CapsuleColliderComponent } from '../../component/physics/CapsuleColliderComponent.js'
 import { SphereColliderComponent } from '../../component/physics/SphereColliderComponent.js'
@@ -35,8 +35,6 @@ export class CollisionSystem {
       }
     }
 
-    // console.log('handleToEntityMap', handleToEntityMap)
-
     // Handle collision events
     eventQueue.drainCollisionEvents((handle1, handle2, started) => {
       const entityFirst = handleToEntityMap.get(handle1)
@@ -45,20 +43,20 @@ export class CollisionSystem {
       // console.log('entitySecond', entitySecond)
       if (entityFirst && entitySecond) {
         if (started) {
-          const onCollisionEnterFirst = entityFirst.getComponent(OnCollisionEnterComponent)
+          const onCollisionEnterFirst = entityFirst.getComponent(OnCollisionEnterEvent)
           if (onCollisionEnterFirst) {
             onCollisionEnterFirst.onCollisionEnter(entitySecond)
           }
-          const onCollisionEnterSecond = entitySecond.getComponent(OnCollisionEnterComponent)
+          const onCollisionEnterSecond = entitySecond.getComponent(OnCollisionEnterEvent)
           if (onCollisionEnterSecond) {
             onCollisionEnterSecond.onCollisionEnter(entityFirst)
           }
         } else {
-          const onCollisionExitFirst = entityFirst.getComponent(OnCollisionExitComponent)
+          const onCollisionExitFirst = entityFirst.getComponent(OnCollisionExitEvent)
           if (onCollisionExitFirst) {
             onCollisionExitFirst.onCollisionExit(entitySecond)
           }
-          const onCollisionExitSecond = entitySecond.getComponent(OnCollisionExitComponent)
+          const onCollisionExitSecond = entitySecond.getComponent(OnCollisionExitEvent)
           if (onCollisionExitSecond) {
             onCollisionExitSecond.onCollisionExit(entityFirst)
           }
