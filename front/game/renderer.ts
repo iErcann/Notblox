@@ -12,6 +12,12 @@ import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
 import { FollowComponent } from './ecs/component/FollowComponent'
 import { MutableRefObject } from 'react'
 
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js'
+
 export interface Renderable {
   mesh: THREE.Mesh
   addToScene(): any
@@ -20,6 +26,8 @@ export class Renderer extends THREE.WebGLRenderer {
   camera: Camera
   scene: THREE.Scene
   css2DRenderer: CSS2DRenderer
+  composer?: EffectComposer
+
   private directionalLight: THREE.DirectionalLight | undefined
   constructor(public gameContainerRef: MutableRefObject<any>) {
     super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
@@ -33,8 +41,7 @@ export class Renderer extends THREE.WebGLRenderer {
 
     this.setSize(window.innerWidth, window.innerHeight)
     this.setPixelRatio(this.getDevicePixelRatio())
-    this.toneMapping = THREE.CineonToneMapping
-    this.toneMappingExposure = 0.8
+
     this.css2DRenderer = new CSS2DRenderer()
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight)
     this.css2DRenderer.domElement.style.position = 'absolute'
@@ -46,6 +53,8 @@ export class Renderer extends THREE.WebGLRenderer {
     this.addLight()
     this.addDirectionnalLight()
     this.addSky()
+    // this.setupPostProcessing()
+
     window.addEventListener('resize', this.onWindowResize.bind(this), false)
   }
 
@@ -53,6 +62,31 @@ export class Renderer extends THREE.WebGLRenderer {
     const userAgent = window.navigator.userAgent.toLowerCase()
     const isMobile = /iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(userAgent)
     return isMobile ? window.devicePixelRatio / 2 : window.devicePixelRatio / 1.2
+  }
+
+  private setupPostProcessing() {
+    this.toneMapping = THREE.ACESFilmicToneMapping
+    this.toneMappingExposure = 0.4
+    // Create EffectComposer
+    this.composer = new EffectComposer(this)
+    this.composer.setSize(window.innerWidth, window.innerHeight)
+
+    // Add RenderPass
+    const renderPass = new RenderPass(this.scene, this.camera)
+    this.composer.addPass(renderPass)
+
+    // Add UnrealBloomPass
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.5,
+      0.1,
+      0.9
+    )
+    this.composer.addPass(bloomPass)
+
+    // Add GammaCorrectionPass
+    const gammaCorrectionPass = new ShaderPass(GammaCorrectionShader)
+    this.composer.addPass(gammaCorrectionPass)
   }
 
   appendChild() {
@@ -67,10 +101,10 @@ export class Renderer extends THREE.WebGLRenderer {
     let sky = new Sky()
 
     const uniforms = sky.material.uniforms
-    uniforms['turbidity'].value = 1
-    uniforms['rayleigh'].value = 0.3
-    uniforms['mieCoefficient'].value = 0.025
-    uniforms['mieDirectionalG'].value = 0.7
+    uniforms['turbidity'].value = 12
+    uniforms['rayleigh'].value = 0
+    uniforms['mieCoefficient'].value = 0.045
+    uniforms['mieDirectionalG'].value = 0.0263
 
     const elevation = 2
     const azimuth = 180
@@ -88,8 +122,8 @@ export class Renderer extends THREE.WebGLRenderer {
   private addDirectionnalLight() {
     // Create a directional light for shadows and highlights
     // Create a directional light with a different color and intensity
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.5)
-    this.directionalLight.position.set(100, 100, 100)
+    this.directionalLight = new THREE.DirectionalLight(0xff8a0d, 2)
+    this.directionalLight.position.set(100, 100, -2500)
 
     // Configure shadow properties with different values
     this.directionalLight.shadow.mapSize.height = 2048
@@ -119,9 +153,7 @@ export class Renderer extends THREE.WebGLRenderer {
 
   private addLight() {
     // Use HemisphereLight for natural lighting
-    const hemiLight = new THREE.HemisphereLight(0xc0fafc, 0x9563ff, 1)
-    hemiLight.color.setHSL(0.59, 0.4, 0.6)
-    hemiLight.groundColor.setHSL(0.095, 0.2, 0.75)
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xff8a05, 1)
     hemiLight.position.set(0, 50, 0)
     this.scene.add(hemiLight)
   }
@@ -132,7 +164,7 @@ export class Renderer extends THREE.WebGLRenderer {
       const position = followedEntity.getComponent(PositionComponent)
       if (position) {
         this.directionalLight.position.lerp(
-          new THREE.Vector3(position.x, position.y + 150, position.z - 15),
+          new THREE.Vector3(position.x, position.y + 150, position.z - 150),
           0.1
         )
         this.directionalLight.target.position.lerp(
@@ -144,6 +176,9 @@ export class Renderer extends THREE.WebGLRenderer {
     this.camera.update(deltaTime, entities, inputMessage)
     this.css2DRenderer.render(this.scene, this.camera)
     this.render(this.scene, this.camera)
+    if (this.composer) {
+      this.composer.render(deltaTime) // Use composer instead of direct rendering
+    }
   }
 
   private onWindowResize() {
@@ -152,5 +187,8 @@ export class Renderer extends THREE.WebGLRenderer {
     this.camera.updateProjectionMatrix()
     this.setSize(window.innerWidth, window.innerHeight)
     this.css2DRenderer.setSize(window.innerWidth, window.innerHeight)
+    if (this.composer) {
+      this.composer.setSize(window.innerWidth, window.innerHeight)
+    }
   }
 }

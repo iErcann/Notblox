@@ -85,6 +85,7 @@ async function gameLoop() {
   const now = Date.now()
   const dt = now - lastUpdateTimestamp
 
+  physicsSystem.update(entities)
   destroyEventSystem.update(entities)
 
   // Create the bodies first.
@@ -116,7 +117,6 @@ async function gameLoop() {
   networkSystem.update(entities)
 
   sleepCheckSystem.update(entities)
-  physicsSystem.update()
 
   // Useful for DestroySystem
   eventSystem.afterUpdate(entities)

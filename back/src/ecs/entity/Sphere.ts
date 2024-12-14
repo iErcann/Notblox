@@ -27,7 +27,7 @@ export class Sphere {
     const sizeComponent = new SingleSizeComponent(this.entity.id, size)
     this.entity.addComponent(sizeComponent)
 
-    const colorComponent = new ColorComponent(this.entity.id, '#FFFFFF')
+    const colorComponent = new ColorComponent(this.entity.id, 'default')
     this.entity.addComponent(colorComponent)
 
     const serverMeshComponent = new ServerMeshComponent(

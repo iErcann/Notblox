@@ -60,6 +60,8 @@ export class CapsuleColliderSystem {
 
     // Set the restitution combine rule to control how restitution is combined with other contacts
     colliderDesc.setRestitutionCombineRule(Rapier.CoefficientCombineRule.Max)
+
+    colliderDesc.setActiveEvents(Rapier.ActiveEvents.COLLISION_EVENTS)
     capsuleColliderComponent.collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
   }
 }

@@ -13,10 +13,11 @@ export class SyncColorSystem {
         // and update the material color
         meshComponent.mesh.traverse((child) => {
           if (child instanceof THREE.Mesh) {
-            // console.log('child', child)
             child.material.skinning = true
 
-            child.material.color = new THREE.Color(colorComponent.color)
+            if (colorComponent.color !== 'default') {
+              child.material.color = new THREE.Color(colorComponent.color)
+            }
           }
         })
         meshComponent.mesh.material = new THREE.MeshPhongMaterial({

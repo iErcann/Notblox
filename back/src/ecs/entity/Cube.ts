@@ -10,6 +10,7 @@ import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComp
 import { BoxColliderComponent } from '../component/physics/BoxColliderComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
+import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 
 export class Cube {
   entity: Entity
@@ -32,8 +33,8 @@ export class Cube {
     const sizeComponent = new SizeComponent(this.entity.id, width, height, depth)
     this.entity.addComponent(sizeComponent)
 
-    // const colorComponent = new ColorComponent(this.entity.id, '#ff0000')
-    // this.entity.addComponent(colorComponent)
+    const colorComponent = new ColorComponent(this.entity.id, 'default')
+    this.entity.addComponent(colorComponent)
 
     this.entity.addComponent(new BoxColliderComponent(this.entity.id))
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
@@ -42,7 +43,7 @@ export class Cube {
       positionComponent,
       rotationComponent,
       sizeComponent,
-      // colorComponent,
+      colorComponent,
       serverMeshComponent,
     ])
     this.entity.addComponent(networkDataComponent)
