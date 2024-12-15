@@ -1,15 +1,4 @@
-## ⚠️ This project is not related to any crypto project
-
-There have been some modifications of Notblox running online to promote cryptocurrencies, it is not made by me
-
-The point of notblox was to show a demo of a multiplayer 3d game with three.js, fully open-source  
-
-The only version I run is notblox.online, all the other modifications are made by third-parties
-
-
 # Three JS Multiplayer Game Demo
-
- 
 
 ![Screen](GameScreen1.webp)
 
@@ -18,8 +7,6 @@ The only version I run is notblox.online, all the other modifications are made b
 Small demo here : [NotBlox.online](https://www.notblox.online/)
 
 Hosted on an european server, there is no client side prediction, so the game may be laggy if you are far from the server.
-
- 
 
 ### Controls
 
@@ -42,9 +29,8 @@ Hosted on an european server, there is no client side prediction, so the game ma
 - Interpolation
 - Fast to load (small assets)
 - Shared code between server and client (useful for component replication)
-- Trimesh Collider 
+- Trimesh Collider
 
- 
 ## Why ?
 
 Browser games are fun, but most of them are Unity WebGL exports that take a long time to load.
@@ -57,17 +43,26 @@ Inspiration : https://github.com/swift502/Sketchbook
 
 ## Demo (Click on the images to see the video)
 
-[![Football with real players](GameScreen2.webp)](https://www.youtube.com/watch?v=7vBifZ2qG1k "See on youtube")
+[![Football with real players](GameScreen2.webp)](https://www.youtube.com/watch?v=7vBifZ2qG1k 'See on youtube')
 
-[![Demo](GameScreen3.webp)](https://www.youtube.com/watch?v=Uu3VCuyD9EA "See on youtube")
+[![Demo](GameScreen3.webp)](https://www.youtube.com/watch?v=Uu3VCuyD9EA 'See on youtube')
 
- 
-
-## How to run
+## How to run locally
 
 ### Back-end
 
-Modify the `back/.env` file with `NODE_ENV=development`
+Comment the `NODE_ENV=production` & `FRONTEND_URL` line in the `back/.env` file
+
+It should look like this :
+
+```bash
+# NODE_ENV=production
+# Comment to run in development mode
+
+# FRONTEND_URL=https://www.notblox.online
+# Only accept websocket connections from this URL
+# Comment to accept connections from any URL
+```
 
 ```bash
   cd back
@@ -77,7 +72,15 @@ Modify the `back/.env` file with `NODE_ENV=development`
 
 ### Front-end
 
-Uncomment the `NEXT_PUBLIC_SERVER_URL` variable in `front/.env.local`, it will default to localhost
+Comment the `NEXT_PUBLIC_SERVER_URL` variable in `front/.env.local`, it will default to localhost
+
+It should look like this :
+
+```bash
+# NEXT_PUBLIC_SERVER_URL=https://www.notblox.online
+# Only accept websocket connections from this URL
+# Comment to accept connections from any URL
+```
 
 ```bash
   cd front
@@ -85,39 +88,48 @@ Uncomment the `NEXT_PUBLIC_SERVER_URL` variable in `front/.env.local`, it will d
   npm run dev
 ```
 
+Go on your browser to http://localhost:4000/
+
 ## How to change the map
 
-A map is a GLB/GLTF file. The backend will approximate a Trimesh Collider based on it, and it is then rendered by the client.
+Maps are **GLB/GLTF files**. The back-end approximates a **Trimesh Collider** based on the map, which is rendered on the client.
 
-Go to the file : `back/src/ecs/entity/MapWorld.ts`
+To change the map, update the URL in `back/src/scripts/defaultScript.js`:
 
 ```typescript
-export class MapWorld {
-  entity: Entity
-  constructor() {
-    this.entity = EntityManager.createEntity(SerializedEntityType.WORLD)
-
-    // URL of the GLB/GLTF file (Change this)
-    const mapUrl = 'https://rawcdn.githack.com/iErcann/Notblox-Assets/610c6492aa88e5a6b5107a38e1a7c34cc43d9e81/KenneyWorld.glb'
-
-    // Server-side mesh for rendering
-    const serverMeshComponent = new ServerMeshComponent(this.entity.id, mapUrl)
-    this.entity.addComponent(serverMeshComponent)
-
-    // Static (kinematic) property for the map
-    this.entity.addComponent(new KinematicRigidBodyComponent(this.entity.id))
-
-    // Trimesh collider approximation based on the map
-    this.entity.addComponent(new TrimeshCollidersComponent(this.entity.id, mapUrl))
-
-    // Sending only the visual data (mesh URL file)
-    this.entity.addComponent(
-      new NetworkDataComponent(this.entity.id, this.entity.type, [serverMeshComponent])
-    )
-  }
-}
-
+new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/aqsworld.glb') // Change this URL to your map
 ```
+
+---
+
+### **How to Host Your Assets for Free Without a S3 Bucket**
+
+You can host your assets for free using **GitHub** and **Githack**. Here's how:
+
+1. Create a repository on GitHub, e.g., [Notblox-Assets](https://github.com/iErcann/Notblox-Assets).
+2. Use **Githack** to serve your assets via CDN: [Setup Githack](https://gist.github.com/jcubic/a8b8c979d200ffde13cc08505f7a6436#how-to-setup-a-literally-free-cdn).
+
+![Githack](Githack.webp)
+
+Then, update the URL in `defaultScript.js`:
+
+```typescript
+new MapWorld(
+  'https://rawcdn.githack.com/iErcann/Notblox-Assets/d66f6da91bb7f025c90aa9f6eb24b99e997efa38/BasicWorld.glb'
+) // Change this URL to your map
+```
+
+---
+
+### **How to Point the Map to a Local File (For Testing)**
+
+For local testing, place the map .glb under the `front/public/assets` folder and use:
+
+```typescript
+new MapWorld('http://localhost:4001/BasicWorld.glb')
+```
+
+Make sure to run the front-end with `npm run dev` to serve the local file.
 
 ### Blender: How to Export a Map Correctly
 
@@ -143,21 +155,16 @@ export class MapWorld {
 
 ![Activate Compression](https://github.com/iErcann/Notblox/assets/25112067/36de3e8c-798c-47b8-bab5-2f99ffd1bea2)
 
-### Free asset hosting
-Github Repo + Githack : 
-
-https://gist.github.com/jcubic/a8b8c979d200ffde13cc08505f7a6436#how-to-setup-a-literally-free-cdn
-
- 
 ## Current Event system (might change!)
- 
+
 [Is it better design to store event effects within an Entity itself, or within a system?](https://gamedev.stackexchange.com/questions/194133/is-it-better-design-to-store-event-effects-within-an-entity-itself-or-within-a)
- >If you are using event queues anyway, you can also do them properly. With one global EventManager system which receives all events. Systems can subscribe to events they are interested in and then the EventManager will put those events into their event queues.
 
+> If you are using event queues anyway, you can also do them properly. With one global EventManager system which receives all events. Systems can subscribe to events they are interested in and then the EventManager will put those events into their event queues.
 
--  `Component` can also be a `NetworkComponent`. This means it can be sent over the network to be replicated by the clients.
+- `Component` can also be a `NetworkComponent`. This means it can be sent over the network to be replicated by the clients.
 
 ### Shared
+
 ```js
 // Shared component between client & back
 export class ColorComponent extends NetworkComponent {
@@ -168,15 +175,18 @@ export class ColorComponent extends NetworkComponent {
 ```
 
 ### Back
+
 The back-end need to pass some events; This is achieved with the event components (example: `EventColorComponent`) that are only used once per ECS loop and then removed from the EventQueue entity.
 
 ```js
 // Creating a color change event on the back
-EventSystem.addEvent(new ColorEvent(yourEntity.id, "#FFFFFF"));
+EventSystem.addEvent(new ColorEvent(yourEntity.id, '#FFFFFF'))
 ```
-It can be received by any system, here `ColorEventSystem` : 
+
+It can be received by any system, here `ColorEventSystem` :
 
 The `ColorComponent` is updated:
+
 ```js
 export class ColorEventSystem {
   update(entities: Entity[]) {
@@ -199,37 +209,33 @@ export class ColorEventSystem {
 ```
 
 ### Client (front-end)
+
 The component is replicated by the client with the `SyncComponentsSystem.ts`, then it uses the front-end version of `SyncColorSystem` to actually change the color of the mesh, you could incorporate more checks here depending on other components
 
 ```js
 export class SyncColorSystem {
   update(entities: Entity[]) {
     for (const entity of entities) {
-      const colorComponent = entity.getComponent(ColorComponent);
-      const meshComponent = entity.getComponent(MeshComponent);
+      const colorComponent = entity.getComponent(ColorComponent)
+      const meshComponent = entity.getComponent(MeshComponent)
       if (colorComponent && meshComponent && colorComponent.updated) {
         meshComponent.mesh.material = new THREE.MeshPhongMaterial({
           color: colorComponent.color,
-        });
+        })
       }
     }
   }
 }
 ```
 
+## You like this project or want to talk about Three.js games ?
 
-
-## You like this project or want to talk about Three.js games ? 
-Discord  https://discord.gg/aEBXPtFwgU 👀
-
-
+Discord https://discord.gg/aEBXPtFwgU 👀
 
 ### Shared file import Error .js files fix
 
 [Link to GitHub Discussion](https://github.com/vercel/next.js/discussions/32237)
- 
- 
- 
+
 ## Asset Credits
 
 San Andreas Map :
@@ -237,3 +243,11 @@ https://skfb.ly/oJSPS
 
 Kenney Assets
 https://www.kenney.nl/
+
+## ⚠️ This project is not related to any crypto project
+
+There have been some modifications of Notblox running online to promote cryptocurrencies, it is not made by me
+
+The point of notblox was to show a demo of a multiplayer 3d game with three.js, fully open-source
+
+The only version I run is notblox.online, all the other modifications are made by third-parties
