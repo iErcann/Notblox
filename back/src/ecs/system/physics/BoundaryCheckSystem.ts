@@ -40,11 +40,6 @@ export class BoundaryCheckSystem {
             true
           )
         }
-        const colorComponent = entity.getComponent(ColorComponent)
-        if (colorComponent) {
-          const randomHex = Math.floor(Math.random() * 16777215).toString(16)
-          EventSystem.addEvent(new ColorEvent(entity.id, '#' + randomHex))
-        }
         bodyComponent.body.setLinvel(new Rapier.Vector3(0, 0, 0), true)
 
         if (entity.getComponent(PlayerComponent)) {

@@ -39,10 +39,7 @@ export class Player {
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))
 
     // Components used for rendering by the client
-    const colorComponent = new ColorComponent(
-      this.entity.id,
-      `#${Math.floor(Math.random() * 16777215).toString(16)}`
-    )
+    const colorComponent = new ColorComponent(this.entity.id, `#FFFFFF`)
     this.entity.addComponent(colorComponent)
 
     const stateComponent = new StateComponent(this.entity.id, SerializedStateType.IDLE)
