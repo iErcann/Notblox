@@ -129,7 +129,7 @@ export class MapWorld {
 
 **2. Clear Parents**
 
-- Press `A` to select all objects, then `CTRL-P` and choose "Clear Parent" to remove all parent relationships.
+- Press `A` to select all objects, then `ALT-P` and choose "Clear Parent" to remove all parent relationships.
 
 ![Clear Parents](https://github.com/iErcann/Notblox/assets/25112067/c253deea-0d8f-44e2-8020-a90668d2af06)
 
