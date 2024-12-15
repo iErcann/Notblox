@@ -1,70 +1,78 @@
-// Runtime script
-
-// Create map world from a .glb file
-const mapWorld = new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/aqsworld.glb')
-
-function sendChatMessage(entityId, authorStr, messageStr) {
-  EventSystem.addEvent(new ChatMessageEvent(entityId, authorStr, messageStr))
+function randomHexColor() {
+  const hex = Math.floor(Math.random() * 16777215).toString(16)
+  return '#' + '0'.repeat(6 - hex.length) + hex
 }
 
-// Function to create a cube with a RandomizeComponent
-function createRandomCube(x, y, z, width, height, depth) {
-  const cube = new Cube(x, y, z, width, height, depth)
-  cube.entity.addComponent(new RandomizeComponent(cube.entity.id))
+// Load the game world
+// Can also be hosted on a github repo : https://github.com/iErcann/Notblox-Assets + https://rawcdn.githack.com
+new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/aqsworld.glb')
 
-  return cube
-}
+// === Basic Entity Creation Examples ===
 
-// Function to create a sphere with a RandomizeComponent
-function createRandomSphere(x, y, z, radius) {
-  const sphere = new Sphere(x, y, z, radius)
-  sphere.entity.addComponent(new RandomizeComponent(sphere.entity.id))
-  return sphere
-}
+// Create a basic cube
+new Cube(0, 5, -10, 3, 3, 3)
 
-// Create a random cube
-new Cube(0, 50, -100, 1, 1, 1)
-new Cube(0, 50, -400, 3, 3, 3)
+// Create physics-enabled sphere with a white color
+new Sphere(5, 10, -10, 4, '#ffffff')
 
-for (let i = 0; i < 2; i++) {
-  const cubeWithCollision = new Cube(0, 50, -120, 2, 2, 2)
-  cubeWithCollision.entity.addComponent(
-    new OnCollisionEnterEvent(cubeWithCollision.entity.id, (collidedWithEntity) => {
-      // If the other entity is a player
-      const tagPlayerComponent = collidedWithEntity.getComponent(PlayerComponent)
-      if (tagPlayerComponent) {
-        // If the cube collided with a player, move the cube up
-        const positionComponent = cubeWithCollision.entity.getComponent(PositionComponent)
-        const cubeRigidBodyComponent =
-          cubeWithCollision.entity.getComponent(DynamicRigidBodyComponent)
-        if (positionComponent && cubeRigidBodyComponent) {
-          // Random hex color
-          const randomHex = Math.floor(Math.random() * 16777215).toString(16)
-          EventSystem.addEvent(new ColorEvent(cubeWithCollision.entity.id, '#' + randomHex))
+// === Interactive Trigger Zone Example ===
+// Creates an invisible trigger zone that detects when players enter/exit
+new TriggerCube(
+  -180,
+  0,
+  -250, // position
+  6,
+  4,
+  6, // size
+  (entity) => {
+    // onEnter callback
+    if (entity.getComponent(PlayerComponent)) {
+      console.log('Invisible trigger zone: Player entered the zone!')
+      // You could add game logic here, like:
+      // - Giving points
+      // - Triggering events
+      // - Spawning enemies
+      entity
+        .getComponent(DynamicRigidBodyComponent)
+        .body.applyImpulse(new Rapier.Vector3(0, 9000, 0), true)
+    }
+  },
+  (entity) => {
+    // onExit callback
+    if (entity.getComponent(PlayerComponent)) {
+      console.log('Invisible trigger zone: Player left the zone!')
+    }
+  },
+  true // Set to true to see the trigger zone (useful for debugging)
+)
 
-          // Impulse up 10 units
-          cubeRigidBodyComponent.body.applyImpulse(new Rapier.Vector3(0, 5000, 0), true)
+// === Interactive Object Example ===
+// Create a cube that reacts to player collision
+for (let i = 0; i < 3; i++) {
+  const interactiveCube = new Cube(0, 5, -100, 2, 2, 2)
+  interactiveCube.entity.addComponent(
+    new OnCollisionEnterEvent(interactiveCube.entity.id, (collidedWithEntity) => {
+      // Only react to players
+      if (collidedWithEntity.getComponent(PlayerComponent)) {
+        // Change color of the cube on collision
+        EventSystem.addEvent(new ColorEvent(interactiveCube.entity.id, randomHexColor()))
+
+        // Apply upward force
+        const rigidBody = interactiveCube.entity.getComponent(DynamicRigidBodyComponent)
+        if (rigidBody) {
+          rigidBody.body.applyImpulse(new Rapier.Vector3(0, 5000, 0), true)
         }
       }
     })
   )
 }
-// cubeWithCollision.entity.addComponent(
-//   new OnCollisionExitEvent(cubeWithCollision.entity.id, (collidedWithEntity) => {})
-// )
 
-// // Create a series of cubes
-// for (let i = 1; i < 5; i++) {
-//   new Cube(0, 5, 5 * i, 1, 1, 1)
-// }
-
-// Create a sphere
-new Sphere(0, 30, 0, 3)
-
-// Create a series of random spheres
-for (let i = 1; i < 5; i++) {
-  createRandomSphere(0, i * 30, 0, 3)
+// === Create Multiple Objects Example ===
+// Creates a line of cubes with alternating colors
+const colors = ['#ff0000', '#00ff00', '#0000ff']
+for (let i = 0; i < 2; i++) {
+  const cube = new Cube(i * 3, 5, -40, 1, 1, 1, colors[i % colors.length])
+  cube.entity.addComponent(new RandomizeComponent(cube.entity.id))
+  const sphere = new Sphere(i * 3, 5, -40, 1, colors[i % colors.length])
+  sphere.entity.addComponent(new RandomizeComponent(sphere.entity.id))
 }
-
-// Create another sphere
-new Sphere(10, 30, 0, 4)

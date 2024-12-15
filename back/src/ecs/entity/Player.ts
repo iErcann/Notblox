@@ -18,7 +18,6 @@ import { LockedRotationComponent } from '../component/LockedRotationComponent.js
 import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
-import { PhysicsPropertiesComponent } from '../component/physics/PhysicsPropertiesComponent.js'
 
 export class Player {
   entity: Entity

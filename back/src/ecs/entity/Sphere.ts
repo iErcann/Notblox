@@ -15,7 +15,7 @@ import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComp
 export class Sphere {
   entity: Entity
 
-  constructor(x: number, y: number, z: number, size: number) {
+  constructor(x: number, y: number, z: number, size: number, color: string = 'default') {
     this.entity = EntityManager.createEntity(SerializedEntityType.NONE)
 
     const positionComponent = new PositionComponent(this.entity.id, x, y, z)
@@ -27,7 +27,7 @@ export class Sphere {
     const sizeComponent = new SingleSizeComponent(this.entity.id, size)
     this.entity.addComponent(sizeComponent)
 
-    const colorComponent = new ColorComponent(this.entity.id, 'default')
+    const colorComponent = new ColorComponent(this.entity.id, color)
     this.entity.addComponent(colorComponent)
 
     const serverMeshComponent = new ServerMeshComponent(

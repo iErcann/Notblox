@@ -15,7 +15,15 @@ import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 export class Cube {
   entity: Entity
 
-  constructor(x: number, y: number, z: number, width: number, height: number, depth: number) {
+  constructor(
+    x: number,
+    y: number,
+    z: number,
+    width: number,
+    height: number,
+    depth: number,
+    color: string = 'default'
+  ) {
     this.entity = EntityManager.createEntity(SerializedEntityType.CUBE)
 
     const positionComponent = new PositionComponent(this.entity.id, x, y, z)
@@ -33,7 +41,7 @@ export class Cube {
     const sizeComponent = new SizeComponent(this.entity.id, width, height, depth)
     this.entity.addComponent(sizeComponent)
 
-    const colorComponent = new ColorComponent(this.entity.id, 'default')
+    const colorComponent = new ColorComponent(this.entity.id, color)
     this.entity.addComponent(colorComponent)
 
     this.entity.addComponent(new BoxColliderComponent(this.entity.id))

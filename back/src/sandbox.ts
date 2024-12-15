@@ -31,6 +31,8 @@ import { ColorEvent } from './ecs/component/events/ColorEvent.js'
 import { SizeEvent } from './ecs/component/events/SizeEvent.js'
 import { SingleSizeEvent } from './ecs/component/events/SingleSizeEvent.js'
 import Rapier from './physics/rapier.js'
+import { Player } from './ecs/entity/Player.js'
+import { TriggerCube } from './ecs/entity/TriggerCube.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
@@ -83,6 +85,8 @@ async function loadGameLogic() {
     Cube,
     Sphere,
     MapWorld,
+    Player,
+    TriggerCube,
   }
   const context = createContext(sandbox)
   const script = new Script(code)
