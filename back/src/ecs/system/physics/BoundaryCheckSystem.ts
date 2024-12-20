@@ -10,7 +10,7 @@ import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidB
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 
 export class BoundaryCheckSystem {
-  lowerBound = -40
+  lowerBound = -100
   update(entities: Entity[]) {
     for (const entity of entities) {
       const bodyComponent = entity.getComponent(DynamicRigidBodyComponent)

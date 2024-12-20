@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev  -p 4000",
+    "dev": "concurrently \"next dev -p 4000\" \"serve -s public/assets -l 4001 --cors\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -29,9 +29,11 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
+    "concurrently": "^8.2.2",
     "eslint": "latest",
     "eslint-config-next": "latest",
     "postcss": "latest",
+    "serve": "^14.2.4",
     "tailwindcss": "latest",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "latest"
