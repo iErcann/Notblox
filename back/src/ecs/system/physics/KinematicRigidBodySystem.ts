@@ -39,6 +39,8 @@ export class KinematicRigidBodySystem {
     // No position component here, we move the body directly, so it's at the origin
     const physicsBodyComponent = event.component
     const kinematic = Rapier.RigidBodyDesc.kinematicPositionBased()
+    kinematic.setCcdEnabled(true)
+
     const rigidBody = world.createRigidBody(kinematic)
     physicsBodyComponent.body = rigidBody
 

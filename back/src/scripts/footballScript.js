@@ -1,10 +1,49 @@
-// back/src/scripts/footballScript.js
-
 new MapWorld('http://localhost:4001/Stadium.glb')
 
 // Create the ball
-const ball = new Sphere(0, -20, -185, 2)
-ball.entity.addComponent(new SpawnPositionComponent(ball.entity.id, 0, -20, -185))
+const ballSpawnPosition = {
+  x: 0,
+  y: -15,
+  z: -355,
+}
+const ball = new Sphere(
+  ballSpawnPosition.x,
+  ballSpawnPosition.y,
+  ballSpawnPosition.z,
+  1.4,
+  'default',
+  'https://rawcdn.githack.com/iErcann/Notblox-Assets/707558dda5772f387508259e5a3e0741e15b2b57/Ball.glb'
+)
+ball.entity.addComponent(
+  new SpawnPositionComponent(
+    ball.entity.id,
+    ballSpawnPosition.x,
+    ballSpawnPosition.y,
+    ballSpawnPosition.z
+  )
+)
+
+// TODO : Make the ball interactive
+// ball.entity.addComponent(
+//   new OnCollisionEnterEvent(ball.entity.id, (playerEntity) => {
+//     // Check if the collided entity is a player
+//     if (playerEntity.getComponent(PlayerComponent) && playerEntity.getComponent(InputComponent)) {
+//       // Calculate impulse direction and magnitude
+//       const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
+
+//       //   Apply player looking direction to the ball
+//       const playerLookingDirection = playerEntity.getComponent(InputComponent).lookingYAngle
+//       const playerLookingDirectionVector = new Rapier.Vector3(
+//         -Math.cos(playerLookingDirection) * 500,
+//         0,
+//         -Math.sin(playerLookingDirection) * 500
+//       )
+//       console.log(playerLookingDirectionVector, 'playerLookingDirectionVector')
+//       // Apply impulse to the ball
+//       ballBody.applyImpulse(playerLookingDirectionVector, true)
+//     }
+//   })
+// )
 
 // Find the chat entity
 const allEntities = EntityManager.getInstance().getAllEntities()
@@ -42,7 +81,7 @@ new TriggerCube(
       // Teleport the player to the red team's spawn position
       collidedWithEntity
         .getComponent(DynamicRigidBodyComponent)
-        .body.setTranslation(new Rapier.Vector3(-80, 5, -200), true)
+        .body.setTranslation(new Rapier.Vector3(-80, 5, -350), true)
     }
   },
   () => {},
@@ -64,7 +103,7 @@ new TriggerCube(
       // Teleport the player to the blue team's spawn position
       collidedWithEntity
         .getComponent(DynamicRigidBodyComponent)
-        .body.setTranslation(new Rapier.Vector3(80, 5, -200), true)
+        .body.setTranslation(new Rapier.Vector3(80, 5, -350), true)
     }
   },
   () => {},
@@ -74,9 +113,9 @@ new TriggerCube(
 // Create trigger goals
 // Red team goals
 new TriggerCube(
-  -140,
+  -120,
   -40,
-  -185,
+  -350,
   5,
   10,
   13,
@@ -89,7 +128,10 @@ new TriggerCube(
 
       // Reset ball position after goal
       const body = ball.entity.getComponent(DynamicRigidBodyComponent).body
-      body.setTranslation(new Rapier.Vector3(0, -35, -185), new Rapier.Quaternion(0, 0, 0, 1))
+      body.setTranslation(
+        new Rapier.Vector3(ballSpawnPosition.x, ballSpawnPosition.y, ballSpawnPosition.z),
+        new Rapier.Quaternion(0, 0, 0, 1)
+      )
       body.setLinvel(new Rapier.Vector3(0, 0, 0), true)
     }
   },
@@ -99,9 +141,9 @@ new TriggerCube(
 
 // Blue team goal
 new TriggerCube(
-  140,
+  120,
   -40,
-  -185,
+  -350,
   5,
   10,
   13,
@@ -114,7 +156,10 @@ new TriggerCube(
 
       // Reset ball position after goal
       const body = ball.entity.getComponent(DynamicRigidBodyComponent).body
-      body.setTranslation(new Rapier.Vector3(0, -35, -185), new Rapier.Quaternion(0, 0, 0, 1))
+      body.setTranslation(
+        new Rapier.Vector3(ballSpawnPosition.x, ballSpawnPosition.y, ballSpawnPosition.z),
+        new Rapier.Quaternion(0, 0, 0, 1)
+      )
       body.setLinvel(new Rapier.Vector3(0, 0, 0), true)
     }
   },
