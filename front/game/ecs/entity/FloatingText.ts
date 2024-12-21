@@ -2,11 +2,9 @@ import { Entity } from '@shared/entity/Entity'
 import { SerializedEntityType } from '@shared/network/server/serialized'
 import { EntityManager } from '@shared/system/EntityManager'
 
-export class Player {
+export class FloatingText {
   entity: Entity
-  debug: boolean = true
-
   constructor(entityId: number) {
-    this.entity = EntityManager.createEntity(SerializedEntityType.PLAYER, entityId)
+    this.entity = EntityManager.createEntity(SerializedEntityType.FLOATING_TEXT, entityId)
   }
 }

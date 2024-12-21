@@ -5,7 +5,7 @@ import { NetworkComponent } from '../network/NetworkComponent.js'
 // This will fix the color of the mesh not being set because we need for the mesh to be loaded before setting the color
 /**
  * Holds the path to the rendered mesh file
- * Will be actually rendered by the client with a FrontMeshComponent
+ * Will be rendered by the client with a MeshComponent
  */
 export class ServerMeshComponent extends NetworkComponent {
   constructor(entityId: number, public filePath: string) {

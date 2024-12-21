@@ -16,6 +16,8 @@ export enum SerializedComponentType {
   CHAT_MESSAGE = 9,
 
   SERVER_MESH = 10,
+  KEY_INTERACTIBLE = 11,
+  TEXT = 12,
 }
 
 export enum SerializedEntityType {
@@ -26,6 +28,7 @@ export enum SerializedEntityType {
   SPHERE = 4,
   CHAT = 5,
   EVENT_QUEUE = 6,
+  FLOATING_TEXT = 7,
 }
 
 export enum SerializedStateType {

@@ -7,6 +7,7 @@ import { RotationComponent } from '../../shared/component/RotationComponent.js'
 import { EntityManager } from '../../shared/system/EntityManager.js'
 import { EventSystem } from '../../shared/system/EventSystem.js'
 import { InputComponent } from './ecs/component/InputComponent.js'
+import { KeyInteractibleComponent } from '../../shared/component/KeyInteractibleComponent.js'
 import { LockedRotationComponent } from './ecs/component/LockedRotationComponent.js'
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { SpawnPositionComponent } from './ecs/component/SpawnPositionComponent.js'
@@ -33,9 +34,11 @@ import { SingleSizeEvent } from './ecs/component/events/SingleSizeEvent.js'
 import Rapier from './physics/rapier.js'
 import { Player } from './ecs/entity/Player.js'
 import { TriggerCube } from './ecs/entity/TriggerCube.js'
+import { NetworkDataComponent } from '../../shared/network/NetworkDataComponent.js'
+import { FloatingText } from './ecs/entity/FloatingText.js'
 
 async function loadGameLogic() {
-  const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
+  const gameScript = process.env.GAME_SCRIPT || 'footballScript.js' // Default script name if not provided
   const codePath = resolve(process.cwd(), 'src/scripts', gameScript)
   if (!process.env.GAME_SCRIPT) console.log('No GAME_SCRIPT provided, using default script')
   console.log(`Loading game logic from ${codePath}`)
@@ -59,6 +62,8 @@ async function loadGameLogic() {
     LockedRotationComponent,
     RandomizeComponent,
     ZombieComponent,
+    KeyInteractibleComponent,
+    NetworkDataComponent,
 
     // Physics Components
     BoxColliderComponent,
@@ -87,6 +92,7 @@ async function loadGameLogic() {
     MapWorld,
     Player,
     TriggerCube,
+    FloatingText,
   }
   const context = createContext(sandbox)
   const script = new Script(code)

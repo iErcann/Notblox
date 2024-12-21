@@ -18,6 +18,7 @@ import { LockedRotationComponent } from '../component/LockedRotationComponent.js
 import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
+import { TextComponent } from '../../../../shared/component/TextComponent.js'
 
 export class Player {
   entity: Entity
@@ -35,6 +36,10 @@ export class Player {
 
     const sizeComponent = new SingleSizeComponent(this.entity.id, 1.5 + Math.random())
     this.entity.addComponent(sizeComponent)
+
+    // Player name text on top of the head with offset
+    const textComponent = new TextComponent(this.entity.id, 'Player ' + this.entity.id, 0, 2, 0)
+    this.entity.addComponent(textComponent)
 
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))
 
@@ -69,6 +74,7 @@ export class Player {
       colorComponent,
       stateComponent,
       serverMeshComponent,
+      textComponent,
     ])
 
     this.entity.addComponent(networkDataComponent)

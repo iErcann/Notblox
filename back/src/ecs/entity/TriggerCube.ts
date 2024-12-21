@@ -26,8 +26,8 @@ export class TriggerCube {
     width: number,
     height: number,
     depth: number,
-    onEnter?: (entity: Entity) => void,
-    onExit?: (entity: Entity) => void,
+    onEnter: (entity: Entity) => void,
+    onExit: (entity: Entity) => void,
     showDebug: boolean = false
   ) {
     this.entity = EntityManager.createEntity(SerializedEntityType.CUBE)
@@ -49,12 +49,8 @@ export class TriggerCube {
     const boxCollider = new BoxColliderComponent(this.entity.id)
     this.entity.addComponent(boxCollider)
 
-    if (onEnter) {
-      this.entity.addComponent(new OnCollisionEnterEvent(this.entity.id, onEnter))
-    }
-    if (onExit) {
-      this.entity.addComponent(new OnCollisionExitEvent(this.entity.id, onExit))
-    }
+    this.entity.addComponent(new OnCollisionEnterEvent(this.entity.id, onEnter))
+    this.entity.addComponent(new OnCollisionExitEvent(this.entity.id, onExit))
 
     // Show the trigger cube for debugging purposes.
     // Will show a red cube.

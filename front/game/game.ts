@@ -1,13 +1,12 @@
 import { EntityManager } from '@shared/system/EntityManager'
 import { config } from '@shared/network/config'
-import * as THREE from 'three'
 import { InputManager } from './InputManager'
-import { LoadManager } from './LoadManager'
 import { WebSocketManager } from './WebsocketManager'
 import {
   AnimationSystem,
   ChatSystem,
   DestroySystem,
+  KeyInteractibleSystem,
   SleepCheckSystem,
   SyncColorSystem,
   SyncComponentsSystem,
@@ -22,6 +21,7 @@ import { MeshSystem } from './ecs/system/MeshSystem'
 import { ServerMeshSystem } from './ecs/system/ServerMeshSystem'
 import { IdentifyFollowedMeshSystem } from './ecs/system/IdentifyFollowedMeshSystem'
 import { MutableRefObject } from 'react'
+import { TextComponentSystem } from './ecs/system/TextComponentSystem'
 
 export class Game {
   private static instance: Game
@@ -43,6 +43,8 @@ export class Game {
   inputManager: InputManager
   private meshSystem: MeshSystem
   private serverMeshSystem: ServerMeshSystem
+  private keyInteractibleSystem: KeyInteractibleSystem
+  private textComponentSystem: TextComponentSystem
   renderer: Renderer
   hud: Hud
   private identifyFollowedMeshSystem: IdentifyFollowedMeshSystem
@@ -60,7 +62,9 @@ export class Game {
     this.meshSystem = new MeshSystem()
     this.serverMeshSystem = new ServerMeshSystem()
     this.identifyFollowedMeshSystem = new IdentifyFollowedMeshSystem()
+    this.keyInteractibleSystem = new KeyInteractibleSystem()
     this.eventSystem = EventSystem.getInstance()
+    this.textComponentSystem = new TextComponentSystem()
 
     this.renderer = new Renderer(gameContainerRef)
     this.inputManager = new InputManager(this.websocketManager, this.renderer.camera.controlSystem)
@@ -102,6 +106,7 @@ export class Game {
     await this.loadingPromise
     this.loadingPromise = null
 
+    this.identifyFollowedMeshSystem.update(entities, this)
     this.inputManager.update()
     this.inputManager.sendInput()
     this.destroySystem.update(entities, this.renderer)
@@ -111,9 +116,10 @@ export class Game {
     this.syncPositionSystem.update(entities, positionInterpFactor / 2)
     this.syncRotationSystem.update(entities, 0.7)
     this.syncColorSystem.update(entities)
+    this.keyInteractibleSystem.update(entities, this)
     this.chatSystem.update(entities, this.hud)
+    this.textComponentSystem.update(entities)
     this.syncSizeSystem.update(entities)
-    this.identifyFollowedMeshSystem.update(entities, this)
     this.animationSystem.update(deltaTime, entities)
     this.destroySystem.afterUpdate(entities)
     this.eventSystem.afterUpdate(entities)

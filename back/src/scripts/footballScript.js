@@ -23,6 +23,25 @@ ball.entity.addComponent(
   )
 )
 
+// When the player is near the ball, he can shoot it
+// For that, we need to add a key interactible component to the ball
+// The front also needs to render a key icon above the ball
+// That's why the key interactible component is added to the network data component to be synced with the front
+const keyInteractibleComponent = new KeyInteractibleComponent(
+  ball.entity.id,
+  (interactingEntity) => {
+    // TODO : Shoot the ball
+    console.log('INTERACTED !', interactingEntity)
+  }
+)
+
+// Create a floating text with the score  (emoji and score)
+const scoreText = new FloatingText('🔴 0 - 0 🔵', 0, 0, -450)
+
+const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
+networkDataComponent.addComponent(keyInteractibleComponent)
+ball.entity.addComponent(keyInteractibleComponent)
+
 // TODO : Make the ball interactive
 // ball.entity.addComponent(
 //   new OnCollisionEnterEvent(ball.entity.id, (playerEntity) => {
@@ -59,6 +78,7 @@ function sendChatMessage(author, message) {
 
 function updateScore() {
   sendChatMessage('⚽', `Score: 🔴 Red ${redScore} - ${blueScore} Blue 🔵`)
+  scoreText.updateText(`🔴 ${redScore} - ${blueScore} 🔵`)
 }
 
 sendChatMessage('⚽', 'Welcome to the football game!')
