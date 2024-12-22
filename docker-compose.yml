@@ -13,18 +13,18 @@ services:
 
     # Uncomment the next line if you uncomment anything in the section
     # environment:
-      # Uncomment this if you want to change the location of
-      # the SQLite DB file within the container
-      # DB_SQLITE_FILE: "/data/database.sqlite"
+    # Uncomment this if you want to change the location of
+    # the SQLite DB file within the container
+    # DB_SQLITE_FILE: "/data/database.sqlite"
 
-      # Uncomment this if IPv6 is not enabled on your host
-      # DISABLE_IPV6: 'true'
+    # Uncomment this if IPv6 is not enabled on your host
+    # DISABLE_IPV6: 'true'
 
     volumes:
       - ./data:/data
       - /etc/letsencrypt:/etc/letsencrypt
-  
-  # Test server  
+
+  # Test server
   back:
     build: .
     ports:
@@ -38,9 +38,21 @@ services:
   back2:
     build: .
     environment:
-    - GAME_SCRIPT=parkourScript.js  
+      - GAME_SCRIPT=parkourScript.js
     ports:
       - '8002:8001'
+    volumes:
+      - ./back/src/scripts:/app/back/src/scripts
+      - /etc/letsencrypt:/etc/letsencrypt
+    restart: unless-stopped
+
+  # Football
+  back3:
+    build: .
+    environment:
+      - GAME_SCRIPT=footballScript.js
+    ports:
+      - '8003:8001'
     volumes:
       - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt

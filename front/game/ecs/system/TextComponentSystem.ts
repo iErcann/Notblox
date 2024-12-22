@@ -9,6 +9,7 @@ import { MeshComponent } from '../component/MeshComponent'
 import { CurrentPlayerComponent } from '../component/CurrentPlayerComponent'
 import { PositionComponent } from '@shared/component/PositionComponent'
 import { Game } from '@/game/game'
+import * as THREE from 'three'
 
 export class TextComponentSystem {
   private textObjects: Map<number, CSS2DObject> = new Map()
@@ -96,24 +97,54 @@ export class TextComponentSystem {
   }
 
   private updateExistingComponents(entities: Entity[]): void {
+    const currentPlayerEntity = EntityManager.getFirstEntityWithComponent(
+      entities,
+      CurrentPlayerComponent
+    )
+
     for (const entity of entities) {
       const textComponent = entity.getComponent(TextComponent)
       const textObject = this.textObjects.get(entity.id)
 
       if (!textObject || !textComponent) continue
 
+      // Update text content if changed
       if (textComponent.updated) {
         textObject.element.textContent = textComponent.text
         this.updateTextObjectPosition(textObject, textComponent)
       }
 
-      // If the entity doesn't have a mesh, we will follow its position component
+      // Update position for entities without mesh
       if (!entity.getComponent(MeshComponent)) {
         const positionComponent = entity.getComponent(PositionComponent)
         if (positionComponent) {
           this.updateTextObjectPosition(textObject, textComponent, positionComponent)
         }
       }
+
+      // Update visibility based on distance to player
+      if (currentPlayerEntity) {
+        this.updateVisibility(entity, currentPlayerEntity)
+      }
     }
+  }
+
+  private updateVisibility(entityWithText: Entity, currentPlayerEntity: Entity): void {
+    const textObject = this.textObjects.get(entityWithText.id)
+    const position = entityWithText.getComponent(PositionComponent)
+    const textComponent = entityWithText.getComponent(TextComponent)
+    const playerPosition = currentPlayerEntity.getComponent(PositionComponent)
+
+    if (!textObject || !position || !textComponent || !playerPosition) return
+
+    const distance = this.calculateDistance(position, playerPosition)
+
+    textObject.visible = distance <= textComponent.displayDistance
+  }
+
+  private calculateDistance(pos1: PositionComponent, pos2: PositionComponent): number {
+    return new THREE.Vector3(pos1.x, pos1.y, pos1.z).distanceTo(
+      new THREE.Vector3(pos2.x, pos2.y, pos2.z)
+    )
   }
 }

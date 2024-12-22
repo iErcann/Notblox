@@ -38,7 +38,14 @@ export class Player {
     this.entity.addComponent(sizeComponent)
 
     // Player name text on top of the head with offset
-    const textComponent = new TextComponent(this.entity.id, 'Player ' + this.entity.id, 0, 2, 0)
+    const textComponent = new TextComponent(
+      this.entity.id,
+      'Player ' + this.entity.id,
+      0,
+      2,
+      0,
+      250
+    )
     this.entity.addComponent(textComponent)
 
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))

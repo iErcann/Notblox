@@ -8,13 +8,13 @@ import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComp
 export class FloatingText {
   entity: Entity
   textComponent: TextComponent
-  constructor(text: string, x: number, y: number, z: number) {
+  constructor(text: string, x: number, y: number, z: number, displayDistance: number = 1000) {
     this.entity = EntityManager.createEntity(SerializedEntityType.FLOATING_TEXT)
 
     const positionComponent = new PositionComponent(this.entity.id, x, y, z)
     this.entity.addComponent(positionComponent)
 
-    this.textComponent = new TextComponent(this.entity.id, text)
+    this.textComponent = new TextComponent(this.entity.id, text, 0, 0, 0, displayDistance)
     this.entity.addComponent(this.textComponent)
 
     // Network data component
