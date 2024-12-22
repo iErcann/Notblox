@@ -10,7 +10,7 @@ import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidB
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 
 export class BoundaryCheckSystem {
-  lowerBound = -40
+  lowerBound = -100
   update(entities: Entity[]) {
     for (const entity of entities) {
       const bodyComponent = entity.getComponent(DynamicRigidBodyComponent)
@@ -39,11 +39,6 @@ export class BoundaryCheckSystem {
             },
             true
           )
-        }
-        const colorComponent = entity.getComponent(ColorComponent)
-        if (colorComponent) {
-          const randomHex = Math.floor(Math.random() * 16777215).toString(16)
-          EventSystem.addEvent(new ColorEvent(entity.id, '#' + randomHex))
         }
         bodyComponent.body.setLinvel(new Rapier.Vector3(0, 0, 0), true)
 

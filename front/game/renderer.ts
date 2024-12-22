@@ -30,7 +30,7 @@ export class Renderer extends THREE.WebGLRenderer {
 
   private directionalLight: THREE.DirectionalLight | undefined
   constructor(public gameContainerRef: MutableRefObject<any>) {
-    super({ antialias: false, stencil: false, powerPreference: 'high-performance' })
+    super({ antialias: true, stencil: false, powerPreference: 'high-performance' })
 
     this.camera = new Camera(this)
 
@@ -121,21 +121,20 @@ export class Renderer extends THREE.WebGLRenderer {
   }
   private addDirectionnalLight() {
     // Create a directional light for shadows and highlights
-    // Create a directional light with a different color and intensity
     this.directionalLight = new THREE.DirectionalLight(0xff8a0d, 2)
     this.directionalLight.position.set(100, 100, -2500)
 
     // Configure shadow properties with different values
-    this.directionalLight.shadow.mapSize.height = 2048
-    this.directionalLight.shadow.mapSize.width = 2048
-    const shadowSideLength = 75
+    this.directionalLight.shadow.mapSize.height = 4096
+    this.directionalLight.shadow.mapSize.width = 4096
+    const shadowSideLength = 150
     this.directionalLight.shadow.camera.top = shadowSideLength
     this.directionalLight.shadow.camera.bottom = -shadowSideLength
     this.directionalLight.shadow.camera.left = -shadowSideLength
     this.directionalLight.shadow.camera.right = shadowSideLength
     this.directionalLight.shadow.camera.near = 0.5
-    this.directionalLight.shadow.camera.far = 500
-    this.directionalLight.shadow.normalBias = 0.06
+    this.directionalLight.shadow.camera.far = 1500
+    this.directionalLight.shadow.normalBias = 0.02
     // Enable shadow casting
     this.directionalLight.castShadow = true
 

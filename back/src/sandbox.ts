@@ -7,6 +7,7 @@ import { RotationComponent } from '../../shared/component/RotationComponent.js'
 import { EntityManager } from '../../shared/system/EntityManager.js'
 import { EventSystem } from '../../shared/system/EventSystem.js'
 import { InputComponent } from './ecs/component/InputComponent.js'
+import { KeyInteractibleComponent } from '../../shared/component/KeyInteractibleComponent.js'
 import { LockedRotationComponent } from './ecs/component/LockedRotationComponent.js'
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { SpawnPositionComponent } from './ecs/component/SpawnPositionComponent.js'
@@ -31,6 +32,10 @@ import { ColorEvent } from './ecs/component/events/ColorEvent.js'
 import { SizeEvent } from './ecs/component/events/SizeEvent.js'
 import { SingleSizeEvent } from './ecs/component/events/SingleSizeEvent.js'
 import Rapier from './physics/rapier.js'
+import { Player } from './ecs/entity/Player.js'
+import { TriggerCube } from './ecs/entity/TriggerCube.js'
+import { NetworkDataComponent } from '../../shared/network/NetworkDataComponent.js'
+import { FloatingText } from './ecs/entity/FloatingText.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
@@ -57,6 +62,8 @@ async function loadGameLogic() {
     LockedRotationComponent,
     RandomizeComponent,
     ZombieComponent,
+    KeyInteractibleComponent,
+    NetworkDataComponent,
 
     // Physics Components
     BoxColliderComponent,
@@ -83,6 +90,9 @@ async function loadGameLogic() {
     Cube,
     Sphere,
     MapWorld,
+    Player,
+    TriggerCube,
+    FloatingText,
   }
   const context = createContext(sandbox)
   const script = new Script(code)

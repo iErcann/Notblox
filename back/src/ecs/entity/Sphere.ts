@@ -11,11 +11,19 @@ import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComp
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { SphereColliderComponent } from '../component/physics/SphereColliderComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
+import { PhysicsPropertiesComponent } from '../component/physics/PhysicsPropertiesComponent.js'
 
 export class Sphere {
   entity: Entity
 
-  constructor(x: number, y: number, z: number, size: number) {
+  constructor(
+    x: number,
+    y: number,
+    z: number,
+    size: number,
+    color: string = 'default',
+    meshUrl: string = 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
+  ) {
     this.entity = EntityManager.createEntity(SerializedEntityType.NONE)
 
     const positionComponent = new PositionComponent(this.entity.id, x, y, z)
@@ -27,15 +35,12 @@ export class Sphere {
     const sizeComponent = new SingleSizeComponent(this.entity.id, size)
     this.entity.addComponent(sizeComponent)
 
-    const colorComponent = new ColorComponent(this.entity.id, 'default')
+    const colorComponent = new ColorComponent(this.entity.id, color)
     this.entity.addComponent(colorComponent)
 
-    const serverMeshComponent = new ServerMeshComponent(
-      this.entity.id,
-      'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
-    )
+    const serverMeshComponent = new ServerMeshComponent(this.entity.id, meshUrl)
     this.entity.addComponent(serverMeshComponent)
-    // this.entity.addComponent(new PhysicsPropertiesComponent(this.entity.id, 1000))
+    this.entity.addComponent(new PhysicsPropertiesComponent(this.entity.id, 5))
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
     this.entity.addComponent(new SphereColliderComponent(this.entity.id))
 

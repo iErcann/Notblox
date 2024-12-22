@@ -18,7 +18,7 @@ import { LockedRotationComponent } from '../component/LockedRotationComponent.js
 import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
-import { PhysicsPropertiesComponent } from '../component/physics/PhysicsPropertiesComponent.js'
+import { TextComponent } from '../../../../shared/component/TextComponent.js'
 
 export class Player {
   entity: Entity
@@ -37,13 +37,21 @@ export class Player {
     const sizeComponent = new SingleSizeComponent(this.entity.id, 1.5 + Math.random())
     this.entity.addComponent(sizeComponent)
 
+    // Player name text on top of the head with offset
+    const textComponent = new TextComponent(
+      this.entity.id,
+      'Player ' + this.entity.id,
+      0,
+      2,
+      0,
+      250
+    )
+    this.entity.addComponent(textComponent)
+
     this.entity.addComponent(new WebSocketComponent(this.entity.id, ws))
 
     // Components used for rendering by the client
-    const colorComponent = new ColorComponent(
-      this.entity.id,
-      `#${Math.floor(Math.random() * 16777215).toString(16)}`
-    )
+    const colorComponent = new ColorComponent(this.entity.id, `#FFFFFF`)
     this.entity.addComponent(colorComponent)
 
     const stateComponent = new StateComponent(this.entity.id, SerializedStateType.IDLE)
@@ -73,6 +81,7 @@ export class Player {
       colorComponent,
       stateComponent,
       serverMeshComponent,
+      textComponent,
     ])
 
     this.entity.addComponent(networkDataComponent)

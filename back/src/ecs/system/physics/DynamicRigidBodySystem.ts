@@ -59,6 +59,7 @@ export class DynamicRigidBodySystem {
     const physicsPropertiesComponent = entity.getComponent(PhysicsPropertiesComponent)
     if (physicsPropertiesComponent) {
       physicsBodyComponent.body.setAdditionalMass(physicsPropertiesComponent.mass, true)
+      physicsBodyComponent.body.setAngularDamping(0.5)
     }
   }
 

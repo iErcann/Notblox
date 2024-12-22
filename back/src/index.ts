@@ -87,9 +87,10 @@ async function gameLoop() {
 
   physicsSystem.update(entities)
   destroyEventSystem.update(entities)
+  boundaryCheckSystem.update(entities)
 
   // Create the bodies first.
-  kinematicPhysicsBodySystem.update(physicsSystem.world)
+  kinematicPhysicsBodySystem.update(entities, physicsSystem.world)
   rigidPhysicsBodySystem.update(entities, physicsSystem.world)
   // Then handle the colliders
   trimeshColliderSystem.update(entities, physicsSystem.world)
@@ -112,7 +113,6 @@ async function gameLoop() {
   syncRotationSystem.update(entities)
   syncPositionSystem.update(entities)
 
-  boundaryCheckSystem.update(entities)
   lockedRotationSystem.update(entities)
   networkSystem.update(entities)
 

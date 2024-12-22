@@ -5,6 +5,7 @@ import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
+import { ColliderPropertiesComponent } from '../../component/physics/ColliderPropertiesComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 
@@ -54,6 +55,14 @@ export class BoxColliderSystem {
       sizeComponent.height,
       sizeComponent.depth
     )
+
+    const colliderProperties = entity.getComponent(ColliderPropertiesComponent)
+
+    if (colliderProperties) {
+      colliderDesc.setSensor(colliderProperties.isSensor)
+      colliderDesc.setFriction(colliderProperties.friction)
+      colliderDesc.setRestitution(colliderProperties.restitution)
+    }
 
     colliderDesc.setActiveEvents(Rapier.ActiveEvents.COLLISION_EVENTS)
     boxColliderComponent.collider = world.createCollider(colliderDesc, rigidBodyComponent.body)

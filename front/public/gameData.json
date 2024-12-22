@@ -17,11 +17,11 @@
     },
     {
       "title": "Obby Online Parkour",
-      "imageUrl": "/obby.webp",
+      "imageUrl": "/PreviewObbyGame.webp",
       "slug": "obby",
       "images": [
         {
-          "url": "/obby.webp",
+          "url": "/PreviewObbyGame.webp",
           "width": 1920,
           "height": 1080,
           "alt": "NotBlox Logo",
@@ -30,6 +30,22 @@
       ],
       "websocketPort": 8002,
       "metaDescription": "Play Obby NotBlox Parkour, a fun and challenging multiplayer parkour game. Compete with others to reach the top of the map."
+    },
+    {
+      "title": "Online Multiplayer Football Game",
+      "imageUrl": "/PreviewFootballGame.webp",
+      "slug": "football",
+      "images": [
+        {
+          "url": "/PreviewFootballGame.webp",
+          "width": 1920,
+          "height": 1080,
+          "alt": "NotBlox Football",
+          "type": "image/webp" 
+        } 
+      ],
+      "websocketPort": 8003,
+      "metaDescription": "Multiplayer football game in your browser with your friends. Play soccer on your browser desktop or mobile."
     }
   ]
   

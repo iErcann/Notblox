@@ -5,6 +5,7 @@ import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { CapsuleColliderComponent } from '../../component/physics/CapsuleColliderComponent.js'
+import { ColliderPropertiesComponent } from '../../component/physics/ColliderPropertiesComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 
@@ -60,6 +61,14 @@ export class CapsuleColliderSystem {
 
     // Set the restitution combine rule to control how restitution is combined with other contacts
     colliderDesc.setRestitutionCombineRule(Rapier.CoefficientCombineRule.Max)
+
+    const colliderProperties = entity.getComponent(ColliderPropertiesComponent)
+
+    if (colliderProperties) {
+      colliderDesc.setSensor(colliderProperties.isSensor)
+      colliderDesc.setFriction(colliderProperties.friction)
+      colliderDesc.setRestitution(colliderProperties.restitution)
+    }
 
     colliderDesc.setActiveEvents(Rapier.ActiveEvents.COLLISION_EVENTS)
     capsuleColliderComponent.collider = world.createCollider(colliderDesc, rigidBodyComponent.body)

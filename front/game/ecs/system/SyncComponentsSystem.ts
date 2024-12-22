@@ -23,13 +23,14 @@ import { SizeComponent } from '@shared/component/SizeComponent'
 import { StateComponent } from '@shared/component/StateComponent'
 import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEvent'
 import { ServerMeshComponent } from '@shared/component/ServerMeshComponent'
-
-import { MeshComponent } from '../component/MeshComponent'
+import { KeyInteractibleComponent } from '@shared/component/KeyInteractibleComponent'
+import { TextComponent } from '@shared/component/TextComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
 import { EventSystem } from '@shared/system/EventSystem'
 import { EventListComponent } from '@shared/component/events/EventListComponent'
 import { EntityManager } from '@shared/system/EntityManager'
+import { FloatingText } from '../entity/FloatingText'
 
 export class SyncComponentsSystem {
   private snapshotMessages: SnapshotMessage[] = []
@@ -123,6 +124,9 @@ export class SyncComponentsSystem {
       case SerializedEntityType.CHAT:
         newEntity = new Chat(serializedEntity.id).entity
         break
+      case SerializedEntityType.FLOATING_TEXT:
+        newEntity = new FloatingText(serializedEntity.id).entity
+        break
       case SerializedEntityType.EVENT_QUEUE:
         newEntity = EventSystem.getInstance().eventQueue.entity
         break
@@ -131,6 +135,7 @@ export class SyncComponentsSystem {
         console.warn("Unknown entity type, can't create entity")
         break
     }
+    console.log('newEntity', newEntity)
 
     return newEntity
   }
@@ -168,6 +173,12 @@ export class SyncComponentsSystem {
         break
       case SerializedComponentType.SERVER_MESH:
         component = new ServerMeshComponent(entityId, '')
+        break
+      case SerializedComponentType.KEY_INTERACTIBLE:
+        component = new KeyInteractibleComponent(entityId, 'Nothing', () => {})
+        break
+      case SerializedComponentType.TEXT:
+        component = new TextComponent(entityId, '', 0, 0, 0)
         break
       default:
         console.error("Unknown component type, can't create component")

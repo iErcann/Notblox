@@ -5,8 +5,6 @@ import { MeshComponent } from '../component/MeshComponent.js'
 import { ComponentAddedEvent } from '@shared/component/events/ComponentAddedEvent.js'
 import { ComponentRemovedEvent } from '@shared/component/events/ComponentRemovedEvent.js'
 import * as THREE from 'three'
-import { TextComponent } from '../component/TextComponent.js'
-import { EntityManager } from '@shared/system/EntityManager.js'
 
 export class MeshSystem {
   update(entities: Entity[], renderer: Renderer) {
