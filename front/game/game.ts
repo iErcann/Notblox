@@ -13,15 +13,15 @@ import {
   SyncPositionSystem,
   SyncRotationSystem,
   SyncSizeSystem,
+  MeshSystem,
+  ServerMeshSystem,
+  IdentifyFollowedMeshSystem,
+  TextComponentSystem,
 } from './ecs/system'
 import { Hud } from './hud'
 import { Renderer } from './renderer'
 import { EventSystem } from '@shared/system/EventSystem'
-import { MeshSystem } from './ecs/system/MeshSystem'
-import { ServerMeshSystem } from './ecs/system/ServerMeshSystem'
-import { IdentifyFollowedMeshSystem } from './ecs/system/IdentifyFollowedMeshSystem'
 import { MutableRefObject } from 'react'
-import { TextComponentSystem } from './ecs/system/TextComponentSystem'
 
 export class Game {
   private static instance: Game
