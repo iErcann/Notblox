@@ -6,7 +6,6 @@ import { ComponentRemovedEvent } from '../../../../../shared/component/events/Co
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
-import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 import { PhysicsPropertiesComponent } from '../../component/physics/PhysicsPropertiesComponent.js'
 
 export class DynamicRigidBodySystem {
@@ -53,13 +52,26 @@ export class DynamicRigidBodySystem {
     }
 
     physicsBodyComponent.body = rigidBody
-    if (entity.getComponent(PlayerComponent)) {
-      physicsBodyComponent.body.enableCcd(true)
-    }
     const physicsPropertiesComponent = entity.getComponent(PhysicsPropertiesComponent)
     if (physicsPropertiesComponent) {
-      physicsBodyComponent.body.setAdditionalMass(physicsPropertiesComponent.mass, true)
-      physicsBodyComponent.body.setAngularDamping(0.5)
+      if (physicsPropertiesComponent.data.mass) {
+        physicsBodyComponent.body.setAdditionalMass(physicsPropertiesComponent.data.mass, true)
+      }
+      if (physicsPropertiesComponent.data.angularDamping) {
+        physicsBodyComponent.body.setAngularDamping(physicsPropertiesComponent.data.angularDamping)
+      }
+      if (physicsPropertiesComponent.data.enableCcd) {
+        physicsBodyComponent.body.enableCcd(physicsPropertiesComponent.data.enableCcd)
+      }
+      if (physicsPropertiesComponent.data.linearDamping) {
+        physicsBodyComponent.body.setLinearDamping(physicsPropertiesComponent.data.linearDamping)
+      }
+      if (physicsPropertiesComponent.data.gravityScale) {
+        physicsBodyComponent.body.setGravityScale(
+          physicsPropertiesComponent.data.gravityScale,
+          true
+        )
+      }
     }
   }
 

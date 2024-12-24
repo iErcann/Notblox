@@ -11,36 +11,67 @@ import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComp
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { SphereColliderComponent } from '../component/physics/SphereColliderComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
-import { PhysicsPropertiesComponent } from '../component/physics/PhysicsPropertiesComponent.js'
+import {
+  PhysicsPropertiesComponent,
+  PhysicsPropertiesComponentData,
+} from '../component/physics/PhysicsPropertiesComponent.js'
 
+export interface SphereParams {
+  /**
+   * @default 1
+   */
+  radius?: number
+  position: {
+    x: number
+    y: number
+    z: number
+  }
+  /**
+   * @default "default" (Mesh color is unchanged)
+   */
+  color?: string
+  /**
+   * @default https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb
+   */
+  meshUrl?: string
+  /**
+   * @default {}
+   */
+  physicsProperties?: PhysicsPropertiesComponentData
+}
 export class Sphere {
   entity: Entity
 
-  constructor(
-    x: number,
-    y: number,
-    z: number,
-    size: number,
-    color: string = 'default',
-    meshUrl: string = 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
-  ) {
-    this.entity = EntityManager.createEntity(SerializedEntityType.NONE)
+  constructor(params: SphereParams) {
+    const { position, radius, color, meshUrl, physicsProperties } = params
 
-    const positionComponent = new PositionComponent(this.entity.id, x, y, z)
+    this.entity = EntityManager.createEntity(SerializedEntityType.SPHERE)
+
+    const positionComponent = new PositionComponent(
+      this.entity.id,
+      position.x,
+      position.y,
+      position.z
+    )
     this.entity.addComponent(positionComponent)
 
     const rotationComponent = new RotationComponent(this.entity.id, 0, 0, 0, 0)
     this.entity.addComponent(rotationComponent)
 
-    const sizeComponent = new SingleSizeComponent(this.entity.id, size)
+    const sizeComponent = new SingleSizeComponent(this.entity.id, radius ?? 1)
     this.entity.addComponent(sizeComponent)
 
-    const colorComponent = new ColorComponent(this.entity.id, color)
+    const colorComponent = new ColorComponent(this.entity.id, color ?? 'default')
     this.entity.addComponent(colorComponent)
 
-    const serverMeshComponent = new ServerMeshComponent(this.entity.id, meshUrl)
+    const serverMeshComponent = new ServerMeshComponent(
+      this.entity.id,
+      meshUrl ?? 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
+    )
     this.entity.addComponent(serverMeshComponent)
-    this.entity.addComponent(new PhysicsPropertiesComponent(this.entity.id, 5))
+    this.entity.addComponent(
+      new PhysicsPropertiesComponent(this.entity.id, physicsProperties ?? {})
+    )
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
     this.entity.addComponent(new SphereColliderComponent(this.entity.id))
 

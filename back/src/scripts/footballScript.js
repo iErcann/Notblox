@@ -3,15 +3,27 @@ new MapWorld(
   'https://rawcdn.githack.com/iErcann/Notblox-Assets/f8b474a703930afb1caa82fd2bda4ca336a00a29/Stadium.glb'
 )
 
-const ballSpawnPosition = { x: 0, y: -15, z: -355 }
-const ball = new Sphere(
-  ballSpawnPosition.x,
-  ballSpawnPosition.y,
-  ballSpawnPosition.z,
-  1.4,
-  'default',
-  'https://rawcdn.githack.com/iErcann/Notblox-Assets/f8b474a703930afb1caa82fd2bda4ca336a00a29/Ball.glb'
-)
+const ballSpawnPosition = { x: 0, y: -20, z: -355 }
+const sphereParams = {
+  radius: 1.4,
+  position: {
+    x: ballSpawnPosition.x,
+    y: ballSpawnPosition.y,
+    z: ballSpawnPosition.z,
+  },
+  meshUrl:
+    'https://rawcdn.githack.com/iErcann/Notblox-Assets/f8b474a703930afb1caa82fd2bda4ca336a00a29/Ball.glb',
+  physicsProperties: {
+    mass: 1,
+    // Enable continuous collision detection to prevent the ball from going through the walls
+    enableCcd: true,
+    angularDamping: 0.5,
+  },
+}
+
+let ball
+// Initialize the ball using SphereParams
+ball = new Sphere(sphereParams)
 ball.entity.addComponent(
   new SpawnPositionComponent(
     ball.entity.id,
@@ -21,26 +33,25 @@ ball.entity.addComponent(
   )
 )
 
+// ball.entity.addComponent(
+//   new OnCollisionEnterEvent(ball.entity.id, (playerEntity) => {
+//     if (playerEntity.getComponent(PlayerComponent) && playerEntity.getComponent(InputComponent)) {
+//       const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
+//       const playerLookingDirection = playerEntity.getComponent(InputComponent).lookingYAngle
+//       const playerLookingDirectionVector = new Rapier.Vector3(
+//         -Math.cos(playerLookingDirection) * 5500,
+//         0,
+//         -Math.sin(playerLookingDirection) * 5500
+//       )
+//       ballBody.applyImpulse(playerLookingDirectionVector, true)
+//     }
+//   })
+// )
+
 // Score display and management
 const scoreText = new FloatingText('🔴 0 - 0 🔵', 0, 0, -450, 200)
 let redScore = 0,
   blueScore = 0
-
-// Ball collision handling
-ball.entity.addComponent(
-  new OnCollisionEnterEvent(ball.entity.id, (playerEntity) => {
-    if (playerEntity.getComponent(PlayerComponent) && playerEntity.getComponent(InputComponent)) {
-      const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
-      const playerLookingDirection = playerEntity.getComponent(InputComponent).lookingYAngle
-      const playerLookingDirectionVector = new Rapier.Vector3(
-        -Math.cos(playerLookingDirection) * 500,
-        0,
-        -Math.sin(playerLookingDirection) * 500
-      )
-      ballBody.applyImpulse(playerLookingDirectionVector, true)
-    }
-  })
-)
 
 // Chat functionality
 const chatEntity = EntityManager.getFirstEntityWithComponent(
@@ -58,7 +69,7 @@ const updateScore = () => {
 }
 
 // Initialize chat and score
-sendChatMessage('⚽', 'Welcome to the football game!')
+sendChatMessage('⚽', 'Football NotBlox.Online')
 updateScore()
 
 // Team spawn teleporters and coloring
@@ -129,6 +140,28 @@ new TriggerCube(
   () => {},
   false
 )
+
+ScriptableSystem.update = (dt, entities) => {
+  // Check if there are any players
+  const hasPlayers = entities.some((entity) => entity.getComponent(PlayerComponent))
+
+  if (!hasPlayers && (redScore > 0 || blueScore > 0)) {
+    // No players are present. Reset the game
+    sendChatMessage('⚽', 'No players, resetting game...')
+    console.log('No players, resetting game...')
+
+    const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
+    ballBody.setTranslation(
+      new Rapier.Vector3(ballSpawnPosition.x, ballSpawnPosition.y, ballSpawnPosition.z),
+      new Rapier.Quaternion(0, 0, 0, 1)
+    )
+    ballBody.setLinvel(new Rapier.Vector3(0, 0, 0), true)
+
+    redScore = 0
+    blueScore = 0
+    updateScore()
+  }
+}
 
 // Keep the commented key interactible part as requested
 // // When the player is near the ball, he can shoot it

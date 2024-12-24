@@ -29,6 +29,7 @@ import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
 import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
 import { ZombieSystem } from './ecs/system/ZombieSystem.js'
+import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -88,6 +89,7 @@ async function gameLoop() {
   physicsSystem.update(entities)
   destroyEventSystem.update(entities)
   boundaryCheckSystem.update(entities)
+  ScriptableSystem.update(dt, entities)
 
   // Create the bodies first.
   kinematicPhysicsBodySystem.update(entities, physicsSystem.world)

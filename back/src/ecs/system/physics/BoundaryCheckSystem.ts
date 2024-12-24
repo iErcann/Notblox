@@ -1,11 +1,8 @@
-import { ColorComponent } from '../../../../../shared/component/ColorComponent.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import Rapier from '../../../physics/rapier.js'
 import { LockedRotationComponent } from '../../component/LockedRotationComponent.js'
 import { SpawnPositionComponent } from '../../component/SpawnPositionComponent.js'
-import { ColorEvent } from '../../component/events/ColorEvent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
 
@@ -41,6 +38,7 @@ export class BoundaryCheckSystem {
           )
         }
         bodyComponent.body.setLinvel(new Rapier.Vector3(0, 0, 0), true)
+        bodyComponent.body.setAngvel(new Rapier.Vector3(0, 0, 0), true)
 
         if (entity.getComponent(PlayerComponent)) {
           if (entity.getComponent(LockedRotationComponent)) {

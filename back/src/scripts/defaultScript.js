@@ -10,10 +10,19 @@ new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/aqsworld.glb')
 // === Basic Entity Creation Examples ===
 
 // Create a basic cube
-new Cube(0, 5, -10, 3, 3, 3)
+const basicCubeParams = {
+  position: { x: 0, y: 5, z: -10 },
+  size: { width: 3, height: 3, depth: 3 },
+}
+new Cube(basicCubeParams)
 
 // Create physics-enabled sphere with a white color
-new Sphere(5, 10, -10, 4, '#ffffff')
+const basicSphereParams = {
+  position: { x: 5, y: 10, z: -10 },
+  radius: 4,
+  color: '#ffffff',
+}
+new Sphere(basicSphereParams)
 
 // === Interactive Trigger Zone Example ===
 // Creates an invisible trigger zone that detects when players enter/exit
@@ -49,7 +58,11 @@ new TriggerCube(
 // === Interactive Object Example ===
 // Create a cube that reacts to player collision
 for (let i = 0; i < 3; i++) {
-  const interactiveCube = new Cube(0, 5, -100, 2, 2, 2)
+  const interactiveCubeParams = {
+    position: { x: 0, y: 5, z: -100 },
+    size: { width: 2, height: 2, depth: 2 },
+  }
+  const interactiveCube = new Cube(interactiveCubeParams)
   interactiveCube.entity.addComponent(
     new OnCollisionEnterEvent(interactiveCube.entity.id, (collidedWithEntity) => {
       // Only react to players
@@ -71,8 +84,18 @@ for (let i = 0; i < 3; i++) {
 // Creates a line of cubes with alternating colors
 const colors = ['#ff0000', '#00ff00', '#0000ff']
 for (let i = 0; i < 2; i++) {
-  const cube = new Cube(i * 3, 5, -40, 1, 1, 1, colors[i % colors.length])
+  const cubeParams = {
+    position: { x: i * 3, y: 5, z: -40 },
+    size: { width: 1, height: 1, depth: 1 },
+    color: colors[i % colors.length],
+  }
+  const cube = new Cube(cubeParams)
   cube.entity.addComponent(new RandomizeComponent(cube.entity.id))
-  const sphere = new Sphere(i * 3, 5, -40, 1, colors[i % colors.length])
+  const sphereParams = {
+    position: { x: i * 3, y: 5, z: -40 },
+    radius: 1,
+    color: colors[i % colors.length],
+  }
+  const sphere = new Sphere(sphereParams)
   sphere.entity.addComponent(new RandomizeComponent(sphere.entity.id))
 }

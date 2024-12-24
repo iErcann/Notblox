@@ -19,6 +19,7 @@ import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderCo
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
 import { TextComponent } from '../../../../shared/component/TextComponent.js'
+import { PhysicsPropertiesComponent } from '../component/physics/PhysicsPropertiesComponent.js'
 
 export class Player {
   entity: Entity
@@ -67,7 +68,12 @@ export class Player {
     this.entity.addComponent(new InputComponent(this.entity.id))
 
     // Physics
-    // this.entity.addComponent(new PhysicsPropertiesComponent(this.entity.id, 0.1))
+    this.entity.addComponent(
+      new PhysicsPropertiesComponent(this.entity.id, {
+        enableCcd: true,
+        angularDamping: 1.5,
+      })
+    )
     this.entity.addComponent(new GroundCheckComponent(this.entity.id))
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
     this.entity.addComponent(new LockedRotationComponent(this.entity.id))
