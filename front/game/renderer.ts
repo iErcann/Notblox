@@ -107,7 +107,7 @@ export class Renderer extends THREE.WebGLRenderer {
     uniforms['mieDirectionalG'].value = 0.0263
 
     const elevation = 2
-    const azimuth = 180
+    const azimuth = 360
 
     const phi = THREE.MathUtils.degToRad(90 - elevation)
     const theta = THREE.MathUtils.degToRad(azimuth)
@@ -141,13 +141,7 @@ export class Renderer extends THREE.WebGLRenderer {
     // Create a target for the directional light
     const lightTarget = new THREE.Object3D()
     this.directionalLight.target = lightTarget
-
-    // Add the directional light and its target to the scene
     this.scene.add(this.directionalLight, lightTarget)
-
-    // Uncomment the following lines to add a helper for visualization
-    // const helper = new THREE.DirectionalLightHelper(this.directionalLight, 10)
-    // this.scene.add(helper)
   }
 
   private addLight() {
@@ -163,7 +157,7 @@ export class Renderer extends THREE.WebGLRenderer {
       const position = followedEntity.getComponent(PositionComponent)
       if (position) {
         this.directionalLight.position.lerp(
-          new THREE.Vector3(position.x, position.y + 150, position.z - 150),
+          new THREE.Vector3(position.x, position.y + 150, position.z + 150),
           0.1
         )
         this.directionalLight.target.position.lerp(

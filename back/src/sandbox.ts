@@ -37,9 +37,10 @@ import { TriggerCube } from './ecs/entity/TriggerCube.js'
 import { NetworkDataComponent } from '../../shared/network/NetworkDataComponent.js'
 import { FloatingText } from './ecs/entity/FloatingText.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
+import { TextComponent } from '../../shared/component/TextComponent.js'
 
 async function loadGameLogic() {
-  const gameScript = process.env.GAME_SCRIPT || 'footballScript.js' // Default script name if not provided
+  const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
   const codePath = resolve(process.cwd(), 'src/scripts', gameScript)
   if (!process.env.GAME_SCRIPT) console.log('No GAME_SCRIPT provided, using default script')
   console.log(`Loading game logic from ${codePath}`)
@@ -66,6 +67,7 @@ async function loadGameLogic() {
     ZombieComponent,
     KeyInteractibleComponent,
     NetworkDataComponent,
+    TextComponent,
 
     // Physics Components
     BoxColliderComponent,

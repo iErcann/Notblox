@@ -1,7 +1,5 @@
 // Initialize world and ball
-new MapWorld(
-  'https://rawcdn.githack.com/iErcann/Notblox-Assets/f8b474a703930afb1caa82fd2bda4ca336a00a29/Stadium.glb'
-)
+new MapWorld('http://localhost:4001/Stadium.glb')
 
 const ballSpawnPosition = { x: 0, y: -20, z: -355 }
 const sphereParams = {
@@ -78,9 +76,9 @@ function createTeamTrigger(x, y, z, color, spawnX) {
     x,
     y,
     z,
-    10,
+    12,
     2,
-    10,
+    12,
     (collidedWithEntity) => {
       // If the player collides with the trigger, we change his color and teleport him to the stadium
       if (collidedWithEntity.getComponent(PlayerComponent)) {
@@ -163,18 +161,23 @@ ScriptableSystem.update = (dt, entities) => {
   }
 }
 
-// Keep the commented key interactible part as requested
-// // When the player is near the ball, he can shoot it
-// // For that, we need to add a key interactible component to the ball
-// // The front also needs to render a key icon above the ball
-// // That's why the key interactible component is added to the network data component to be synced with the front
-// const keyInteractibleComponent = new KeyInteractibleComponent(
-//   ball.entity.id,
-//   (interactingEntity) => {
-//     // TODO : Shoot the ball
-//     console.log('INTERACTED !', interactingEntity)
-//   }
-// )
-// const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
-// networkDataComponent.addComponent(keyInteractibleComponent)
-// ball.entity.addComponent(keyInteractibleComponent)
+// When the player is near the ball, he can shoot it
+// For that, we need to add a key interactible component to the ball
+// The front also needs to render a key icon above the ball
+// That's why the key interactible component is added to the network data component to be synced with the front
+const keyInteractibleComponent = new KeyInteractibleComponent(
+  ball.entity.id,
+  '(E) SHOOT',
+  (interactingEntity) => {
+    // TODO : Shoot the ball
+    console.log('INTERACTED !', interactingEntity)
+  }
+)
+const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
+networkDataComponent.addComponent(keyInteractibleComponent)
+ball.entity.addComponent(keyInteractibleComponent)
+
+// test having a text component on the ball
+// const textComponent = new TextComponent(ball.entity.id, 'Edge case test', 0, 10, 0, 50)
+// networkDataComponent.addComponent(textComponent)
+// ball.entity.addComponent(textComponent)

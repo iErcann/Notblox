@@ -10,9 +10,10 @@ import { CurrentPlayerComponent } from '../component/CurrentPlayerComponent'
 import { PositionComponent } from '@shared/component/PositionComponent'
 import { Game } from '@/game/game'
 import * as THREE from 'three'
+import { KeyInteractibleComponent } from '@shared/component/KeyInteractibleComponent'
 
 export class TextComponentSystem {
-  private textObjects: Map<number, CSS2DObject> = new Map()
+  private textObjects: WeakMap<TextComponent, CSS2DObject> = new WeakMap()
 
   // Default styles for text elements
   private static readonly DEFAULT_STYLES: Record<string, string> = {
@@ -24,9 +25,13 @@ export class TextComponentSystem {
   }
 
   update(entities: Entity[]) {
+    const currentPlayerEntity = entities.find((entity) =>
+      entity.getComponent(CurrentPlayerComponent)
+    )
+    if (!currentPlayerEntity) return
     this.handleAddedComponents(entities)
     this.handleRemovedComponents()
-    this.updateExistingComponents(entities)
+    this.processEntities(entities, currentPlayerEntity)
   }
 
   private applyStyles(element: HTMLDivElement, styles: Record<string, string> = {}): void {
@@ -56,7 +61,10 @@ export class TextComponentSystem {
   }
 
   private handleAddedComponents(entities: Entity[]): void {
-    const createdEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, TextComponent)
+    const createdEvents: ComponentAddedEvent<TextComponent>[] = EventSystem.getEventsWrapped(
+      ComponentAddedEvent,
+      TextComponent
+    )
 
     for (const event of createdEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
@@ -72,7 +80,7 @@ export class TextComponentSystem {
       }
 
       const textObject = this.createTextObject(event.component)
-      this.textObjects.set(entity.id, textObject)
+      this.textObjects.set(event.component, textObject)
 
       // Attach to mesh if available and not the current player
       const meshComponent = entity.getComponent(MeshComponent)
@@ -81,61 +89,117 @@ export class TextComponentSystem {
       const parent = meshComponent?.mesh ?? Game.getInstance().renderer.scene
       parent.add(textObject)
     }
+
+    const createdKeyInteractEvents: ComponentAddedEvent<KeyInteractibleComponent>[] =
+      EventSystem.getEventsWrapped(ComponentAddedEvent, KeyInteractibleComponent)
+    for (const event of createdKeyInteractEvents) {
+      const entity = EntityManager.getEntityById(entities, event.entityId)
+      if (!entity) {
+        console.error('TextComponentSystem: Entity not found', event.entityId)
+        continue
+      }
+
+      const keyInteractibleComponent = event.component
+      const textComponent = keyInteractibleComponent.textComponent
+
+      const textObject = this.createTextObject(textComponent)
+      this.textObjects.set(textComponent, textObject)
+
+      // Attach to mesh if available
+      const meshComponent = entity.getComponent(MeshComponent)
+      const parent = meshComponent?.mesh ?? Game.getInstance().renderer.scene
+      parent.add(textObject)
+    }
   }
 
   private handleRemovedComponents() {
-    const removedEvents = EventSystem.getEventsWrapped(ComponentRemovedEvent, TextComponent)
+    const removedEvents: ComponentRemovedEvent<TextComponent>[] = EventSystem.getEventsWrapped(
+      ComponentRemovedEvent,
+      TextComponent
+    )
 
     for (const event of removedEvents) {
-      const textObject = this.textObjects.get(event.entityId)
+      const textObject = this.textObjects.get(event.component)
       if (textObject) {
         textObject.element.remove()
         textObject.removeFromParent() // Remove from mesh if attached
-        this.textObjects.delete(event.entityId)
+        this.textObjects.delete(event.component)
+      }
+    }
+
+    const removedKeyInteractEvents: ComponentRemovedEvent<KeyInteractibleComponent>[] =
+      EventSystem.getEventsWrapped(ComponentRemovedEvent, KeyInteractibleComponent)
+    for (const event of removedKeyInteractEvents) {
+      const textObject = this.textObjects.get(event.component.textComponent)
+      if (textObject) {
+        textObject.element.remove()
+        textObject.removeFromParent() // Remove from mesh if attached
+        this.textObjects.delete(event.component.textComponent)
       }
     }
   }
 
-  private updateExistingComponents(entities: Entity[]): void {
-    const currentPlayerEntity = EntityManager.getFirstEntityWithComponent(
-      entities,
-      CurrentPlayerComponent
-    )
-
+  /**
+   * TextComponent is shown when the entity is within the display distance
+   * KeyInteractibleComponent has a TextComponent (E.g "Press E to interact")
+   */
+  private processEntities(entities: Entity[], currentPlayerEntity: Entity): void {
     for (const entity of entities) {
       const textComponent = entity.getComponent(TextComponent)
-      const textObject = this.textObjects.get(entity.id)
-
-      if (!textObject || !textComponent) continue
-
-      // Update text content if changed
-      if (textComponent.updated) {
-        textObject.element.textContent = textComponent.text
-        this.updateTextObjectPosition(textObject, textComponent)
+      if (textComponent) {
+        this.processTextComponent(entity, textComponent, currentPlayerEntity)
       }
-
-      // Update position for entities without mesh
-      if (!entity.getComponent(MeshComponent)) {
-        const positionComponent = entity.getComponent(PositionComponent)
-        if (positionComponent) {
-          this.updateTextObjectPosition(textObject, textComponent, positionComponent)
-        }
-      }
-
-      // Update visibility based on distance to player
-      if (currentPlayerEntity) {
-        this.updateVisibility(entity, currentPlayerEntity)
+      const keyInteractibleComponent = entity.getComponent(KeyInteractibleComponent)
+      if (keyInteractibleComponent) {
+        this.processTextComponent(
+          entity,
+          keyInteractibleComponent.textComponent,
+          currentPlayerEntity
+        )
       }
     }
   }
 
-  private updateVisibility(entityWithText: Entity, currentPlayerEntity: Entity): void {
-    const textObject = this.textObjects.get(entityWithText.id)
+  private processTextComponent(
+    entity: Entity,
+    textComponent: TextComponent,
+    currentPlayerEntity: Entity
+  ): void {
+    if (!textComponent) return
+
+    const textObject = this.textObjects.get(textComponent)
+    if (!textObject) return
+
+    if (textComponent.updated) {
+      textObject.element.textContent = textComponent.text
+      this.updateTextObjectPosition(textObject, textComponent)
+    }
+
+    if (!entity.getComponent(MeshComponent)) {
+      const positionComponent = entity.getComponent(PositionComponent)
+      if (positionComponent) {
+        this.updateTextObjectPosition(textObject, textComponent, positionComponent)
+      }
+    }
+
+    if (currentPlayerEntity) {
+      this.updateVisibility(entity, currentPlayerEntity, textComponent)
+    }
+  }
+
+  private updateVisibility(
+    entityWithText: Entity,
+    currentPlayerEntity: Entity,
+    textComponent: TextComponent
+  ): void {
+    const textObject = this.textObjects.get(textComponent)
+
+    if (!textObject) return
+
     const position = entityWithText.getComponent(PositionComponent)
-    const textComponent = entityWithText.getComponent(TextComponent)
     const playerPosition = currentPlayerEntity.getComponent(PositionComponent)
 
-    if (!textObject || !position || !textComponent || !playerPosition) return
+    if (!textObject || !position || !playerPosition) return
 
     const distance = this.calculateDistance(position, playerPosition)
 

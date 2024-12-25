@@ -6,7 +6,6 @@ import {
   AnimationSystem,
   ChatSystem,
   DestroySystem,
-  KeyInteractibleSystem,
   SleepCheckSystem,
   SyncColorSystem,
   SyncComponentsSystem,
@@ -43,7 +42,6 @@ export class Game {
   inputManager: InputManager
   private meshSystem: MeshSystem
   private serverMeshSystem: ServerMeshSystem
-  private keyInteractibleSystem: KeyInteractibleSystem
   private textComponentSystem: TextComponentSystem
   renderer: Renderer
   hud: Hud
@@ -62,7 +60,6 @@ export class Game {
     this.meshSystem = new MeshSystem()
     this.serverMeshSystem = new ServerMeshSystem()
     this.identifyFollowedMeshSystem = new IdentifyFollowedMeshSystem()
-    this.keyInteractibleSystem = new KeyInteractibleSystem()
     this.eventSystem = EventSystem.getInstance()
     this.textComponentSystem = new TextComponentSystem()
 
@@ -116,7 +113,6 @@ export class Game {
     this.syncPositionSystem.update(entities, positionInterpFactor / 2)
     this.syncRotationSystem.update(entities, 0.7)
     this.syncColorSystem.update(entities)
-    this.keyInteractibleSystem.update(entities, this)
     this.chatSystem.update(entities, this.hud)
     this.textComponentSystem.update(entities)
     this.syncSizeSystem.update(entities)

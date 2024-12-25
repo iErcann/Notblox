@@ -25,6 +25,7 @@ export class KeyInteractibleComponent extends NetworkComponent {
   }
 
   deserialize(data: SerializedKeyInteractibleComponent): void {
+    console.log('KeyInteractibleComponent: deserialize', data)
     this.textComponent.deserialize(data.tC)
   }
 
