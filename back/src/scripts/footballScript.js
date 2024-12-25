@@ -1,5 +1,7 @@
 // Initialize world and ball
-new MapWorld('http://localhost:4001/Stadium.glb')
+new MapWorld(
+  'https://rawcdn.githack.com/iErcann/Notblox-Assets/50f73702842fc334177d7ed3e2a2b63816c503e2/Stadium.glb'
+)
 
 const ballSpawnPosition = { x: 0, y: -20, z: -355 }
 const sphereParams = {
@@ -165,17 +167,17 @@ ScriptableSystem.update = (dt, entities) => {
 // For that, we need to add a key interactible component to the ball
 // The front also needs to render a key icon above the ball
 // That's why the key interactible component is added to the network data component to be synced with the front
-const keyInteractibleComponent = new KeyInteractibleComponent(
-  ball.entity.id,
-  '(E) SHOOT',
-  (interactingEntity) => {
-    // TODO : Shoot the ball
-    console.log('INTERACTED !', interactingEntity)
-  }
-)
-const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
-networkDataComponent.addComponent(keyInteractibleComponent)
-ball.entity.addComponent(keyInteractibleComponent)
+// const keyInteractibleComponent = new KeyInteractibleComponent(
+//   ball.entity.id,
+//   '(E) SHOOT',
+//   (interactingEntity) => {
+//     // TODO : Shoot the ball
+//     console.log('INTERACTED !', interactingEntity)
+//   }
+// )
+// const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
+// networkDataComponent.addComponent(keyInteractibleComponent)
+// ball.entity.addComponent(keyInteractibleComponent)
 
 // test having a text component on the ball
 // const textComponent = new TextComponent(ball.entity.id, 'Edge case test', 0, 10, 0, 50)
