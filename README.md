@@ -88,7 +88,7 @@ It should look like this :
   npm run dev
 ```
 
-Go on your browser to http://localhost:4000/
+Go on your browser to http://localhost:4000/play/test
 
 ## How to change the map
 

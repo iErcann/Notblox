@@ -7,21 +7,25 @@ import {
   us_listen_socket,
   us_socket_context_t,
 } from 'uWebSockets.js'
-import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
-import { ClientMessage, ClientMessageType } from '../../../../../shared/network/client/base.js'
-import { ChatMessage } from '../../../../../shared/network/client/chatMessage.js'
-import { InputMessage } from '../../../../../shared/network/client/input.js'
-import { ConnectionMessage } from '../../../../../shared/network/server/connection.js'
-
 import { unpack } from 'msgpackr'
-import { ServerMessageType } from '../../../../../shared/network/server/base.js'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
+
+import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
+import {
+  ChatMessage,
+  InputMessage,
+  ProximityPromptInteractMessage,
+  ClientMessageType,
+  ClientMessage,
+} from '../../../../../shared/network/client/index.js'
+import { ConnectionMessage, ServerMessageType } from '../../../../../shared/network/server/index.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
+
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
 import { NetworkSystem } from './NetworkSystem.js'
-import { RateLimiterMemory } from 'rate-limiter-flexible'
-
+import { ProximityPromptInteractEvent } from '../../component/events/ProximityPromptInteractEvent.js'
 type MessageHandler = (ws: any, message: any) => void
 
 export class WebsocketSystem {
@@ -106,6 +110,10 @@ export class WebsocketSystem {
   private initializeMessageHandlers() {
     this.addMessageHandler(ClientMessageType.INPUT, this.handleInputMessage.bind(this))
     this.addMessageHandler(ClientMessageType.CHAT_MESSAGE, this.handleChatMessage.bind(this))
+    this.addMessageHandler(
+      ClientMessageType.PROXIMITY_PROMPT_INTERACT,
+      this.handleProximityPromptInteractMessage.bind(this)
+    )
   }
 
   private addMessageHandler(type: ClientMessageType, handler: MessageHandler) {
@@ -206,5 +214,14 @@ export class WebsocketSystem {
     EventSystem.addEvent(
       new ChatMessageEvent(player.entity.id, `Player ${player.entity.id}`, content)
     )
+  }
+  private handleProximityPromptInteractMessage(ws: any, message: ProximityPromptInteractMessage) {
+    const player: Player = ws.player
+    if (!player) {
+      console.error(`Player with WS ${ws} not found.`)
+      return
+    }
+    const { eId } = message
+    EventSystem.addEvent(new ProximityPromptInteractEvent(player.entity.id, eId))
   }
 }

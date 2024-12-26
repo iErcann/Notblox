@@ -1,20 +1,20 @@
 [
-    {
-      "title": "Test Server",
-      "imageUrl": "/PreviewTestGame.webp",
-      "images": [
-        {
-          "url": "/Logo.png",
-          "width": 800,
-          "height": 600,
-          "alt": "NotBlox Logo",
-          "type": "image/png" 
-        } 
-      ],
-      "websocketPort": 8001,
-      "slug": "test",
-      "metaDescription": "This is a test server for development purposes. Feel free to join and test the game."
-    },
+  {
+    "title": "Online Multiplayer Football Game",
+    "imageUrl": "/PreviewFootballGame.webp",
+    "slug": "football",
+    "images": [
+      {
+        "url": "/PreviewFootballGame.webp",
+        "width": 1920,
+        "height": 1080,
+        "alt": "NotBlox Football",
+        "type": "image/webp" 
+      } 
+    ],
+    "websocketPort": 8003,
+    "metaDescription": "Multiplayer football game in your browser with your friends. Play soccer on your browser desktop or mobile."
+  },   
     {
       "title": "Obby Online Parkour",
       "imageUrl": "/PreviewObbyGame.webp",
@@ -32,20 +32,20 @@
       "metaDescription": "Play Obby NotBlox Parkour, a fun and challenging multiplayer parkour game. Compete with others to reach the top of the map."
     },
     {
-      "title": "Online Multiplayer Football Game",
-      "imageUrl": "/PreviewFootballGame.webp",
-      "slug": "football",
+      "title": "Test Server",
+      "imageUrl": "/PreviewTestGame.webp",
       "images": [
         {
-          "url": "/PreviewFootballGame.webp",
-          "width": 1920,
-          "height": 1080,
-          "alt": "NotBlox Football",
-          "type": "image/webp" 
+          "url": "/Logo.png",
+          "width": 800,
+          "height": 600,
+          "alt": "NotBlox Logo",
+          "type": "image/png" 
         } 
       ],
-      "websocketPort": 8003,
-      "metaDescription": "Multiplayer football game in your browser with your friends. Play soccer on your browser desktop or mobile."
+      "websocketPort": 8001,
+      "slug": "test",
+      "metaDescription": "This is a test server for development purposes. Feel free to join and test the game."
     }
   ]
   

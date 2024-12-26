@@ -105,7 +105,7 @@ export class Game {
 
     this.identifyFollowedMeshSystem.update(entities, this)
     this.inputManager.update()
-    this.inputManager.sendInput()
+    this.inputManager.sendInput(entities)
     this.destroySystem.update(entities, this.renderer)
     this.meshSystem.update(entities, this.renderer)
     const deltaTime = now - this.lastRenderTime

@@ -1,8 +1,10 @@
 import { ClientMessageType } from '@shared/network/client/base'
-import { InputMessage } from '@shared/network/client/input'
+import { InputMessage } from '@shared/network/client/inputMessage'
 import { IJoystickUpdateEvent } from 'react-joystick-component/build/lib/Joystick'
 import { OrbitCameraFollowSystem } from './ecs/system'
 import { WebSocketManager } from './WebsocketManager'
+import { ProximityPromptSystem } from './ecs/system/ProximityPromptSystem'
+import { Entity } from '@shared/entity/Entity'
 
 export enum KeyboardLanguage {
   FR = 'fr',
@@ -27,6 +29,7 @@ export class InputManager {
     // INTERACTION
     i: false,
   }
+  proximityPromptSystem = new ProximityPromptSystem()
 
   private keyboardLanguage: KeyboardLanguage = KeyboardLanguage.EN
   private cameraFollowSystem: OrbitCameraFollowSystem // Add a reference to the camera follow system
@@ -214,7 +217,7 @@ export class InputManager {
 
   // TODO: To lower the bandiwdth even more, send at a maxrate of config.SERVER_TICKRATE
   // Only sending when the input state changes
-  sendInput() {
+  sendInput(entities: Entity[]) {
     // Check if the current input state is different from the previous one
     if (
       !this.previousInputState ||
@@ -225,8 +228,12 @@ export class InputManager {
 
       // Update the previous input state
       this.previousInputState = { ...this.inputState }
+
+      if (this.inputState.i) {
+        const message = this.proximityPromptSystem.getMessage(entities)
+        if (message) this.webSocketManager.send(message)
+      }
     }
-    // Reset the input state to avoid sending the same input state multiple times
   }
 
   private areInputStatesEqual(state1: InputMessage, state2: InputMessage): boolean {

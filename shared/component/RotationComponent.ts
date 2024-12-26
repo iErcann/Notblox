@@ -12,6 +12,19 @@ export class RotationComponent extends NetworkComponent {
   ) {
     super(entityId, SerializedComponentType.ROTATION)
   }
+
+  getForwardDirection() {
+    // Forward vector rotated by quaternion math
+    const x = 2 * (this.x * this.z + this.w * this.y)
+    const z = 1 - 2 * (this.x * this.x + this.y * this.y)
+
+    // Normalize the vector
+    const length = Math.sqrt(x * x + z * z)
+    return {
+      x: x / length,
+      z: z / length,
+    }
+  }
   deserialize(data: SerializedRotationComponent): void {
     this.x = data.x
     this.y = data.y

@@ -3,7 +3,7 @@ new MapWorld(
   'https://rawcdn.githack.com/iErcann/Notblox-Assets/50f73702842fc334177d7ed3e2a2b63816c503e2/Stadium.glb'
 )
 
-const ballSpawnPosition = { x: 0, y: -20, z: -355 }
+const ballSpawnPosition = { x: 0, y: -20, z: -350 }
 const sphereParams = {
   radius: 1.4,
   position: {
@@ -32,21 +32,6 @@ ball.entity.addComponent(
     ballSpawnPosition.z
   )
 )
-
-// ball.entity.addComponent(
-//   new OnCollisionEnterEvent(ball.entity.id, (playerEntity) => {
-//     if (playerEntity.getComponent(PlayerComponent) && playerEntity.getComponent(InputComponent)) {
-//       const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
-//       const playerLookingDirection = playerEntity.getComponent(InputComponent).lookingYAngle
-//       const playerLookingDirectionVector = new Rapier.Vector3(
-//         -Math.cos(playerLookingDirection) * 5500,
-//         0,
-//         -Math.sin(playerLookingDirection) * 5500
-//       )
-//       ballBody.applyImpulse(playerLookingDirectionVector, true)
-//     }
-//   })
-// )
 
 // Score display and management
 const scoreText = new FloatingText('🔴 0 - 0 🔵', 0, 0, -450, 200)
@@ -145,10 +130,9 @@ ScriptableSystem.update = (dt, entities) => {
   // Check if there are any players
   const hasPlayers = entities.some((entity) => entity.getComponent(PlayerComponent))
 
-  if (!hasPlayers && (redScore > 0 || blueScore > 0)) {
+  if (!hasPlayers) {
     // No players are present. Reset the game
     sendChatMessage('⚽', 'No players, resetting game...')
-    console.log('No players, resetting game...')
 
     const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
     ballBody.setTranslation(
@@ -166,65 +150,32 @@ ScriptableSystem.update = (dt, entities) => {
 // When the player is near the ball, he can shoot it
 // For that, we need to add a proximity prompt component to the ball
 // The front also needs to render a proximity prompt above the ball
+
 // That's why the proximity prompt component is added to the network data component to be synced with the front
-const proximityPromptComponent = new ProximityPromptComponent(
-  ball.entity.id,
-  '⚽ (E) KICK',
-  (playerEntity) => {
+const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
+  text: '(Press E) KICK BALL',
+  onInteract: (playerEntity) => {
     const ballRigidbody = ball.entity.getComponent(DynamicRigidBodyComponent)
-    if (ballRigidbody && playerEntity.getComponent(InputComponent)) {
-      const playerLookingDirection = playerEntity.getComponent(InputComponent).lookingYAngle
-      console.log('PLAYER LOOKING DIRECTION', playerLookingDirection)
+    const playerRotationComponent = playerEntity.getComponent(RotationComponent)
+
+    if (ballRigidbody && playerRotationComponent && playerEntity.getComponent(InputComponent)) {
+      // Convert rotation to direction vector
+      const direction = playerRotationComponent.getForwardDirection()
+      // Calculate player looking direction
+      // sendChatMessage('⚽', `Player shot the ball !`)
       const playerLookingDirectionVector = new Rapier.Vector3(
-        -Math.cos(playerLookingDirection) * 500,
+        direction.x * 500,
         0,
-        -Math.sin(playerLookingDirection) * 500
+        direction.z * 500
       )
 
-      console.log(ballRigidbody.body)
       ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
     }
-  }
-)
+  },
+  maxInteractDistance: 10,
+  interactionCooldown: 2000,
+  holdDuration: 0,
+})
 const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
 networkDataComponent.addComponent(proximityPromptComponent)
 ball.entity.addComponent(proximityPromptComponent)
-
-// test having a text component on the ball
-// const textComponent = new TextComponent(ball.entity.id, 'Edge case test', 0, 10, 0, 50)
-// networkDataComponent.addComponent(textComponent)
-// ball.entity.addComponent(textComponent)
-
-function cubeWithPrompts() {
-  const cube = new Cube({
-    position: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-    physicsProperties: {
-      mass: 1,
-      enableCcd: true,
-      angularDamping: 0.5,
-    },
-  })
-  const proximityPromptComponent = new ProximityPromptComponent(
-    cube.entity.id,
-    '⚽ (E) KICK',
-    () => {
-      console.log('Prompt interacted with cube')
-      cube.entity
-        .getComponent(DynamicRigidBodyComponent)
-        .body.applyImpulse(new Rapier.Vector3(0, 0, 1000), true)
-    }
-  )
-  cube.entity.addComponent(proximityPromptComponent)
-  const networkDataComponent = cube.entity.getComponent(NetworkDataComponent)
-  networkDataComponent.addComponent(proximityPromptComponent)
-
-  return cube
-}
-
-for (let i = 0; i < 10; i++) {
-  cubeWithPrompts()
-}

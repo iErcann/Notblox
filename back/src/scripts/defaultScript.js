@@ -57,7 +57,7 @@ new TriggerCube(
 
 // === Interactive Object Example ===
 // Create a cube that reacts to player collision
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 2; i++) {
   const interactiveCubeParams = {
     position: { x: 0, y: 5, z: -100 },
     size: { width: 2, height: 2, depth: 2 },
@@ -99,3 +99,36 @@ for (let i = 0; i < 2; i++) {
   const sphere = new Sphere(sphereParams)
   sphere.entity.addComponent(new RandomizeComponent(sphere.entity.id))
 }
+
+const cube = new Cube({
+  position: {
+    x: 100,
+    y: 10,
+    z: 100,
+  },
+  physicsProperties: {
+    mass: 1,
+    angularDamping: 0.5,
+  },
+})
+const proximityPromptComponent = new ProximityPromptComponent(cube.entity.id, {
+  text: 'Press E to change color',
+  onInteract: (interactingEntity) => {
+    cube.entity
+      .getComponent(DynamicRigidBodyComponent)
+      .body.applyImpulse(new Rapier.Vector3(0, 5, 0), true)
+
+    const colorComponent = cube.entity.getComponent(ColorComponent)
+    if (colorComponent) {
+      // randomize color
+      colorComponent.color = '#' + Math.floor(Math.random() * 16777215).toString(16)
+      colorComponent.updated = true
+    }
+  },
+  maxInteractDistance: 10,
+  interactionCooldown: 200,
+  holdDuration: 0,
+})
+cube.entity.addComponent(proximityPromptComponent)
+const networkDataComponent = cube.entity.getComponent(NetworkDataComponent)
+networkDataComponent.addComponent(proximityPromptComponent)

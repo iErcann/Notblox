@@ -30,7 +30,7 @@ import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSyste
 import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
 import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
-import { ProximityPromptSystem } from './ecs/system/ProximityPromptSystem.js'
+import { ProximityPromptSystem } from './ecs/system/events/ProximityPromptEventSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -72,13 +72,18 @@ new Chat()
 console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
 let lastUpdateTimestamp = Date.now()
 
-function playersExists() {
+let lastTickPlayerExisted = false
+function atLeastOnePlayerExit() {
   const player = EntityManager.getFirstEntityWithComponent(entities, PlayerComponent)
   return player !== undefined
 }
 async function gameLoop() {
   // Idle mode if no players
-  if (!playersExists()) {
+  const playerExist = atLeastOnePlayerExit()
+
+  // If no players, wait for one to join
+  // Making an extra tick for entities that check player existence (E.g if no player exist on a game script, reset it)
+  if (!playerExist && !lastTickPlayerExisted) {
     console.log('No players, waiting...')
     lastUpdateTimestamp = Date.now()
     setTimeout(gameLoop, 1000)
@@ -125,6 +130,7 @@ async function gameLoop() {
   // Useful for DestroySystem
   eventSystem.afterUpdate(entities)
   lastUpdateTimestamp = now
+  lastTickPlayerExisted = playerExist
 }
 
 export function startGameLoop() {

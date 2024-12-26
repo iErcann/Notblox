@@ -6,7 +6,6 @@ import { ConnectionMessage } from '@shared/network/server/connection'
 import { ClientMessage, ClientMessageType } from '@shared/network/client/base'
 import { isNativeAccelerationEnabled } from 'msgpackr'
 import pako from 'pako'
-import { InputMessage } from '@shared/network/client/input'
 
 if (!isNativeAccelerationEnabled)
   console.warn('Native acceleration not enabled, verify that install finished properly')

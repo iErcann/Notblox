@@ -1,7 +1,7 @@
 export enum ClientMessageType {
-  FIRST_CONNECTION = 0,
   INPUT = 1,
   CHAT_MESSAGE = 2,
+  PROXIMITY_PROMPT_INTERACT = 3,
 }
 
 export interface ClientMessage {

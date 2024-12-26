@@ -1,6 +1,6 @@
 import { InputComponent } from '../component/InputComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
-import { InputMessage } from '../../../../shared/network/client/input.js'
+import { InputMessage } from '../../../../shared/network/client/inputMessage.js'
 
 export class InputProcessingSystem {
   constructor() {}

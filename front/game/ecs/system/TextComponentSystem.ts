@@ -25,8 +25,9 @@ export class TextComponentSystem {
   }
 
   update(entities: Entity[]) {
-    const currentPlayerEntity = entities.find((entity) =>
-      entity.getComponent(CurrentPlayerComponent)
+    const currentPlayerEntity = EntityManager.getFirstEntityWithComponent(
+      entities,
+      CurrentPlayerComponent
     )
     if (!currentPlayerEntity) return
     this.handleAddedComponents(entities)
@@ -73,6 +74,7 @@ export class TextComponentSystem {
         continue
       }
 
+      // If the entity is the current player, we don't want to show the text
       const currentPlayerComponent = entity.getComponent(CurrentPlayerComponent)
       if (currentPlayerComponent) {
         // Ignore the current player text
@@ -127,9 +129,9 @@ export class TextComponentSystem {
       }
     }
 
-    const removedKeyInteractEvents: ComponentRemovedEvent<ProximityPromptComponent>[] =
+    const removedProximityPromptEvents: ComponentRemovedEvent<ProximityPromptComponent>[] =
       EventSystem.getEventsWrapped(ComponentRemovedEvent, ProximityPromptComponent)
-    for (const event of removedKeyInteractEvents) {
+    for (const event of removedProximityPromptEvents) {
       const textObject = this.textObjects.get(event.component.textComponent)
       if (textObject) {
         textObject.element.remove()
