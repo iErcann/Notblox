@@ -175,7 +175,9 @@ export class SyncComponentsSystem {
         component = new ServerMeshComponent(entityId, '')
         break
       case SerializedComponentType.PROXIMITY_PROMPT:
-        component = new ProximityPromptComponent(entityId, 'Nothing', () => {})
+        component = new ProximityPromptComponent(entityId, {
+          onInteract: () => {},
+        })
         break
       case SerializedComponentType.TEXT:
         component = new TextComponent(entityId, '', 0, 0, 0)

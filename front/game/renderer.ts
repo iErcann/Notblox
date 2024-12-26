@@ -1,12 +1,10 @@
 import * as THREE from 'three'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { Sky } from 'three/examples/jsm/objects/Sky.js'
-import { LoadManager } from './LoadManager'
 import { Camera } from './camera'
 
 import { PositionComponent } from '@shared/component/PositionComponent'
 import { Entity } from '@shared/entity/Entity'
-import { InputMessage } from '@shared/network/client/input'
+import { InputMessage } from '@shared/network/client/inputMessage'
 import { EntityManager } from '@shared/system/EntityManager'
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
 import { FollowComponent } from './ecs/component/FollowComponent'

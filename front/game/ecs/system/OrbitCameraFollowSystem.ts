@@ -4,9 +4,8 @@ import { Entity } from '@shared/entity/Entity'
 import CameraControls from 'camera-controls'
 import * as THREE from 'three'
 import { FollowComponent } from '../component/FollowComponent'
-import { InputMessage } from '@shared/network/client/input'
+import { InputMessage } from '@shared/network/client/inputMessage'
 import { MeshComponent } from '../component/MeshComponent'
-import { InputManager } from '@/game/InputManager'
 
 export class OrbitCameraFollowSystem {
   cameraControls: CameraControls

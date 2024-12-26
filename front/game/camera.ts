@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { OrbitCameraFollowSystem } from './ecs/system/OrbitCameraFollowSystem'
 import { Entity } from '@shared/entity/Entity'
-import { InputMessage } from '@shared/network/client/input'
+import { InputMessage } from '@shared/network/client/inputMessage'
 
 export class Camera extends THREE.PerspectiveCamera {
   defaultOffset = new THREE.Vector3(0, 5, 15)
