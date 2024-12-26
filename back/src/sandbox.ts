@@ -7,7 +7,7 @@ import { RotationComponent } from '../../shared/component/RotationComponent.js'
 import { EntityManager } from '../../shared/system/EntityManager.js'
 import { EventSystem } from '../../shared/system/EventSystem.js'
 import { InputComponent } from './ecs/component/InputComponent.js'
-import { KeyInteractibleComponent } from '../../shared/component/KeyInteractibleComponent.js'
+import { ProximityPromptComponent } from '../../shared/component/ProximityPromptComponent.js'
 import { LockedRotationComponent } from './ecs/component/LockedRotationComponent.js'
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { SpawnPositionComponent } from './ecs/component/SpawnPositionComponent.js'
@@ -40,7 +40,7 @@ import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { TextComponent } from '../../shared/component/TextComponent.js'
 
 async function loadGameLogic() {
-  const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
+  const gameScript = process.env.GAME_SCRIPT || 'footballScript.js' // Default script name if not provided
   const codePath = resolve(process.cwd(), 'src/scripts', gameScript)
   if (!process.env.GAME_SCRIPT) console.log('No GAME_SCRIPT provided, using default script')
   console.log(`Loading game logic from ${codePath}`)
@@ -65,7 +65,7 @@ async function loadGameLogic() {
     LockedRotationComponent,
     RandomizeComponent,
     ZombieComponent,
-    KeyInteractibleComponent,
+    ProximityPromptComponent,
     NetworkDataComponent,
     TextComponent,
 

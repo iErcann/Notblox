@@ -16,7 +16,7 @@ export enum SerializedComponentType {
   CHAT_MESSAGE = 9,
 
   SERVER_MESH = 10,
-  KEY_INTERACTIBLE = 11,
+  PROXIMITY_PROMPT = 11,
   TEXT = 12,
 }
 

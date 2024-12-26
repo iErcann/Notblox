@@ -164,22 +164,67 @@ ScriptableSystem.update = (dt, entities) => {
 }
 
 // When the player is near the ball, he can shoot it
-// For that, we need to add a key interactible component to the ball
-// The front also needs to render a key icon above the ball
-// That's why the key interactible component is added to the network data component to be synced with the front
-// const keyInteractibleComponent = new KeyInteractibleComponent(
-//   ball.entity.id,
-//   '(E) SHOOT',
-//   (interactingEntity) => {
-//     // TODO : Shoot the ball
-//     console.log('INTERACTED !', interactingEntity)
-//   }
-// )
-// const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
-// networkDataComponent.addComponent(keyInteractibleComponent)
-// ball.entity.addComponent(keyInteractibleComponent)
+// For that, we need to add a proximity prompt component to the ball
+// The front also needs to render a proximity prompt above the ball
+// That's why the proximity prompt component is added to the network data component to be synced with the front
+const proximityPromptComponent = new ProximityPromptComponent(
+  ball.entity.id,
+  '⚽ (E) KICK',
+  (playerEntity) => {
+    const ballRigidbody = ball.entity.getComponent(DynamicRigidBodyComponent)
+    if (ballRigidbody && playerEntity.getComponent(InputComponent)) {
+      const playerLookingDirection = playerEntity.getComponent(InputComponent).lookingYAngle
+      console.log('PLAYER LOOKING DIRECTION', playerLookingDirection)
+      const playerLookingDirectionVector = new Rapier.Vector3(
+        -Math.cos(playerLookingDirection) * 500,
+        0,
+        -Math.sin(playerLookingDirection) * 500
+      )
+
+      console.log(ballRigidbody.body)
+      ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
+    }
+  }
+)
+const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
+networkDataComponent.addComponent(proximityPromptComponent)
+ball.entity.addComponent(proximityPromptComponent)
 
 // test having a text component on the ball
 // const textComponent = new TextComponent(ball.entity.id, 'Edge case test', 0, 10, 0, 50)
 // networkDataComponent.addComponent(textComponent)
 // ball.entity.addComponent(textComponent)
+
+function cubeWithPrompts() {
+  const cube = new Cube({
+    position: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    physicsProperties: {
+      mass: 1,
+      enableCcd: true,
+      angularDamping: 0.5,
+    },
+  })
+  const proximityPromptComponent = new ProximityPromptComponent(
+    cube.entity.id,
+    '⚽ (E) KICK',
+    () => {
+      console.log('Prompt interacted with cube')
+      cube.entity
+        .getComponent(DynamicRigidBodyComponent)
+        .body.applyImpulse(new Rapier.Vector3(0, 0, 1000), true)
+    }
+  )
+  cube.entity.addComponent(proximityPromptComponent)
+  const networkDataComponent = cube.entity.getComponent(NetworkDataComponent)
+  networkDataComponent.addComponent(proximityPromptComponent)
+
+  return cube
+}
+
+for (let i = 0; i < 10; i++) {
+  cubeWithPrompts()
+}

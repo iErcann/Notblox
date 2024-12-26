@@ -20,5 +20,6 @@ export class InputProcessingSystem {
     inputComponent.right = inputMessage.r
     inputComponent.space = inputMessage.s
     inputComponent.lookingYAngle = inputMessage.y
+    inputComponent.interact = inputMessage.i
   }
 }

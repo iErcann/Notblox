@@ -177,14 +177,15 @@ export class WebsocketSystem {
       console.error(`Player with WS ${ws} not found.`)
       return
     }
-    const { u: up, d: down, l: left, r: right, s: space, y: angleY } = message
+    const { u: up, d: down, l: left, r: right, s: space, y: angleY, i: interact } = message
     if (
       typeof up !== 'boolean' ||
       typeof down !== 'boolean' ||
       typeof left !== 'boolean' ||
       typeof right !== 'boolean' ||
       typeof space !== 'boolean' ||
-      typeof angleY !== 'number'
+      typeof angleY !== 'number' ||
+      typeof interact !== 'boolean'
     ) {
       console.error('Invalid input message', message)
       return
@@ -196,13 +197,14 @@ export class WebsocketSystem {
   private handleChatMessage(ws: any, message: ChatMessage) {
     console.log('Chat message received', message)
     const player: Player = ws.player
-    const id = player.entity.id
 
     const { content } = message
-    if (!content || typeof content !== 'string') {
+    if (!content || typeof content !== 'string' || content.length === 0) {
       console.error(`Invalid chat message, sent from ${player}`, message)
       return
     }
-    EventSystem.addEvent(new ChatMessageEvent(id, `Player ${id}`, content))
+    EventSystem.addEvent(
+      new ChatMessageEvent(player.entity.id, `Player ${player.entity.id}`, content)
+    )
   }
 }

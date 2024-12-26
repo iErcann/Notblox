@@ -10,7 +10,7 @@ import { CurrentPlayerComponent } from '../component/CurrentPlayerComponent'
 import { PositionComponent } from '@shared/component/PositionComponent'
 import { Game } from '@/game/game'
 import * as THREE from 'three'
-import { KeyInteractibleComponent } from '@shared/component/KeyInteractibleComponent'
+import { ProximityPromptComponent } from '@shared/component/ProximityPromptComponent'
 
 export class TextComponentSystem {
   private textObjects: WeakMap<TextComponent, CSS2DObject> = new WeakMap()
@@ -90,17 +90,17 @@ export class TextComponentSystem {
       parent.add(textObject)
     }
 
-    const createdKeyInteractEvents: ComponentAddedEvent<KeyInteractibleComponent>[] =
-      EventSystem.getEventsWrapped(ComponentAddedEvent, KeyInteractibleComponent)
-    for (const event of createdKeyInteractEvents) {
+    const createdProximityPromptEvents: ComponentAddedEvent<ProximityPromptComponent>[] =
+      EventSystem.getEventsWrapped(ComponentAddedEvent, ProximityPromptComponent)
+    for (const event of createdProximityPromptEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
       if (!entity) {
         console.error('TextComponentSystem: Entity not found', event.entityId)
         continue
       }
 
-      const keyInteractibleComponent = event.component
-      const textComponent = keyInteractibleComponent.textComponent
+      const proximityPromptComponent = event.component
+      const textComponent = proximityPromptComponent.textComponent
 
       const textObject = this.createTextObject(textComponent)
       this.textObjects.set(textComponent, textObject)
@@ -127,8 +127,8 @@ export class TextComponentSystem {
       }
     }
 
-    const removedKeyInteractEvents: ComponentRemovedEvent<KeyInteractibleComponent>[] =
-      EventSystem.getEventsWrapped(ComponentRemovedEvent, KeyInteractibleComponent)
+    const removedKeyInteractEvents: ComponentRemovedEvent<ProximityPromptComponent>[] =
+      EventSystem.getEventsWrapped(ComponentRemovedEvent, ProximityPromptComponent)
     for (const event of removedKeyInteractEvents) {
       const textObject = this.textObjects.get(event.component.textComponent)
       if (textObject) {
@@ -141,7 +141,7 @@ export class TextComponentSystem {
 
   /**
    * TextComponent is shown when the entity is within the display distance
-   * KeyInteractibleComponent has a TextComponent (E.g "Press E to interact")
+   * ProximityPromptComponent has a TextComponent (E.g "Press E to interact")
    */
   private processEntities(entities: Entity[], currentPlayerEntity: Entity): void {
     for (const entity of entities) {
@@ -149,11 +149,11 @@ export class TextComponentSystem {
       if (textComponent) {
         this.processTextComponent(entity, textComponent, currentPlayerEntity)
       }
-      const keyInteractibleComponent = entity.getComponent(KeyInteractibleComponent)
-      if (keyInteractibleComponent) {
+      const proximityPromptComponent = entity.getComponent(ProximityPromptComponent)
+      if (proximityPromptComponent) {
         this.processTextComponent(
           entity,
-          keyInteractibleComponent.textComponent,
+          proximityPromptComponent.textComponent,
           currentPlayerEntity
         )
       }

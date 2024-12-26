@@ -7,4 +7,5 @@ export class InputComponent extends Component {
   right: boolean = false
   space: boolean = false
   lookingYAngle = 0
+  interact: boolean = false
 }

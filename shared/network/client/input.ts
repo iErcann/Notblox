@@ -13,4 +13,6 @@ export interface InputMessage extends ClientMessage {
   s: boolean
   // Y angle
   y: number
+  // INTERACTION
+  i: boolean
 }

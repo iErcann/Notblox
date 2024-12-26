@@ -24,6 +24,8 @@ export class InputManager {
     // SPACE
     s: false,
     y: 0,
+    // INTERACTION
+    i: false,
   }
 
   private keyboardLanguage: KeyboardLanguage = KeyboardLanguage.EN
@@ -101,6 +103,10 @@ export class InputManager {
           case ' ':
             this.inputState.s = true
             break
+          case 'E':
+          case 'e':
+            this.inputState.i = true
+            break
         }
         break
       case KeyboardLanguage.FR:
@@ -127,6 +133,10 @@ export class InputManager {
             break
           case ' ':
             this.inputState.s = true
+            break
+          case 'E':
+          case 'e':
+            this.inputState.i = true
             break
         }
         break
@@ -160,6 +170,10 @@ export class InputManager {
           case ' ':
             this.inputState.s = false
             break
+          case 'E':
+          case 'e':
+            this.inputState.i = false
+            break
         }
         break
       case KeyboardLanguage.FR:
@@ -186,6 +200,10 @@ export class InputManager {
             break
           case ' ':
             this.inputState.s = false
+            break
+          case 'E':
+          case 'e':
+            this.inputState.i = false
             break
         }
         break

@@ -30,6 +30,7 @@ import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSyste
 import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
 import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
+import { ProximityPromptSystem } from './ecs/system/ProximityPromptSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -56,6 +57,7 @@ const syncPositionSystem = new SyncPositionSystem()
 const syncRotationSystem = new SyncRotationSystem()
 const chatSystem = new ChatEventSystem()
 const destroyEventSystem = new DestroyEventSystem()
+const interactEventSystem = new ProximityPromptSystem()
 
 const movementSystem = new MovementSystem()
 const networkSystem = new NetworkSystem()
@@ -87,9 +89,9 @@ async function gameLoop() {
   const dt = now - lastUpdateTimestamp
 
   physicsSystem.update(entities)
-  destroyEventSystem.update(entities)
   boundaryCheckSystem.update(entities)
   ScriptableSystem.update(dt, entities)
+  interactEventSystem.update(entities, dt)
 
   // Create the bodies first.
   kinematicPhysicsBodySystem.update(entities, physicsSystem.world)
@@ -116,8 +118,8 @@ async function gameLoop() {
   syncPositionSystem.update(entities)
 
   lockedRotationSystem.update(entities)
+  destroyEventSystem.update(entities)
   networkSystem.update(entities)
-
   sleepCheckSystem.update(entities)
 
   // Useful for DestroySystem

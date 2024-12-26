@@ -3,10 +3,10 @@ import { ServerMessage, ServerMessageType } from '@shared/network/server/base'
 import { SnapshotMessage } from '@shared/network/server/serialized'
 import { Game } from './game'
 import { ConnectionMessage } from '@shared/network/server/connection'
-import { ClientMessage } from '@shared/network/client/base'
-
+import { ClientMessage, ClientMessageType } from '@shared/network/client/base'
 import { isNativeAccelerationEnabled } from 'msgpackr'
 import pako from 'pako'
+import { InputMessage } from '@shared/network/client/input'
 
 if (!isNativeAccelerationEnabled)
   console.warn('Native acceleration not enabled, verify that install finished properly')

@@ -23,7 +23,7 @@ import { SizeComponent } from '@shared/component/SizeComponent'
 import { StateComponent } from '@shared/component/StateComponent'
 import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEvent'
 import { ServerMeshComponent } from '@shared/component/ServerMeshComponent'
-import { KeyInteractibleComponent } from '@shared/component/KeyInteractibleComponent'
+import { ProximityPromptComponent } from '@shared/component/ProximityPromptComponent'
 import { TextComponent } from '@shared/component/TextComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
@@ -174,8 +174,8 @@ export class SyncComponentsSystem {
       case SerializedComponentType.SERVER_MESH:
         component = new ServerMeshComponent(entityId, '')
         break
-      case SerializedComponentType.KEY_INTERACTIBLE:
-        component = new KeyInteractibleComponent(entityId, 'Nothing', () => {})
+      case SerializedComponentType.PROXIMITY_PROMPT:
+        component = new ProximityPromptComponent(entityId, 'Nothing', () => {})
         break
       case SerializedComponentType.TEXT:
         component = new TextComponent(entityId, '', 0, 0, 0)
