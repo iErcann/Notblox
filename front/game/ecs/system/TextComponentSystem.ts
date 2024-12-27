@@ -48,19 +48,22 @@ export class TextComponentSystem {
   ) {
     if (isProximityPrompt) {
       textElement.innerHTML = `
-        <div class="flex items-center justify-between bg-gray-950/30 text-white p-2 rounded-md shadow-lg w-30">
-          <div class="flex items-center justify-center w-8 h-8 bg-gray-700/50 rounded-full">
-            <span class="text-lg font-bold">E</span>
-          </div>
-          <div class="ml-2">
-            <p class="text-sm font-medium leading-tight">${textComponent.text}</p>
-            <p class="text-xs text-gray-300">Interact</p>
-          </div>
-        </div>`
+        <div style="display: flex; flex-direction: column; align-items: flex-start; background-color: rgba(31, 41, 55, 0.2); color: white; padding: 0.25rem; border-radius: 0.5rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);">
+          <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+            <div style="display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; background-color: rgba(31, 41, 55, 0.4); border-radius: 0.375rem; margin-right: 0.5rem;">
+              <span style="font-size: 1.5rem; font-weight: bold; color: white;">E</span>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+            <p style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem;">${textComponent.text}</p>
+            <p style="font-size: 0.75rem; color: #9ca3af; text-align: right; margin-left: auto;">Interact</p>
+              </div>
+            </div>
+        </div>
+      `
     } else {
       textElement.innerHTML = `
-        <div class="flex items-center justify-between bg-gray-950/20 text-white p-2 rounded-md shadow-lg w-30">
-          <p class="text-sm font-medium leading-tight">${textComponent.text}</p>
+        <div style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(23, 23, 23, 0.2); color: white; padding: 0.5rem; border-radius: 0.375rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); ">
+          <p style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;">${textComponent.text}</p>
         </div>`
     }
   }
@@ -187,21 +190,23 @@ export class TextComponentSystem {
 
     if (textComponent.updated) {
       this.updateTextElement(textObject.element, textComponent, isProximityPrompt)
-      this.updateTextObjectPosition(textObject, textComponent)
     }
 
+    // If the entity has no mesh, we will follow the position component
     if (!entity.getComponent(MeshComponent)) {
       const positionComponent = entity.getComponent(PositionComponent)
       if (positionComponent) {
         this.updateTextObjectPosition(textObject, textComponent, positionComponent)
       }
+    } else {
+      // If the entity has a mesh, no need to follow the position component since it's attached to the mesh
+      this.updateTextObjectPosition(textObject, textComponent)
     }
 
-    if (currentPlayerEntity) {
-      this.updateVisibility(entity, currentPlayerEntity, textComponent)
-    }
+    this.updateVisibility(entity, currentPlayerEntity, textComponent)
   }
 
+  // Update the visibility of the text based on the distance from the player
   private updateVisibility(
     entityWithText: Entity,
     currentPlayerEntity: Entity,
