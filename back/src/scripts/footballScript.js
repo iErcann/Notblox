@@ -153,7 +153,7 @@ ScriptableSystem.update = (dt, entities) => {
 
 // That's why the proximity prompt component is added to the network data component to be synced with the front
 const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
-  text: '(Press E) KICK BALL',
+  text: 'Kick',
   onInteract: (playerEntity) => {
     const ballRigidbody = ball.entity.getComponent(DynamicRigidBodyComponent)
     const playerRotationComponent = playerEntity.getComponent(RotationComponent)
@@ -172,7 +172,7 @@ const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
       ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
     }
   },
-  maxInteractDistance: 10,
+  maxInteractDistance: 5,
   interactionCooldown: 2000,
   holdDuration: 0,
 })

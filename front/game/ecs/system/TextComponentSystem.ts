@@ -15,15 +15,6 @@ import { ProximityPromptComponent } from '@shared/component/ProximityPromptCompo
 export class TextComponentSystem {
   private textObjects: WeakMap<TextComponent, CSS2DObject> = new WeakMap()
 
-  // Default styles for text elements
-  private static readonly DEFAULT_STYLES: Record<string, string> = {
-    color: '#FFFFFF',
-    backgroundColor: 'rgba(0, 0, 0, .2)',
-    padding: '5px',
-    fontFamily: 'Arial, sans-serif',
-    fontSize: '14px',
-  }
-
   update(entities: Entity[]) {
     const currentPlayerEntity = EntityManager.getFirstEntityWithComponent(
       entities,
@@ -35,19 +26,39 @@ export class TextComponentSystem {
     this.processEntities(entities, currentPlayerEntity)
   }
 
-  private applyStyles(element: HTMLDivElement, styles: Record<string, string> = {}): void {
-    Object.assign(element.style, TextComponentSystem.DEFAULT_STYLES, styles)
-  }
-  private createTextObject(textComponent: TextComponent): CSS2DObject {
+  private createTextObject(
+    textComponent: TextComponent,
+    isProximityPrompt: boolean = false
+  ): CSS2DObject {
     const textElement = document.createElement('div')
-    textElement.textContent = textComponent.text
-
-    // Apply default styles
-    this.applyStyles(textElement)
-
+    this.updateTextElement(textElement, textComponent, isProximityPrompt)
     const textObject = new CSS2DObject(textElement)
     this.updateTextObjectPosition(textObject, textComponent)
     return textObject
+  }
+
+  private updateTextElement(
+    textElement: HTMLElement,
+    textComponent: TextComponent,
+    isProximityPrompt: boolean
+  ) {
+    if (isProximityPrompt) {
+      textElement.innerHTML = `
+        <div class="flex items-center justify-between bg-gray-950/30 text-white p-2 rounded-md shadow-lg w-30">
+          <div class="flex items-center justify-center w-8 h-8 bg-gray-700/50 rounded-full">
+            <span class="text-lg font-bold">E</span>
+          </div>
+          <div class="ml-2">
+            <p class="text-sm font-medium leading-tight">${textComponent.text}</p>
+            <p class="text-xs text-gray-300">Interact</p>
+          </div>
+        </div>`
+    } else {
+      textElement.innerHTML = `
+        <div class="flex items-center justify-between bg-gray-950/20 text-white p-2 rounded-md shadow-lg w-30">
+          <p class="text-sm font-medium leading-tight">${textComponent.text}</p>
+        </div>`
+    }
   }
 
   private updateTextObjectPosition(
@@ -104,7 +115,7 @@ export class TextComponentSystem {
       const proximityPromptComponent = event.component
       const textComponent = proximityPromptComponent.textComponent
 
-      const textObject = this.createTextObject(textComponent)
+      const textObject = this.createTextObject(textComponent, true)
       this.textObjects.set(textComponent, textObject)
 
       // Attach to mesh if available
@@ -141,10 +152,6 @@ export class TextComponentSystem {
     }
   }
 
-  /**
-   * TextComponent is shown when the entity is within the display distance
-   * ProximityPromptComponent has a TextComponent (E.g "Press E to interact")
-   */
   private processEntities(entities: Entity[], currentPlayerEntity: Entity): void {
     for (const entity of entities) {
       const textComponent = entity.getComponent(TextComponent)
@@ -156,7 +163,8 @@ export class TextComponentSystem {
         this.processTextComponent(
           entity,
           proximityPromptComponent.textComponent,
-          currentPlayerEntity
+          currentPlayerEntity,
+          true
         )
       }
     }
@@ -165,7 +173,8 @@ export class TextComponentSystem {
   private processTextComponent(
     entity: Entity,
     textComponent: TextComponent,
-    currentPlayerEntity: Entity
+    currentPlayerEntity: Entity,
+    isProximityPrompt: boolean = false
   ): void {
     if (!textComponent) return
 
@@ -173,7 +182,7 @@ export class TextComponentSystem {
     if (!textObject) return
 
     if (textComponent.updated) {
-      textObject.element.textContent = textComponent.text
+      this.updateTextElement(textObject.element, textComponent, isProximityPrompt)
       this.updateTextObjectPosition(textObject, textComponent)
     }
 
