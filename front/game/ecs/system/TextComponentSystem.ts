@@ -12,6 +12,10 @@ import { Game } from '@/game/game'
 import * as THREE from 'three'
 import { ProximityPromptComponent } from '@shared/component/ProximityPromptComponent'
 
+/**
+ * TextComponent is shown when the entity is within the display distance
+ * ProximityPromptComponent has a TextComponent (E.g "Press E to interact")
+ */
 export class TextComponentSystem {
   private textObjects: WeakMap<TextComponent, CSS2DObject> = new WeakMap()
 
