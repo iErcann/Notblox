@@ -93,6 +93,7 @@ async function gameLoop() {
   const now = Date.now()
   const dt = now - lastUpdateTimestamp
 
+  destroyEventSystem.update(entities)
   physicsSystem.update(entities)
   boundaryCheckSystem.update(entities)
   ScriptableSystem.update(dt, entities)
@@ -123,7 +124,6 @@ async function gameLoop() {
   syncPositionSystem.update(entities)
 
   lockedRotationSystem.update(entities)
-  destroyEventSystem.update(entities)
   networkSystem.update(entities)
   sleepCheckSystem.update(entities)
 
