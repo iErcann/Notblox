@@ -38,6 +38,8 @@ import { NetworkDataComponent } from '../../shared/network/NetworkDataComponent.
 import { FloatingText } from './ecs/entity/FloatingText.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { TextComponent } from '../../shared/component/TextComponent.js'
+import { Car } from './ecs/entity/Car.js'
+import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
@@ -89,6 +91,7 @@ async function loadGameLogic() {
     ColorEvent,
     SizeEvent,
     SingleSizeEvent,
+    EntityDestroyedEvent,
 
     // Entities
     Cube,
@@ -97,6 +100,7 @@ async function loadGameLogic() {
     Player,
     TriggerCube,
     FloatingText,
+    Car,
   }
   const context = createContext(sandbox)
   const script = new Script(code)

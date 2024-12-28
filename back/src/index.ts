@@ -31,6 +31,8 @@ import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
 import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { ProximityPromptSystem } from './ecs/system/events/ProximityPromptEventSystem.js'
+import { ConvexHullColliderComponent } from './ecs/component/physics/ConvexHullColliderComponent.js'
+import { ConvexHullColliderSystem } from './ecs/system/physics/ConvexHullColliderSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -45,6 +47,7 @@ const trimeshColliderSystem = new TrimeshColliderSystem()
 const boxColliderSystem = new BoxColliderSystem()
 const capsuleColliderSystem = new CapsuleColliderSystem()
 const sphereColliderSystem = new SphereColliderSystem()
+const convexHullColliderSystem = new ConvexHullColliderSystem()
 
 const physicsSystem = PhysicsSystem.getInstance()
 const groundedCheckSystem = new GroundedCheckSystem()
@@ -89,6 +92,7 @@ async function gameLoop() {
     setTimeout(gameLoop, 1000)
     return
   }
+  // printMemoryUsage()
   setTimeout(gameLoop, 1000 / config.SERVER_TICKRATE)
   const now = Date.now()
   const dt = now - lastUpdateTimestamp
@@ -107,6 +111,7 @@ async function gameLoop() {
   boxColliderSystem.update(entities, physicsSystem.world)
   capsuleColliderSystem.update(entities, physicsSystem.world)
   sphereColliderSystem.update(entities, physicsSystem.world)
+  convexHullColliderSystem.update(entities, physicsSystem.world)
 
   zombieSystem.update(dt, entities)
 
@@ -138,5 +143,14 @@ export function startGameLoop() {
     gameLoop()
   } catch (error) {
     console.error('Error in game loop:', error)
+  }
+}
+
+function printMemoryUsage() {
+  const used = process.memoryUsage()
+  for (const key in used) {
+    console.log(
+      `${key} ${Math.round((used[key as keyof NodeJS.MemoryUsage] / 1024 / 1024) * 100) / 100} MB`
+    )
   }
 }

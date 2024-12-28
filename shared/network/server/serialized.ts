@@ -29,6 +29,7 @@ export enum SerializedEntityType {
   CHAT = 5,
   EVENT_QUEUE = 6,
   FLOATING_TEXT = 7,
+  CAR = 8,
 }
 
 export enum SerializedStateType {

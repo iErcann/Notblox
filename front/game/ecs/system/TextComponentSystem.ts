@@ -35,13 +35,13 @@ export class TextComponentSystem {
     isProximityPrompt: boolean = false
   ): CSS2DObject {
     const textElement = document.createElement('div')
-    this.updateTextElement(textElement, textComponent, isProximityPrompt)
+    this.updateTextElementContent(textElement, textComponent, isProximityPrompt)
     const textObject = new CSS2DObject(textElement)
     this.updateTextObjectPosition(textObject, textComponent)
     return textObject
   }
 
-  private updateTextElement(
+  private updateTextElementContent(
     textElement: HTMLElement,
     textComponent: TextComponent,
     isProximityPrompt: boolean
@@ -189,13 +189,13 @@ export class TextComponentSystem {
     if (!textObject) return
 
     if (textComponent.updated) {
-      this.updateTextElement(textObject.element, textComponent, isProximityPrompt)
+      this.updateTextElementContent(textObject.element, textComponent, isProximityPrompt)
     }
 
     // If the entity has no mesh, we will follow the position component
     if (!entity.getComponent(MeshComponent)) {
       const positionComponent = entity.getComponent(PositionComponent)
-      if (positionComponent) {
+      if (positionComponent && positionComponent.updated) {
         this.updateTextObjectPosition(textObject, textComponent, positionComponent)
       }
     } else {
