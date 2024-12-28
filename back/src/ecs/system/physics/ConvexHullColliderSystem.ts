@@ -67,20 +67,27 @@ export class ConvexHullColliderSystem {
     model.scene.traverse((child) => {
       if (child instanceof Mesh) {
         const mesh = child as Mesh
-        const worldPosition = new Vector3()
-        mesh.getWorldPosition(worldPosition)
-
+        const geometry = mesh.geometry
+        const positionAttribute = geometry.getAttribute('position')
         console.log('ConvexHullColliderSystem: Found mesh:', mesh.name)
-        const vertices = mesh.geometry.attributes.position.array
-        console.log('adding', vertices.length, 'vertices')
-        // Get world position and scale of the mesh
-        const scale = mesh.getWorldScale(mesh.scale)
+        console.log('adding', positionAttribute.count, 'vertices')
 
-        // Scale the vertices and add to the vertices array
-        for (let i = 0; i < vertices.length; i += 3) {
-          verticesArray.push(worldPosition.x + vertices[i] * scale.x)
-          verticesArray.push(worldPosition.y + vertices[i + 1] * scale.y)
-          verticesArray.push(worldPosition.z + vertices[i + 2] * scale.z)
+        // Create a new Float32Array to hold the transformed vertices
+        const transformedVertices = new Float32Array(positionAttribute.count * 3)
+
+        // Transform the vertices using localToWorld
+        const vertex = new Vector3()
+        for (let i = 0; i < positionAttribute.count; i++) {
+          vertex.fromBufferAttribute(positionAttribute, i)
+          mesh.localToWorld(vertex)
+          transformedVertices[i * 3] = vertex.x
+          transformedVertices[i * 3 + 1] = vertex.y
+          transformedVertices[i * 3 + 2] = vertex.z
+        }
+
+        // Add the transformed vertices to the vertices array
+        for (let i = 0; i < transformedVertices.length; i++) {
+          verticesArray.push(transformedVertices[i])
         }
       }
     })
@@ -94,14 +101,8 @@ export class ConvexHullColliderSystem {
       return
     }
 
-    // Convert the vertices array to Float32Array
-    const scaledVertices = new Float32Array(verticesArray)
-
-    // Approximate the vertices if necessary (e.g., using a library like QuickHull)
-    // Example: const approximatedVertices = approximateVertices(scaledVertices);
-
     // Create the collider using the approximated vertices
-    const colliderDesc = Rapier.ColliderDesc.convexHull(scaledVertices)
+    const colliderDesc = Rapier.ColliderDesc.convexHull(verticesArray)
     if (!colliderDesc) {
       console.error(
         'ConvexHullColliderSystem: Could not create collider descriptor, approximation of convex hull failed ?'
