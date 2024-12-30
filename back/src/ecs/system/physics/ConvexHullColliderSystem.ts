@@ -8,6 +8,7 @@ import Rapier from '../../../physics/rapier.js'
 import { ConvexHullColliderComponent } from '../../component/physics/ConvexHullColliderComponent.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
+import { ColliderPropertiesComponent } from '../../component/physics/ColliderPropertiesComponent.js'
 
 export class ConvexHullColliderSystem {
   private meshCache: Map<string, { vertices: number[] }> = new Map()
@@ -124,6 +125,13 @@ export class ConvexHullColliderSystem {
       return
     }
     const collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
+
+    const colliderProperties = entity.getComponent(ColliderPropertiesComponent)
+    if (colliderProperties) {
+      collider.setSensor(colliderProperties.isSensor)
+      collider.setFriction(colliderProperties.friction)
+      collider.setRestitution(colliderProperties.restitution)
+    }
     convexHullComponent.collider = collider
   }
 }

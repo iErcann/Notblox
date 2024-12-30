@@ -4,7 +4,7 @@ import Rapier from '../../../physics/rapier.js'
 import { LockedRotationComponent } from '../../component/LockedRotationComponent.js'
 import { SpawnPositionComponent } from '../../component/SpawnPositionComponent.js'
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
-import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
+import { PlayerComponent } from '../../../../../shared/component/PlayerComponent.js'
 
 export class BoundaryCheckSystem {
   lowerBound = -100

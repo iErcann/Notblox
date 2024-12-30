@@ -4,6 +4,7 @@ import { Cube } from '../entity/Cube'
 import { Player } from '../entity/Player'
 import { Sphere } from '../entity/Sphere'
 import { Chat } from '../entity/Chat'
+import { FloatingText } from '../entity/FloatingText'
 
 import {
   SerializedComponent,
@@ -25,12 +26,12 @@ import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEv
 import { ServerMeshComponent } from '@shared/component/ServerMeshComponent'
 import { ProximityPromptComponent } from '@shared/component/ProximityPromptComponent'
 import { TextComponent } from '@shared/component/TextComponent'
+import { VehicleComponent } from '@shared/component/VehicleComponent'
+import { PlayerComponent } from '@shared/component/PlayerComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
 import { EventSystem } from '@shared/system/EventSystem'
-import { EventListComponent } from '@shared/component/events/EventListComponent'
 import { EntityManager } from '@shared/system/EntityManager'
-import { FloatingText } from '../entity/FloatingText'
 
 export class SyncComponentsSystem {
   private snapshotMessages: SnapshotMessage[] = []
@@ -181,6 +182,12 @@ export class SyncComponentsSystem {
         break
       case SerializedComponentType.TEXT:
         component = new TextComponent(entityId, '', 0, 0, 0)
+        break
+      case SerializedComponentType.VEHICLE:
+        component = new VehicleComponent(entityId)
+        break
+      case SerializedComponentType.PLAYER:
+        component = new PlayerComponent(entityId)
         break
       default:
         console.error("Unknown component type, can't create component")

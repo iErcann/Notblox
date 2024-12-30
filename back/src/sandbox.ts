@@ -23,7 +23,7 @@ import { PhysicsPropertiesComponent } from './ecs/component/physics/PhysicsPrope
 import { SphereColliderComponent } from './ecs/component/physics/SphereColliderComponent.js'
 import { TrimeshColliderComponent } from './ecs/component/physics/TrimeshColliderComponent.js'
 import { ChatComponent } from './ecs/component/tag/TagChatComponent.js'
-import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
+import { PlayerComponent } from '../../shared/component/PlayerComponent.js'
 import { Cube } from './ecs/entity/Cube.js'
 import { MapWorld } from './ecs/entity/MapWorld.js'
 import { Sphere } from './ecs/entity/Sphere.js'

@@ -1,4 +1,3 @@
-// SNAPSHOT
 import { ServerMessage } from './base'
 export enum SerializedComponentType {
   NONE = 0,
@@ -18,6 +17,8 @@ export enum SerializedComponentType {
   SERVER_MESH = 10,
   PROXIMITY_PROMPT = 11,
   TEXT = 12,
+  VEHICLE = 13,
+  PLAYER = 14,
 }
 
 export enum SerializedEntityType {
@@ -40,6 +41,7 @@ export enum SerializedStateType {
   ATTACK = 'Attack',
   FALL = 'Fall',
   DEATH = 'Death',
+  VEHICLE_DRIVING = 'VehicleDriving',
 }
 
 export interface SerializedComponent {
@@ -55,5 +57,5 @@ export interface SerializedEntity {
 }
 
 export interface SnapshotMessage extends ServerMessage {
-  e: Array<SerializedEntity>
+  e: SerializedEntity[]
 }

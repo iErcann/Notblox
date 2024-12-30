@@ -12,7 +12,7 @@ import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 import { WebSocketComponent } from '../component/WebsocketComponent.js'
-import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'
+import { PlayerComponent } from '../../../../shared/component/PlayerComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { LockedRotationComponent } from '../component/LockedRotationComponent.js'
 import { CapsuleColliderComponent } from '../component/physics/CapsuleColliderComponent.js'
@@ -27,7 +27,8 @@ export class Player {
   constructor(ws: WebSocket, initialX: number, initialY: number, initialZ: number) {
     this.entity = EntityManager.createEntity(SerializedEntityType.PLAYER)
     // Tag
-    this.entity.addComponent(new PlayerComponent(this.entity.id))
+    const playerComponent = new PlayerComponent(this.entity.id)
+    this.entity.addComponent(playerComponent)
 
     const positionComponent = new PositionComponent(this.entity.id, initialX, initialY, initialZ)
     this.entity.addComponent(positionComponent)
@@ -72,6 +73,7 @@ export class Player {
       new PhysicsPropertiesComponent(this.entity.id, {
         enableCcd: true,
         angularDamping: 1.5,
+        mass: 5,
       })
     )
     this.entity.addComponent(new GroundCheckComponent(this.entity.id))
@@ -88,6 +90,7 @@ export class Player {
       stateComponent,
       serverMeshComponent,
       textComponent,
+      playerComponent,
     ])
 
     this.entity.addComponent(networkDataComponent)

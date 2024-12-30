@@ -22,9 +22,10 @@ export class AnimationSystem {
       if (
         inputComponent &&
         rigidBodyComponent &&
-        stateComponent &&
         positionComponent &&
-        colliderComponent
+        colliderComponent &&
+        stateComponent &&
+        stateComponent.state !== SerializedStateType.VEHICLE_DRIVING
       ) {
         const groundedComponent = entity.getComponent(GroundCheckComponent)
         this.updateState(inputComponent, stateComponent, groundedComponent?.grounded || false)

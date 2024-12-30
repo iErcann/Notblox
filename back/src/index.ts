@@ -27,11 +27,10 @@ import { SphereColliderSystem } from './ecs/system/physics/SphereColliderSystem.
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
-import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
+import { PlayerComponent } from '../../shared/component/PlayerComponent.js'
 import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { ProximityPromptSystem } from './ecs/system/events/ProximityPromptEventSystem.js'
-import { ConvexHullColliderComponent } from './ecs/component/physics/ConvexHullColliderComponent.js'
 import { ConvexHullColliderSystem } from './ecs/system/physics/ConvexHullColliderSystem.js'
 import { VehicleMovementSystem } from './ecs/system/VehicleMovementSystem.js'
 

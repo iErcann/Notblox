@@ -3,7 +3,7 @@ import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
-import { PlayerComponent } from '../../component/tag/TagPlayerComponent.js'
+import { PlayerComponent } from '../../../../../shared/component/PlayerComponent.js'
 
 export class DestroyEventSystem {
   update(entities: Entity[]) {

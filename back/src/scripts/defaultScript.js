@@ -7,64 +7,69 @@ function randomHexColor() {
 // Can also be hosted on a gittblox-Assets + https://rawcdn.githack.comhub repo : https://github.com/iErcann/No
 new MapWorld('http://localhost:4001/FlatMap.glb')
 
-for (let i = 0; i < 1; i++) {
-  const car = new Car({
-    position: {
-      x: 10,
-      y: 10,
-      z: 10 * i,
-    },
-  })
+new Car({
+  position: {
+    x: 10,
+    y: 10,
+    z: 10,
+  },
+})
 
-  const proximityPromptComponent = new ProximityPromptComponent(car.entity.id, {
-    text: 'Kick',
-    onInteract: (playerEntity) => {
-      const ballRigidbody = car.entity.getComponent(DynamicRigidBodyComponent)
-      const playerRotationComponent = playerEntity.getComponent(RotationComponent)
+new Car({
+  position: {
+    x: 50,
+    y: 10,
+    z: 10,
+  },
+})
 
-      if (ballRigidbody && playerRotationComponent && playerEntity.getComponent(InputComponent)) {
-        // Convert rotation to direction vector
-        const direction = playerRotationComponent.getForwardDirection()
-        // Calculate player looking direction
-        // sendChatMessage('⚽', `Player shot the ball !`)
-        const playerLookingDirectionVector = new Rapier.Vector3(
-          direction.x * 52500,
-          0,
-          direction.z * 52500
-        )
+// const proximityPromptComponent = new ProximityPromptComponent(car.entity.id, {
+//   text: 'Kick',
+//   onInteract: (playerEntity) => {
+//     const ballRigidbody = car.entity.getComponent(DynamicRigidBodyComponent)
+//     const playerRotationComponent = playerEntity.getComponent(RotationComponent)
 
-        ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
-      }
-    },
-    maxInteractDistance: 15,
-    interactionCooldown: 2000,
-    holdDuration: 0,
-  })
-  const networkDataComponent = car.entity.getComponent(NetworkDataComponent)
-  networkDataComponent.addComponent(proximityPromptComponent)
-  car.entity.addComponent(proximityPromptComponent)
+//     if (ballRigidbody && playerRotationComponent && playerEntity.getComponent(InputComponent)) {
+//       // Convert rotation to direction vector
+//       const direction = playerRotationComponent.getForwardDirection()
+//       // Calculate player looking direction
+//       const playerLookingDirectionVector = new Rapier.Vector3(
+//         direction.x * 52500,
+//         0,
+//         direction.z * 52500
+//       )
 
-  for (let i = 1; i < 5; i++) {
-    new Cube({
-      position: {
-        x: 10 + i * 10,
-        y: 10 + i * 10,
-        z: 0,
-      },
-      size: {
-        width: i / 2,
-        height: i / 2,
-        depth: i / 2,
-      },
-      physicsProperties: {
-        mass: 0.1,
-        angularDamping: 0,
-        linearDamping: 0,
-        enableCcd: true,
-      },
-    })
-  }
-}
+//       ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
+//     }
+//   },
+//   maxInteractDistance: 15,
+//   interactionCooldown: 2000,
+//   holdDuration: 0,
+// })
+// const networkDataComponent = car.entity.getComponent(NetworkDataComponent)
+// networkDataComponent.addComponent(proximityPromptComponent)
+// car.entity.addComponent(proximityPromptComponent)
+
+// for (let i = 1; i < 5; i++) {
+//   new Cube({
+//     position: {
+//       x: 10 + i * 10,
+//       y: 10 + i * 10,
+//       z: 0,
+//     },
+//     size: {
+//       width: i / 2,
+//       height: i / 2,
+//       depth: i / 2,
+//     },
+//     physicsProperties: {
+//       mass: 0.1,
+//       angularDamping: 0,
+//       linearDamping: 0,
+//       enableCcd: true,
+//     },
+//   })
+// }
 
 // setInterval(() => {
 //   console.log(car.entity.getComponent(TextComponent))

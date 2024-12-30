@@ -1,9 +1,8 @@
 import { EventSystem } from '../../../../shared/system/EventSystem.js'
 import { ComponentAddedEvent } from '../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
-import { VehicleComponent } from '../component/VehicleComponent.js'
+import { VehicleComponent } from '../../../../shared/component/VehicleComponent.js'
 import { EntityManager } from '../../../../shared/system/EntityManager.js'
-import { PlayerComponent } from '../component/tag/TagPlayerComponent.js'
 import { InputComponent } from '../component/InputComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import Rapier from '../../physics/rapier.js'
@@ -13,12 +12,6 @@ export class VehicleMovementSystem {
   // Map each Entity with a VehicleComponent to a DynamicRayCastVehicleController
   private vehicleControllers = new Map<Entity, DynamicRayCastVehicleController>()
   update(entities: Entity[], world: Rapier.World, dt: number): void {
-    const player = EntityManager.getFirstEntityWithComponent(entities, PlayerComponent)
-    if (!player) {
-      console.error('CarMovementSystem: No player found')
-      return
-    }
-
     const createEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, VehicleComponent)
     for (const event of createEvents) {
       const entity = EntityManager.getEntityById(entities, event.entityId)
@@ -36,10 +29,10 @@ export class VehicleMovementSystem {
 
       // Define wheel positions and directions
       const wheelConfigs = [
-        { position: new Rapier.Vector3(-4.65, -0.15 * 3, -2.45) }, // Front Left
-        { position: new Rapier.Vector3(-4.65, -0.15 * 3, 2.45) }, // Back Left
-        { position: new Rapier.Vector3(4.65, -0.15 * 3, -2.45) }, // Front Right
-        { position: new Rapier.Vector3(4.65, -0.15 * 3, 2.45) }, // Back Right
+        { position: new Rapier.Vector3(-4.65, 0, -2.85) }, // FRONT
+        { position: new Rapier.Vector3(-4.65, 0, 2.85) }, // BACK
+        { position: new Rapier.Vector3(4.65, 0, -2.85) }, // FRONT
+        { position: new Rapier.Vector3(4.65, 0, 2.85) }, // BACK
       ]
 
       for (const config of wheelConfigs) {
@@ -47,7 +40,7 @@ export class VehicleMovementSystem {
           config.position,
           new Rapier.Vector3(0, -1, 0),
           new Rapier.Vector3(-1, 0, 0),
-          0.125,
+          1,
           1
         )
       }
@@ -58,15 +51,11 @@ export class VehicleMovementSystem {
         vehicle.setWheelSuspensionStiffness(i, 5.8)
         vehicle.setWheelMaxSuspensionForce(i, 6000)
         vehicle.setWheelMaxSuspensionTravel(i, 5)
+
+        vehicle.setWheelSideFrictionStiffness(i, 0.5)
       }
 
       this.vehicleControllers.set(entity, vehicle)
-
-      const carComponent: VehicleComponent = event.component
-      if (!carComponent.driverEntityId) {
-        console.log('Setting driver', player.id)
-        carComponent.driverEntityId = player.id
-      }
     }
 
     for (const entity of entities) {
@@ -109,17 +98,17 @@ export class VehicleMovementSystem {
             : driverInputComponent.down
             ? -15000
             : 0
-          vehicleController.setWheelEngineForce(1, engineForce) // Back Left
-          vehicleController.setWheelEngineForce(3, engineForce) // Back Right
+          vehicleController.setWheelEngineForce(0, engineForce)
+          vehicleController.setWheelEngineForce(2, engineForce)
 
           // Steering for front wheels (0 and 2)
           const steeringAngle = driverInputComponent.left
-            ? -0.5
-            : driverInputComponent.right
             ? 0.5
+            : driverInputComponent.right
+            ? -0.5
             : 0
-          vehicleController.setWheelSteering(0, steeringAngle) // Front Left
-          vehicleController.setWheelSteering(2, steeringAngle) // Front Right
+          vehicleController.setWheelSteering(1, steeringAngle)
+          vehicleController.setWheelSteering(3, steeringAngle)
 
           // Update the vehicle controller
           vehicleController.updateVehicle(dt / 1000)
