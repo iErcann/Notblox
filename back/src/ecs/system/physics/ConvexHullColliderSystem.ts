@@ -10,6 +10,8 @@ import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRi
 import { DynamicRigidBodyComponent } from '../../component/physics/DynamicRigidBodyComponent.js'
 
 export class ConvexHullColliderSystem {
+  private meshCache: Map<string, { vertices: number[] }> = new Map()
+
   async update(entities: Entity[], world: Rapier.World) {
     const createEvents = EventSystem.getEventsWrapped(
       ComponentAddedEvent,
@@ -23,7 +25,6 @@ export class ConvexHullColliderSystem {
         continue
       }
 
-      // TODO : Store a Map<MeshURL, {vertices: number[], indices: number[]}> to avoid loading the same mesh multiple times
       await this.onComponentAdded(entity, event, world)
     }
   }
@@ -43,22 +44,18 @@ export class ConvexHullColliderSystem {
     event: ComponentAddedEvent<ConvexHullColliderComponent>,
     world: Rapier.World
   ) {
-    // TODO: Make a cache for the loaded models vertices and indices
     const convexHullComponent = event.component as ConvexHullColliderComponent
-    const model = await GLTFLoaderManager.loadGLTFModel(convexHullComponent.meshUrl)
-    if (!model) {
-      console.error('ConvexHullColliderSystem: Mesh not found')
+
+    // Check if the mesh is already cached
+    if (this.meshCache.has(convexHullComponent.meshUrl)) {
+      const cachedData = this.meshCache.get(convexHullComponent.meshUrl)
+      this.createColliderFromVertices(entity, cachedData!.vertices, world, convexHullComponent)
       return
     }
 
-    const rigidBodyComponent =
-      entity.getComponent(KinematicRigidBodyComponent) ||
-      entity.getComponent(DynamicRigidBodyComponent)
-
-    if (!rigidBodyComponent) {
-      console.error(
-        'ConvexHullColliderSystem: No RigidBodyComponent found on entity, cannot add collider'
-      )
+    const model = await GLTFLoaderManager.loadGLTFModel(convexHullComponent.meshUrl)
+    if (!model) {
+      console.error('ConvexHullColliderSystem: Mesh not found')
       return
     }
 
@@ -69,8 +66,6 @@ export class ConvexHullColliderSystem {
         const mesh = child as Mesh
         const geometry = mesh.geometry
         const positionAttribute = geometry.getAttribute('position')
-        console.log('ConvexHullColliderSystem: Found mesh:', mesh.name)
-        console.log('adding', positionAttribute.count, 'vertices')
 
         // Create a new Float32Array to hold the transformed vertices
         const transformedVertices = new Float32Array(positionAttribute.count * 3)
@@ -92,17 +87,36 @@ export class ConvexHullColliderSystem {
       }
     })
 
-    console.log(
-      'ConvexHullColliderSystem: Merged mesh vertices:',
-      JSON.stringify(verticesArray, null, 2)
-    )
     if (verticesArray.length === 0) {
       console.error('ConvexHullColliderSystem: No vertices found in model')
       return
     }
 
-    // Create the collider using the approximated vertices
-    const colliderDesc = Rapier.ColliderDesc.convexHull(verticesArray)
+    // Cache the vertices
+    this.meshCache.set(convexHullComponent.meshUrl, { vertices: verticesArray })
+
+    // Create the collider using the cached vertices
+    this.createColliderFromVertices(entity, verticesArray, world, convexHullComponent)
+  }
+
+  private createColliderFromVertices(
+    entity: Entity,
+    vertices: number[],
+    world: Rapier.World,
+    convexHullComponent: ConvexHullColliderComponent
+  ) {
+    const rigidBodyComponent =
+      entity.getComponent(KinematicRigidBodyComponent) ||
+      entity.getComponent(DynamicRigidBodyComponent)
+
+    if (!rigidBodyComponent) {
+      console.error(
+        'ConvexHullColliderSystem: No RigidBodyComponent found on entity, cannot add collider'
+      )
+      return
+    }
+
+    const colliderDesc = Rapier.ColliderDesc.convexHull(new Float32Array(vertices))
     if (!colliderDesc) {
       console.error(
         'ConvexHullColliderSystem: Could not create collider descriptor, approximation of convex hull failed ?'
@@ -111,7 +125,5 @@ export class ConvexHullColliderSystem {
     }
     const collider = world.createCollider(colliderDesc, rigidBodyComponent.body)
     convexHullComponent.collider = collider
-
-    console.log('ConvexHullColliderSystem: Created collider for merged mesh vertices')
   }
 }

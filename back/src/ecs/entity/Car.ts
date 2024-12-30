@@ -5,16 +5,16 @@ import { SerializedEntityType } from '../../../../shared/network/server/serializ
 import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
 import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
-import { BoxColliderComponent } from '../component/physics/BoxColliderComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
-import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import {
   PhysicsPropertiesComponent,
   PhysicsPropertiesComponentData,
 } from '../component/physics/PhysicsPropertiesComponent.js'
 import { TextComponent } from '../../../../shared/component/TextComponent.js'
 import { ConvexHullColliderComponent } from '../component/physics/ConvexHullColliderComponent.js'
+import { VehicleComponent as VehicleComponent } from '../component/VehicleComponent.js'
+import { VehicleRayCastComponent } from '../system/physics/VehicleRayCastComponent.js'
 
 export interface CarParams {
   position: {
@@ -50,7 +50,8 @@ export class Car {
   constructor(params: CarParams) {
     const { position, size, color, meshUrl, physicsProperties } = params
 
-    this.entity = EntityManager.createEntity(SerializedEntityType.CAR)
+    this.entity = EntityManager.createEntity(SerializedEntityType.VEHICLE)
+    this.entity.addComponent(new VehicleComponent(this.entity.id))
 
     const positionComponent = new PositionComponent(
       this.entity.id,
@@ -88,13 +89,13 @@ export class Car {
         this.entity.id,
         physicsProperties ?? {
           enableCcd: true,
-          angularDamping: 0.2,
-          linearDamping: 0.2,
           mass: 1,
         }
       )
     )
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
+
+    this.entity.addComponent(new VehicleRayCastComponent(this.entity.id))
 
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [
       positionComponent,

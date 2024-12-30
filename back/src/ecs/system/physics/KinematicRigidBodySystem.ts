@@ -61,7 +61,7 @@ export class KinematicRigidBodySystem {
       if (physicsPropertiesComponent.data.angularDamping) {
         physicsBodyComponent.body.setAngularDamping(physicsPropertiesComponent.data.angularDamping)
       }
-      if (physicsPropertiesComponent.data.enableCcd) {
+      if (physicsPropertiesComponent.data.enableCcd != undefined) {
         physicsBodyComponent.body.enableCcd(physicsPropertiesComponent.data.enableCcd)
       }
       if (physicsPropertiesComponent.data.linearDamping) {

@@ -4,131 +4,111 @@ function randomHexColor() {
 }
 
 // Load the game world
-// Can also be hosted on a github repo : https://github.com/iErcann/Notblox-Assets + https://rawcdn.githack.com
-new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/aqsworld.glb')
+// Can also be hosted on a gittblox-Assets + https://rawcdn.githack.comhub repo : https://github.com/iErcann/No
+new MapWorld('http://localhost:4001/FlatMap.glb')
 
-// === Basic Entity Creation Examples ===
+for (let i = 0; i < 1; i++) {
+  const car = new Car({
+    position: {
+      x: 10,
+      y: 10,
+      z: 10 * i,
+    },
+  })
 
-// Create a basic cube
-const basicCubeParams = {
-  position: { x: 0, y: 5, z: -10 },
-  size: { width: 3, height: 3, depth: 3 },
-}
-new Cube(basicCubeParams)
+  const proximityPromptComponent = new ProximityPromptComponent(car.entity.id, {
+    text: 'Kick',
+    onInteract: (playerEntity) => {
+      const ballRigidbody = car.entity.getComponent(DynamicRigidBodyComponent)
+      const playerRotationComponent = playerEntity.getComponent(RotationComponent)
 
-// Create physics-enabled sphere with a white color
-const basicSphereParams = {
-  position: { x: 5, y: 10, z: -10 },
-  radius: 4,
-  color: '#ffffff',
-}
-new Sphere(basicSphereParams)
+      if (ballRigidbody && playerRotationComponent && playerEntity.getComponent(InputComponent)) {
+        // Convert rotation to direction vector
+        const direction = playerRotationComponent.getForwardDirection()
+        // Calculate player looking direction
+        // sendChatMessage('⚽', `Player shot the ball !`)
+        const playerLookingDirectionVector = new Rapier.Vector3(
+          direction.x * 52500,
+          0,
+          direction.z * 52500
+        )
 
-// === Interactive Trigger Zone Example ===
-// Creates an invisible trigger zone that detects when players enter/exit
-new TriggerCube(
-  -180,
-  0,
-  -250, // position
-  6,
-  4,
-  6, // size
-  (entity) => {
-    // onEnter callback
-    if (entity.getComponent(PlayerComponent)) {
-      console.log('Invisible trigger zone: Player entered the zone!')
-      // You could add game logic here, like:
-      // - Giving points
-      // - Triggering events
-      // - Spawning enemies
-      entity
-        .getComponent(DynamicRigidBodyComponent)
-        .body.applyImpulse(new Rapier.Vector3(0, 9000, 0), true)
-    }
-  },
-  (entity) => {
-    // onExit callback
-    if (entity.getComponent(PlayerComponent)) {
-      console.log('Invisible trigger zone: Player left the zone!')
-    }
-  },
-  true // Set to true to see the trigger zone (useful for debugging)
-)
-
-// === Interactive Object Example ===
-// Create a cube that reacts to player collision
-for (let i = 0; i < 2; i++) {
-  const interactiveCubeParams = {
-    position: { x: 0, y: 5, z: -100 },
-    size: { width: 2, height: 2, depth: 2 },
-  }
-  const interactiveCube = new Cube(interactiveCubeParams)
-  interactiveCube.entity.addComponent(
-    new OnCollisionEnterEvent(interactiveCube.entity.id, (collidedWithEntity) => {
-      // Only react to players
-      if (collidedWithEntity.getComponent(PlayerComponent)) {
-        // Change color of the cube on collision
-        EventSystem.addEvent(new ColorEvent(interactiveCube.entity.id, randomHexColor()))
-
-        // Apply upward force
-        const rigidBody = interactiveCube.entity.getComponent(DynamicRigidBodyComponent)
-        if (rigidBody) {
-          rigidBody.body.applyImpulse(new Rapier.Vector3(0, 5000, 0), true)
-        }
+        ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
       }
+    },
+    maxInteractDistance: 15,
+    interactionCooldown: 2000,
+    holdDuration: 0,
+  })
+  const networkDataComponent = car.entity.getComponent(NetworkDataComponent)
+  networkDataComponent.addComponent(proximityPromptComponent)
+  car.entity.addComponent(proximityPromptComponent)
+
+  for (let i = 1; i < 5; i++) {
+    new Cube({
+      position: {
+        x: 10 + i * 10,
+        y: 10 + i * 10,
+        z: 0,
+      },
+      size: {
+        width: i / 2,
+        height: i / 2,
+        depth: i / 2,
+      },
+      physicsProperties: {
+        mass: 0.1,
+        angularDamping: 0,
+        linearDamping: 0,
+        enableCcd: true,
+      },
     })
-  )
+  }
 }
 
-// === Create Multiple Objects Example ===
-// Creates a line of cubes with alternating colors
-const colors = ['#ff0000', '#00ff00', '#0000ff']
-for (let i = 0; i < 2; i++) {
-  const cubeParams = {
-    position: { x: i * 3, y: 5, z: -40 },
-    size: { width: 1, height: 1, depth: 1 },
-    color: colors[i % colors.length],
-  }
-  const cube = new Cube(cubeParams)
-  cube.entity.addComponent(new RandomizeComponent(cube.entity.id))
-  const sphereParams = {
-    position: { x: i * 3, y: 5, z: -40 },
-    radius: 1,
-    color: colors[i % colors.length],
-  }
-  const sphere = new Sphere(sphereParams)
-  sphere.entity.addComponent(new RandomizeComponent(sphere.entity.id))
-}
+// setInterval(() => {
+//   console.log(car.entity.getComponent(TextComponent))
+//   car.entity.getComponent(TextComponent).text = 'Hello' + Math.random()
+//   car.entity.getComponent(TextComponent).updated = true
+// }, 1000)
 
-const cube = new Cube({
-  position: {
-    x: 100,
-    y: 10,
-    z: 100,
-  },
-  physicsProperties: {
-    mass: 1,
-    angularDamping: 0.5,
-  },
-})
-const proximityPromptComponent = new ProximityPromptComponent(cube.entity.id, {
-  text: 'Press E to change color',
-  onInteract: (interactingEntity) => {
-    cube.entity
-      .getComponent(DynamicRigidBodyComponent)
-      .body.applyImpulse(new Rapier.Vector3(0, 5, 0), true)
+// // ---------
+// for (let i = 0; i < 100; i++) {
+//   const cube = new Cube({
+//     position: {
+//       x: i * 20,
+//       y: i * 20,
+//       z: 100,
+//     },
+//     physicsProperties: {
+//       mass: 1,
+//       angularDamping: 0.5,
+//       enableCcd: true,
+//     },
+//   })
+//   const proximityPromptComponent = new ProximityPromptComponent(cube.entity.id, {
+//     text: 'Press E to change color',
+//     onInteract: (interactingEntity) => {
+//       cube.entity
+//         .getComponent(DynamicRigidBodyComponent)
+//         .body.applyImpulse(new Rapier.Vector3(0, 5, 0), true)
 
-    const colorComponent = cube.entity.getComponent(ColorComponent)
-    if (colorComponent) {
-      // randomize color
-      colorComponent.color = '#' + Math.floor(Math.random() * 16777215).toString(16)
-      colorComponent.updated = true
-    }
-  },
-  maxInteractDistance: 10,
-  interactionCooldown: 200,
-  holdDuration: 0,
-})
-cube.entity.addComponent(proximityPromptComponent)
-const networkDataComponent = cube.entity.getComponent(NetworkDataComponent)
-networkDataComponent.addComponent(proximityPromptComponent)
+//       const colorComponent = cube.entity.getComponent(ColorComponent)
+//       if (colorComponent) {
+//         // randomize color
+//         colorComponent.color = '#' + Math.floor(Math.random() * 16777215).toString(16)
+//         colorComponent.updated = true
+//       }
+//     },
+//     maxInteractDistance: 10,
+//     interactionCooldown: 200,
+//     holdDuration: 0,
+//   })
+//   cube.entity.addComponent(proximityPromptComponent)
+//   const networkDataComponent = cube.entity.getComponent(NetworkDataComponent)
+//   networkDataComponent.addComponent(proximityPromptComponent)
+
+//   setTimeout(() => {
+//     EventSystem.addNetworkEvent(new EntityDestroyedEvent(cube.entity.id))
+//   }, i * 1000)
+// }

@@ -33,6 +33,7 @@ import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { ProximityPromptSystem } from './ecs/system/events/ProximityPromptEventSystem.js'
 import { ConvexHullColliderComponent } from './ecs/component/physics/ConvexHullColliderComponent.js'
 import { ConvexHullColliderSystem } from './ecs/system/physics/ConvexHullColliderSystem.js'
+import { VehicleMovementSystem } from './ecs/system/VehicleMovementSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -63,6 +64,7 @@ const destroyEventSystem = new DestroyEventSystem()
 const interactEventSystem = new ProximityPromptSystem()
 
 const movementSystem = new MovementSystem()
+const carMovementSystem = new VehicleMovementSystem()
 const networkSystem = new NetworkSystem()
 
 const animationSystem = new AnimationSystem()
@@ -123,6 +125,7 @@ async function gameLoop() {
 
   groundedCheckSystem.update(entities, physicsSystem.world)
   movementSystem.update(dt, entities)
+  carMovementSystem.update(entities, physicsSystem.world, dt)
 
   animationSystem.update(entities)
   syncRotationSystem.update(entities)

@@ -64,6 +64,7 @@ export class Entity {
         return component as NetworkComponent
       }
     }
+    console.error('NetworkComponent not found by type', componentType)
     return undefined
   }
 }
