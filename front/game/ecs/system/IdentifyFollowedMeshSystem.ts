@@ -7,26 +7,34 @@ import { PlayerComponent } from '@shared/component/PlayerComponent.js'
 import { VehicleComponent } from '@shared/component/VehicleComponent.js'
 import { EntityManager } from '@shared/system/EntityManager.js'
 import { StateComponent } from '@shared/component/StateComponent.js'
+import { EventSystem } from '@shared/system/EventSystem'
+import { ComponentAddedEvent } from '@shared/component/events/ComponentAddedEvent'
 
 export class IdentifyFollowedMeshSystem {
+  currentPlayerEntity?: Entity
+  handlePlayerCreation(entities: Entity[], game: Game) {
+    const addedPlayerEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, PlayerComponent)
+    for (const playerEvent of addedPlayerEvents) {
+      const playerComponent: PlayerComponent = playerEvent.component
+      if (playerComponent.entityId === game.currentPlayerEntityId) {
+        const entity = EntityManager.getEntityById(entities, playerEvent.entityId)
+        if (entity) {
+          entity.addComponent(new CurrentPlayerComponent(playerEvent.entityId))
+          entity.addComponent(new FollowComponent(playerEvent.entityId, game.renderer.camera))
+          this.currentPlayerEntity = entity
+        }
+      }
+    }
+  }
   update(entities: Entity[], game: Game) {
-    if (!game.currentPlayerEntityId) return
-
-    const currentPlayerEntity = EntityManager.getEntityById(entities, game.currentPlayerEntityId)
-
-    if (!currentPlayerEntity) return
-
-    const playerComponent = currentPlayerEntity.getComponent(PlayerComponent)
-
-    // Ensure the current player has the required components
-    if (playerComponent && !currentPlayerEntity.getComponent(CurrentPlayerComponent)) {
-      currentPlayerEntity.addComponent(new CurrentPlayerComponent(currentPlayerEntity.id))
-      currentPlayerEntity.addComponent(
-        new FollowComponent(currentPlayerEntity.id, game.renderer.camera)
-      )
+    if (!this.currentPlayerEntity && game.currentPlayerEntityId) {
+      this.handlePlayerCreation(entities, game)
     }
 
-    const playerStateComponent = currentPlayerEntity.getComponent(StateComponent)
+    if (!this.currentPlayerEntity) {
+      return
+    }
+    const playerStateComponent = this.currentPlayerEntity.getComponent(StateComponent)
     if (!playerStateComponent) {
       return
     }
@@ -42,8 +50,8 @@ export class IdentifyFollowedMeshSystem {
           vehicleComponent.driverEntityId === game.currentPlayerEntityId
         ) {
           // Stop following the current player and follow the vehicle instead
-          if (currentPlayerEntity.getComponent(FollowComponent)) {
-            currentPlayerEntity.removeComponent(FollowComponent)
+          if (this.currentPlayerEntity.getComponent(FollowComponent)) {
+            this.currentPlayerEntity.removeComponent(FollowComponent)
           }
           if (!vehicleEntity.getComponent(FollowComponent)) {
             vehicleEntity.addComponent(new FollowComponent(vehicleEntity.id, game.renderer.camera))
@@ -53,7 +61,7 @@ export class IdentifyFollowedMeshSystem {
         // If the current player stopped driving a vehicle
         else if (
           playerStateComponent.state !== SerializedStateType.VEHICLE_DRIVING &&
-          !currentPlayerEntity.getComponent(FollowComponent)
+          !this.currentPlayerEntity.getComponent(FollowComponent)
         ) {
           // Stop following the vehicle and follow the current player instead
           if (vehicleEntity.getComponent(FollowComponent)) {
@@ -62,8 +70,8 @@ export class IdentifyFollowedMeshSystem {
             console.log('CANT REMOVE? WTF!', vehicleEntity)
           }
 
-          currentPlayerEntity.addComponent(
-            new FollowComponent(currentPlayerEntity.id, game.renderer.camera)
+          this.currentPlayerEntity.addComponent(
+            new FollowComponent(this.currentPlayerEntity.id, game.renderer.camera)
           )
         }
       }

@@ -17,7 +17,6 @@ import {
 import { TextComponent } from '../../../../shared/component/TextComponent.js'
 import { ConvexHullColliderComponent } from '../component/physics/ConvexHullColliderComponent.js'
 import { VehicleComponent as VehicleComponent } from '../../../../shared/component/VehicleComponent.js'
-import { VehicleRayCastComponent } from '../system/physics/VehicleRayCastComponent.js'
 import { ColliderPropertiesComponent } from '../component/physics/ColliderPropertiesComponent.js'
 import { ProximityPromptComponent } from '../../../../shared/component/ProximityPromptComponent.js'
 import { PlayerComponent } from '../../../../shared/component/PlayerComponent.js'
@@ -99,8 +98,8 @@ export class Car {
         physicsProperties ?? {
           enableCcd: true,
           mass: 1,
-          angularDamping: 1,
-          linearDamping: 0.05,
+          angularDamping: 0.001,
+          linearDamping: 0.0005,
         }
       )
     )
@@ -119,6 +118,7 @@ export class Car {
           const vehicleHasDriver = vehicleComponent.driverEntityId !== undefined
           // Is the current player already driving a vehicle?
           const playerIsDriving = playerStateComponent.state === SerializedStateType.VEHICLE_DRIVING
+
           if (!vehicleHasDriver && !playerIsDriving) {
             vehicleComponent.driverEntityId = playerEntity.id
             vehicleComponent.updated = true
@@ -154,8 +154,6 @@ export class Car {
     this.entity.addComponent(proximityPromptComponent)
 
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
-
-    this.entity.addComponent(new VehicleRayCastComponent(this.entity.id))
 
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [
       positionComponent,
