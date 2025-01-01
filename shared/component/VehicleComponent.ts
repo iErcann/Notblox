@@ -2,7 +2,11 @@ import { SerializedComponent, SerializedComponentType } from '../network/server/
 import { NetworkComponent } from '../network/NetworkComponent.js'
 
 export class VehicleComponent extends NetworkComponent {
-  constructor(entityId: number, public driverEntityId?: number) {
+  constructor(
+    entityId: number,
+    public driverEntityId?: number,
+    public passengerEntityIds?: number[]
+  ) {
     super(entityId, SerializedComponentType.VEHICLE)
   }
   serialize() {

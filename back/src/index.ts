@@ -32,7 +32,7 @@ import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { ProximityPromptSystem } from './ecs/system/events/ProximityPromptEventSystem.js'
 import { ConvexHullColliderSystem } from './ecs/system/physics/ConvexHullColliderSystem.js'
-import { VehicleMovementSystem } from './ecs/system/VehicleMovementSystem.js'
+import { VehicleSystem } from './ecs/system/VehicleSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -60,10 +60,10 @@ const syncPositionSystem = new SyncPositionSystem()
 const syncRotationSystem = new SyncRotationSystem()
 const chatSystem = new ChatEventSystem()
 const destroyEventSystem = new DestroyEventSystem()
-const interactEventSystem = new ProximityPromptSystem()
+const proximityPromptSystem = new ProximityPromptSystem()
 
 const movementSystem = new MovementSystem()
-const carMovementSystem = new VehicleMovementSystem()
+const vehicleSystem = new VehicleSystem()
 const networkSystem = new NetworkSystem()
 
 const animationSystem = new AnimationSystem()
@@ -102,7 +102,7 @@ async function gameLoop() {
   physicsSystem.update(entities)
   boundaryCheckSystem.update(entities)
   ScriptableSystem.update(dt, entities)
-  interactEventSystem.update(entities, dt)
+  proximityPromptSystem.update(entities, dt)
 
   // Create the bodies first.
   kinematicPhysicsBodySystem.update(entities, physicsSystem.world)
@@ -115,7 +115,6 @@ async function gameLoop() {
   convexHullColliderSystem.update(entities, physicsSystem.world)
 
   zombieSystem.update(dt, entities)
-
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
   singleSizeEventSystem.update(entities)
@@ -124,7 +123,7 @@ async function gameLoop() {
 
   groundedCheckSystem.update(entities, physicsSystem.world)
   movementSystem.update(dt, entities)
-  carMovementSystem.update(entities, physicsSystem.world, dt)
+  vehicleSystem.update(entities, physicsSystem.world, dt)
 
   animationSystem.update(entities)
   syncRotationSystem.update(entities)
@@ -145,14 +144,5 @@ export function startGameLoop() {
     gameLoop()
   } catch (error) {
     console.error('Error in game loop:', error)
-  }
-}
-
-function printMemoryUsage() {
-  const used = process.memoryUsage()
-  for (const key in used) {
-    console.log(
-      `${key} ${Math.round((used[key as keyof NodeJS.MemoryUsage] / 1024 / 1024) * 100) / 100} MB`
-    )
   }
 }
