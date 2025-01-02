@@ -4,6 +4,7 @@ import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { InputComponent } from '../component/InputComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { VehicleRayCastComponent } from '../component/physics/VehicleRayCastComponent.js'
+import { VehicleOccupancyComponent } from '../../../../shared/component/VehicleOccupancyComponent.js'
 
 export class VehicleMovementSystem {
   update(entities: Entity[], dt: number): void {
@@ -17,6 +18,14 @@ export class VehicleMovementSystem {
         if (!driver) {
           console.error(
             'VehicleInputSystem: Driver entity not found for the id ' + carComponent.driverEntityId
+          )
+          continue
+        }
+
+        if (!driver.getComponent(VehicleOccupancyComponent)) {
+          console.error(
+            'VehicleInputSystem: Driver is not in a vehicle ? The driver should have a VehicleOccupancyComponent : ' +
+              driver
           )
           continue
         }

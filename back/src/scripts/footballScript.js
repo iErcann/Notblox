@@ -4,6 +4,7 @@ new MapWorld(
 )
 
 const ballSpawnPosition = { x: 0, y: -20, z: -350 }
+
 const sphereParams = {
   radius: 1.4,
   position: {
@@ -172,10 +173,8 @@ const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
       ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
     }
   },
-  maxInteractDistance: 5,
+  maxInteractDistance: 10,
   interactionCooldown: 2000,
   holdDuration: 0,
 })
-const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
-networkDataComponent.addComponent(proximityPromptComponent)
-ball.entity.addComponent(proximityPromptComponent)
+ball.entity.addNetworkComponent(proximityPromptComponent)

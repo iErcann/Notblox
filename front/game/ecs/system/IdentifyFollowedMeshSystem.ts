@@ -9,9 +9,12 @@ import { EntityManager } from '@shared/system/EntityManager.js'
 import { StateComponent } from '@shared/component/StateComponent.js'
 import { EventSystem } from '@shared/system/EventSystem'
 import { ComponentAddedEvent } from '@shared/component/events/ComponentAddedEvent'
+import { VehicleOccupancyComponent } from '@shared/component/VehicleOccupancyComponent.js'
+import { ComponentRemovedEvent } from '@shared/component/events/ComponentRemovedEvent.js'
 
 export class IdentifyFollowedMeshSystem {
   currentPlayerEntity?: Entity
+  followedEntity?: Entity
   handlePlayerCreation(entities: Entity[], game: Game) {
     const addedPlayerEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, PlayerComponent)
     for (const playerEvent of addedPlayerEvents) {
@@ -22,6 +25,7 @@ export class IdentifyFollowedMeshSystem {
           entity.addComponent(new CurrentPlayerComponent(playerEvent.entityId))
           entity.addComponent(new FollowComponent(playerEvent.entityId, game.renderer.camera))
           this.currentPlayerEntity = entity
+          this.followedEntity = entity
         }
       }
     }
@@ -39,41 +43,49 @@ export class IdentifyFollowedMeshSystem {
       return
     }
 
-    if (playerStateComponent.updated) {
-      for (const vehicleEntity of entities) {
-        const vehicleComponent = vehicleEntity.getComponent(VehicleComponent)
-        if (!vehicleComponent) continue
+    // Get all events about a player starting to occupy a vehicle
+    const addedVehicleOccupancyEvents = EventSystem.getEventsWrapped(
+      ComponentAddedEvent,
+      VehicleOccupancyComponent
+    )
 
-        // If the current player started driving a vehicle.
-        if (
-          playerStateComponent.state === SerializedStateType.VEHICLE_DRIVING &&
-          vehicleComponent.driverEntityId === game.currentPlayerEntityId
-        ) {
-          // Stop following the current player and follow the vehicle instead
-          if (this.currentPlayerEntity.getComponent(FollowComponent)) {
-            this.currentPlayerEntity.removeComponent(FollowComponent)
-          }
-          if (!vehicleEntity.getComponent(FollowComponent)) {
-            vehicleEntity.addComponent(new FollowComponent(vehicleEntity.id, game.renderer.camera))
-            console.log('AFTER', vehicleEntity)
-          }
-        }
-        // If the current player stopped driving a vehicle
-        else if (
-          playerStateComponent.state !== SerializedStateType.VEHICLE_DRIVING &&
-          !this.currentPlayerEntity.getComponent(FollowComponent)
-        ) {
-          // Stop following the vehicle and follow the current player instead
-          if (vehicleEntity.getComponent(FollowComponent)) {
-            vehicleEntity.removeComponent(FollowComponent)
-          } else {
-            console.log('CANT REMOVE? WTF!', vehicleEntity)
-          }
+    for (const vehicleOccupancyEvent of addedVehicleOccupancyEvents) {
+      console.log('vehicleOccupancyEvent', vehicleOccupancyEvent)
+      const vehicleOccupancyComponent: VehicleOccupancyComponent = vehicleOccupancyEvent.component
+      if (vehicleOccupancyComponent.entityId === this.currentPlayerEntity.id) {
+        const vehicle = EntityManager.getEntityById(
+          entities,
+          vehicleOccupancyComponent.vehicleEntityId
+        )
 
-          this.currentPlayerEntity.addComponent(
-            new FollowComponent(this.currentPlayerEntity.id, game.renderer.camera)
-          )
+        if (!vehicle) {
+          console.error('IdentifyFollowedMeshSystem: Vehicle not found')
+          continue
         }
+        // Stop following previous entity
+        this.followedEntity?.removeComponent(FollowComponent)
+        // Follow the vehicle
+        vehicle.addComponent(new FollowComponent(vehicle.id, game.renderer.camera))
+        this.followedEntity = vehicle
+      }
+    }
+
+    // Get all events about a player stopping to occupy a vehicle
+    const removedVehicleOccupancyEvents = EventSystem.getEventsWrapped(
+      ComponentRemovedEvent,
+      VehicleOccupancyComponent
+    )
+
+    for (const vehicleOccupancyEvent of removedVehicleOccupancyEvents) {
+      const vehicleOccupancyComponent: VehicleOccupancyComponent = vehicleOccupancyEvent.component
+      if (vehicleOccupancyComponent.entityId === this.currentPlayerEntity.id) {
+        // Stop following the vehicle
+        this.followedEntity?.removeComponent(FollowComponent)
+        // Follow the current player entity
+        this.currentPlayerEntity.addComponent(
+          new FollowComponent(this.currentPlayerEntity.id, game.renderer.camera)
+        )
+        this.followedEntity = this.currentPlayerEntity
       }
     }
   }

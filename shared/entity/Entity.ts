@@ -2,6 +2,7 @@ import { SerializedComponentType, SerializedEntityType } from '../network/server
 import { Component, ComponentConstructor } from '../component/Component.js'
 import { EventSystem } from '../system/EventSystem.js'
 import { NetworkComponent } from '../../shared/network/NetworkComponent.js'
+import { NetworkDataComponent } from '../../shared/network/NetworkDataComponent.js'
 
 // Define an Entity class
 export class Entity {
@@ -23,6 +24,21 @@ export class Entity {
     }
   }
 
+  /**
+   * Add a network component to the entity
+   * Also add the event to the NetworkDataComponent so it can be sent to the client and replicated
+   * @param component  The network component to add
+   */
+  addNetworkComponent<T extends NetworkComponent>(component: T, createAddedEvent = true) {
+    const networkDataComponent = this.getComponent(NetworkDataComponent)
+    if (!networkDataComponent) {
+      console.error("Can't add a network component, NetworkDataComponent not found on", this)
+      return
+    }
+    networkDataComponent.addComponent(component)
+    this.addComponent(component, createAddedEvent)
+  }
+
   // Remove all components using the remove component function
   removeAllComponents() {
     Array.from(this.components.keys()).forEach((componentType) =>
@@ -40,6 +56,7 @@ export class Entity {
     if (removedComponent) {
       this.components.delete(componentType)
       if (createRemoveEvent) {
+        console.log('Removing component', removedComponent)
         EventSystem.onComponentRemoved(removedComponent)
       }
     }

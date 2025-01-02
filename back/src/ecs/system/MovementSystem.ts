@@ -4,8 +4,7 @@ import Rapier from '../../physics/rapier.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import { GroundCheckComponent } from '../component/GroundedComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
-import { StateComponent } from '../../../../shared/component/StateComponent.js'
-import { SerializedStateType } from '../../../../shared/network/server/index.js'
+import { VehicleOccupancyComponent } from '../../../../shared/component/VehicleOccupancyComponent.js'
 
 /**
  * System responsible for handling movement logic of entities.
@@ -29,21 +28,15 @@ export class MovementSystem {
     const rigidBodyComponent = entity.getComponent(DynamicRigidBodyComponent)
     const positionComponent = entity.getComponent(PositionComponent)
     const groundedCheckComponent = entity.getComponent(GroundCheckComponent)
-    const stateComponent = entity.getComponent(StateComponent)
+    const vehicleOccupancyComponent = entity.getComponent(VehicleOccupancyComponent)
 
     // Skip processing if any required component is missing
-    if (
-      !inputComponent ||
-      !rigidBodyComponent ||
-      !positionComponent ||
-      !groundedCheckComponent ||
-      !stateComponent
-    ) {
+    if (!inputComponent || !rigidBodyComponent || !positionComponent || !groundedCheckComponent) {
       return
     }
 
-    // Skip processing if the entity is in a driving state
-    if (stateComponent.state === SerializedStateType.VEHICLE_DRIVING) {
+    // Skip processing if the entity is inside a vehicle
+    if (vehicleOccupancyComponent) {
       return
     }
 

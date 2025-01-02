@@ -19,6 +19,7 @@ export enum SerializedComponentType {
   TEXT = 12,
   VEHICLE = 13,
   PLAYER = 14,
+  VEHICLE_OCCUPANCY = 15,
 }
 
 export enum SerializedEntityType {
@@ -33,15 +34,14 @@ export enum SerializedEntityType {
   VEHICLE = 8,
 }
 
+// Movement states
 export enum SerializedStateType {
   IDLE = 'Idle',
   WALK = 'Walk',
   RUN = 'Run',
   JUMP = 'Jump',
-  ATTACK = 'Attack',
   FALL = 'Fall',
   DEATH = 'Death',
-  VEHICLE_DRIVING = 'VehicleDriving',
 }
 
 export interface SerializedComponent {
