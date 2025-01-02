@@ -1,10 +1,7 @@
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import { RotationComponent } from '../../../../shared/component/RotationComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
-import {
-  SerializedEntityType,
-  SerializedStateType,
-} from '../../../../shared/network/server/serialized.js'
+import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
 import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
@@ -16,11 +13,12 @@ import {
 } from '../component/physics/PhysicsPropertiesComponent.js'
 import { TextComponent } from '../../../../shared/component/TextComponent.js'
 import { ConvexHullColliderComponent } from '../component/physics/ConvexHullColliderComponent.js'
-import { VehicleComponent as VehicleComponent } from '../../../../shared/component/VehicleComponent.js'
+import { VehicleComponent } from '../../../../shared/component/VehicleComponent.js'
+import { VehicleOccupancyComponent } from '../../../../shared/component/VehicleOccupancyComponent.js'
+
 import { ColliderPropertiesComponent } from '../component/physics/ColliderPropertiesComponent.js'
 import { ProximityPromptComponent } from '../../../../shared/component/ProximityPromptComponent.js'
 import { PlayerComponent } from '../../../../shared/component/PlayerComponent.js'
-import { StateComponent } from '../../../../shared/component/StateComponent.js'
 
 export interface CarParams {
   position: {
@@ -110,39 +108,66 @@ export class Car {
         console.log('Car interacted', this)
         // Ensure a player is interacting with the car
         const playerComponent = playerEntity.getComponent(PlayerComponent)
-        const playerStateComponent = playerEntity.getComponent(StateComponent)
+        const playerVehicleOccupancyComponent = playerEntity.getComponent(VehicleOccupancyComponent)
         const vehicleComponent = this.entity.getComponent(VehicleComponent)
 
-        if (playerComponent && playerStateComponent && vehicleComponent) {
+        if (playerComponent && vehicleComponent) {
           // Is there a driver?
           const vehicleHasDriver = vehicleComponent.driverEntityId !== undefined
-          // Is the current player already driving a vehicle?
-          const playerIsDriving = playerStateComponent.state === SerializedStateType.VEHICLE_DRIVING
+          // Is the current player already occupying a vehicle?
+          const playerInsideVehicle = playerVehicleOccupancyComponent !== undefined
 
-          if (!vehicleHasDriver && !playerIsDriving) {
-            vehicleComponent.driverEntityId = playerEntity.id
-            vehicleComponent.updated = true
-            playerStateComponent.state = SerializedStateType.VEHICLE_DRIVING
-            playerStateComponent.updated = true
-
-            console.log('Driver entered car')
-          } else {
-            // A driver exists, but is it the same player interacting?
-            const samePlayer = vehicleComponent?.driverEntityId === playerEntity.id
-            // if so, he's exiting the car
-            if (samePlayer) {
-              vehicleComponent.driverEntityId = undefined
+          if (!playerInsideVehicle) {
+            // If there's no driver, the player becomes the driver
+            if (!vehicleHasDriver) {
+              // Player becomes the driver
+              vehicleComponent.driverEntityId = playerEntity.id
               vehicleComponent.updated = true
 
-              playerStateComponent.state = SerializedStateType.IDLE
-              playerStateComponent.updated = true
-
-              console.log('Driver exited car')
+              // Update the player entity with a new vehicle occupancy component
+              const vehicleOccupancyComponent = new VehicleOccupancyComponent(
+                playerEntity.id,
+                this.entity.id
+              )
+              playerEntity.addNetworkComponent(vehicleOccupancyComponent)
+              console.log('Player became the driver', playerEntity)
+            } else {
+              // Player becomes a passenger
+              vehicleComponent.passengerEntityIds.push(playerEntity.id)
+              const vehicleOccupancyComponent = new VehicleOccupancyComponent(
+                playerEntity.id,
+                this.entity.id
+              )
+              playerEntity.addNetworkComponent(vehicleOccupancyComponent)
+              console.log('Player became a passenger')
             }
-            // Else, another player is trying to enter the car
-            else {
-              // TODO : Add passengers in the car (array of player ids)
-              console.log('Car is already occupied by another player', vehicleComponent)
+          } else {
+            // Player is inside a vehicle
+            // Is he inside the car he's interacting with?
+
+            const samePlayer =
+              vehicleComponent?.driverEntityId === playerEntity.id ||
+              vehicleComponent?.passengerEntityIds.includes(playerEntity.id)
+
+            // if so, he's exiting the car
+            if (samePlayer) {
+              const isDriver = vehicleComponent.driverEntityId === playerEntity.id
+              if (isDriver) {
+                vehicleComponent.driverEntityId = undefined
+                console.log('Driver left the car')
+              } else {
+                vehicleComponent.passengerEntityIds = vehicleComponent.passengerEntityIds.filter(
+                  (passengerId) => passengerId !== playerEntity.id
+                )
+                console.log('Passenger left the car')
+              }
+              vehicleComponent.updated = true
+              playerEntity.removeComponent(VehicleOccupancyComponent)
+              // TODO: Check if we also need to remove it from the NetworkDataComponent list on leave
+
+              //   playerEntity
+              //     .getComponent(NetworkDataComponent)
+              //     ?.removeComponent(VehicleOccupancyComponent)
             }
           }
         }

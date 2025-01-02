@@ -28,6 +28,7 @@ import { ProximityPromptComponent } from '@shared/component/ProximityPromptCompo
 import { TextComponent } from '@shared/component/TextComponent'
 import { VehicleComponent } from '@shared/component/VehicleComponent'
 import { PlayerComponent } from '@shared/component/PlayerComponent'
+import { VehicleOccupancyComponent } from '@shared/component/VehicleOccupancyComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
 import { EventSystem } from '@shared/system/EventSystem'
@@ -188,6 +189,9 @@ export class SyncComponentsSystem {
         break
       case SerializedComponentType.PLAYER:
         component = new PlayerComponent(entityId)
+        break
+      case SerializedComponentType.VEHICLE_OCCUPANCY:
+        component = new VehicleOccupancyComponent(entityId, 0)
         break
       default:
         console.error("Unknown component type, can't create component")
