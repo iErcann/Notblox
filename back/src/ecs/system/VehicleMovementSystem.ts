@@ -3,11 +3,9 @@ import { VehicleComponent } from '../../../../shared/component/VehicleComponent.
 import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { InputComponent } from '../component/InputComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
-import { VehicleCreationSystem } from './VehicleCreationSystem.js'
+import { VehicleRayCastComponent } from '../component/physics/VehicleRayCastComponent.js'
 
 export class VehicleMovementSystem {
-  constructor(private vehicleCreationSystem: VehicleCreationSystem) {}
-
   update(entities: Entity[], dt: number): void {
     for (const entity of entities) {
       const carComponent = entity.getComponent(VehicleComponent)
@@ -29,7 +27,7 @@ export class VehicleMovementSystem {
         }
 
         const rigidBody = entity.getComponent(DynamicRigidBodyComponent)?.body
-        const vehicleController = this.vehicleCreationSystem.getVehicleController(entity)
+        const vehicleController = entity.getComponent(VehicleRayCastComponent)?.raycastController
 
         if (rigidBody && vehicleController) {
           // Wake up rigid body only when applying force/torque
