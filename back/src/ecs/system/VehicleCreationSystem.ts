@@ -5,11 +5,9 @@ import { VehicleComponent } from '../../../../shared/component/VehicleComponent.
 import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import Rapier from '../../physics/rapier.js'
-import { DynamicRayCastVehicleController } from '@dimforge/rapier3d-compat'
+import { VehicleRayCastComponent } from '../component/physics/VehicleRayCastComponent.js'
 
 export class VehicleCreationSystem {
-  private vehicleControllers = new Map<Entity, DynamicRayCastVehicleController>()
-
   update(entities: Entity[], world: Rapier.World): void {
     const createEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, VehicleComponent)
     for (const event of createEvents) {
@@ -53,11 +51,7 @@ export class VehicleCreationSystem {
         vehicle.setWheelSideFrictionStiffness(i, 0.5)
       }
 
-      this.vehicleControllers.set(entity, vehicle)
+      entity.addComponent(new VehicleRayCastComponent(entity.id, vehicle))
     }
-  }
-
-  getVehicleController(entity: Entity): DynamicRayCastVehicleController | undefined {
-    return this.vehicleControllers.get(entity)
   }
 }
