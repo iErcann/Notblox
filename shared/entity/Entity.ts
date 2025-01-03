@@ -3,6 +3,7 @@ import { Component, ComponentConstructor } from '../component/Component.js'
 import { EventSystem } from '../system/EventSystem.js'
 import { NetworkComponent } from '../network/NetworkComponent.js'
 import { NetworkDataComponent } from '../network/NetworkDataComponent.js'
+import { config } from '../network/config.js'
 
 // Define an Entity class
 export class Entity {
@@ -58,6 +59,15 @@ export class Entity {
       this.components.delete(componentType)
       if (createRemoveEvent) {
         EventSystem.onComponentRemoved(removedComponent)
+        // If we are on the server, remove the component from the NetworkDataComponent
+        if (config.IS_SERVER) {
+          const networkDataComponent = this.getComponent(NetworkDataComponent)
+          if (networkDataComponent) {
+            networkDataComponent.removeComponent(
+              removedComponent.constructor as typeof NetworkComponent
+            )
+          }
+        }
       }
     }
   }
