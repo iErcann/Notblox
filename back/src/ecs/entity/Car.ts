@@ -75,7 +75,7 @@ export class Car {
     )
     this.entity.addComponent(serverMeshComponent)
 
-    const textComponent = new TextComponent(this.entity.id, 'Car prototype', 0, 5, 0, 250)
+    const textComponent = new TextComponent(this.entity.id, 'Car prototype', 0, 5, 0, 30)
     this.entity.addComponent(textComponent)
 
     const sizeComponent = new SizeComponent(

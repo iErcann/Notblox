@@ -23,6 +23,88 @@ new Car({
   },
 })
 
+for (let i = 0; i < 4; i++) {
+  const cube = new Cube({
+    position: {
+      x: 10 * i,
+      y: 10 * i,
+      z: 0,
+    },
+    physicsProperties: {
+      mass: 1,
+      angularDamping: 0.5,
+      enableCcd: true,
+    },
+  })
+  const proximityPromptComponent = new ProximityPromptComponent(cube.entity.id, {
+    text: 'Change color',
+    onInteract: (interactingEntity) => {
+      cube.entity
+        .getComponent(DynamicRigidBodyComponent)
+        .body.applyImpulse(new Rapier.Vector3(0, 5, 0), true)
+
+      const colorComponent = cube.entity.getComponent(ColorComponent)
+      if (colorComponent) {
+        // randomize color
+        colorComponent.color = '#' + Math.floor(Math.random() * 16777215).toString(16)
+        colorComponent.updated = true
+      }
+    },
+    maxInteractDistance: 10,
+    interactionCooldown: 200,
+    holdDuration: 0,
+  })
+  cube.entity.addNetworkComponent(proximityPromptComponent)
+}
+
+const sphereParams = {
+  radius: 1.4,
+  position: {
+    x: 10,
+    y: 10,
+    z: 10,
+  },
+  meshUrl:
+    'https://rawcdn.githack.com/iErcann/Notblox-Assets/f8b474a703930afb1caa82fd2bda4ca336a00a29/Ball.glb',
+  physicsProperties: {
+    mass: 1,
+    // Enable continuous collision detection to prevent the ball from going through the walls
+    enableCcd: true,
+    angularDamping: 0.5,
+  },
+}
+
+let ball
+// Initialize the ball using SphereParams
+ball = new Sphere(sphereParams)
+
+// That's why the proximity prompt component is added to the network data component to be synced with the front
+const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
+  text: 'Kick',
+  onInteract: (playerEntity) => {
+    const ballRigidbody = ball.entity.getComponent(DynamicRigidBodyComponent)
+    const playerRotationComponent = playerEntity.getComponent(RotationComponent)
+
+    if (ballRigidbody && playerRotationComponent && playerEntity.getComponent(InputComponent)) {
+      // Convert rotation to direction vector
+      const direction = playerRotationComponent.getForwardDirection()
+      // Calculate player looking direction
+      // sendChatMessage('⚽', `Player shot the ball !`)
+      const playerLookingDirectionVector = new Rapier.Vector3(
+        direction.x * 500,
+        0,
+        direction.z * 500
+      )
+
+      ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
+    }
+  },
+  maxInteractDistance: 10,
+  interactionCooldown: 2000,
+  holdDuration: 0,
+})
+ball.entity.addNetworkComponent(proximityPromptComponent)
+
 // const proximityPromptComponent = new ProximityPromptComponent(car.entity.id, {
 //   text: 'Kick',
 //   onInteract: (playerEntity) => {

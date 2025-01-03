@@ -89,7 +89,7 @@ export class TextComponentSystem {
             <span style="font-size: 1.5rem; font-weight: bold; color: #FFFFFF;">E</span>
           </div>
           <div style="display: flex; flex-direction: column;">
-            <p style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem; color: #FFFFFF;">${textComponent.text}</p>
+            <p style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem; color: #FFFFFF;">${sanitizedText}</p>
             <p style="font-size: 0.75rem; color: #FFFFFF; text-align: right; margin-left: auto; font-style: italic;">Interact</p>
           </div>
         </div>
@@ -98,7 +98,7 @@ export class TextComponentSystem {
     } else {
       textElement.innerHTML = `
         <div style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(23, 23, 23, 0.2); color: white; padding: 0.5rem; border-radius: 0.375rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); ">
-          <p style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;">${textComponent.text}</p>
+          <p style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;">${sanitizedText}</p>
         </div>`
     }
   }

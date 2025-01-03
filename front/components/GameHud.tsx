@@ -69,7 +69,7 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
         <input
           type="text"
           placeholder="Type your message..."
-          className="p-2 bg-black bg-opacity-20 text-white rounded-lg"
+          className="p-2 bg-gray-700 bg-opacity-30 text-white rounded-lg"
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === 'Enter') {
               sendMessage(e.currentTarget.value)
