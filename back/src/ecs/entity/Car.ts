@@ -174,6 +174,7 @@ export class Car {
             }
           }
         }
+        this.updateText()
       },
       maxInteractDistance: 15,
       interactionCooldown: 1000,
@@ -193,5 +194,21 @@ export class Car {
       vehicleComponent,
     ])
     this.entity.addComponent(networkDataComponent)
+  }
+
+  updateText() {
+    // Debug text a bit above the car
+    // Just to show driver / passenger count
+
+    const textComponent = this.entity.getComponent(TextComponent)
+    if (textComponent) {
+      const vehicleComponent = this.entity.getComponent(VehicleComponent)
+      if (vehicleComponent) {
+        textComponent.text = `🚗 Driver: ${
+          vehicleComponent.driverEntityId ? 'Yes' : 'No'
+        } | 🧑‍🤝‍🧑 Passengers: ${vehicleComponent.passengerEntityIds.length}`
+        textComponent.updated = true
+      }
+    }
   }
 }

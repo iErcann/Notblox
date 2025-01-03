@@ -55,19 +55,45 @@ export class TextComponentSystem {
     textComponent: TextComponent,
     isProximityPrompt: boolean
   ) {
+    function sanitize(input: string): string {
+      const element = document.createElement('div')
+      element.innerText = input
+      return element.innerHTML
+    }
+
+    // Dumb sanitize to prevent XSS
+    const sanitizedText = sanitize(textComponent.text)
     if (isProximityPrompt) {
       textElement.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: flex-start; background-color: rgba(31, 41, 55, 0.2); color: white; padding: 0.25rem; border-radius: 0.5rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);">
-          <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
-            <div style="display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; background-color: rgba(31, 41, 55, 0.4); border-radius: 0.375rem; margin-right: 0.5rem;">
-              <span style="font-size: 1.5rem; font-weight: bold; color: white;">E</span>
-            </div>
-            <div style="display: flex; flex-direction: column;">
-            <p style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem;">${textComponent.text}</p>
-            <p style="font-size: 0.75rem; color: #9ca3af; text-align: right; margin-left: auto;">Interact</p>
-              </div>
-            </div>
+      <div style="      
+        background-color: rgba(200, 200, 200, 0.3); 
+        color: #000; 
+        padding: 1rem; 
+        border-radius: 0.5rem; 
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+        font-size: 1.5rem; 
+        text-align: center;
+        max-width: 300px;
+        margin: auto;
+      ">
+        <div style="display: flex; align-items: center;">
+          <div style="
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 2.5rem; 
+            height: 2.5rem; 
+            background-color: rgba(0, 0, 0, 0.2); 
+            border-radius: 0.375rem; 
+            margin-right: 0.5rem;">
+            <span style="font-size: 1.5rem; font-weight: bold; color: #FFFFFF;">E</span>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <p style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem; color: #FFFFFF;">${textComponent.text}</p>
+            <p style="font-size: 0.75rem; color: #FFFFFF; text-align: right; margin-left: auto; font-style: italic;">Interact</p>
+          </div>
         </div>
+      </div>
       `
     } else {
       textElement.innerHTML = `
