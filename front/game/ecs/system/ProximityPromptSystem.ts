@@ -83,6 +83,7 @@ export class ProximityPromptSystem {
       return false
     }
 
+    // Add a small buffer to the cooldown to avoid flickering
     return interactionAccumulator < proximityPromptComponent.interactionCooldown + 100
   }
 
