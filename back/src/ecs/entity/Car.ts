@@ -112,11 +112,12 @@ export class Car {
         const vehicleComponent = this.entity.getComponent(VehicleComponent)
 
         if (playerComponent && vehicleComponent) {
-          // Is there a driver?
+          // Is there a driver on the car?
           const vehicleHasDriver = vehicleComponent.driverEntityId !== undefined
           // Is the current player already occupying a vehicle?
           const playerInsideVehicle = playerVehicleOccupancyComponent !== undefined
 
+          // If the player is not already inside a vehicle
           if (!playerInsideVehicle) {
             // If there's no driver, the player becomes the driver
             if (!vehicleHasDriver) {
@@ -131,8 +132,9 @@ export class Car {
               )
               playerEntity.addNetworkComponent(vehicleOccupancyComponent)
               console.log('Player became the driver', playerEntity)
-            } else {
-              // Player becomes a passenger
+            }
+            // If there's already a driver, the player becomes a passenger
+            else {
               vehicleComponent.passengerEntityIds.push(playerEntity.id)
               const vehicleOccupancyComponent = new VehicleOccupancyComponent(
                 playerEntity.id,
@@ -141,17 +143,18 @@ export class Car {
               playerEntity.addNetworkComponent(vehicleOccupancyComponent)
               console.log('Player became a passenger')
             }
-          } else {
-            // Player is inside a vehicle
+          }
+          // Player is already inside a vehicle
+          else {
             // Is he inside the car he's interacting with?
-
-            const samePlayer =
+            const insideCar =
               vehicleComponent?.driverEntityId === playerEntity.id ||
               vehicleComponent?.passengerEntityIds.includes(playerEntity.id)
 
             // if so, he's exiting the car
-            if (samePlayer) {
+            if (insideCar) {
               const isDriver = vehicleComponent.driverEntityId === playerEntity.id
+              // Is he exiting as a driver?
               if (isDriver) {
                 vehicleComponent.driverEntityId = undefined
                 console.log('Driver left the car')
@@ -161,13 +164,13 @@ export class Car {
                 )
                 console.log('Passenger left the car')
               }
+              // Update the vehicle component to reflect the changes
               vehicleComponent.updated = true
+              // Remove the vehicle occupancy component from the player
+              // This also removes the VehicleOccupancyComponent from the NetworkDataComponent
+              // This will throw a OnComponentRemoved<VehicleOccupancyComponent> event
+              // Player will stop visually following the vehicle client-side (No more FollowComponent)
               playerEntity.removeComponent(VehicleOccupancyComponent)
-              // TODO: Check if we also need to remove it from the NetworkDataComponent list on leave
-
-              //   playerEntity
-              //     .getComponent(NetworkDataComponent)
-              //     ?.removeComponent(VehicleOccupancyComponent)
             }
           }
         }
