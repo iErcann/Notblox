@@ -90,6 +90,7 @@ export class Game {
   private async loop() {
     const entities = EntityManager.getInstance().getAllEntities()
     const now = Date.now()
+    const deltaTime = now - this.lastRenderTime
     this.syncComponentSystem.update(entities)
 
     // Server can send us ServerMeshComponents to load.
@@ -104,11 +105,10 @@ export class Game {
     this.loadingPromise = null
 
     this.identifyFollowedMeshSystem.update(entities, this)
-    this.inputManager.update()
+    this.inputManager.update(entities, now - this.lastRenderTime)
     this.inputManager.sendInput(entities)
     this.destroySystem.update(entities, this.renderer)
     this.meshSystem.update(entities, this.renderer)
-    const deltaTime = now - this.lastRenderTime
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
     this.syncPositionSystem.update(entities, positionInterpFactor / 2)
     this.syncRotationSystem.update(entities, 0.7)

@@ -5,6 +5,7 @@ import { OrbitCameraFollowSystem } from './ecs/system'
 import { WebSocketManager } from './WebsocketManager'
 import { ProximityPromptSystem } from './ecs/system/ProximityPromptSystem'
 import { Entity } from '@shared/entity/Entity'
+import { EntityManager } from '@shared/system/EntityManager'
 
 export enum KeyboardLanguage {
   FR = 'fr',
@@ -68,8 +69,9 @@ export class InputManager {
     this.inputState.u = true
   }
 
-  update() {
+  update(entities: Entity[], dt: number) {
     if (this.pcUser) this.inputState.y = this.cameraFollowSystem.y
+    this.proximityPromptSystem.update(entities, dt)
   }
 
   public handleJoystickStop(joystick: IJoystickUpdateEvent) {

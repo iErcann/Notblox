@@ -20,7 +20,7 @@ export class TextComponentSystem {
   private textObjects: WeakMap<TextComponent, CSS2DObject> = new WeakMap()
   // Throttle visibility check & text updates to once per second
   private elapsedTime: number = 0 // Accumulator for delta time in milliseconds
-  private updateInterval: number = 1000 // We want only one update per second
+  private updateInterval: number = 1000 / 2 // We want only two updates per second
 
   update(entities: Entity[], dt: number) {
     const currentPlayerEntity = EntityManager.getFirstEntityWithComponent(
@@ -209,7 +209,7 @@ export class TextComponentSystem {
       this.updateTextElementContent(textObject.element, textComponent, isProximityPrompt)
     }
 
-    // Throttle visibility check & text updates to once per second for performance
+    // Throttle visibility check & text updates to two per second for performance
     if (this.elapsedTime < this.updateInterval) return
 
     // If the entity has no mesh, we will follow the position component
