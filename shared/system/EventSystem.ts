@@ -152,15 +152,23 @@ export class EventSystem {
 
   /**
    * Handle component removed event
+   * Also, if we are on the server, send a component removed event to the client so it can be removed from the client entity
    * @param removedComponent The component that was removed
    */
   static onComponentRemoved<T extends Component>(removedComponent: T) {
-    // Local event
+    /**
+     * Local event
+     */
     EventSystem.addEvent(new ComponentRemovedEvent(removedComponent))
-    // If the component is a network component, we need to send a component removed event to the client
-    // Only if we are on the server
+
+    /**
+     * Network event
+     * If the component is a network component, we need to send a component removed event to the client
+     * Only if we are on the server
+     */
     if (config.IS_SERVER && removedComponent instanceof NetworkComponent) {
       const componentRemovedEvent = new SerializableComponentRemovedEvent(
+        // EntityID + ComponentType is unique, so it can be used to identify the component
         removedComponent.entityId,
         removedComponent.type
       )
