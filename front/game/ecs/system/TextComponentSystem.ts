@@ -18,16 +18,25 @@ import { ProximityPromptComponent } from '@shared/component/ProximityPromptCompo
  */
 export class TextComponentSystem {
   private textObjects: WeakMap<TextComponent, CSS2DObject> = new WeakMap()
+  // Throttle visibility check & text updates to once per second
+  private elapsedTime: number = 0 // Accumulator for delta time in milliseconds
+  private updateInterval: number = 1000 // We want only one update per second
 
-  update(entities: Entity[]) {
+  update(entities: Entity[], dt: number) {
     const currentPlayerEntity = EntityManager.getFirstEntityWithComponent(
       entities,
       CurrentPlayerComponent
     )
     if (!currentPlayerEntity) return
+    this.elapsedTime += dt
+
     this.handleAddedComponents(entities)
     this.handleRemovedComponents()
     this.processEntities(entities, currentPlayerEntity)
+
+    if (this.elapsedTime > this.updateInterval) {
+      this.elapsedTime = 0
+    }
   }
 
   private createTextObject(
@@ -160,7 +169,11 @@ export class TextComponentSystem {
   }
 
   private processEntities(entities: Entity[], currentPlayerEntity: Entity): void {
+    const throttle = this.elapsedTime > this.updateInterval
     for (const entity of entities) {
+      /**
+       * An entity can at the same time have a TextComponent and a ProximityPromptComponent with a TextComponent
+       */
       const textComponent = entity.getComponent(TextComponent)
       if (textComponent) {
         this.processTextComponent(entity, textComponent, currentPlayerEntity)
@@ -175,6 +188,9 @@ export class TextComponentSystem {
         )
       }
     }
+    if (throttle) {
+      this.elapsedTime = 0
+    }
   }
 
   private processTextComponent(
@@ -188,9 +204,13 @@ export class TextComponentSystem {
     const textObject = this.textObjects.get(textComponent)
     if (!textObject) return
 
+    // If the TextComponent network component has been updated, update the text element content (Most likely the text)
     if (textComponent.updated) {
       this.updateTextElementContent(textObject.element, textComponent, isProximityPrompt)
     }
+
+    // Throttle visibility check & text updates to once per second for performance
+    if (this.elapsedTime < this.updateInterval) return
 
     // If the entity has no mesh, we will follow the position component
     if (!entity.getComponent(MeshComponent)) {

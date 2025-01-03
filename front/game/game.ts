@@ -114,7 +114,7 @@ export class Game {
     this.syncRotationSystem.update(entities, 0.7)
     this.syncColorSystem.update(entities)
     this.chatSystem.update(entities, this.hud)
-    this.textComponentSystem.update(entities)
+    this.textComponentSystem.update(entities, deltaTime)
     this.syncSizeSystem.update(entities)
     this.animationSystem.update(deltaTime, entities)
     this.destroySystem.afterUpdate(entities)

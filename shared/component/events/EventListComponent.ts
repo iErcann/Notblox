@@ -31,6 +31,7 @@ export class EventListComponent extends Component {
       this.events.set(componentType, [])
     }
     this.events.get(componentType)!.push(event)
+    console.log('EventListComponent', this.events.get(componentType))
   }
 
   /**

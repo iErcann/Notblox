@@ -56,7 +56,6 @@ export class Entity {
     if (removedComponent) {
       this.components.delete(componentType)
       if (createRemoveEvent) {
-        console.log('Removing component', removedComponent)
         EventSystem.onComponentRemoved(removedComponent)
       }
     }

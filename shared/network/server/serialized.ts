@@ -5,7 +5,7 @@ export enum SerializedComponentType {
   ROTATION = 2,
   SIZE = 3,
   COLOR = 4,
-  DESTROYED_EVENT = 5,
+  ENTITY_DESTROYED_EVENT = 5,
   SINGLE_SIZE = 6,
 
   // Used for animations mostly
@@ -20,6 +20,7 @@ export enum SerializedComponentType {
   VEHICLE = 13,
   PLAYER = 14,
   VEHICLE_OCCUPANCY = 15,
+  COMPONENT_REMOVED_EVENT = 16,
 }
 
 export enum SerializedEntityType {
