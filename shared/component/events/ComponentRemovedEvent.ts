@@ -17,7 +17,6 @@ export class ComponentRemovedEvent<T extends Component> extends ComponentWrapper
 export class SerializableComponentRemovedEvent extends NetworkComponent {
   constructor(entityId: number, public removedComponentType: SerializedComponentType) {
     super(entityId, SerializedComponentType.COMPONENT_REMOVED_EVENT)
-    console.log('Created a SerializableComponentRemovedEvent', this)
   }
 
   serialize(): SerializedComponentRemovedEvent {

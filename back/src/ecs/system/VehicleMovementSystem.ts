@@ -5,9 +5,47 @@ import { InputComponent } from '../component/InputComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { VehicleRayCastComponent } from '../component/physics/VehicleRayCastComponent.js'
 import { VehicleOccupancyComponent } from '../../../../shared/component/VehicleOccupancyComponent.js'
+import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
+import Rapier from '../../physics/rapier.js'
 
 export class VehicleMovementSystem {
+  // Hack for proximity prompt
+  snapAllOccupantsToVehicle(entities: Entity[]): void {
+    for (const carEntity of entities) {
+      const carComponent = carEntity.getComponent(VehicleComponent)
+      const carPosition = carEntity.getComponent(PositionComponent)
+      if (carComponent && carPosition) {
+        if (carComponent.driverEntityId) {
+          const driver = EntityManager.getEntityById(entities, carComponent.driverEntityId)
+          if (driver) {
+            const rigidBody = driver.getComponent(DynamicRigidBodyComponent)?.body
+            if (rigidBody) {
+              rigidBody.setTranslation(
+                new Rapier.Vector3(carPosition.x, carPosition.y, carPosition.z),
+                true
+              )
+            }
+          }
+          const passengers = carComponent.passengerEntityIds
+          for (const passengerId of passengers) {
+            const passenger = EntityManager.getEntityById(entities, passengerId)
+            if (passenger) {
+              const rigidBody = passenger.getComponent(DynamicRigidBodyComponent)?.body
+              if (rigidBody) {
+                rigidBody.setTranslation(
+                  new Rapier.Vector3(carPosition.x, carPosition.y, carPosition.z),
+                  true
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   update(entities: Entity[], dt: number): void {
+    this.snapAllOccupantsToVehicle(entities)
     for (const entity of entities) {
       const carComponent = entity.getComponent(VehicleComponent)
       if (carComponent) {

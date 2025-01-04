@@ -68,7 +68,7 @@ export class TextComponentSystem {
       <div style="      
         background-color: rgba(200, 200, 200, 0.3); 
         color: #000; 
-        padding: 1rem; 
+        padding: 0.4rem; 
         border-radius: 0.5rem; 
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
         font-size: 1.5rem; 

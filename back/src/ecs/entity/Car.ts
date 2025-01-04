@@ -19,6 +19,7 @@ import { VehicleOccupancyComponent } from '../../../../shared/component/VehicleO
 import { ColliderPropertiesComponent } from '../component/physics/ColliderPropertiesComponent.js'
 import { ProximityPromptComponent } from '../../../../shared/component/ProximityPromptComponent.js'
 import { PlayerComponent } from '../../../../shared/component/PlayerComponent.js'
+import Rapier from '../../physics/rapier.js'
 
 export interface CarParams {
   position: {
@@ -105,7 +106,6 @@ export class Car {
     const proximityPromptComponent = new ProximityPromptComponent(this.entity.id, {
       text: 'Enter/Exit',
       onInteract: (playerEntity) => {
-        console.log('Car interacted', this)
         // Ensure a player is interacting with the car
         const playerComponent = playerEntity.getComponent(PlayerComponent)
         const playerVehicleOccupancyComponent = playerEntity.getComponent(VehicleOccupancyComponent)
@@ -122,26 +122,32 @@ export class Car {
             // If there's no driver, the player becomes the driver
             if (!vehicleHasDriver) {
               // Player becomes the driver
-              vehicleComponent.driverEntityId = playerEntity.id
-              vehicleComponent.updated = true
-
               // Update the player entity with a new vehicle occupancy component
               const vehicleOccupancyComponent = new VehicleOccupancyComponent(
                 playerEntity.id,
                 this.entity.id
               )
               playerEntity.addNetworkComponent(vehicleOccupancyComponent)
-              console.log('Player became the driver', playerEntity)
+
+              // Hack : Disable player rigid body
+              const rigidBody = playerEntity.getComponent(DynamicRigidBodyComponent)?.body
+              if (rigidBody) {
+                rigidBody.setEnabled(false)
+              }
             }
             // If there's already a driver, the player becomes a passenger
             else {
-              vehicleComponent.passengerEntityIds.push(playerEntity.id)
               const vehicleOccupancyComponent = new VehicleOccupancyComponent(
                 playerEntity.id,
                 this.entity.id
               )
               playerEntity.addNetworkComponent(vehicleOccupancyComponent)
-              console.log('Player became a passenger')
+
+              // Hack : Disable player rigid body
+              const rigidBody = playerEntity.getComponent(DynamicRigidBodyComponent)?.body
+              if (rigidBody) {
+                rigidBody.setEnabled(false)
+              }
             }
           }
           // Player is already inside a vehicle
@@ -153,28 +159,30 @@ export class Car {
 
             // if so, he's exiting the car
             if (insideCar) {
-              const isDriver = vehicleComponent.driverEntityId === playerEntity.id
-              // Is he exiting as a driver?
-              if (isDriver) {
-                vehicleComponent.driverEntityId = undefined
-                console.log('Driver left the car')
-              } else {
-                vehicleComponent.passengerEntityIds = vehicleComponent.passengerEntityIds.filter(
-                  (passengerId) => passengerId !== playerEntity.id
-                )
-                console.log('Passenger left the car')
-              }
-              // Update the vehicle component to reflect the changes
-              vehicleComponent.updated = true
               // Remove the vehicle occupancy component from the player
               // This also removes the VehicleOccupancyComponent from the NetworkDataComponent
               // This will throw a OnComponentRemoved<VehicleOccupancyComponent> event
-              // Player will stop visually following the vehicle client-side (No more FollowComponent)
+              // Catch both by the front & back.
+              // The back will clean up the vehicle component
+              // The front will stop visually following the vehicle client-side (No more FollowComponent)
               playerEntity.removeComponent(VehicleOccupancyComponent)
+
+              // Hack : Enable player rigid body
+              const rigidBody = playerEntity.getComponent(DynamicRigidBodyComponent)?.body
+              if (rigidBody) {
+                rigidBody.setEnabled(true)
+                // Set the player beside the car
+                const position = this.entity.getComponent(PositionComponent)
+                if (position) {
+                  rigidBody.setTranslation(
+                    new Rapier.Vector3(position.x + 4, position.y, position.z),
+                    true
+                  )
+                }
+              }
             }
           }
         }
-        this.updateText()
       },
       maxInteractDistance: 15,
       interactionCooldown: 1000,
@@ -194,21 +202,5 @@ export class Car {
       vehicleComponent,
     ])
     this.entity.addComponent(networkDataComponent)
-  }
-
-  updateText() {
-    // Debug text a bit above the car
-    // Just to show driver / passenger count
-
-    const textComponent = this.entity.getComponent(TextComponent)
-    if (textComponent) {
-      const vehicleComponent = this.entity.getComponent(VehicleComponent)
-      if (vehicleComponent) {
-        textComponent.text = `🚗 Driver: ${
-          vehicleComponent.driverEntityId ? 'Yes' : 'No'
-        } | 🧑‍🤝‍🧑 Passengers: ${vehicleComponent.passengerEntityIds.length}`
-        textComponent.updated = true
-      }
-    }
   }
 }
