@@ -87,7 +87,7 @@ export class Car {
     )
     this.entity.addComponent(sizeComponent)
 
-    this.entity.addComponent(new ColliderPropertiesComponent(this.entity.id, false, 0.0, 0.0))
+    this.entity.addComponent(new ColliderPropertiesComponent(this.entity.id, false, 0.0, 0))
     this.entity.addComponent(
       new ConvexHullColliderComponent(this.entity.id, meshUrl ?? 'http://localhost:4001/Car.glb')
     )
@@ -96,9 +96,6 @@ export class Car {
         this.entity.id,
         physicsProperties ?? {
           enableCcd: true,
-          mass: 1,
-          angularDamping: 0.001,
-          linearDamping: 0.0005,
         }
       )
     )

@@ -12,10 +12,10 @@ import { TextComponent } from '../../../../shared/component/TextComponent.js'
 
 export class VehicleCreationSystem {
   private static readonly WHEEL_POSITIONS = [
-    [-4.65, -1, -2.85], // FRONT
-    [-4.65, -1, 2.85], // BACK
-    [4.65, -1, -2.85], // FRONT
-    [4.65, -1, 2.85], // BACK
+    [-4.14, -0.387, -2.46], // FRONT
+    [-4.14, -0.387, 2.46], // FRONT
+    [4.14, -0.387, -2.46], // BACK
+    [4.14, -0.387, 2.46], // BACK
   ]
 
   update(entities: Entity[], world: Rapier.World): void {
@@ -48,17 +48,18 @@ export class VehicleCreationSystem {
           new Rapier.Vector3(0, -1, 0),
           new Rapier.Vector3(-1, 0, 0),
           1,
-          1
+          1.2
         )
       })
 
       for (let i = 0; i < 4; i++) {
-        vehicle.setWheelSuspensionCompression(i, 0.82)
-        vehicle.setWheelSuspensionRelaxation(i, 0.88)
-        vehicle.setWheelSuspensionStiffness(i, 5.8)
-        vehicle.setWheelMaxSuspensionForce(i, 6000)
-        vehicle.setWheelMaxSuspensionTravel(i, 5)
-        vehicle.setWheelSideFrictionStiffness(i, 0.5)
+        // vehicle.setWheelSuspensionCompression(i, 0.82)
+        // vehicle.setWheelSuspensionRelaxation(i, 0.88)
+        vehicle.setWheelSuspensionStiffness(i, 24)
+        // vehicle.setWheelMaxSuspensionForce(i, 6000)
+        // vehicle.setWheelMaxSuspensionTravel(i, 5)
+        // vehicle.setWheelSideFrictionStiffness(i, 1)
+        // vehicle.setWheelFrictionSlip(i, 0.8)
       }
 
       entity.addComponent(new VehicleRayCastComponent(entity.id, vehicle))
@@ -82,7 +83,6 @@ export class VehicleCreationSystem {
         const vehicleComponent = vehicleEntity.getComponent(VehicleComponent)
         if (vehicleComponent) {
           // If the exiting entity is the driver, remove the driver
-          console.log('COMPARING', vehicleComponent.driverEntityId, exitingEntityId)
           if (vehicleComponent.driverEntityId === exitingEntityId) {
             console.log('Removing driver', exitingEntityId)
             vehicleComponent.driverEntityId = undefined

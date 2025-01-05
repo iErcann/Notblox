@@ -26,17 +26,17 @@ export class VehicleMovementSystem {
               )
             }
           }
-          const passengers = carComponent.passengerEntityIds
-          for (const passengerId of passengers) {
-            const passenger = EntityManager.getEntityById(entities, passengerId)
-            if (passenger) {
-              const rigidBody = passenger.getComponent(DynamicRigidBodyComponent)?.body
-              if (rigidBody) {
-                rigidBody.setTranslation(
-                  new Rapier.Vector3(carPosition.x, carPosition.y, carPosition.z),
-                  true
-                )
-              }
+        }
+        const passengers = carComponent.passengerEntityIds
+        for (const passengerId of passengers) {
+          const passenger = EntityManager.getEntityById(entities, passengerId)
+          if (passenger) {
+            const rigidBody = passenger.getComponent(DynamicRigidBodyComponent)?.body
+            if (rigidBody) {
+              rigidBody.setTranslation(
+                new Rapier.Vector3(carPosition.x, carPosition.y, carPosition.z),
+                true
+              )
             }
           }
         }
@@ -87,25 +87,22 @@ export class VehicleMovementSystem {
             rigidBody.wakeUp()
           }
 
-          // Engine force for back wheels (2 and 3)
-          const engineForce = driverInputComponent.up
-            ? 15000
-            : driverInputComponent.down
-            ? -15000
-            : 0
-          vehicleController.setWheelEngineForce(0, engineForce)
-          vehicleController.setWheelEngineForce(2, engineForce)
+          // Engine force for back wheels
+          const engineForce = driverInputComponent.up ? 5000 : driverInputComponent.down ? -5000 : 0
+          vehicleController.setWheelEngineForce(1, engineForce)
+          vehicleController.setWheelEngineForce(3, engineForce)
 
-          // Steering for front wheels (0 and 2)
+          // Steering for front wheels
           const steeringAngle = driverInputComponent.left
-            ? Math.PI / 16
-            : driverInputComponent.right
             ? -Math.PI / 16
+            : driverInputComponent.right
+            ? Math.PI / 16
             : 0
-          vehicleController.setWheelSteering(1, steeringAngle)
-          vehicleController.setWheelSteering(3, steeringAngle)
+          vehicleController.setWheelSteering(0, steeringAngle)
+          vehicleController.setWheelSteering(2, steeringAngle)
 
           // Update the vehicle controller
+          console.log(dt)
           vehicleController.updateVehicle(dt / 1000)
         }
       }
