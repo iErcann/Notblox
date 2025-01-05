@@ -80,6 +80,7 @@ export class TrimeshColliderSystem {
 
           // Create the collider and associate it with the rigid body
           const collider = world.createCollider(trimeshDesc, kinematicRigidBodyComponent.body)
+          collider.setFriction(0.1)
           physicsTrimeshCollidersComponent.colliders.push(
             new TrimeshColliderComponent(event.entityId, collider)
           )
