@@ -42,14 +42,13 @@ export class MovementSystem {
 
     // Calculate the impulse based on input and physics
     const impulse = this.calculateImpulse(dt, inputComponent, rigidBodyComponent)
-
     // Apply a jump impulse if the space key is pressed and the entity is grounded
     if (inputComponent.space && groundedCheckComponent.grounded) {
-      impulse.y = 0.8 * dt // Apply vertical impulse for jumping
+      impulse.y = 40 // Apply vertical impulse for jumping
     }
 
     // Apply the calculated impulse to the rigid body
-    this.applyImpulse(rigidBodyComponent, impulse)
+    this.setVelocity(rigidBodyComponent, impulse)
   }
 
   /**
@@ -65,7 +64,7 @@ export class MovementSystem {
     }
 
     const currentLinVel = rigidBodyComponent.body.linvel() // Current linear velocity
-    const speed = 0.27 // Movement speed constant
+    const speed = 15 // Movement speed constant
     const lookingYAngle = inputComponent.lookingYAngle // Player's current facing direction
 
     // Initialize impulse with current vertical velocity
@@ -89,17 +88,13 @@ export class MovementSystem {
       impulse.x += speed * Math.cos(lookingYAngle + Math.PI / 2)
     }
 
-    // Scale impulse by delta time for frame-independent movement
-    impulse.x *= dt
-    impulse.z *= dt
-
     return impulse
   }
 
   /**
-   * Applies the calculated impulse to the entity's rigid body.
+   * Apply the calculated velocity to the entity's rigid body.
    */
-  applyImpulse(rigidBodyComponent: DynamicRigidBodyComponent, impulse: Rapier.Vector3): void {
+  setVelocity(rigidBodyComponent: DynamicRigidBodyComponent, impulse: Rapier.Vector3): void {
     if (!rigidBodyComponent.body) {
       return
     }
