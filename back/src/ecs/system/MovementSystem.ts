@@ -41,7 +41,7 @@ export class MovementSystem {
     }
 
     // Calculate the impulse based on input and physics
-    const impulse = this.calculateImpulse(dt, inputComponent, rigidBodyComponent)
+    const impulse = this.calculateVelocity(dt, inputComponent, rigidBodyComponent)
     // Apply a jump impulse if the space key is pressed and the entity is grounded
     if (inputComponent.space && groundedCheckComponent.grounded) {
       impulse.y = 40 // Apply vertical impulse for jumping
@@ -54,7 +54,7 @@ export class MovementSystem {
   /**
    * Calculates the movement impulse based on input and current velocity.
    */
-  calculateImpulse(
+  calculateVelocity(
     dt: number,
     inputComponent: InputComponent,
     rigidBodyComponent: DynamicRigidBodyComponent
