@@ -41,12 +41,13 @@ export class TextComponentSystem {
 
   private createTextObject(
     textComponent: TextComponent,
+    positionComponent: PositionComponent,
     isProximityPrompt: boolean = false
   ): CSS2DObject {
     const textElement = document.createElement('div')
     this.updateTextElementContent(textElement, textComponent, isProximityPrompt)
     const textObject = new CSS2DObject(textElement)
-    this.updateTextObjectPosition(textObject, textComponent)
+    this.updateTextObjectPosition(textObject, textComponent, positionComponent)
     return textObject
   }
 
@@ -134,7 +135,9 @@ export class TextComponentSystem {
         continue
       }
 
-      const textObject = this.createTextObject(event.component)
+      const positionComponent = entity.getComponent(PositionComponent)
+      if (!positionComponent) continue
+      const textObject = this.createTextObject(event.component, positionComponent)
       this.textObjects.set(event.component, textObject)
 
       // Attach to mesh if available and not the current player
@@ -157,7 +160,9 @@ export class TextComponentSystem {
       const proximityPromptComponent = event.component
       const textComponent = proximityPromptComponent.textComponent
 
-      const textObject = this.createTextObject(textComponent, true)
+      const positionComponent = entity.getComponent(PositionComponent)
+      if (!positionComponent) continue
+      const textObject = this.createTextObject(textComponent, positionComponent, true)
       this.textObjects.set(textComponent, textObject)
 
       // Attach to mesh if available
