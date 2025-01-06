@@ -73,47 +73,34 @@ const boundaryCheckSystem = new BoundaryCheckSystem()
 const zombieSystem = new ZombieSystem()
 
 new Chat()
-console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
-let lastUpdateTimestamp = Date.now()
 
-let lastTickPlayerExisted = false
-function atLeastOnePlayerExit() {
+const fixedTimestep = 1000 / config.SERVER_TICKRATE
+
+let lastFrameTime = Date.now()
+let accumulatedTime = 0
+
+function atLeastOnePlayerExists() {
   const player = EntityManager.getFirstEntityWithComponent(entities, PlayerComponent)
   return player !== undefined
 }
-async function gameLoop() {
-  // Idle mode if no players
-  const playerExist = atLeastOnePlayerExit()
 
-  // If no players, wait for one to join
-  // Making an extra tick for entities that check player existence (E.g if no player exist on a game script, reset it)
-  if (!playerExist && !lastTickPlayerExisted) {
-    console.log('No players, waiting...')
-    lastUpdateTimestamp = Date.now()
-    setTimeout(gameLoop, 1000)
-    return
-  }
-  // printMemoryUsage()
-  setTimeout(gameLoop, 1000 / config.SERVER_TICKRATE)
-  const now = Date.now()
-  const dt = now - lastUpdateTimestamp
-
+function updateGameState(dt: number) {
   destroyEventSystem.update(entities)
   physicsSystem.update(entities)
   boundaryCheckSystem.update(entities)
   ScriptableSystem.update(dt, entities)
   proximityPromptSystem.update(entities, dt)
 
-  // Create the bodies first.
+  // Physics bodies and colliders
   kinematicPhysicsBodySystem.update(entities, physicsSystem.world)
   rigidPhysicsBodySystem.update(entities, physicsSystem.world)
-  // Then handle the colliders
   trimeshColliderSystem.update(entities, physicsSystem.world)
   boxColliderSystem.update(entities, physicsSystem.world)
   capsuleColliderSystem.update(entities, physicsSystem.world)
   sphereColliderSystem.update(entities, physicsSystem.world)
   convexHullColliderSystem.update(entities, physicsSystem.world)
 
+  // Other systems
   zombieSystem.update(dt, entities)
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
@@ -133,16 +120,37 @@ async function gameLoop() {
   networkSystem.update(entities)
   sleepCheckSystem.update(entities)
 
-  // Useful for DestroySystem
+  // Finalize events
   eventSystem.afterUpdate(entities)
-  lastUpdateTimestamp = now
-  lastTickPlayerExisted = playerExist
+}
+
+function handleNoPlayers() {
+  setTimeout(gameLoop, 1000) // Retry after 1 second
+  accumulatedTime = 0
+}
+
+function gameLoop() {
+  const currentTime = Date.now()
+  const frameTime = currentTime - lastFrameTime // Time elapsed since last frame
+  lastFrameTime = currentTime
+  accumulatedTime += frameTime
+
+  while (accumulatedTime >= fixedTimestep) {
+    const playerExist = atLeastOnePlayerExists()
+
+    if (!playerExist) {
+      handleNoPlayers()
+      return
+    }
+    updateGameState(fixedTimestep)
+    accumulatedTime -= fixedTimestep
+  }
+
+  // Schedule the next loop iteration
+  setTimeout(gameLoop, config.SERVER_TICKRATE / 2)
 }
 
 export function startGameLoop() {
-  try {
-    gameLoop()
-  } catch (error) {
-    console.error('Error in game loop:', error)
-  }
+  lastFrameTime = Date.now()
+  gameLoop()
 }
