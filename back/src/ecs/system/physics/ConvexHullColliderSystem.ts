@@ -128,9 +128,15 @@ export class ConvexHullColliderSystem {
 
     const colliderProperties = entity.getComponent(ColliderPropertiesComponent)
     if (colliderProperties) {
-      collider.setSensor(colliderProperties.isSensor)
-      collider.setFriction(colliderProperties.friction)
-      collider.setRestitution(colliderProperties.restitution)
+      if (colliderProperties.data.isSensor) {
+        collider.setSensor(true)
+      }
+      if (colliderProperties.data.friction) {
+        collider.setFriction(colliderProperties.data.friction)
+      }
+      if (colliderProperties.data.restitution) {
+        collider.setRestitution(colliderProperties.data.restitution)
+      }
     }
     convexHullComponent.collider = collider
   }

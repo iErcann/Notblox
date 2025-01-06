@@ -15,6 +15,7 @@ import {
   PhysicsPropertiesComponent,
   PhysicsPropertiesComponentData,
 } from '../component/physics/PhysicsPropertiesComponent.js'
+import { ColliderPropertiesComponent } from '../component/physics/ColliderPropertiesComponent.js'
 
 export interface SphereParams {
   /**
@@ -38,6 +39,10 @@ export interface SphereParams {
    * @default {}
    */
   physicsProperties?: PhysicsPropertiesComponentData
+  /**
+   * @default {}
+   */
+  colliderProperties?: ColliderPropertiesComponent
 }
 export class Sphere {
   entity: Entity
@@ -73,6 +78,7 @@ export class Sphere {
       new PhysicsPropertiesComponent(this.entity.id, physicsProperties ?? {})
     )
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
+    this.entity.addComponent(new ColliderPropertiesComponent(this.entity.id, {}))
     this.entity.addComponent(new SphereColliderComponent(this.entity.id))
 
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [

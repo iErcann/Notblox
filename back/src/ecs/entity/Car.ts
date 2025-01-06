@@ -87,7 +87,12 @@ export class Car {
     )
     this.entity.addComponent(sizeComponent)
 
-    this.entity.addComponent(new ColliderPropertiesComponent(this.entity.id, false, 0.0, 0))
+    this.entity.addComponent(
+      new ColliderPropertiesComponent(this.entity.id, {
+        friction: 0.0,
+        restitution: 0.0,
+      })
+    )
     this.entity.addComponent(
       new ConvexHullColliderComponent(this.entity.id, meshUrl ?? 'http://localhost:4001/Car.glb')
     )

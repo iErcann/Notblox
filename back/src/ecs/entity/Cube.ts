@@ -15,6 +15,7 @@ import {
   PhysicsPropertiesComponent,
   PhysicsPropertiesComponentData,
 } from '../component/physics/PhysicsPropertiesComponent.js'
+import { ColliderPropertiesComponentData } from '../component/physics/ColliderPropertiesComponent.js'
 
 export interface CubeParams {
   position: {
@@ -42,6 +43,10 @@ export interface CubeParams {
    * @default {}
    */
   physicsProperties?: PhysicsPropertiesComponentData
+  /**
+   * @default {}
+   */
+  colliderProperties?: ColliderPropertiesComponentData
 }
 
 export class Cube {
