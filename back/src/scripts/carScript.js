@@ -17,11 +17,24 @@ new Car({
 
 new Car({
   position: {
-    x: 50,
-    y: 10,
+    x: 100,
+    y: 5,
     z: 10,
   },
-  meshUrl: 'http://localhost:4001/EzCar.glb',
+  meshUrl: 'http://localhost:4001/EzCar2.glb',
+})
+
+new Mesh({
+  position: {
+    x: 0,
+    y: 100,
+    z: 0,
+  },
+  physicsProperties: {
+    mass: 10,
+    enableCcd: true,
+  },
+  meshUrl: 'http://localhost:4001/Cubing.glb',
 })
 
 for (let i = 0; i < 4; i++) {
