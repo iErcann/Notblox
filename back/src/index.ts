@@ -111,7 +111,6 @@ function updateGameState(dt: number) {
   groundedCheckSystem.update(entities, physicsSystem.world)
   movementSystem.update(dt, entities)
   vehicleSystem.update(entities, physicsSystem.world, dt)
-  vehicleSystem.update(entities, physicsSystem.world, dt)
 
   animationSystem.update(entities)
   syncRotationSystem.update(entities)

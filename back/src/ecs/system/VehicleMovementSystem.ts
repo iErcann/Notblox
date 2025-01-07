@@ -52,6 +52,7 @@ export class VehicleMovementSystem {
         if (!carComponent.driverEntityId) {
           continue
         }
+
         const driver = EntityManager.getEntityById(entities, carComponent.driverEntityId)
         if (!driver) {
           console.error(
@@ -61,8 +62,16 @@ export class VehicleMovementSystem {
         }
 
         const driverInputComponent = driver.getComponent(InputComponent)
+
+        if (!driver.getComponent(VehicleOccupancyComponent)) {
+          console.error(
+            'VehicleInputSystem: Driver is not in a vehicle ? The driver should have a VehicleOccupancyComponent : ' +
+              driver
+          )
+          continue
+        }
+
         if (!driverInputComponent) {
-          console.error('VehicleInputSystem: Driver has no input component')
           console.error('VehicleInputSystem: Driver has no input component')
           continue
         }
