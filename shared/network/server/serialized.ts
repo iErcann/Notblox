@@ -36,6 +36,7 @@ export enum SerializedEntityType {
 }
 
 // Movement states
+// Movement states
 export enum SerializedStateType {
   IDLE = 'Idle',
   WALK = 'Walk',

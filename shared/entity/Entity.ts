@@ -58,6 +58,7 @@ export class Entity {
     if (removedComponent) {
       this.components.delete(componentType)
       if (createRemoveEvent) {
+        console.log('Removing component', removedComponent)
         EventSystem.onComponentRemoved(removedComponent)
         // If we are on the server, remove the component from the NetworkDataComponent
         if (config.IS_SERVER) {

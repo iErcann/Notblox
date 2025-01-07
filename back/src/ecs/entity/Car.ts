@@ -15,7 +15,6 @@ import { TextComponent } from '../../../../shared/component/TextComponent.js'
 import { ConvexHullColliderComponent } from '../component/physics/ConvexHullColliderComponent.js'
 import { VehicleComponent } from '../../../../shared/component/VehicleComponent.js'
 import { VehicleOccupancyComponent } from '../../../../shared/component/VehicleOccupancyComponent.js'
-
 import { ColliderPropertiesComponent } from '../component/physics/ColliderPropertiesComponent.js'
 import { ProximityPromptComponent } from '../../../../shared/component/ProximityPromptComponent.js'
 import { PlayerComponent } from '../../../../shared/component/PlayerComponent.js'

@@ -60,15 +60,9 @@ export class VehicleMovementSystem {
           continue
         }
 
-        if (!driver.getComponent(VehicleOccupancyComponent)) {
-          console.error(
-            'VehicleInputSystem: Driver is not in a vehicle ? The driver should have a VehicleOccupancyComponent : ' +
-              driver
-          )
-          continue
-        }
         const driverInputComponent = driver.getComponent(InputComponent)
         if (!driverInputComponent) {
+          console.error('VehicleInputSystem: Driver has no input component')
           console.error('VehicleInputSystem: Driver has no input component')
           continue
         }
