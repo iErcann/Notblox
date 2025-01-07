@@ -11,6 +11,7 @@ import Rapier from '../../../physics/rapier.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { KinematicRigidBodyComponent } from '../../component/physics/KinematicRigidBodyComponent.js'
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
+import { ColliderPropertiesComponent } from '../../component/physics/ColliderPropertiesComponent.js'
 
 export class TrimeshColliderSystem {
   async update(entities: Entity[], world: Rapier.World) {
@@ -80,7 +81,20 @@ export class TrimeshColliderSystem {
 
           // Create the collider and associate it with the rigid body
           const collider = world.createCollider(trimeshDesc, kinematicRigidBodyComponent.body)
-          collider.setFriction(0.1)
+
+          const colliderPropertiesComponent = entity.getComponent(ColliderPropertiesComponent)
+          if (colliderPropertiesComponent) {
+            if (colliderPropertiesComponent.data.friction) {
+              collider.setFriction(colliderPropertiesComponent.data.friction)
+            }
+            if (colliderPropertiesComponent.data.restitution) {
+              collider.setRestitution(colliderPropertiesComponent.data.restitution)
+            }
+            if (colliderPropertiesComponent.data.isSensor) {
+              collider.setSensor(colliderPropertiesComponent.data.isSensor)
+            }
+          }
+
           physicsTrimeshCollidersComponent.colliders.push(
             new TrimeshColliderComponent(event.entityId, collider)
           )

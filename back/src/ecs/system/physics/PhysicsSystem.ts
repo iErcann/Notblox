@@ -14,7 +14,7 @@ export class PhysicsSystem {
     this.world = new Rapier.World(gravity)
     this.world.timestep = 1 / config.SERVER_TICKRATE
     this.eventQueue = new Rapier.EventQueue(true)
-    console.log('Physics World constructed')
+    console.log(`Physics World constructed with tick rate: ${config.SERVER_TICKRATE}`)
   }
 
   update(entities: Entity[]) {

@@ -7,6 +7,7 @@ import { PositionComponent } from '../../../../shared/component/PositionComponen
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
 import { PhysicsPropertiesComponent } from '../component/physics/PhysicsPropertiesComponent.js'
+import { ColliderPropertiesComponent } from '../component/physics/ColliderPropertiesComponent.js'
 
 export class MapWorld {
   entity: Entity
@@ -19,8 +20,16 @@ export class MapWorld {
     this.entity.addComponent(new PositionComponent(this.entity.id, 0, 0, 0))
 
     this.entity.addComponent(
+      new ColliderPropertiesComponent(this.entity.id, {
+        friction: 0.0,
+        restitution: 0.1,
+      })
+    )
+    this.entity.addComponent(
       new PhysicsPropertiesComponent(this.entity.id, {
         enableCcd: true,
+        angularDamping: 0.05,
+        linearDamping: 0.05,
       })
     )
     this.entity.addComponent(new KinematicRigidBodyComponent(this.entity.id))

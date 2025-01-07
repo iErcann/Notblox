@@ -88,18 +88,22 @@ export class VehicleMovementSystem {
           }
 
           // Engine force for back wheels
-          const engineForce = driverInputComponent.up ? 5000 : driverInputComponent.down ? -5000 : 0
-          vehicleController.setWheelEngineForce(1, engineForce)
-          vehicleController.setWheelEngineForce(3, engineForce)
+          const engineForce = driverInputComponent.up
+            ? 15000
+            : driverInputComponent.down
+            ? -15000
+            : 0
+          vehicleController.setWheelEngineForce(0, engineForce)
+          vehicleController.setWheelEngineForce(2, engineForce)
 
           // Steering for front wheels
           const steeringAngle = driverInputComponent.left
-            ? -Math.PI / 16
+            ? Math.PI / 24
             : driverInputComponent.right
-            ? Math.PI / 16
+            ? -Math.PI / 24
             : 0
-          vehicleController.setWheelSteering(0, steeringAngle)
-          vehicleController.setWheelSteering(2, steeringAngle)
+          vehicleController.setWheelSteering(1, steeringAngle)
+          vehicleController.setWheelSteering(3, steeringAngle)
 
           // Update the vehicle controller
           console.log(dt)

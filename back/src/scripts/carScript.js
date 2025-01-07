@@ -5,7 +5,7 @@ function randomHexColor() {
 
 // Load the game world
 // Can also be hosted on a gittblox-Assets + https://rawcdn.githack.comhub repo : https://github.com/iErcann/No
-new MapWorld('http://localhost:4001/racetrack.glb')
+new MapWorld('http://localhost:4001/FlatMap.glb')
 
 new Car({
   position: {
@@ -61,7 +61,7 @@ for (let i = 0; i < 4; i++) {
 const sphereParams = {
   radius: 1.4,
   position: {
-    x: 10,
+    x: 40,
     y: 10,
     z: 10,
   },

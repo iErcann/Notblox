@@ -12,10 +12,10 @@ import { TextComponent } from '../../../../shared/component/TextComponent.js'
 
 export class VehicleCreationSystem {
   private static readonly WHEEL_POSITIONS = [
-    [-4.14, -0.387, -2.46], // FRONT
-    [-4.14, -0.387, 2.46], // FRONT
-    [4.14, -0.387, -2.46], // BACK
-    [4.14, -0.387, 2.46], // BACK
+    [-4.14, -0.387, -2.46], // BACK
+    [-4.14, -0.387, 2.46], // BACK
+    [4.14, -0.387, -2.46], // FRONT
+    [4.14, -0.387, 2.46], // FRONT
   ]
 
   update(entities: Entity[], world: Rapier.World): void {
@@ -47,7 +47,7 @@ export class VehicleCreationSystem {
           new Rapier.Vector3(x, y, z),
           new Rapier.Vector3(0, -1, 0),
           new Rapier.Vector3(-1, 0, 0),
-          1,
+          0.125,
           1.2
         )
       })
@@ -55,11 +55,11 @@ export class VehicleCreationSystem {
       for (let i = 0; i < 4; i++) {
         // vehicle.setWheelSuspensionCompression(i, 0.82)
         // vehicle.setWheelSuspensionRelaxation(i, 0.88)
-        vehicle.setWheelSuspensionStiffness(i, 24)
+        vehicle.setWheelSuspensionStiffness(i, 124)
         // vehicle.setWheelMaxSuspensionForce(i, 6000)
         // vehicle.setWheelMaxSuspensionTravel(i, 5)
-        // vehicle.setWheelSideFrictionStiffness(i, 1)
-        // vehicle.setWheelFrictionSlip(i, 0.8)
+        vehicle.setWheelSideFrictionStiffness(i, 1)
+        vehicle.setWheelFrictionSlip(i, 0.7)
       }
 
       entity.addComponent(new VehicleRayCastComponent(entity.id, vehicle))

@@ -101,6 +101,9 @@ export class Car {
         this.entity.id,
         physicsProperties ?? {
           enableCcd: true,
+          angularDamping: 0.05,
+          linearDamping: 0.05,
+          mass: 5,
         }
       )
     )
