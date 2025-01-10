@@ -1,19 +1,22 @@
-new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/OBBY23.glb')
+new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/OBBY24.glb')
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-for (let i = 1; i <= 7; i++) {
+for (let i = 1; i <= 4; i++) {
   const fallingSpherePosition = {
-    x: 225,
-    y: 111 + i * 5,
-    z: randomInt(-990, -1020),
+    x: 263,
+    y: 426 + i * 5,
+    z: -986 - randomInt(0, -40),
   }
 
   const sphereParams = {
     position: fallingSpherePosition,
     radius: 4,
+    physicsProperties: {
+      enableCcd: true,
+    },
   }
   const sphere = new Sphere(sphereParams)
   sphere.entity.addComponent(
