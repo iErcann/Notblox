@@ -62,45 +62,55 @@ export class TextComponentSystem {
       return element.innerHTML
     }
 
-    // Dumb sanitize to prevent XSS
     const sanitizedText = sanitize(textComponent.text)
-    if (isProximityPrompt) {
-      textElement.innerHTML = `
-      <div style="      
-        background-color: rgba(200, 200, 200, 0.3); 
-        color: #000; 
-        padding: 0.4rem; 
-        border-radius: 0.5rem; 
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
-        font-size: 1.5rem; 
-        text-align: center;
-        max-width: 300px;
-        margin: auto;
-      ">
-        <div style="display: flex; align-items: center;">
-          <div style="
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            width: 2.5rem; 
-            height: 2.5rem; 
-            background-color: rgba(0, 0, 0, 0.2); 
-            border-radius: 0.375rem; 
-            margin-right: 0.5rem;">
-            <span style="font-size: 1.5rem; font-weight: bold; color: #FFFFFF;">E</span>
+
+    // Check if the text element has been initialized
+    if (!textElement.dataset.initialized) {
+      if (isProximityPrompt) {
+        textElement.innerHTML = `
+          <div style="      
+            background-color: rgba(200, 200, 200, 0.3); 
+            color: #000; 
+            padding: 0.4rem; 
+            border-radius: 0.5rem; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+            font-size: 1.5rem; 
+            text-align: center;
+            max-width: 300px;
+            margin: auto;
+          ">
+            <div style="display: flex; align-items: center;">
+              <div style="
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                width: 2.5rem; 
+                height: 2.5rem; 
+                background-color: rgba(0, 0, 0, 0.2); 
+                border-radius: 0.375rem; 
+                margin-right: 0.5rem;">
+                <span style="font-size: 1.5rem; font-weight: bold; color: #FFFFFF;">E</span>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <p class="text-content" style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem; color: #FFFFFF;"></p>
+                <p style="font-size: 0.75rem; color: #FFFFFF; text-align: right; margin-left: auto; font-style: italic;">Interact</p>
+              </div>
+            </div>
           </div>
-          <div style="display: flex; flex-direction: column;">
-            <p style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem; color: #FFFFFF;">${sanitizedText}</p>
-            <p style="font-size: 0.75rem; color: #FFFFFF; text-align: right; margin-left: auto; font-style: italic;">Interact</p>
-          </div>
-        </div>
-      </div>
-      `
-    } else {
-      textElement.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(23, 23, 23, 0.2); color: white; padding: 0.5rem; border-radius: 0.375rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); ">
-          <p style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;">${sanitizedText}</p>
-        </div>`
+        `
+      } else {
+        textElement.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(23, 23, 23, 0.2); color: white; padding: 0.5rem; border-radius: 0.375rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); ">
+            <p class="text-content" style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;"></p>
+          </div>`
+      }
+      textElement.dataset.initialized = 'true'
+    }
+
+    // Update only the text content
+    const textContentElement = textElement.querySelector('.text-content')
+    if (textContentElement) {
+      textContentElement.textContent = sanitizedText
     }
   }
 
