@@ -21,6 +21,7 @@ export enum SerializedComponentType {
   PLAYER = 14,
   VEHICLE_OCCUPANCY = 15,
   COMPONENT_REMOVED_EVENT = 16,
+  WHEEL = 17,
 }
 
 export enum SerializedEntityType {

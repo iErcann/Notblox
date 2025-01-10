@@ -108,8 +108,43 @@ export class VehicleMovementSystem {
           vehicleController.setWheelSteering(1, steeringAngle)
           vehicleController.setWheelSteering(3, steeringAngle)
 
+          // const vehiclePosition = rigidBody.translation()
+          // Update the wheels for visual purpose
+          // for (let i = 0; i < carComponent.wheels.length; i++) {
+          //   const wheel = carComponent.wheels[i]
+          //   const wheelAxleCs = vehicleController.wheelAxleCs(i)!
+          //   const connection = vehicleController.wheelChassisConnectionPointCs(i)?.y || 0
+          //   const suspension = vehicleController.wheelSuspensionLength(i) || 0
+          //   const steering = vehicleController.wheelSteering(i) || 0
+          //   const rotationRad = vehicleController.wheelRotation(i) || 0
+
+          //   // Also do the rotation of the wheel
+          //   // Y is up, X is right, Z is forward
+          //   // ADD THE ROTATION OF THE CAR
+          //   wheel.positionComponent.y =
+          //     VehicleMovementSystem.WHEEL_POSITIONS[i][1] +
+          //     vehiclePosition.y +
+          //     connection -
+          //     suspension +
+          //     suspension * Math.cos(steering) +
+          //     suspension * Math.sin(steering)
+          //   wheel.positionComponent.x =
+          //     VehicleMovementSystem.WHEEL_POSITIONS[i][0] +
+          //     vehiclePosition.x +
+          //     suspension * Math.sin(steering) -
+          //     suspension * Math.cos(steering)
+          //   wheel.positionComponent.z =
+          //     VehicleMovementSystem.WHEEL_POSITIONS[i][2] + vehiclePosition.z + suspension
+
+          //   // Update the wheel rotation
+          //   wheel.rotationComponent.x = rotationRad
+          //   wheel.rotationComponent.y = steering
+          //   wheel.rotationComponent.z = wheelAxleCs.x
+          //   wheel.rotationComponent.w = wheelAxleCs.y
+          // }
+
           // Update the vehicle controller
-          console.log(dt)
+          carComponent.updated = true
           vehicleController.updateVehicle(dt / 1000)
         }
       }
