@@ -40,6 +40,7 @@ import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { TextComponent } from '../../shared/component/TextComponent.js'
 import { Car } from './ecs/entity/Car.js'
 import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
+import { Mesh } from './ecs/entity/Mesh.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'carScript.js' // Default script name if not provided
@@ -97,6 +98,7 @@ async function loadGameLogic() {
     Cube,
     Sphere,
     MapWorld,
+    Mesh,
     Player,
     TriggerCube,
     FloatingText,
