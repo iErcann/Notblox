@@ -56,8 +56,8 @@ export class WebsocketSystem {
     const acceptedOrigin: string | undefined = process.env.FRONTEND_URL
     const app = isProduction
       ? SSLApp({
-          key_file_name: '/etc/letsencrypt/live/npm-1/privkey.pem',
-          cert_file_name: '/etc/letsencrypt/live/npm-1/cert.pem',
+          key_file_name: '/etc/letsencrypt/live/npm-3/privkey.pem',
+          cert_file_name: '/etc/letsencrypt/live/npm-3/cert.pem',
         })
       : App()
 
