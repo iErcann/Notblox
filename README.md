@@ -4,10 +4,13 @@
 
 ### Online demo
 
-Small demo here : [NotBlox.online](https://www.notblox.online/)
+Demo here : [NotBlox.online](https://www.notblox.online/)
 
 Hosted on an european server, there is no client side prediction, so the game may be laggy if you are far from the server.
 
+#### Videos : 
+- Car https://www.youtube.com/watch?v=7eSYb6jKOV0
+- Football https://www.youtube.com/watch?v=tZlNKU_buCQ&t=2s
 ### Controls
 
 - W : Forward
