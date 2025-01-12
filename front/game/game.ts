@@ -16,12 +16,13 @@ import {
   ServerMeshSystem,
   IdentifyFollowedMeshSystem,
   TextComponentSystem,
+  InvisibilitySystem,
+  VehicleSystem,
 } from './ecs/system'
 import { Hud } from './hud'
 import { Renderer } from './renderer'
 import { EventSystem } from '@shared/system/EventSystem'
 import { MutableRefObject } from 'react'
-import { VehicleSystem } from './ecs/system/VehicleSystem'
 
 export class Game {
   private static instance: Game
@@ -45,6 +46,7 @@ export class Game {
   private serverMeshSystem: ServerMeshSystem
   private textComponentSystem: TextComponentSystem
   private vehicleSystem: VehicleSystem
+  private invisibilitySystem: InvisibilitySystem
   renderer: Renderer
   hud: Hud
   private identifyFollowedMeshSystem: IdentifyFollowedMeshSystem
@@ -65,6 +67,7 @@ export class Game {
     this.eventSystem = EventSystem.getInstance()
     this.textComponentSystem = new TextComponentSystem()
     this.vehicleSystem = new VehicleSystem()
+    this.invisibilitySystem = new InvisibilitySystem()
 
     this.renderer = new Renderer(gameContainerRef)
     this.inputManager = new InputManager(this.websocketManager, this.renderer.camera.controlSystem)
@@ -113,6 +116,7 @@ export class Game {
     this.destroySystem.update(entities, this.renderer)
     this.meshSystem.update(entities, this.renderer)
     this.vehicleSystem.update(entities)
+    this.invisibilitySystem.update(entities)
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
     this.syncPositionSystem.update(entities, positionInterpFactor / 2)
     this.syncRotationSystem.update(entities, 0.7)

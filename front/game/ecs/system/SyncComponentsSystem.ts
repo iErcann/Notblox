@@ -5,6 +5,7 @@ import { Player } from '../entity/Player'
 import { Sphere } from '../entity/Sphere'
 import { Chat } from '../entity/Chat'
 import { FloatingText } from '../entity/FloatingText'
+import { InvisibleComponent } from '../../../../shared/component/InvisibleComponent.js'
 
 import {
   SerializedComponent,
@@ -199,6 +200,9 @@ export class SyncComponentsSystem {
         break
       case SerializedComponentType.COMPONENT_REMOVED_EVENT:
         component = new SerializableComponentRemovedEvent(entityId, serializedComponent.t)
+        break
+      case SerializedComponentType.INVISIBLE:
+        component = new InvisibleComponent(entityId)
         break
       default:
         console.error("Unknown component type, can't create component")

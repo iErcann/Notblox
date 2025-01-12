@@ -132,22 +132,22 @@ const proximityPromptComponent = new ProximityPromptComponent(cube.entity.id, {
 cube.entity.addNetworkComponent(proximityPromptComponent)
 
 for (let i = 1; i < 6; i++) {
-  new Car({
-    position: {
-      x: 50 * -i,
-      y: 10,
-      z: 70,
-    },
+  const x = 50 * -i
+  const y = 10
+  const z = 70
+  const car = new Car({
+    position: { x, y, z },
   })
+  car.entity.addComponent(new SpawnPositionComponent(car.entity.id, x, y, z))
 }
 
 for (let i = 1; i < 6; i++) {
-  new Car({
-    position: {
-      x: 50 * i,
-      y: 10,
-      z: 70,
-    },
-    meshUrl: 'http://localhost:4001/EzCar.glb',
+  const x = 50 * i
+  const y = 10
+  const z = 70
+  const car = new Car({
+    position: { x, y, z },
+    meshUrl: 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/EzCar.glb',
   })
+  car.entity.addComponent(new SpawnPositionComponent(car.entity.id, x, y, z))
 }

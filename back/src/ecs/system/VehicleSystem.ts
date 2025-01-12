@@ -12,7 +12,7 @@ import { TextComponent } from '../../../../shared/component/TextComponent.js'
 import { PlayerComponent } from '../../../../shared/component/PlayerComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
-
+import { InvisibleComponent } from '../../../../shared/component/InvisibleComponent.js'
 export class VehicleSystem {
   private vehicleCreationSystem = new VehicleCreationSystem()
   private vehicleMovementSystem = new VehicleMovementSystem()
@@ -122,24 +122,30 @@ export class VehicleSystem {
           }
           // Update the vehicle component to reflect the changes
           vehicleComponent.updated = true
-
-          // Enable player rigid body + Teleport player beside the car
           const exitingPlayerEntity = EntityManager.getEntityById(entities, exitingPlayerEntityId)
-          const playerRigidBody = exitingPlayerEntity?.getComponent(DynamicRigidBodyComponent)?.body
-          if (playerRigidBody) {
-            playerRigidBody.setEnabled(true)
-            // Set the player beside the car
-            const vehiclePosition = vehicleEntity.getComponent(PositionComponent)
-            if (vehiclePosition) {
-              playerRigidBody.setTranslation(
-                new Rapier.Vector3(
-                  vehiclePosition.x + 10,
-                  vehiclePosition.y + 5,
+
+          if (exitingPlayerEntity) {
+            // Handle rigid body
+            const playerRigidBody =
+              exitingPlayerEntity.getComponent(DynamicRigidBodyComponent)?.body
+            if (playerRigidBody) {
+              // Re-enable physics for player
+              playerRigidBody.setEnabled(true)
+
+              // Position player next to vehicle
+              const vehiclePosition = vehicleEntity.getComponent(PositionComponent)
+              if (vehiclePosition) {
+                const exitPosition = new Rapier.Vector3(
+                  vehiclePosition.x + 10, // Offset to side of vehicle
+                  vehiclePosition.y + 5, // Slight height offset
                   vehiclePosition.z
-                ),
-                true
-              )
+                )
+                playerRigidBody.setTranslation(exitPosition, true)
+              }
             }
+
+            // Make player visible again
+            exitingPlayerEntity.removeComponent(InvisibleComponent)
           }
 
           // Update the text component to reflect the changes
@@ -179,6 +185,10 @@ export class VehicleSystem {
           if (playerRigidBody) {
             playerRigidBody.setEnabled(false)
           }
+          // Make the player invisible
+          const invisibleComponent = new InvisibleComponent(playerEntity.id)
+          playerEntity.addNetworkComponent(invisibleComponent)
+
           // Update the vehicle component to reflect the changes
           vehicleComponent.updated = true
 
