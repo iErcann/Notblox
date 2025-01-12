@@ -1,4 +1,4 @@
-import { Mesh, Vector3 } from 'three'
+import * as THREE from 'three'
 import { ComponentAddedEvent } from '../../../../../shared/component/events/ComponentAddedEvent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
@@ -51,7 +51,7 @@ export class TrimeshColliderSystem {
 
       // Traverse the scene graph to find meshes
       model.scene.traverse((child) => {
-        if (child instanceof Mesh) {
+        if (child instanceof THREE.Mesh) {
           const mesh = child
           const indices = mesh.geometry.index?.array // Get indices from the geometry
           const vertices = mesh.geometry.attributes.position.array // Get vertices from the geometry
@@ -63,7 +63,7 @@ export class TrimeshColliderSystem {
 
           // Transform vertices from local space to world space
           const transformedVertices = new Float32Array(vertices.length)
-          const vertex = new Vector3()
+          const vertex = new THREE.Vector3()
 
           for (let i = 0; i < vertices.length; i += 3) {
             vertex.set(vertices[i], vertices[i + 1], vertices[i + 2]) // Set the vertex position

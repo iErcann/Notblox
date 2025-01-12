@@ -84,28 +84,34 @@ function atLeastOnePlayerExists() {
   return player !== undefined
 }
 
-function updateGameState(dt: number) {
+async function updateGameState(dt: number) {
   destroyEventSystem.update(entities)
   physicsSystem.update(entities)
   boundaryCheckSystem.update(entities)
   ScriptableSystem.update(dt, entities)
   proximityPromptSystem.update(entities, dt)
 
-  // Physics bodies and colliders
+  // Physics bodies
   kinematicPhysicsBodySystem.update(entities, physicsSystem.world)
   rigidPhysicsBodySystem.update(entities, physicsSystem.world)
-  trimeshColliderSystem.update(entities, physicsSystem.world)
+  // Physics colliders
+  /**
+   * Trimesh & Convexhull colliders use a gltf model as a source
+   * Waiting for them to be loaded
+   * Example : The map has a Trimesh Collider, if we don't wait for it
+   * the entities will have a wrong position and not respects script positions
+   */
+  await trimeshColliderSystem.update(entities, physicsSystem.world)
+  await convexHullColliderSystem.update(entities, physicsSystem.world)
   boxColliderSystem.update(entities, physicsSystem.world)
   capsuleColliderSystem.update(entities, physicsSystem.world)
   sphereColliderSystem.update(entities, physicsSystem.world)
-  convexHullColliderSystem.update(entities, physicsSystem.world)
 
   // Other systems
   zombieSystem.update(dt, entities)
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
   singleSizeEventSystem.update(entities)
-  chatSystem.update(entities)
   colorEventSystem.update(entities)
 
   groundedCheckSystem.update(entities, physicsSystem.world)
@@ -116,6 +122,7 @@ function updateGameState(dt: number) {
   syncRotationSystem.update(entities)
   syncPositionSystem.update(entities)
 
+  chatSystem.update(entities)
   lockedRotationSystem.update(entities)
   networkSystem.update(entities)
   sleepCheckSystem.update(entities)
@@ -129,7 +136,7 @@ function handleNoPlayers() {
   accumulatedTime = 0
 }
 
-function gameLoop() {
+async function gameLoop() {
   const currentTime = Date.now()
   const frameTime = currentTime - lastFrameTime // Time elapsed since last frame
   lastFrameTime = currentTime
@@ -142,7 +149,7 @@ function gameLoop() {
       handleNoPlayers()
       return
     }
-    updateGameState(fixedTimestep)
+    await updateGameState(fixedTimestep)
     accumulatedTime -= fixedTimestep
   }
 
