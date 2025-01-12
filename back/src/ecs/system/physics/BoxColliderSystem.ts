@@ -59,9 +59,15 @@ export class BoxColliderSystem {
     const colliderProperties = entity.getComponent(ColliderPropertiesComponent)
 
     if (colliderProperties) {
-      colliderDesc.setSensor(colliderProperties.isSensor)
-      colliderDesc.setFriction(colliderProperties.friction)
-      colliderDesc.setRestitution(colliderProperties.restitution)
+      if (colliderProperties.data.isSensor) {
+        colliderDesc.setSensor(true)
+      }
+      if (colliderProperties.data.friction) {
+        colliderDesc.setFriction(colliderProperties.data.friction)
+      }
+      if (colliderProperties.data.restitution) {
+        colliderDesc.setRestitution(colliderProperties.data.restitution)
+      }
     }
 
     colliderDesc.setActiveEvents(Rapier.ActiveEvents.COLLISION_EVENTS)

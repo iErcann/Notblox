@@ -27,10 +27,12 @@ import { SphereColliderSystem } from './ecs/system/physics/SphereColliderSystem.
 import { SyncPositionSystem } from './ecs/system/physics/SyncPositionSystem.js'
 import { SyncRotationSystem } from './ecs/system/physics/SyncRotationSystem.js'
 import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSystem.js'
-import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
+import { PlayerComponent } from '../../shared/component/PlayerComponent.js'
 import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { ProximityPromptSystem } from './ecs/system/events/ProximityPromptEventSystem.js'
+import { ConvexHullColliderSystem } from './ecs/system/physics/ConvexHullColliderSystem.js'
+import { VehicleSystem } from './ecs/system/VehicleSystem.js'
 
 // TODO: Make it wait for the websocket server to start
 const eventSystem = EventSystem.getInstance()
@@ -45,6 +47,7 @@ const trimeshColliderSystem = new TrimeshColliderSystem()
 const boxColliderSystem = new BoxColliderSystem()
 const capsuleColliderSystem = new CapsuleColliderSystem()
 const sphereColliderSystem = new SphereColliderSystem()
+const convexHullColliderSystem = new ConvexHullColliderSystem()
 
 const physicsSystem = PhysicsSystem.getInstance()
 const groundedCheckSystem = new GroundedCheckSystem()
@@ -57,9 +60,10 @@ const syncPositionSystem = new SyncPositionSystem()
 const syncRotationSystem = new SyncRotationSystem()
 const chatSystem = new ChatEventSystem()
 const destroyEventSystem = new DestroyEventSystem()
-const interactEventSystem = new ProximityPromptSystem()
+const proximityPromptSystem = new ProximityPromptSystem()
 
 const movementSystem = new MovementSystem()
+const vehicleSystem = new VehicleSystem()
 const networkSystem = new NetworkSystem()
 
 const animationSystem = new AnimationSystem()
@@ -69,74 +73,91 @@ const boundaryCheckSystem = new BoundaryCheckSystem()
 const zombieSystem = new ZombieSystem()
 
 new Chat()
-console.log(`Detected tick rate : ${config.SERVER_TICKRATE}`)
-let lastUpdateTimestamp = Date.now()
 
-let lastTickPlayerExisted = false
-function atLeastOnePlayerExit() {
+const fixedTimestep = 1000 / config.SERVER_TICKRATE
+
+let lastFrameTime = Date.now()
+let accumulatedTime = 0
+
+function atLeastOnePlayerExists() {
   const player = EntityManager.getFirstEntityWithComponent(entities, PlayerComponent)
   return player !== undefined
 }
-async function gameLoop() {
-  // Idle mode if no players
-  const playerExist = atLeastOnePlayerExit()
 
-  // If no players, wait for one to join
-  // Making an extra tick for entities that check player existence (E.g if no player exist on a game script, reset it)
-  if (!playerExist && !lastTickPlayerExisted) {
-    console.log('No players, waiting...')
-    lastUpdateTimestamp = Date.now()
-    setTimeout(gameLoop, 1000)
-    return
-  }
-  setTimeout(gameLoop, 1000 / config.SERVER_TICKRATE)
-  const now = Date.now()
-  const dt = now - lastUpdateTimestamp
-
+async function updateGameState(dt: number) {
   destroyEventSystem.update(entities)
   physicsSystem.update(entities)
   boundaryCheckSystem.update(entities)
   ScriptableSystem.update(dt, entities)
-  interactEventSystem.update(entities, dt)
+  proximityPromptSystem.update(entities, dt)
 
-  // Create the bodies first.
+  // Physics bodies
   kinematicPhysicsBodySystem.update(entities, physicsSystem.world)
   rigidPhysicsBodySystem.update(entities, physicsSystem.world)
-  // Then handle the colliders
-  trimeshColliderSystem.update(entities, physicsSystem.world)
+  // Physics colliders
+  /**
+   * Trimesh & Convexhull colliders use a gltf model as a source
+   * Waiting for them to be loaded
+   * Example : The map has a Trimesh Collider, if we don't wait for it
+   * the entities will have a wrong position and not respects script positions
+   */
+  await trimeshColliderSystem.update(entities, physicsSystem.world)
+  await convexHullColliderSystem.update(entities, physicsSystem.world)
   boxColliderSystem.update(entities, physicsSystem.world)
   capsuleColliderSystem.update(entities, physicsSystem.world)
   sphereColliderSystem.update(entities, physicsSystem.world)
 
+  // Other systems
   zombieSystem.update(dt, entities)
-
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
   singleSizeEventSystem.update(entities)
-  chatSystem.update(entities)
   colorEventSystem.update(entities)
 
   groundedCheckSystem.update(entities, physicsSystem.world)
   movementSystem.update(dt, entities)
+  vehicleSystem.update(entities, physicsSystem.world, dt)
 
   animationSystem.update(entities)
   syncRotationSystem.update(entities)
   syncPositionSystem.update(entities)
 
+  chatSystem.update(entities)
   lockedRotationSystem.update(entities)
   networkSystem.update(entities)
   sleepCheckSystem.update(entities)
 
-  // Useful for DestroySystem
+  // Finalize events
   eventSystem.afterUpdate(entities)
-  lastUpdateTimestamp = now
-  lastTickPlayerExisted = playerExist
+}
+
+function handleNoPlayers() {
+  setTimeout(gameLoop, 1000) // Retry after 1 second
+  accumulatedTime = 0
+}
+
+async function gameLoop() {
+  const currentTime = Date.now()
+  const frameTime = currentTime - lastFrameTime // Time elapsed since last frame
+  lastFrameTime = currentTime
+  accumulatedTime += frameTime
+
+  while (accumulatedTime >= fixedTimestep) {
+    const playerExist = atLeastOnePlayerExists()
+
+    if (!playerExist) {
+      handleNoPlayers()
+      return
+    }
+    await updateGameState(fixedTimestep)
+    accumulatedTime -= fixedTimestep
+  }
+
+  // Schedule the next loop iteration
+  setTimeout(gameLoop, config.SERVER_TICKRATE / 2)
 }
 
 export function startGameLoop() {
-  try {
-    gameLoop()
-  } catch (error) {
-    console.error('Error in game loop:', error)
-  }
+  lastFrameTime = Date.now()
+  gameLoop()
 }

@@ -16,6 +16,8 @@ import {
   ServerMeshSystem,
   IdentifyFollowedMeshSystem,
   TextComponentSystem,
+  InvisibilitySystem,
+  VehicleSystem,
 } from './ecs/system'
 import { Hud } from './hud'
 import { Renderer } from './renderer'
@@ -43,6 +45,8 @@ export class Game {
   private meshSystem: MeshSystem
   private serverMeshSystem: ServerMeshSystem
   private textComponentSystem: TextComponentSystem
+  private vehicleSystem: VehicleSystem
+  private invisibilitySystem: InvisibilitySystem
   renderer: Renderer
   hud: Hud
   private identifyFollowedMeshSystem: IdentifyFollowedMeshSystem
@@ -62,6 +66,8 @@ export class Game {
     this.identifyFollowedMeshSystem = new IdentifyFollowedMeshSystem()
     this.eventSystem = EventSystem.getInstance()
     this.textComponentSystem = new TextComponentSystem()
+    this.vehicleSystem = new VehicleSystem()
+    this.invisibilitySystem = new InvisibilitySystem()
 
     this.renderer = new Renderer(gameContainerRef)
     this.inputManager = new InputManager(this.websocketManager, this.renderer.camera.controlSystem)
@@ -90,6 +96,7 @@ export class Game {
   private async loop() {
     const entities = EntityManager.getInstance().getAllEntities()
     const now = Date.now()
+    const deltaTime = now - this.lastRenderTime
     this.syncComponentSystem.update(entities)
 
     // Server can send us ServerMeshComponents to load.
@@ -104,17 +111,18 @@ export class Game {
     this.loadingPromise = null
 
     this.identifyFollowedMeshSystem.update(entities, this)
-    this.inputManager.update()
+    this.inputManager.update(entities, now - this.lastRenderTime)
     this.inputManager.sendInput(entities)
     this.destroySystem.update(entities, this.renderer)
     this.meshSystem.update(entities, this.renderer)
-    const deltaTime = now - this.lastRenderTime
+    this.vehicleSystem.update(entities)
+    this.invisibilitySystem.update(entities)
     const positionInterpFactor = deltaTime / (1000 / config.SERVER_TICKRATE)
     this.syncPositionSystem.update(entities, positionInterpFactor / 2)
     this.syncRotationSystem.update(entities, 0.7)
     this.syncColorSystem.update(entities)
     this.chatSystem.update(entities, this.hud)
-    this.textComponentSystem.update(entities)
+    this.textComponentSystem.update(entities, deltaTime)
     this.syncSizeSystem.update(entities)
     this.animationSystem.update(deltaTime, entities)
     this.destroySystem.afterUpdate(entities)

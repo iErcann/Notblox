@@ -6,6 +6,7 @@ import { ComponentRemovedEvent } from '../../../../../shared/component/events/Co
 import { PositionComponent } from '../../../../../shared/component/PositionComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
+import { PhysicsPropertiesComponent } from '../../component/physics/PhysicsPropertiesComponent.js'
 
 export class KinematicRigidBodySystem {
   update(entities: Entity[], world: Rapier.World) {
@@ -50,6 +51,28 @@ export class KinematicRigidBodySystem {
         new Rapier.Vector3(positionComponent.x, positionComponent.y, positionComponent.z),
         false
       )
+    }
+
+    const physicsPropertiesComponent = entity.getComponent(PhysicsPropertiesComponent)
+    if (physicsPropertiesComponent) {
+      if (physicsPropertiesComponent.data.mass) {
+        physicsBodyComponent.body.setAdditionalMass(physicsPropertiesComponent.data.mass, true)
+      }
+      if (physicsPropertiesComponent.data.angularDamping) {
+        physicsBodyComponent.body.setAngularDamping(physicsPropertiesComponent.data.angularDamping)
+      }
+      if (physicsPropertiesComponent.data.enableCcd != undefined) {
+        physicsBodyComponent.body.enableCcd(physicsPropertiesComponent.data.enableCcd)
+      }
+      if (physicsPropertiesComponent.data.linearDamping) {
+        physicsBodyComponent.body.setLinearDamping(physicsPropertiesComponent.data.linearDamping)
+      }
+      if (physicsPropertiesComponent.data.gravityScale) {
+        physicsBodyComponent.body.setGravityScale(
+          physicsPropertiesComponent.data.gravityScale,
+          true
+        )
+      }
     }
   }
 

@@ -20,7 +20,6 @@ export interface ProximityPromptParams {
  */
 export class ProximityPromptComponent extends NetworkComponent {
   public textComponent: TextComponent
-  public lastInteractionTime: number = 0
 
   // Map to track interaction timing for each entity (used to check if the player has interacted with the entity recently)
   // Entity  -> Accumulator
@@ -46,16 +45,20 @@ export class ProximityPromptComponent extends NetworkComponent {
   public onInteract: (interactingEntity: Entity) => void
   public maxInteractDistance: number
   public interactionCooldown: number
+
+  // Unused for now, but could be used for hold interactions in the future
   public holdDuration: number
 
   serialize(): SerializedProximityPromptComponent {
     return {
       tC: this.textComponent.serialize(),
+      iC: this.interactionCooldown,
     }
   }
 
   deserialize(data: SerializedProximityPromptComponent): void {
     this.textComponent.deserialize(data.tC)
+    this.interactionCooldown = data.iC
   }
 
   interact(interactingEntity: Entity) {
@@ -65,4 +68,5 @@ export class ProximityPromptComponent extends NetworkComponent {
 
 export interface SerializedProximityPromptComponent extends SerializedComponent {
   tC: SerializedTextComponent
+  iC: number
 }

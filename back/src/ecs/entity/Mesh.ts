@@ -4,20 +4,18 @@ import { RotationComponent } from '../../../../shared/component/RotationComponen
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 
-import { SizeComponent } from '../../../../shared/component/SizeComponent.js'
 import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
-import { BoxColliderComponent } from '../component/physics/BoxColliderComponent.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { ServerMeshComponent } from '../../../../shared/component/ServerMeshComponent.js'
-import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import {
   PhysicsPropertiesComponent,
   PhysicsPropertiesComponentData,
 } from '../component/physics/PhysicsPropertiesComponent.js'
 import { ColliderPropertiesComponentData } from '../component/physics/ColliderPropertiesComponent.js'
+import { ConvexHullColliderComponent } from '../component/physics/ConvexHullColliderComponent.js'
 
-export interface CubeParams {
+export interface MeshParams {
   position: {
     x: number
     y: number
@@ -49,11 +47,11 @@ export interface CubeParams {
   colliderProperties?: ColliderPropertiesComponentData
 }
 
-export class Cube {
+export class Mesh {
   entity: Entity
 
-  constructor(params: CubeParams) {
-    const { position, size, color, meshUrl, physicsProperties } = params
+  constructor(params: MeshParams) {
+    const { position, meshUrl, physicsProperties } = params
 
     this.entity = EntityManager.createEntity(SerializedEntityType.CUBE)
 
@@ -74,18 +72,12 @@ export class Cube {
     )
     this.entity.addComponent(serverMeshComponent)
 
-    const sizeComponent = new SizeComponent(
-      this.entity.id,
-      size?.width ?? 1,
-      size?.height ?? 1,
-      size?.depth ?? 1
+    this.entity.addComponent(
+      new ConvexHullColliderComponent(
+        this.entity.id,
+        meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb'
+      )
     )
-    this.entity.addComponent(sizeComponent)
-
-    const colorComponent = new ColorComponent(this.entity.id, color ?? 'default')
-    this.entity.addComponent(colorComponent)
-
-    this.entity.addComponent(new BoxColliderComponent(this.entity.id))
     this.entity.addComponent(
       new PhysicsPropertiesComponent(this.entity.id, physicsProperties ?? {})
     )
@@ -94,8 +86,6 @@ export class Cube {
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [
       positionComponent,
       rotationComponent,
-      sizeComponent,
-      colorComponent,
       serverMeshComponent,
     ])
     this.entity.addComponent(networkDataComponent)

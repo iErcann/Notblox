@@ -15,6 +15,7 @@ import {
   PhysicsPropertiesComponent,
   PhysicsPropertiesComponentData,
 } from '../component/physics/PhysicsPropertiesComponent.js'
+import { ColliderPropertiesComponent } from '../component/physics/ColliderPropertiesComponent.js'
 
 export interface SphereParams {
   /**
@@ -31,13 +32,17 @@ export interface SphereParams {
    */
   color?: string
   /**
-   * @default https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb
+   * @default https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Sphere.glb
    */
   meshUrl?: string
   /**
    * @default {}
    */
   physicsProperties?: PhysicsPropertiesComponentData
+  /**
+   * @default {}
+   */
+  colliderProperties?: ColliderPropertiesComponent
 }
 export class Sphere {
   entity: Entity
@@ -66,13 +71,14 @@ export class Sphere {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ?? 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
+      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Sphere.glb'
     )
     this.entity.addComponent(serverMeshComponent)
     this.entity.addComponent(
       new PhysicsPropertiesComponent(this.entity.id, physicsProperties ?? {})
     )
     this.entity.addComponent(new DynamicRigidBodyComponent(this.entity.id))
+    this.entity.addComponent(new ColliderPropertiesComponent(this.entity.id, {}))
     this.entity.addComponent(new SphereColliderComponent(this.entity.id))
 
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [

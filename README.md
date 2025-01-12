@@ -97,7 +97,7 @@ Maps are **GLB/GLTF files**. The back-end approximates a **Trimesh Collider** ba
 To change the map, update the URL in `back/src/scripts/defaultScript.js`:
 
 ```typescript
-new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/aqsworld.glb') // Change this URL to your map
+new MapWorld('https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/world/TestWorld.glb') // Change this URL to your map
 ```
 
 ---

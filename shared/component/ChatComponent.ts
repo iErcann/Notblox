@@ -23,7 +23,7 @@ export interface SerializedChatMessageComponent extends SerializedComponent {
 }
 
 export class ChatListComponent extends NetworkComponent {
-  constructor(entityId: number, public list: Array<ChatMessageComponent>) {
+  constructor(entityId: number, public list: ChatMessageComponent[]) {
     super(entityId, SerializedComponentType.CHAT_LIST)
   }
   deserialize(data: SerializedChatListComponent): void {

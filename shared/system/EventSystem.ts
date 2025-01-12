@@ -1,13 +1,17 @@
 import { ComponentWrapper } from '../component/events/ComponentWrapper.js'
 import { Component, ComponentConstructor } from '../component/Component.js'
 import { ComponentAddedEvent } from '../component/events/ComponentAddedEvent.js'
-import { ComponentRemovedEvent } from '../component/events/ComponentRemovedEvent.js'
+import {
+  ComponentRemovedEvent,
+  SerializableComponentRemovedEvent,
+} from '../component/events/ComponentRemovedEvent.js'
 
 import { Entity } from '../entity/Entity.js'
 import { EventQueue } from '../entity/EventQueue.js'
 import { NetworkDataComponent } from '../network/NetworkDataComponent.js'
 import { NetworkComponent } from '../network/NetworkComponent.js'
 import { EventListComponent } from '../../shared/component/events/EventListComponent.js'
+import { config } from '../network/config.js'
 
 /* See https://gamedev.stackexchange.com/a/194135 */
 export class EventSystem {
@@ -76,7 +80,6 @@ export class EventSystem {
       return
     }
 
-    console.log('Adding network event', event)
     networkDataComponent.addComponent(event)
   }
 
@@ -149,9 +152,27 @@ export class EventSystem {
 
   /**
    * Handle component removed event
+   * Also, if we are on the server, send a component removed event to the client so it can be removed from the client entity
    * @param removedComponent The component that was removed
    */
   static onComponentRemoved<T extends Component>(removedComponent: T) {
+    /**
+     * Local event
+     */
     EventSystem.addEvent(new ComponentRemovedEvent(removedComponent))
+
+    /**
+     * Network event
+     * If the component is a network component, we need to send a component removed event to the client
+     * Only if we are on the server
+     */
+    if (config.IS_SERVER && removedComponent instanceof NetworkComponent) {
+      const componentRemovedEvent = new SerializableComponentRemovedEvent(
+        // EntityID + ComponentType is unique, so it can be used to identify the component
+        removedComponent.entityId,
+        removedComponent.type
+      )
+      EventSystem.addNetworkEvent(componentRemovedEvent)
+    }
   }
 }

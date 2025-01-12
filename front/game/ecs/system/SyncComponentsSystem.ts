@@ -4,6 +4,8 @@ import { Cube } from '../entity/Cube'
 import { Player } from '../entity/Player'
 import { Sphere } from '../entity/Sphere'
 import { Chat } from '../entity/Chat'
+import { FloatingText } from '../entity/FloatingText'
+import { InvisibleComponent } from '../../../../shared/component/InvisibleComponent.js'
 
 import {
   SerializedComponent,
@@ -25,12 +27,15 @@ import { EntityDestroyedEvent } from '@shared/component/events/EntityDestroyedEv
 import { ServerMeshComponent } from '@shared/component/ServerMeshComponent'
 import { ProximityPromptComponent } from '@shared/component/ProximityPromptComponent'
 import { TextComponent } from '@shared/component/TextComponent'
+import { VehicleComponent } from '@shared/component/VehicleComponent'
+import { PlayerComponent } from '@shared/component/PlayerComponent'
+import { VehicleOccupancyComponent } from '@shared/component/VehicleOccupancyComponent'
 
 import { NetworkComponent } from '@shared/network/NetworkComponent'
 import { EventSystem } from '@shared/system/EventSystem'
-import { EventListComponent } from '@shared/component/events/EventListComponent'
 import { EntityManager } from '@shared/system/EntityManager'
-import { FloatingText } from '../entity/FloatingText'
+import { SerializableComponentRemovedEvent } from '@shared/component/events/ComponentRemovedEvent'
+import { ComponentConstructor } from '@shared/component/Component'
 
 export class SyncComponentsSystem {
   private snapshotMessages: SnapshotMessage[] = []
@@ -81,6 +86,7 @@ export class SyncComponentsSystem {
       // Remove the processed snapshotMessage from the array
       this.snapshotMessages.splice(index, 1)
     }
+    this.catchRemoveComponentEvent(entities)
   }
 
   updateOrCreateComponent(entity: Entity, serializedComponent: SerializedComponent) {
@@ -96,6 +102,7 @@ export class SyncComponentsSystem {
       // If the NetworkComponent doesn't exist, create it
       const newComponent = this.createComponent(serializedComponent, entity.id)
       if (newComponent) {
+        // Reminder : This will create a ComponentAddedEvent<T>
         entity.addComponent(newComponent)
       } else {
         console.error(
@@ -156,7 +163,7 @@ export class SyncComponentsSystem {
       case SerializedComponentType.SIZE:
         component = new SizeComponent(entityId, 1, 1, 1)
         break
-      case SerializedComponentType.DESTROYED_EVENT:
+      case SerializedComponentType.ENTITY_DESTROYED_EVENT:
         component = new EntityDestroyedEvent(entityId)
         break
       case SerializedComponentType.COLOR:
@@ -182,11 +189,41 @@ export class SyncComponentsSystem {
       case SerializedComponentType.TEXT:
         component = new TextComponent(entityId, '', 0, 0, 0)
         break
+      case SerializedComponentType.VEHICLE:
+        component = new VehicleComponent(entityId, [])
+        break
+      case SerializedComponentType.PLAYER:
+        component = new PlayerComponent(entityId)
+        break
+      case SerializedComponentType.VEHICLE_OCCUPANCY:
+        component = new VehicleOccupancyComponent(entityId, 0)
+        break
+      case SerializedComponentType.COMPONENT_REMOVED_EVENT:
+        component = new SerializableComponentRemovedEvent(entityId, serializedComponent.t)
+        break
+      case SerializedComponentType.INVISIBLE:
+        component = new InvisibleComponent(entityId)
+        break
       default:
         console.error("Unknown component type, can't create component")
     }
     // Default values will be overwritten by the serialized values
     component?.deserialize(serializedComponent)
     return component
+  }
+
+  // Catch all the serialized component removed events and remove the component from the entity
+  catchRemoveComponentEvent(entities: Entity[]) {
+    const removedComponent = EventSystem.getEvents(SerializableComponentRemovedEvent)
+    for (const componentRemovedEvent of removedComponent) {
+      const entity = EntityManager.getEntityById(entities, componentRemovedEvent.entityId)
+      if (entity) {
+        const componentType = componentRemovedEvent.removedComponentType
+        const component = entity.getNetworkComponentBySerializedType(componentType)
+        if (component) {
+          entity.removeComponent(component.constructor as ComponentConstructor)
+        }
+      }
+    }
   }
 }

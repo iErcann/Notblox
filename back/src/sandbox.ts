@@ -23,7 +23,7 @@ import { PhysicsPropertiesComponent } from './ecs/component/physics/PhysicsPrope
 import { SphereColliderComponent } from './ecs/component/physics/SphereColliderComponent.js'
 import { TrimeshColliderComponent } from './ecs/component/physics/TrimeshColliderComponent.js'
 import { ChatComponent } from './ecs/component/tag/TagChatComponent.js'
-import { PlayerComponent } from './ecs/component/tag/TagPlayerComponent.js'
+import { PlayerComponent } from '../../shared/component/PlayerComponent.js'
 import { Cube } from './ecs/entity/Cube.js'
 import { MapWorld } from './ecs/entity/MapWorld.js'
 import { Sphere } from './ecs/entity/Sphere.js'
@@ -38,6 +38,9 @@ import { NetworkDataComponent } from '../../shared/network/NetworkDataComponent.
 import { FloatingText } from './ecs/entity/FloatingText.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
 import { TextComponent } from '../../shared/component/TextComponent.js'
+import { Car } from './ecs/entity/Car.js'
+import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
+import { Mesh } from './ecs/entity/Mesh.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
@@ -89,14 +92,17 @@ async function loadGameLogic() {
     ColorEvent,
     SizeEvent,
     SingleSizeEvent,
+    EntityDestroyedEvent,
 
     // Entities
     Cube,
     Sphere,
     MapWorld,
+    Mesh,
     Player,
     TriggerCube,
     FloatingText,
+    Car,
   }
   const context = createContext(sandbox)
   const script = new Script(code)

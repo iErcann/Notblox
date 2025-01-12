@@ -1,4 +1,3 @@
-// SNAPSHOT
 import { ServerMessage } from './base'
 export enum SerializedComponentType {
   NONE = 0,
@@ -6,7 +5,7 @@ export enum SerializedComponentType {
   ROTATION = 2,
   SIZE = 3,
   COLOR = 4,
-  DESTROYED_EVENT = 5,
+  ENTITY_DESTROYED_EVENT = 5,
   SINGLE_SIZE = 6,
 
   // Used for animations mostly
@@ -18,6 +17,12 @@ export enum SerializedComponentType {
   SERVER_MESH = 10,
   PROXIMITY_PROMPT = 11,
   TEXT = 12,
+  VEHICLE = 13,
+  PLAYER = 14,
+  VEHICLE_OCCUPANCY = 15,
+  COMPONENT_REMOVED_EVENT = 16,
+  WHEEL = 17,
+  INVISIBLE = 18,
 }
 
 export enum SerializedEntityType {
@@ -29,14 +34,15 @@ export enum SerializedEntityType {
   CHAT = 5,
   EVENT_QUEUE = 6,
   FLOATING_TEXT = 7,
+  VEHICLE = 8,
 }
 
+// Movement states
 export enum SerializedStateType {
   IDLE = 'Idle',
   WALK = 'Walk',
   RUN = 'Run',
   JUMP = 'Jump',
-  ATTACK = 'Attack',
   FALL = 'Fall',
   DEATH = 'Death',
 }
@@ -54,5 +60,5 @@ export interface SerializedEntity {
 }
 
 export interface SnapshotMessage extends ServerMessage {
-  e: Array<SerializedEntity>
+  e: SerializedEntity[]
 }

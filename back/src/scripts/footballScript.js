@@ -1,9 +1,8 @@
 // Initialize world and ball
-new MapWorld(
-  'https://rawcdn.githack.com/iErcann/Notblox-Assets/50f73702842fc334177d7ed3e2a2b63816c503e2/Stadium.glb'
-)
+new MapWorld('https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/world/Stadium.glb')
 
 const ballSpawnPosition = { x: 0, y: -20, z: -350 }
+
 const sphereParams = {
   radius: 1.4,
   position: {
@@ -11,13 +10,17 @@ const sphereParams = {
     y: ballSpawnPosition.y,
     z: ballSpawnPosition.z,
   },
-  meshUrl:
-    'https://rawcdn.githack.com/iErcann/Notblox-Assets/f8b474a703930afb1caa82fd2bda4ca336a00a29/Ball.glb',
+  meshUrl: 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Ball.glb',
   physicsProperties: {
     mass: 1,
     // Enable continuous collision detection to prevent the ball from going through the walls
     enableCcd: true,
     angularDamping: 0.5,
+    linearDamping: 0.5,
+  },
+  colliderProperties: {
+    friction: 0.4,
+    restitution: 0.8,
   },
 }
 
@@ -172,10 +175,8 @@ const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
       ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)
     }
   },
-  maxInteractDistance: 5,
+  maxInteractDistance: 10,
   interactionCooldown: 2000,
   holdDuration: 0,
 })
-const networkDataComponent = ball.entity.getComponent(NetworkDataComponent)
-networkDataComponent.addComponent(proximityPromptComponent)
-ball.entity.addComponent(proximityPromptComponent)
+ball.entity.addNetworkComponent(proximityPromptComponent)

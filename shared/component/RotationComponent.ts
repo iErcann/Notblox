@@ -17,7 +17,7 @@ export class RotationComponent extends NetworkComponent {
     // Forward vector rotated by quaternion math
     const x = 2 * (this.x * this.z + this.w * this.y)
     const z = 1 - 2 * (this.x * this.x + this.y * this.y)
-
+    z
     // Normalize the vector
     const length = Math.sqrt(x * x + z * z)
     return {

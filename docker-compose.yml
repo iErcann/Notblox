@@ -57,7 +57,3 @@ services:
       - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
-
-networks:
-  my_network:
-    driver: bridge

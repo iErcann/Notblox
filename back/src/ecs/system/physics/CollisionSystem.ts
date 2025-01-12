@@ -4,6 +4,7 @@ import { OnCollisionEnterEvent } from '../../component/events/OnCollisionEnterEv
 import { OnCollisionExitEvent } from '../../component/events/OnCollisionExitEvent.js'
 import { BoxColliderComponent } from '../../component/physics/BoxColliderComponent.js'
 import { CapsuleColliderComponent } from '../../component/physics/CapsuleColliderComponent.js'
+import { ConvexHullColliderComponent } from '../../component/physics/ConvexHullColliderComponent.js'
 import { SphereColliderComponent } from '../../component/physics/SphereColliderComponent.js'
 
 export class CollisionSystem {
@@ -17,6 +18,7 @@ export class CollisionSystem {
         BoxColliderComponent,
         SphereColliderComponent,
         CapsuleColliderComponent,
+        ConvexHullColliderComponent,
       ]
 
       for (const ColliderType of colliderTypes) {

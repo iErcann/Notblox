@@ -22,9 +22,9 @@ export class AnimationSystem {
       if (
         inputComponent &&
         rigidBodyComponent &&
-        stateComponent &&
         positionComponent &&
-        colliderComponent
+        colliderComponent &&
+        stateComponent
       ) {
         const groundedComponent = entity.getComponent(GroundCheckComponent)
         this.updateState(inputComponent, stateComponent, groundedComponent?.grounded || false)

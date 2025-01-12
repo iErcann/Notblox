@@ -8,7 +8,7 @@ import { NetworkComponent } from '../../network/NetworkComponent.js'
  */
 export class EntityDestroyedEvent extends NetworkComponent {
   constructor(entityId: number) {
-    super(entityId, SerializedComponentType.DESTROYED_EVENT)
+    super(entityId, SerializedComponentType.ENTITY_DESTROYED_EVENT)
   }
 
   deserialize(data: SerializedEntityDestroyedEvent): void {

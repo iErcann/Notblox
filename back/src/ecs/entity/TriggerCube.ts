@@ -42,7 +42,11 @@ export class TriggerCube {
     this.entity.addComponent(new KinematicRigidBodyComponent(this.entity.id))
 
     // Make it a sensor to be traversable by other entities
-    const colliderProperties = new ColliderPropertiesComponent(this.entity.id, true, 0, 0)
+    const colliderProperties = new ColliderPropertiesComponent(this.entity.id, {
+      isSensor: true,
+      friction: 0,
+      restitution: 0,
+    })
     this.entity.addComponent(colliderProperties)
 
     // Add box collider with sensor enabled
@@ -58,7 +62,7 @@ export class TriggerCube {
       // Debug mesh
       const serverMeshComponent = new ServerMeshComponent(
         this.entity.id,
-        'https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb'
+        'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb'
       )
       this.entity.addComponent(serverMeshComponent)
 

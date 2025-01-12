@@ -5,7 +5,6 @@ import {
   SerializedEntityType,
 } from './server/serialized.js'
 import { Component } from '../component/Component.js'
-import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 
 export class NetworkDataComponent extends Component {
   type = SerializedComponentType.NONE

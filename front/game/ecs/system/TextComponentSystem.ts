@@ -18,53 +18,99 @@ import { ProximityPromptComponent } from '@shared/component/ProximityPromptCompo
  */
 export class TextComponentSystem {
   private textObjects: WeakMap<TextComponent, CSS2DObject> = new WeakMap()
+  // Throttle visibility check & text updates to once per second
+  private elapsedTime: number = 0 // Accumulator for delta time in milliseconds
+  private updateInterval: number = 1000 / 2 // We want only two updates per second
 
-  update(entities: Entity[]) {
+  update(entities: Entity[], dt: number) {
     const currentPlayerEntity = EntityManager.getFirstEntityWithComponent(
       entities,
       CurrentPlayerComponent
     )
     if (!currentPlayerEntity) return
+    this.elapsedTime += dt
+
     this.handleAddedComponents(entities)
     this.handleRemovedComponents()
     this.processEntities(entities, currentPlayerEntity)
+
+    if (this.elapsedTime > this.updateInterval) {
+      this.elapsedTime = 0
+    }
   }
 
   private createTextObject(
     textComponent: TextComponent,
+    positionComponent: PositionComponent,
     isProximityPrompt: boolean = false
   ): CSS2DObject {
     const textElement = document.createElement('div')
-    this.updateTextElement(textElement, textComponent, isProximityPrompt)
+    this.updateTextElementContent(textElement, textComponent, isProximityPrompt)
     const textObject = new CSS2DObject(textElement)
-    this.updateTextObjectPosition(textObject, textComponent)
+    this.updateTextObjectPosition(textObject, textComponent, positionComponent)
     return textObject
   }
 
-  private updateTextElement(
+  private updateTextElementContent(
     textElement: HTMLElement,
     textComponent: TextComponent,
     isProximityPrompt: boolean
   ) {
-    if (isProximityPrompt) {
-      textElement.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: flex-start; background-color: rgba(31, 41, 55, 0.2); color: white; padding: 0.25rem; border-radius: 0.5rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);">
-          <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
-            <div style="display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; background-color: rgba(31, 41, 55, 0.4); border-radius: 0.375rem; margin-right: 0.5rem;">
-              <span style="font-size: 1.5rem; font-weight: bold; color: white;">E</span>
-            </div>
-            <div style="display: flex; flex-direction: column;">
-            <p style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem;">${textComponent.text}</p>
-            <p style="font-size: 0.75rem; color: #9ca3af; text-align: right; margin-left: auto;">Interact</p>
+    function sanitize(input: string): string {
+      const element = document.createElement('div')
+      element.innerText = input
+      return element.innerHTML
+    }
+
+    const sanitizedText = sanitize(textComponent.text)
+
+    // Check if the text element has been initialized
+    if (!textElement.dataset.initialized) {
+      if (isProximityPrompt) {
+        textElement.innerHTML = `
+          <div style="      
+            background-color: rgba(200, 200, 200, 0.3); 
+            color: #000; 
+            padding: 0.4rem; 
+            border-radius: 0.5rem; 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+            font-size: 1.5rem; 
+            text-align: center;
+            max-width: 300px;
+            margin: auto;
+          ">
+            <div style="display: flex; align-items: center;">
+              <div style="
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                width: 2.5rem; 
+                height: 2.5rem; 
+                background-color: rgba(0, 0, 0, 0.2); 
+                border-radius: 0.375rem; 
+                margin-right: 0.5rem;">
+                <span style="font-size: 1.5rem; font-weight: bold; color: #FFFFFF;">E</span>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <p class="text-content" style="font-size: 0.875rem; font-weight: 800; line-height: 1.25rem; color: #FFFFFF;"></p>
+                <p style="font-size: 0.75rem; color: #FFFFFF; text-align: right; margin-left: auto; font-style: italic;">Interact</p>
               </div>
             </div>
-        </div>
-      `
-    } else {
-      textElement.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(23, 23, 23, 0.2); color: white; padding: 0.5rem; border-radius: 0.375rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); ">
-          <p style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;">${textComponent.text}</p>
-        </div>`
+          </div>
+        `
+      } else {
+        textElement.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(23, 23, 23, 0.2); color: white; padding: 0.5rem; border-radius: 0.375rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); ">
+            <p class="text-content" style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;"></p>
+          </div>`
+      }
+      textElement.dataset.initialized = 'true'
+    }
+
+    // Update only the text content
+    const textContentElement = textElement.querySelector('.text-content')
+    if (textContentElement) {
+      textContentElement.textContent = sanitizedText
     }
   }
 
@@ -99,7 +145,9 @@ export class TextComponentSystem {
         continue
       }
 
-      const textObject = this.createTextObject(event.component)
+      const positionComponent = entity.getComponent(PositionComponent)
+      if (!positionComponent) continue
+      const textObject = this.createTextObject(event.component, positionComponent)
       this.textObjects.set(event.component, textObject)
 
       // Attach to mesh if available and not the current player
@@ -122,7 +170,9 @@ export class TextComponentSystem {
       const proximityPromptComponent = event.component
       const textComponent = proximityPromptComponent.textComponent
 
-      const textObject = this.createTextObject(textComponent, true)
+      const positionComponent = entity.getComponent(PositionComponent)
+      if (!positionComponent) continue
+      const textObject = this.createTextObject(textComponent, positionComponent, true)
       this.textObjects.set(textComponent, textObject)
 
       // Attach to mesh if available
@@ -160,7 +210,11 @@ export class TextComponentSystem {
   }
 
   private processEntities(entities: Entity[], currentPlayerEntity: Entity): void {
+    const throttle = this.elapsedTime > this.updateInterval
     for (const entity of entities) {
+      /**
+       * An entity can at the same time have a TextComponent and a ProximityPromptComponent with a TextComponent
+       */
       const textComponent = entity.getComponent(TextComponent)
       if (textComponent) {
         this.processTextComponent(entity, textComponent, currentPlayerEntity)
@@ -175,6 +229,9 @@ export class TextComponentSystem {
         )
       }
     }
+    if (throttle) {
+      this.elapsedTime = 0
+    }
   }
 
   private processTextComponent(
@@ -188,14 +245,18 @@ export class TextComponentSystem {
     const textObject = this.textObjects.get(textComponent)
     if (!textObject) return
 
+    // If the TextComponent network component has been updated, update the text element content (Most likely the text)
     if (textComponent.updated) {
-      this.updateTextElement(textObject.element, textComponent, isProximityPrompt)
+      this.updateTextElementContent(textObject.element, textComponent, isProximityPrompt)
     }
+
+    // Throttle visibility check & text updates to two per second for performance
+    if (this.elapsedTime < this.updateInterval) return
 
     // If the entity has no mesh, we will follow the position component
     if (!entity.getComponent(MeshComponent)) {
       const positionComponent = entity.getComponent(PositionComponent)
-      if (positionComponent) {
+      if (positionComponent && positionComponent.updated) {
         this.updateTextObjectPosition(textObject, textComponent, positionComponent)
       }
     } else {
