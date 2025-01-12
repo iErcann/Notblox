@@ -61,12 +61,6 @@ export class VehicleSystem {
             vehicleEntity.id
           )
           playerEntity.addNetworkComponent(vehicleOccupancyComponent)
-
-          // Hack : Disable player rigid body
-          const rigidBody = playerEntity.getComponent(DynamicRigidBodyComponent)?.body
-          if (rigidBody) {
-            rigidBody.setEnabled(false)
-          }
         }
         // If there's already a driver, the player becomes a passenger
         else {
@@ -75,12 +69,6 @@ export class VehicleSystem {
             vehicleEntity.id
           )
           playerEntity.addNetworkComponent(vehicleOccupancyComponent)
-
-          // Hack : Disable player rigid body
-          const rigidBody = playerEntity.getComponent(DynamicRigidBodyComponent)?.body
-          if (rigidBody) {
-            rigidBody.setEnabled(false)
-          }
         }
       }
       // Player is already inside a vehicle
@@ -99,20 +87,6 @@ export class VehicleSystem {
           // The back will clean up the vehicle component
           // The front will stop visually following the vehicle client-side (No more FollowComponent)
           playerEntity.removeComponent(VehicleOccupancyComponent)
-
-          // Hack : Enable player rigid body
-          const rigidBody = playerEntity.getComponent(DynamicRigidBodyComponent)?.body
-          if (rigidBody) {
-            rigidBody.setEnabled(true)
-            // Set the player beside the car
-            const position = playerEntity.getComponent(PositionComponent)
-            if (position) {
-              rigidBody.setTranslation(
-                new Rapier.Vector3(position.x + 4, position.y, position.z),
-                true
-              )
-            }
-          }
         }
       }
     }
@@ -128,26 +102,45 @@ export class VehicleSystem {
     )
     for (const exitEvent of exitedEvents) {
       const component: VehicleOccupancyComponent = exitEvent.component
-      const exitingEntityId = component.entityId
+      const exitingPlayerEntityId = component.entityId
       const vehicleEntity = EntityManager.getEntityById(entities, component.vehicleEntityId)
 
       if (vehicleEntity) {
         const vehicleComponent = vehicleEntity.getComponent(VehicleComponent)
         if (vehicleComponent) {
           // If the exiting entity is the driver, remove the driver
-          if (vehicleComponent.driverEntityId === exitingEntityId) {
-            console.log('Removing driver', exitingEntityId)
+          if (vehicleComponent.driverEntityId === exitingPlayerEntityId) {
+            console.log('Removing driver', exitingPlayerEntityId)
             vehicleComponent.driverEntityId = undefined
           }
           // If the exiting entity is a passenger, remove it from the passengers
           else {
-            console.log('Removing passenger', exitingEntityId)
+            console.log('Removing passenger', exitingPlayerEntityId)
             vehicleComponent.passengerEntityIds = vehicleComponent.passengerEntityIds.filter(
-              (id) => id !== exitingEntityId
+              (id) => id !== exitingPlayerEntityId
             )
           }
           // Update the vehicle component to reflect the changes
           vehicleComponent.updated = true
+
+          // Enable player rigid body + Teleport player beside the car
+          const exitingPlayerEntity = EntityManager.getEntityById(entities, exitingPlayerEntityId)
+          const playerRigidBody = exitingPlayerEntity?.getComponent(DynamicRigidBodyComponent)?.body
+          if (playerRigidBody) {
+            playerRigidBody.setEnabled(true)
+            // Set the player beside the car
+            const vehiclePosition = vehicleEntity.getComponent(PositionComponent)
+            if (vehiclePosition) {
+              playerRigidBody.setTranslation(
+                new Rapier.Vector3(
+                  vehiclePosition.x + 10,
+                  vehiclePosition.y + 5,
+                  vehiclePosition.z
+                ),
+                true
+              )
+            }
+          }
 
           // Update the text component to reflect the changes
           const textComponent = vehicleEntity.getComponent(TextComponent)
@@ -165,21 +158,26 @@ export class VehicleSystem {
     const addEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, VehicleOccupancyComponent)
     for (const addEvent of addEvents) {
       const component: VehicleOccupancyComponent = addEvent.component
-      const entity = EntityManager.getEntityById(entities, component.entityId)
+      const playerEntity = EntityManager.getEntityById(entities, component.entityId)
       const vehicleEntity = EntityManager.getEntityById(entities, component.vehicleEntityId)
 
-      if (entity && vehicleEntity) {
+      if (playerEntity && vehicleEntity) {
         const vehicleComponent = vehicleEntity.getComponent(VehicleComponent)
         if (vehicleComponent) {
           if (vehicleComponent.driverEntityId === undefined) {
             // If there's no driver, the player becomes the driver
-            vehicleComponent.driverEntityId = entity.id
-            console.log('Player became the driver', entity.id)
+            vehicleComponent.driverEntityId = playerEntity.id
+            console.log('Player became the driver', playerEntity.id)
             console.log(vehicleComponent)
           } else {
             // If there's already a driver, the player becomes a passenger
-            vehicleComponent.passengerEntityIds.push(entity.id)
-            console.log('Player became a passenger', entity.id)
+            vehicleComponent.passengerEntityIds.push(playerEntity.id)
+            console.log('Player became a passenger', playerEntity.id)
+          }
+          // Disable player rigid body
+          const playerRigidBody = playerEntity.getComponent(DynamicRigidBodyComponent)?.body
+          if (playerRigidBody) {
+            playerRigidBody.setEnabled(false)
           }
           // Update the vehicle component to reflect the changes
           vehicleComponent.updated = true
