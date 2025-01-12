@@ -1,16 +1,31 @@
 # Three JS Multiplayer Game Demo
 
-![Screen](GameScreen1.webp)
 
-### Online demo
+ 
+### Online Demo  
 
-Demo here : [NotBlox.online](https://www.notblox.online/)
+ 
 
-Hosted on an european server, there is no client side prediction, so the game may be laggy if you are far from the server.
+- **Demo link:** [NotBlox.online](https://www.notblox.online/)  
+- Hosted on a European server. Note: There is  no client-side prediction, so the game may feel laggy if you're far from the server.  
 
+#### Test World  
+[Play Test World](https://www.notblox.online/play/test)  
+![Test World](https://github.com/user-attachments/assets/1529df59-f270-4b61-b297-c3269dc38462)  
+
+#### Obby Parkour  
+[Play Obby Parkour](https://www.notblox.online/play/obby)  
+![Obby Parkour](https://github.com/user-attachments/assets/a55925b3-9a74-4dbe-9fc4-3dca8e65b2c3)  
+
+#### Football  
+[Play Football](https://www.notblox.online/play/football)  
+![Football](https://github.com/user-attachments/assets/03d18374-6ba8-4ea4-b11a-4c1406695f34)  
+
+--- 
+ 
 #### Videos : 
 - Car https://www.youtube.com/watch?v=7eSYb6jKOV0
-- Football https://www.youtube.com/watch?v=tZlNKU_buCQ&t=2s
+- Football https://www.youtube.com/watch?v=tZlNKU_buCQ 
 ### Controls
 
 - W : Forward
