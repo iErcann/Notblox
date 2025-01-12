@@ -15,11 +15,11 @@ const sphereParams = {
     mass: 1,
     // Enable continuous collision detection to prevent the ball from going through the walls
     enableCcd: true,
-    angularDamping: 0.05,
-    linearDamping: 0.05,
+    angularDamping: 0.5,
+    linearDamping: 0.5,
   },
   colliderProperties: {
-    friction: 0.3,
+    friction: 0.4,
     restitution: 0.8,
   },
 }
