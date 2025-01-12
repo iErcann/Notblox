@@ -16,6 +16,7 @@ Hosted on an european server, there is no client side prediction, so the game ma
 - D : Right
 - Space : Jump
 - Mouse Left click : Rotate screen
+- E : Interact
 
 ## Features
 
@@ -30,6 +31,7 @@ Hosted on an european server, there is no client side prediction, so the game ma
 - Fast to load (small assets)
 - Shared code between server and client (useful for component replication)
 - Trimesh Collider
+- Cars
 
 ## Why ?
 
