@@ -189,7 +189,7 @@ export class SyncComponentsSystem {
         component = new TextComponent(entityId, '', 0, 0, 0)
         break
       case SerializedComponentType.VEHICLE:
-        component = new VehicleComponent(entityId)
+        component = new VehicleComponent(entityId, [])
         break
       case SerializedComponentType.PLAYER:
         component = new PlayerComponent(entityId)

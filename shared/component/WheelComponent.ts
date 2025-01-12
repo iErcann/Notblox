@@ -40,18 +40,29 @@ export interface WheelComponentData {
 }
 
 export class WheelComponent extends NetworkComponent {
+  /**
+   * Wheels transform components (Position and Rotation) are local to the vehicle
+   * In the front, they will be attached to the visual mesh of the vehicle so no need for world transform
+   */
   public positionComponent: PositionComponent
   public rotationComponent: RotationComponent
-
   public radius: number
 
+  /**
+   * Physics properties of the wheel.
+   */
   public suspensionLength: number
   public suspensionCompression: number
   public suspensionRelaxation: number
   public suspensionStiffness: number
+  // Prevents the suspension from applying excessively large forces.
+  // Ensure this is high enough to handle the weight of the vehicle without bottoming out but not so high that it causes instability.
   public maxSuspensionForce: number
   public maxSuspensionTravel: number
+  // If the car slides too much, increase sideFrictionStiffness.
   public sideFrictionStiffness: number
+
+  //If it doesn't slide enough or feels "stuck," reduce frictionSlip.
 
   public frictionSlip: number
   public isSteeringWheel: boolean
@@ -66,11 +77,11 @@ export class WheelComponent extends NetworkComponent {
     this.suspensionLength = data.suspensionLength ?? 0.125
     this.suspensionCompression = data.suspensionCompression ?? 0.82
     this.suspensionRelaxation = data.suspensionRelaxation ?? 0.88
-    this.suspensionStiffness = data.suspensionStiffness ?? 124
+    this.suspensionStiffness = data.suspensionStiffness ?? 6000
     this.maxSuspensionForce = data.maxSuspensionForce ?? 6000
     this.maxSuspensionTravel = data.maxSuspensionTravel ?? 5
     this.sideFrictionStiffness = data.sideFrictionStiffness ?? 1
-    this.frictionSlip = data.frictionSlip ?? 0.7
+    this.frictionSlip = data.frictionSlip ?? 5
     this.isSteeringWheel = data.isSteeringWheel ?? false
     this.isBrakeWheel = data.isBrakeWheel ?? false
     this.isEngineWheel = data.isEngineWheel ?? false

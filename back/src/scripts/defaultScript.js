@@ -5,7 +5,7 @@ function randomHexColor() {
 
 // Load the game world
 // Can also be hosted on a github repo : https://github.com/iErcann/Notblox-Assets + https://rawcdn.githack.com
-new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/aqsworld.glb')
+new MapWorld('https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/world/TestWorld.glb')
 
 // === Basic Entity Creation Examples ===
 
@@ -130,3 +130,24 @@ const proximityPromptComponent = new ProximityPromptComponent(cube.entity.id, {
   holdDuration: 0,
 })
 cube.entity.addNetworkComponent(proximityPromptComponent)
+
+for (let i = 1; i < 6; i++) {
+  new Car({
+    position: {
+      x: 50 * -i,
+      y: 10,
+      z: 70,
+    },
+  })
+}
+
+for (let i = 1; i < 6; i++) {
+  new Car({
+    position: {
+      x: 50 * i,
+      y: 10,
+      z: 70,
+    },
+    meshUrl: 'http://localhost:4001/EzCar.glb',
+  })
+}

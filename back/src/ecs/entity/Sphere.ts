@@ -32,7 +32,7 @@ export interface SphereParams {
    */
   color?: string
   /**
-   * @default https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb
+   * @default https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Sphere.glb
    */
   meshUrl?: string
   /**
@@ -71,7 +71,7 @@ export class Sphere {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ?? 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/sphere.glb'
+      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Sphere.glb'
     )
     this.entity.addComponent(serverMeshComponent)
     this.entity.addComponent(

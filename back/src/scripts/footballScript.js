@@ -1,5 +1,5 @@
 // Initialize world and ball
-new MapWorld('http://localhost:4001/Foot.glb')
+new MapWorld('https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/world/Stadium.glb')
 
 const ballSpawnPosition = { x: 0, y: -20, z: -350 }
 
@@ -10,8 +10,7 @@ const sphereParams = {
     y: ballSpawnPosition.y,
     z: ballSpawnPosition.z,
   },
-  meshUrl:
-    'https://rawcdn.githack.com/iErcann/Notblox-Assets/f8b474a703930afb1caa82fd2bda4ca336a00a29/Ball.glb',
+  meshUrl: 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Ball.glb',
   physicsProperties: {
     mass: 1,
     // Enable continuous collision detection to prevent the ball from going through the walls

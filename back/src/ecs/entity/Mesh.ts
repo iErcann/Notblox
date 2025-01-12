@@ -34,7 +34,7 @@ export interface MeshParams {
    */
   color?: string
   /**
-   * @default https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb
+   * @default https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb
    */
   meshUrl?: string
   /**
@@ -68,14 +68,14 @@ export class Mesh {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ?? 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb'
+      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 
     this.entity.addComponent(
       new ConvexHullColliderComponent(
         this.entity.id,
-        meshUrl ?? 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb'
+        meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb'
       )
     )
     this.entity.addComponent(

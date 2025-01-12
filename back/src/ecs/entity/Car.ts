@@ -38,7 +38,7 @@ export interface CarParams {
    */
   color?: string
   /**
-   * @default https://example.com/car.glb
+   * @default https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb
    */
   meshUrl?: string
   /**
@@ -58,44 +58,52 @@ export class Car {
     // Create 4 wheels
     const frontLeftWheel = new WheelComponent({
       entityId: this.entity.id,
-      positionComponent: new PositionComponent(this.entity.id, 4.14, -0.387, -2.46),
+      positionComponent: new PositionComponent(this.entity.id, -3.46, -0.5287, 4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.2,
+      radius: 1.4,
       suspensionStiffness: 1000,
-      suspensionCompression: 0.1,
-      suspensionLength: 0.5,
+      suspensionCompression: 1,
+      suspensionLength: 0.125,
+      sideFrictionStiffness: 1,
+      frictionSlip: 0.1,
       isSteeringWheel: true,
     })
-
     const frontRightWheel = new WheelComponent({
       entityId: this.entity.id,
-      positionComponent: new PositionComponent(this.entity.id, 4.14, -0.387, 2.46),
+      positionComponent: new PositionComponent(this.entity.id, 3.46, -0.5287, 4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.2,
+      radius: 1.4,
       suspensionStiffness: 1000,
-      suspensionCompression: 0.1,
-      suspensionLength: 0.5,
+      suspensionCompression: 1,
+      suspensionLength: 0.125,
+      sideFrictionStiffness: 1,
+      frictionSlip: 0.1,
       isSteeringWheel: true,
     })
-
     const backLeftWheel = new WheelComponent({
       entityId: this.entity.id,
-      positionComponent: new PositionComponent(this.entity.id, -4.14, -0.387, -2.46),
+      positionComponent: new PositionComponent(this.entity.id, -3.46, -0.5287, -4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.2,
+      radius: 1.5,
       suspensionStiffness: 1000,
-      suspensionCompression: 0.1,
-      suspensionLength: 0.5,
+      suspensionCompression: 1,
+      suspensionLength: 0.125,
+      sideFrictionStiffness: 1,
+      frictionSlip: 0.1,
+      isEngineWheel: true,
     })
 
     const backRightWheel = new WheelComponent({
       entityId: this.entity.id,
-      positionComponent: new PositionComponent(this.entity.id, -4.14, -0.387, 2.46),
+      positionComponent: new PositionComponent(this.entity.id, 3.46, -0.5287, -4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.2,
+      radius: 1.4,
       suspensionStiffness: 1000,
-      suspensionCompression: 0.1,
-      suspensionLength: 0.5,
+      suspensionCompression: 1,
+      suspensionLength: 0.125,
+      sideFrictionStiffness: 1,
+      frictionSlip: 0.1,
+      isEngineWheel: true,
     })
 
     const wheels = [frontLeftWheel, frontRightWheel, backLeftWheel, backRightWheel]
@@ -115,7 +123,7 @@ export class Car {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ?? 'http://localhost:4001/Car.glb'
+      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 
@@ -132,21 +140,24 @@ export class Car {
 
     this.entity.addComponent(
       new ColliderPropertiesComponent(this.entity.id, {
-        friction: 0.0,
-        restitution: 0.0,
+        friction: 0.6,
+        restitution: 0.2,
       })
     )
     this.entity.addComponent(
-      new ConvexHullColliderComponent(this.entity.id, meshUrl ?? 'http://localhost:4001/Car.glb')
+      new ConvexHullColliderComponent(
+        this.entity.id,
+        meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb'
+      )
     )
     this.entity.addComponent(
       new PhysicsPropertiesComponent(
         this.entity.id,
         physicsProperties ?? {
           enableCcd: true,
-          angularDamping: 0.05,
-          linearDamping: 0.05,
-          mass: 5,
+          angularDamping: 0.4,
+          linearDamping: 0.4,
+          mass: 2,
         }
       )
     )

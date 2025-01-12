@@ -3,7 +3,7 @@ import { ZombieComponent } from '../component/ZombieComponent.js'
 import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import { EventSystem } from '../../../../shared/system/EventSystem.js'
-import { Vector3 } from 'three'
+import * as THREE from 'three'
 import { PlayerComponent } from '../../../../shared/component/PlayerComponent.js'
 import Rapier from '../../physics/rapier.js'
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
@@ -71,11 +71,11 @@ export class ZombieSystem {
     return nearbyPlayers
   }
 
-  private calculateDirection(target: Entity, sourcePosition: PositionComponent): Vector3 {
+  private calculateDirection(target: Entity, sourcePosition: PositionComponent): THREE.Vector3 {
     const targetPosition = target.getComponent(PositionComponent)
-    if (!targetPosition) return new Vector3(0, 0, 0)
+    if (!targetPosition) return new THREE.Vector3(0, 0, 0)
 
-    const direction = new Vector3(
+    const direction = new THREE.Vector3(
       targetPosition.x - sourcePosition.x,
       targetPosition.y - sourcePosition.y,
       targetPosition.z - sourcePosition.z
@@ -87,7 +87,7 @@ export class ZombieSystem {
 
   private handleCloseProximity(
     entity: Entity,
-    direction: Vector3,
+    direction: THREE.Vector3,
     rigidBodyComponent: DynamicRigidBodyComponent,
     colorComponent: ColorComponent,
     dt: number
@@ -130,7 +130,7 @@ export class ZombieSystem {
       this.wanderTime = 0
 
       const angle = Math.random() * Math.PI * 2
-      const wanderDirection = new Vector3(
+      const wanderDirection = new THREE.Vector3(
         Math.cos(angle) * this.wanderRadius,
         0,
         Math.sin(angle) * this.wanderRadius

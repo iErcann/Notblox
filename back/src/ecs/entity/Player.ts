@@ -61,7 +61,7 @@ export class Player {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      'https://rawcdn.githack.com/iErcann/Notblox-Assets/0ac6d49540b8fb924bef1b126fbdfd965d733c3a/Character.glb'
+      'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/character/Character.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 

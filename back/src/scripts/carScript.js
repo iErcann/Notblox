@@ -7,23 +7,44 @@ function randomHexColor() {
 // Can also be hosted on a gittblox-Assets + https://rawcdn.githack.comhub repo : https://github.com/iErcann/No
 new MapWorld('http://localhost:4001/FlatMap.glb')
 
-new Car({
-  position: {
-    x: 10,
-    y: 10,
-    z: 10,
-  },
-})
+let i = 0
+// Spawn cars in a loop
+setInterval(() => {
+  new Car({
+    position: {
+      x: 10,
+      y: 10,
+      z: 10 + i++,
+    },
+    meshUrl: 'http://localhost:4001/EzCar.glb',
+  })
+}, 5000)
+// new Car({
+//   position: {
+//     x: 40,
+//     y: 10,
+//     z: 10,
+//   },
+// })
 
-new Car({
-  position: {
-    x: 100,
-    y: 5,
-    z: 10,
-  },
-  meshUrl: 'http://localhost:4001/EzCar2.glb',
-})
+// new Car({
+//   position: {
+//     x: -40,
+//     y: 10,
+//     z: 10,
+//   },
+// })
 
+// new Car({
+//   position: {
+//     x: 100,
+//     y: 5,
+//     z: 10,
+//   },
+//   meshUrl: 'http://localhost:4001/EzCar.glb',
+// })
+
+15 - 8 - 25
 new Mesh({
   position: {
     x: 0,
@@ -78,8 +99,7 @@ const sphereParams = {
     y: 10,
     z: 10,
   },
-  meshUrl:
-    'https://rawcdn.githack.com/iErcann/Notblox-Assets/f8b474a703930afb1caa82fd2bda4ca336a00a29/Ball.glb',
+  meshUrl: 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Ball.glb',
   physicsProperties: {
     mass: 1,
     // Enable continuous collision detection to prevent the ball from going through the walls

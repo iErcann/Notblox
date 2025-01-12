@@ -1,4 +1,4 @@
-new MapWorld('https://myaudio.nyc3.cdn.digitaloceanspaces.com/OBBY24.glb')
+new MapWorld('https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/world/Obby.glb')
 
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)

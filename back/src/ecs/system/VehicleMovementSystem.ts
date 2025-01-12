@@ -7,6 +7,7 @@ import { VehicleRayCastComponent } from '../component/physics/VehicleRayCastComp
 import { VehicleOccupancyComponent } from '../../../../shared/component/VehicleOccupancyComponent.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import Rapier from '../../physics/rapier.js'
+import * as THREE from 'three'
 
 export class VehicleMovementSystem {
   // Hack for proximity prompt
@@ -90,58 +91,54 @@ export class VehicleMovementSystem {
             rigidBody.wakeUp()
           }
 
+          // Find engine force wheels index
+          const engineForceWheelsIndex = carComponent.wheels
+            .map((wheel, index) => (wheel.isEngineWheel ? index : -1))
+            .filter((index) => index !== -1)
           // Engine force for back wheels
           const engineForce = driverInputComponent.up
             ? 15000
             : driverInputComponent.down
             ? -15000
             : 0
-          vehicleController.setWheelEngineForce(0, engineForce)
-          vehicleController.setWheelEngineForce(2, engineForce)
+          for (const wheelIndex of engineForceWheelsIndex) {
+            vehicleController.setWheelEngineForce(wheelIndex, engineForce)
+          }
 
+          // Find steering wheels index
+          const steeringWheelsIndex = carComponent.wheels
+            .map((wheel, index) => (wheel.isSteeringWheel ? index : -1))
+            .filter((index) => index !== -1)
           // Steering for front wheels
           const steeringAngle = driverInputComponent.left
-            ? Math.PI / 24
+            ? Math.PI / 16
             : driverInputComponent.right
-            ? -Math.PI / 24
+            ? -Math.PI / 16
             : 0
-          vehicleController.setWheelSteering(1, steeringAngle)
-          vehicleController.setWheelSteering(3, steeringAngle)
+          for (const wheelIndex of steeringWheelsIndex) {
+            vehicleController.setWheelSteering(wheelIndex, steeringAngle)
+          }
 
           // const vehiclePosition = rigidBody.translation()
           // Update the wheels for visual purpose
-          // for (let i = 0; i < carComponent.wheels.length; i++) {
-          //   const wheel = carComponent.wheels[i]
-          //   const wheelAxleCs = vehicleController.wheelAxleCs(i)!
-          //   const connection = vehicleController.wheelChassisConnectionPointCs(i)?.y || 0
-          //   const suspension = vehicleController.wheelSuspensionLength(i) || 0
-          //   const steering = vehicleController.wheelSteering(i) || 0
-          //   const rotationRad = vehicleController.wheelRotation(i) || 0
+          for (let i = 0; i < carComponent.wheels.length; i++) {
+            const wheel = carComponent.wheels[i]
+            const wheelAxleCs = vehicleController.wheelAxleCs(i)!
+            const connectionY = vehicleController.wheelChassisConnectionPointCs(i)?.y || 0
+            const suspensionLength = vehicleController.wheelSuspensionLength(i) || 0
+            const steeringRad = vehicleController.wheelSteering(i) || 0
+            const rotationRad = vehicleController.wheelRotation(i) || 0
 
-          //   // Also do the rotation of the wheel
-          //   // Y is up, X is right, Z is forward
-          //   // ADD THE ROTATION OF THE CAR
-          //   wheel.positionComponent.y =
-          //     VehicleMovementSystem.WHEEL_POSITIONS[i][1] +
-          //     vehiclePosition.y +
-          //     connection -
-          //     suspension +
-          //     suspension * Math.cos(steering) +
-          //     suspension * Math.sin(steering)
-          //   wheel.positionComponent.x =
-          //     VehicleMovementSystem.WHEEL_POSITIONS[i][0] +
-          //     vehiclePosition.x +
-          //     suspension * Math.sin(steering) -
-          //     suspension * Math.cos(steering)
-          //   wheel.positionComponent.z =
-          //     VehicleMovementSystem.WHEEL_POSITIONS[i][2] + vehiclePosition.z + suspension
-
-          //   // Update the wheel rotation
-          //   wheel.rotationComponent.x = rotationRad
-          //   wheel.rotationComponent.y = steering
-          //   wheel.rotationComponent.z = wheelAxleCs.x
-          //   wheel.rotationComponent.w = wheelAxleCs.y
-          // }
+            this.acctest += 0.01
+            wheel.positionComponent.y = connectionY - suspensionLength
+            const quart = new THREE.Quaternion().setFromEuler(
+              new THREE.Euler(rotationRad, steeringRad, 0)
+            )
+            wheel.rotationComponent.x = quart.x
+            wheel.rotationComponent.y = quart.y
+            wheel.rotationComponent.z = quart.z
+            wheel.rotationComponent.w = quart.w
+          }
 
           // Update the vehicle controller
           carComponent.updated = true
@@ -150,4 +147,5 @@ export class VehicleMovementSystem {
       }
     }
   }
+  acctest = 0
 }

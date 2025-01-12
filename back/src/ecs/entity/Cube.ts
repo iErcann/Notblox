@@ -36,7 +36,7 @@ export interface CubeParams {
    */
   color?: string
   /**
-   * @default https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb
+   * @default https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb
    */
   meshUrl?: string
   /**
@@ -70,7 +70,7 @@ export class Cube {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ?? 'https://myaudio.nyc3.cdn.digitaloceanspaces.com/crates.glb'
+      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 

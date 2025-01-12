@@ -11,9 +11,10 @@ import { RotationComponent } from './RotationComponent.js'
 export class VehicleComponent extends NetworkComponent {
   public driverEntityId?: number
   public passengerEntityIds: number[] = []
-
-  constructor(entityId: number, public wheels: WheelComponent[] = []) {
+  public wheels: WheelComponent[] = []
+  constructor(entityId: number, wheels: WheelComponent[]) {
     super(entityId, SerializedComponentType.VEHICLE)
+    this.wheels = wheels
   }
   serialize() {
     return {
@@ -41,6 +42,7 @@ export class VehicleComponent extends NetworkComponent {
             data.w[i].rC.y,
             data.w[i].rC.z
           ),
+          radius: data.w[i].r,
         })
       } else {
         this.wheels[i].deserialize(data.w[i])
