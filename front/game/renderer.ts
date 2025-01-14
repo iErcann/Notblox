@@ -33,6 +33,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.camera = new Camera(this)
 
     this.scene = new THREE.Scene()
+    this.scene.fog = new THREE.Fog(0x2f3640, 600, 1500)
     this.shadowMap.enabled = true
     this.shadowMap.type = THREE.PCFSoftShadowMap //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
 

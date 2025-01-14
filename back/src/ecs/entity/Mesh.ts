@@ -22,7 +22,7 @@ export interface MeshParams {
     z: number
   }
   /**
-   * @default 1
+   * @default { width: 1, height: 1, depth: 1 }
    */
   size?: {
     width: number
@@ -34,7 +34,7 @@ export interface MeshParams {
    */
   color?: string
   /**
-   * @default https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb
+   * @default "https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Crate.glb"
    */
   meshUrl?: string
   /**

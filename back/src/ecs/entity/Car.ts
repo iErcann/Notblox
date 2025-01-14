@@ -14,11 +14,14 @@ import {
 import { TextComponent } from '../../../../shared/component/TextComponent.js'
 import { ConvexHullColliderComponent } from '../component/physics/ConvexHullColliderComponent.js'
 import { VehicleComponent } from '../../../../shared/component/VehicleComponent.js'
-import { ColliderPropertiesComponent } from '../component/physics/ColliderPropertiesComponent.js'
+import {
+  ColliderPropertiesComponent,
+  ColliderPropertiesComponentData,
+} from '../component/physics/ColliderPropertiesComponent.js'
 import { ProximityPromptComponent } from '../../../../shared/component/ProximityPromptComponent.js'
 import { VehicleSystem } from '../system/VehicleSystem.js'
 import { WheelComponent } from '../../../../shared/component/WheelComponent.js'
-
+import { ColorComponent } from '../../../../shared/component/ColorComponent.js'
 export interface CarParams {
   position: {
     x: number
@@ -26,7 +29,7 @@ export interface CarParams {
     z: number
   }
   /**
-   * @default 2
+   * @default { width: 2, height: 2, depth: 2 }
    */
   size?: {
     width: number
@@ -34,24 +37,32 @@ export interface CarParams {
     depth: number
   }
   /**
-   * @default "red"
+   * @default "default" (Mesh color is unchanged)
    */
   color?: string
   /**
-   * @default https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb
+   * @default "https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb"
    */
   meshUrl?: string
   /**
    * @default {}
    */
   physicsProperties?: PhysicsPropertiesComponentData
+  /**
+   * @default "Car"
+   */
+  name?: string
+  /**
+   * @default { friction: 0.6, restitution: 0.2 }
+   */
+  colliderProperties?: ColliderPropertiesComponentData
 }
 
 export class Car {
   entity: Entity
 
   constructor(params: CarParams) {
-    const { position, size, color, meshUrl, physicsProperties } = params
+    const { position, size, color, meshUrl, physicsProperties, name, colliderProperties } = params
 
     this.entity = EntityManager.createEntity(SerializedEntityType.VEHICLE)
 
@@ -121,13 +132,16 @@ export class Car {
     const rotationComponent = new RotationComponent(this.entity.id, 0, 0, 0, 0)
     this.entity.addComponent(rotationComponent)
 
+    const colorComponent = new ColorComponent(this.entity.id, color ?? 'default')
+    this.entity.addComponent(colorComponent)
+
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
       meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 
-    const textComponent = new TextComponent(this.entity.id, 'Car prototype', 0, 5, 0, 30)
+    const textComponent = new TextComponent(this.entity.id, name ?? 'Car', 0, 5, 0, 30)
     this.entity.addComponent(textComponent)
 
     const sizeComponent = new SizeComponent(
@@ -139,10 +153,13 @@ export class Car {
     this.entity.addComponent(sizeComponent)
 
     this.entity.addComponent(
-      new ColliderPropertiesComponent(this.entity.id, {
-        friction: 0.6,
-        restitution: 0.2,
-      })
+      new ColliderPropertiesComponent(
+        this.entity.id,
+        colliderProperties ?? {
+          friction: 0.6,
+          restitution: 0.2,
+        }
+      )
     )
     this.entity.addComponent(
       new ConvexHullColliderComponent(
@@ -183,6 +200,7 @@ export class Car {
       textComponent,
       proximityPromptComponent,
       vehicleComponent,
+      colorComponent,
     ])
     this.entity.addComponent(networkDataComponent)
   }
