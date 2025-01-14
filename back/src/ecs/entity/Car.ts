@@ -95,7 +95,7 @@ export class Car {
       entityId: this.entity.id,
       positionComponent: new PositionComponent(this.entity.id, -3.46, -0.5287, -4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.5,
+      radius: 1.4,
       suspensionStiffness: 1000,
       suspensionCompression: 1,
       suspensionLength: 0.125,
