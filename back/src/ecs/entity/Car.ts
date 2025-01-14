@@ -69,50 +69,50 @@ export class Car {
     // Create 4 wheels
     const frontLeftWheel = new WheelComponent({
       entityId: this.entity.id,
-      positionComponent: new PositionComponent(this.entity.id, -3.46, -0.5287, 4.14),
+      positionComponent: new PositionComponent(this.entity.id, -3.46, -0.0287, 4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
       radius: 1.4,
-      suspensionStiffness: 1000,
+      suspensionStiffness: 10000,
       suspensionCompression: 1,
-      suspensionLength: 0.125,
-      sideFrictionStiffness: 1,
-      frictionSlip: 0.1,
+      suspensionLength: 1 / 4,
+      sideFrictionStiffness: 4,
+      frictionSlip: 1,
       isSteeringWheel: true,
     })
     const frontRightWheel = new WheelComponent({
       entityId: this.entity.id,
-      positionComponent: new PositionComponent(this.entity.id, 3.46, -0.5287, 4.14),
+      positionComponent: new PositionComponent(this.entity.id, 3.46, -0.0287, 4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
       radius: 1.4,
-      suspensionStiffness: 1000,
+      suspensionStiffness: 10000,
       suspensionCompression: 1,
-      suspensionLength: 0.125,
-      sideFrictionStiffness: 1,
+      suspensionLength: 1 / 4,
+      sideFrictionStiffness: 4,
       frictionSlip: 0.1,
       isSteeringWheel: true,
     })
     const backLeftWheel = new WheelComponent({
       entityId: this.entity.id,
-      positionComponent: new PositionComponent(this.entity.id, -3.46, -0.5287, -4.14),
+      positionComponent: new PositionComponent(this.entity.id, -3.46, -0.0287, -4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
       radius: 1.4,
-      suspensionStiffness: 1000,
+      suspensionStiffness: 10000,
       suspensionCompression: 1,
-      suspensionLength: 0.125,
-      sideFrictionStiffness: 1,
-      frictionSlip: 0.1,
+      suspensionLength: 1 / 4,
+      sideFrictionStiffness: 4,
+      frictionSlip: 1,
       isEngineWheel: true,
     })
 
     const backRightWheel = new WheelComponent({
       entityId: this.entity.id,
-      positionComponent: new PositionComponent(this.entity.id, 3.46, -0.5287, -4.14),
+      positionComponent: new PositionComponent(this.entity.id, 3.46, -0.0287, -4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
       radius: 1.4,
-      suspensionStiffness: 1000,
+      suspensionStiffness: 10000,
       suspensionCompression: 1,
-      suspensionLength: 0.125,
-      sideFrictionStiffness: 1,
+      suspensionLength: 1 / 4,
+      sideFrictionStiffness: 4,
       frictionSlip: 0.1,
       isEngineWheel: true,
     })
@@ -137,7 +137,8 @@ export class Car {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb'
+      meshUrl ??
+        'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/character/CarNoWheel.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 
@@ -164,7 +165,8 @@ export class Car {
     this.entity.addComponent(
       new ConvexHullColliderComponent(
         this.entity.id,
-        meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb'
+        meshUrl ??
+          'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/character/CarNoWheel.glb'
       )
     )
     this.entity.addComponent(

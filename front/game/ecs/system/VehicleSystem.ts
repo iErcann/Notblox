@@ -63,19 +63,21 @@ export class VehicleSystem {
             const wheel = vehicleComponent.wheels[i]
             const wheelMesh = wheelMeshes[i]
             // Position Component is world position, so we need to convert it to local position
-            wheelMesh.position.set(
-              wheel.positionComponent.x,
-              wheel.positionComponent.y,
-              wheel.positionComponent.z
+            wheelMesh.position.lerp(
+              new THREE.Vector3(
+                wheel.positionComponent.x,
+                wheel.positionComponent.y,
+                wheel.positionComponent.z
+              ),
+              0.1
             )
-            wheelMesh.rotation.setFromQuaternion(
-              new THREE.Quaternion(
-                wheel.rotationComponent.x,
-                wheel.rotationComponent.y,
-                wheel.rotationComponent.z,
-                wheel.rotationComponent.w
-              )
+            const targetQuat = new THREE.Quaternion(
+              wheel.rotationComponent.x,
+              wheel.rotationComponent.y,
+              wheel.rotationComponent.z,
+              wheel.rotationComponent.w
             )
+            wheelMesh.quaternion.slerp(targetQuat, 0.1)
           }
         }
       }

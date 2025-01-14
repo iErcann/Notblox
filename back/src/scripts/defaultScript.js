@@ -162,16 +162,18 @@ cube.entity.addNetworkComponent(proximityPromptComponent)
 for (let i = -3; i < 6; i++) {
   if (i === 0) continue
   const x = 5 * -i
-  const y = 20
+  const y = 5
   const z = 20 * i
   const car = new Car({
     position: { x, y, z },
+    meshUrl:
+      'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/character/CarNoWheel.glb',
   })
   car.entity.addComponent(new SpawnPositionComponent(car.entity.id, x, y, z))
 }
 
 const car = new Car({
-  position: { x: 0, y: 20, z: -500 },
+  position: { x: 0, y: 5, z: -500 },
   name: 'Weird Car',
   meshUrl: 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/EzCar.glb',
 })
