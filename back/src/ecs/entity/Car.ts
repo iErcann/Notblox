@@ -137,8 +137,7 @@ export class Car {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ??
-        'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/character/CarNoWheel.glb'
+      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 
@@ -165,8 +164,7 @@ export class Car {
     this.entity.addComponent(
       new ConvexHullColliderComponent(
         this.entity.id,
-        meshUrl ??
-          'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/character/CarNoWheel.glb'
+        meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb'
       )
     )
     this.entity.addComponent(

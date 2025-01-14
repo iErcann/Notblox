@@ -166,11 +166,16 @@ for (let i = -3; i < 6; i++) {
   const z = 20 * i
   const car = new Car({
     position: { x, y, z },
-    meshUrl:
-      'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/character/CarNoWheel.glb',
   })
   car.entity.addComponent(new SpawnPositionComponent(car.entity.id, x, y, z))
 }
+
+const noWheelCar = new Car({
+  position: { x: 0, y: 5, z: -500 },
+  name: 'Weird Car',
+  meshUrl: 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/CarNoWheel.glb',
+})
+noWheelCar.entity.addComponent(new SpawnPositionComponent(noWheelCar.entity.id, 250, 20, -500))
 
 const car = new Car({
   position: { x: 0, y: 5, z: -500 },
