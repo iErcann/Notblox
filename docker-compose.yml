@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  app:
+  nginx_proxy_manager:
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     ports:
@@ -24,8 +24,13 @@ services:
       - ./data:/data
       - /etc/letsencrypt:/etc/letsencrypt
 
-  # Test server
-  back:
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  game_test_server:
     build: .
     ports:
       - '8001:8001'
@@ -34,8 +39,13 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
 
-  # Obby parkour
-  back2:
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  game_obby_parkour:
     build: .
     environment:
       - GAME_SCRIPT=parkourScript.js
@@ -46,8 +56,13 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
 
-  # Football
-  back3:
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  game_football:
     build: .
     environment:
       - GAME_SCRIPT=footballScript.js
@@ -57,3 +72,9 @@ services:
       - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
+
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
