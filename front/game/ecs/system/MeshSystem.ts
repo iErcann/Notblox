@@ -48,7 +48,12 @@ export class MeshSystem {
 
     const rotationComponent = entity.getComponent(RotationComponent)
     if (rotationComponent) {
-      meshComponent.mesh.rotation.set(rotationComponent.x, rotationComponent.y, rotationComponent.z)
+      meshComponent.mesh.quaternion.set(
+        rotationComponent.x,
+        rotationComponent.y,
+        rotationComponent.z,
+        rotationComponent.w
+      )
     }
   }
 
