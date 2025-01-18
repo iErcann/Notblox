@@ -1,4 +1,4 @@
-import { GameInfo } from '@/pages/play/[slug]'
+import { GameInfo } from '@/types'
 
 export default function GameCard({ title, imageUrl, slug, metaDescription }: GameInfo) {
   return (

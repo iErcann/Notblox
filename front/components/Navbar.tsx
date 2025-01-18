@@ -10,14 +10,13 @@ export default function Navbar() {
           alt="Logo"
           width={50}
           height={50}
-          /* Force white  */
           className="hover:animate-spin rounded-xl webkit-filter hue-rotate-15 "
         />
 
-        <a href="#" className=" text-4xl font-extrabold leading-none   text-black select-none">
+        <h1 className=" text-4xl font-extrabold leading-none   text-black select-none">
           NotBlox
           <span className=" font-thin italic">.online</span>
-        </a>
+        </h1>
       </div>
     </section>
   )

@@ -6,11 +6,11 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.resolve.extensionAlias = {
-        ".js": [".ts", ".tsx", ".js"],
-    };
+      '.js': ['.ts', '.tsx', '.js'],
+    }
 
-    return config;
-},
+    return config
+  },
 }
 
 module.exports = nextConfig
