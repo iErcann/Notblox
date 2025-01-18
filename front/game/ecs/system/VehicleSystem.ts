@@ -44,6 +44,7 @@ export class VehicleSystem {
                 wheel.rotationComponent.w
               )
             )
+            wheelMesh.scale.set(wheel.radius, wheel.radius, wheel.radius)
             //Game.getInstance().renderer.scene.add(wheelMesh)
             meshComponent.mesh.add(wheelMesh)
             wheelMeshes.push(wheelMesh)
