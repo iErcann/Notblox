@@ -1,15 +1,30 @@
-<!-- Basic config for Rapier -->
+# Backend of NotBlox.online
 
-https://github.com/isaac-mason/rapier-node-typescript-minimal-example/blob/main/package.json
+https://github.com/iErcann/Notblox
 
-# Docker
+## How to run
 
-If you build your mono repository with Docker using Docker compose of two Docker images (frontend and backend), you will also need to adjust the configuration to access the volumes.
+```bash
+  cd back
+  npm install
+  npm run dev
+```
 
-1volumes:
+## How to build
 
-2 \- "./services/backend:/node/app:delegated"
+```bash
+  cd back
+  npm run build
+```
 
-3 \- "./services/shared:/node/shared:delegated"
+## How to run the build
 
-https://patrickdesjardins.com/blog/typescript-nodejs-sibling-project
+```bash
+  cd back
+  npm run start
+```
+
+## Production: SSL Websocket (WSS)
+
+Be sure to have SSL certificates for the websocket.
+Check the `WebsocketSystem.ts` file for the SSL certificates.

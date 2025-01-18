@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/three": "^0.156.0",
     "camera-controls": "^2.8.3",
     "lucide-react": "^0.473.0",
     "msgpackr": "^1.9.9",
@@ -19,7 +18,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-joystick-component": "^6.2.1",
-    "three": "^0.156.1"
+    "three": "^0.172.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
@@ -27,6 +26,7 @@
     "@types/pako": "^2.0.3",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/three": "^0.172.0",
     "autoprefixer": "latest",
     "concurrently": "^8.2.2",
     "eslint": "latest",
