@@ -15,11 +15,11 @@ const sphereParams = {
     mass: 1,
     // Enable continuous collision detection to prevent the ball from going through the walls
     enableCcd: true,
-    angularDamping: 0.5,
-    linearDamping: 0.5,
+    angularDamping: 0.3,
+    linearDamping: 0.2,
   },
   colliderProperties: {
-    friction: 0.4,
+    friction: 0.1,
     restitution: 0.8,
   },
 }
@@ -167,9 +167,9 @@ const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
       // Calculate player looking direction
       // sendChatMessage('⚽', `Player shot the ball !`)
       const playerLookingDirectionVector = new Rapier.Vector3(
-        direction.x * 500,
+        direction.x * 750,
         0,
-        direction.z * 500
+        direction.z * 750
       )
 
       ballRigidbody.body.applyImpulse(playerLookingDirectionVector, true)

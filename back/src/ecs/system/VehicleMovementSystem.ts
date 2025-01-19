@@ -123,13 +123,12 @@ export class VehicleMovementSystem {
           // Update the wheels for visual purpose
           for (let i = 0; i < carComponent.wheels.length; i++) {
             const wheel = carComponent.wheels[i]
-            const wheelAxleCs = vehicleController.wheelAxleCs(i)!
+            // const wheelAxleCs = vehicleController.wheelAxleCs(i)!
             const connectionY = vehicleController.wheelChassisConnectionPointCs(i)?.y || 0
             const suspensionLength = vehicleController.wheelSuspensionLength(i) || 0
             const steeringRad = vehicleController.wheelSteering(i) || 0
             const rotationRad = vehicleController.wheelRotation(i) || 0
 
-            this.acctest += 0.01
             wheel.positionComponent.y = connectionY - suspensionLength
             const quart = new THREE.Quaternion().setFromEuler(
               new THREE.Euler(rotationRad, steeringRad, 0)
@@ -147,5 +146,4 @@ export class VehicleMovementSystem {
       }
     }
   }
-  acctest = 0
 }
