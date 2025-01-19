@@ -43,6 +43,7 @@ services:
       options:
         max-size: '10m'
         max-file: '3'
+    pull_policy: never
 
   game_obby_parkour:
     image: game-server
@@ -61,6 +62,7 @@ services:
         max-file: '3'
     depends_on:
       - game_test_server
+    pull_policy: never
 
   game_football:
     image: game-server
@@ -79,3 +81,4 @@ services:
         max-file: '3'
     depends_on:
       - game_test_server
+    pull_policy: never
