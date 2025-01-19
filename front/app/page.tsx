@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: 'NotBlox - Play multiplayer games in your browser',
       description:
         'Play multiplayer games in your browser. Create your own games and share them with your friends.',
-      images: ['/Logo.png'],
+      images: ['/PreviewTestGame.webp'],
       siteName: 'NotBlox Online',
     },
     twitter: {
@@ -32,22 +32,6 @@ export default async function Home() {
   const games = gameData as GameInfo[]
   return (
     <main className="p-4 area">
-      <Head>
-        <title>NotBlox - Play multiplayer games in your browser</title>
-        <meta
-          name="description"
-          content="Play multiplayer games in your browser. Create your own games and share them with your friends."
-        />
-        <link rel="canonical" href="https://www.notblox.online/" />
-        <meta property="og:title" content="NotBlox - Play multiplayer games in your browser" />
-        <meta
-          property="og:description"
-          content="Play multiplayer games in your browser. Create your own games and share them with your friends."
-        />
-        <meta property="og:image" content="/Logo.png" />
-        <meta property="og:image:width" content="800" />
-        <meta property="og:image:height" content="600" />
-      </Head>
       <div className="space-y-8  flex flex-col items-center">
         <Navbar />
         <p className="text-2xl">Play multiplayer games in your browser</p>
