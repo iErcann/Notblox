@@ -23,7 +23,6 @@ services:
     volumes:
       - ./data:/data
       - /etc/letsencrypt:/etc/letsencrypt
-
     logging:
       driver: 'json-file'
       options:
@@ -31,6 +30,7 @@ services:
         max-file: '3'
 
   game_test_server:
+    image: game-server
     build: .
     ports:
       - '8001:8001'
@@ -38,7 +38,6 @@ services:
       - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
-
     logging:
       driver: 'json-file'
       options:
@@ -46,7 +45,7 @@ services:
         max-file: '3'
 
   game_obby_parkour:
-    build: .
+    image: game-server
     environment:
       - GAME_SCRIPT=parkourScript.js
     ports:
@@ -55,15 +54,16 @@ services:
       - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
-
     logging:
       driver: 'json-file'
       options:
         max-size: '10m'
         max-file: '3'
+    depends_on:
+      - game_test_server
 
   game_football:
-    build: .
+    image: game-server
     environment:
       - GAME_SCRIPT=footballScript.js
     ports:
@@ -72,9 +72,10 @@ services:
       - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
-
     logging:
       driver: 'json-file'
       options:
         max-size: '10m'
         max-file: '3'
+    depends_on:
+      - game_test_server
