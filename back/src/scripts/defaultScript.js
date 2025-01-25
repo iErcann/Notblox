@@ -24,6 +24,13 @@ const basicSphereParams = {
 }
 new Sphere(basicSphereParams)
 
+const basicSphereParams2 = {
+  position: { x: 5, y: 10, z: -10 },
+  radius: 6,
+  color: '#ffffff',
+}
+new Sphere(basicSphereParams2)
+
 // === Interactive Trigger Zone Example ===
 // Creates an invisible trigger zone that detects when players enter/exit
 const triggerCube = new TriggerCube(
