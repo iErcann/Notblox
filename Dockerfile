@@ -1,5 +1,5 @@
 # Build stage
-FROM node:22 as build
+FROM node:22-alpine as build
 
 WORKDIR /app
 
@@ -7,15 +7,14 @@ COPY . .
 
 WORKDIR /app/back
 
-RUN rm -rf package-lock.json
 RUN npm install
 RUN npm run build
 
 # Production stage
-FROM node:22
+FROM node:22-alpine
 
 WORKDIR /app/back
-
+RUN apk add --no-cache libc6-compat git
 COPY --from=build /app/back/package.json .
 
 RUN npm install --omit=dev
