@@ -12,7 +12,7 @@
     "format": "eslint src/**/*.ts --fix"
   },
   "keywords": [],
-  "author": "",
+  "author": "iercann",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.3.0",
@@ -32,7 +32,6 @@
     "three": "^0.172.0",
     "@types/three": "^0.172.0",
     "@dimforge/rapier3d-compat": "^0.14.0",
-    "dimforge": "file:../../../../../rapier3d",
     "@types/pako": "^2.0.3",
     "dotenv": "^16.3.1",
     "msgpackr": "^1.9.9",
