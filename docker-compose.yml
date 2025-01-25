@@ -46,7 +46,6 @@ services:
     ports:
       - '8001:8001'
     volumes:
-      - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
     logging:
@@ -64,7 +63,6 @@ services:
     ports:
       - '8002:8001'
     volumes:
-      - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
     logging:
@@ -82,7 +80,6 @@ services:
     ports:
       - '8003:8001'
     volumes:
-      - ./back/src/scripts:/app/back/src/scripts
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
     logging:
