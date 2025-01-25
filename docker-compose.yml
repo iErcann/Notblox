@@ -29,9 +29,20 @@ services:
         max-size: '10m'
         max-file: '3'
 
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=300 # Check for updates every 5 minutes
+      - WATCHTOWER_CLEANUP=true # Remove old images after update
+      - WATCHTOWER_LABEL_ENABLE=true # Only watch services with a specific label
+    restart: unless-stopped
+
   game_test_server:
-    image: game-server
-    build: .
+    image: ghcr.io/iercann/notblox-game-server:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     ports:
       - '8001:8001'
     volumes:
@@ -43,10 +54,11 @@ services:
       options:
         max-size: '10m'
         max-file: '3'
-    pull_policy: never
 
   game_obby_parkour:
-    image: game-server
+    image: ghcr.io/iercann/notblox-game-server:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     environment:
       - GAME_SCRIPT=parkourScript.js
     ports:
@@ -60,12 +72,11 @@ services:
       options:
         max-size: '10m'
         max-file: '3'
-    depends_on:
-      - game_test_server
-    pull_policy: never
 
   game_football:
-    image: game-server
+    image: ghcr.io/iercann/notblox-game-server:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     environment:
       - GAME_SCRIPT=footballScript.js
     ports:
@@ -79,6 +90,3 @@ services:
       options:
         max-size: '10m'
         max-file: '3'
-    depends_on:
-      - game_test_server
-    pull_policy: never
