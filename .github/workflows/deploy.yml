@@ -2,6 +2,8 @@ name: Game Server
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'front/**'
 
 env:
   REGISTRY: ghcr.io
