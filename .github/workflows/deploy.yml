@@ -5,7 +5,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: notblox/game-server
+  IMAGE_NAME: iercann/game-server
 
 jobs:
   build-push:
