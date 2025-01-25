@@ -1,11 +1,11 @@
-name: Game Server Build & Push
+name: Game Server
 on:
   push:
     branches: [main]
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: iercann/game-server
+  IMAGE_NAME: iercann/notblox-game-server
 
 jobs:
   build-push:
