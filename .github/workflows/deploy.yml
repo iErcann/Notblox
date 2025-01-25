@@ -1,12 +1,11 @@
-name: Build and Push
-
+name: Game Server Build & Push
 on:
   push:
     branches: [main]
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/game-server
+  IMAGE_NAME: notblox/game-server
 
 jobs:
   build-push:
