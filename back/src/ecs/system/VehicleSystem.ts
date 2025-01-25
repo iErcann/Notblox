@@ -13,6 +13,7 @@ import { PlayerComponent } from '../../../../shared/component/PlayerComponent.js
 import { DynamicRigidBodyComponent } from '../component/physics/DynamicRigidBodyComponent.js'
 import { PositionComponent } from '../../../../shared/component/PositionComponent.js'
 import { InvisibleComponent } from '../../../../shared/component/InvisibleComponent.js'
+import { VehicleRayCastComponent } from '../component/physics/VehicleRayCastComponent.js'
 export class VehicleSystem {
   private vehicleCreationSystem = new VehicleCreationSystem()
   private vehicleMovementSystem = new VehicleMovementSystem()
@@ -23,7 +24,8 @@ export class VehicleSystem {
      */
     this.vehicleCreationSystem.update(entities, world)
     /**
-     * Vehicle movement      */
+     * Vehicle movement
+     */
     this.vehicleMovementSystem.update(entities, dt)
     /**
      * Catch player entering a vehicle (VehicleOccupancyComponent)
@@ -33,6 +35,15 @@ export class VehicleSystem {
      * Catch player exiting a vehicle (VehicleOccupancyComponent)
      */
     this.handlePlayerExitVehicle(entities)
+    /**
+     * Update vehicle controller raycast
+     */
+    for (const entity of entities) {
+      const vehicleRayCastComponent = entity.getComponent(VehicleRayCastComponent)
+      if (vehicleRayCastComponent) {
+        vehicleRayCastComponent.raycastController.updateVehicle(dt / 1000)
+      }
+    }
   }
 
   /**

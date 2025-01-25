@@ -47,6 +47,7 @@ export class VehicleMovementSystem {
 
   update(entities: Entity[], dt: number): void {
     this.snapAllOccupantsToVehicle(entities)
+
     for (const entity of entities) {
       const carComponent = entity.getComponent(VehicleComponent)
       if (carComponent) {
@@ -141,7 +142,6 @@ export class VehicleMovementSystem {
 
           // Update the vehicle controller
           carComponent.updated = true
-          vehicleController.updateVehicle(dt / 1000)
         }
       }
     }
