@@ -267,7 +267,9 @@ export class TextComponentSystem {
     this.updateVisibility(entity, currentPlayerEntity, textComponent)
   }
 
-  // Update the visibility of the text based on the distance from the player
+  // Updates text visibility based on two conditions:
+  // 1. The text must be within displayDistance units of the player
+  // 2. The text content must not be empty
   private updateVisibility(
     entityWithText: Entity,
     currentPlayerEntity: Entity,
@@ -284,7 +286,7 @@ export class TextComponentSystem {
 
     const distance = this.calculateDistance(position, playerPosition)
 
-    textObject.visible = distance <= textComponent.displayDistance
+    textObject.visible = distance <= textComponent.displayDistance && textComponent.text !== ''
   }
 
   private calculateDistance(pos1: PositionComponent, pos2: PositionComponent): number {

@@ -11,7 +11,7 @@ new MapWorld('https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/wo
 
 // Create a basic cube
 const basicCubeParams = {
-  position: { x: 0, y: 5, z: -20 },
+  position: { x: 0, y: 5, z: -50 },
   size: { width: 3, height: 3, depth: 3 },
 }
 new Cube(basicCubeParams)
@@ -23,13 +23,6 @@ const basicSphereParams = {
   color: '#ffffff',
 }
 new Sphere(basicSphereParams)
-
-const basicSphereParams2 = {
-  position: { x: 5, y: 10, z: -10 },
-  radius: 6,
-  color: '#ffffff',
-}
-new Sphere(basicSphereParams2)
 
 // === Interactive Trigger Zone Example ===
 // Creates an invisible trigger zone that detects when players enter/exit

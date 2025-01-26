@@ -24,7 +24,7 @@ export class VehicleSystem {
      */
     this.vehicleCreationSystem.update(entities, world)
     /**
-     * Vehicle movement
+     * Vehicle movement based on player input
      */
     this.vehicleMovementSystem.update(entities, dt)
     /**
@@ -37,6 +37,8 @@ export class VehicleSystem {
     this.handlePlayerExitVehicle(entities)
     /**
      * Update vehicle controller raycast
+     * To optimize this : Only update the raycast if a player is inside the vehicle
+     * But since wheels can be non physical, idle vehicles will have their chassis on the ground
      */
     for (const entity of entities) {
       const vehicleRayCastComponent = entity.getComponent(VehicleRayCastComponent)
@@ -213,9 +215,16 @@ export class VehicleSystem {
     }
   }
   private updateText(textComponent: TextComponent, vehicleComponent: VehicleComponent) {
-    textComponent.text = `🚗 Driver: ${
-      vehicleComponent.driverEntityId ? 'Yes' : 'No'
-    } | 🧑‍🤝‍🧑 Passengers: ${vehicleComponent.passengerEntityIds.length}`
+    const hasDriver = !!vehicleComponent.driverEntityId
+    const passengerCount = vehicleComponent.passengerEntityIds.length
+
+    textComponent.text = [
+      hasDriver ? '' : '🚗 Car',
+      passengerCount > 0 ? `👥 ${passengerCount} passenger${passengerCount > 1 ? 's' : ''}` : '',
+    ]
+      .filter(Boolean)
+      .join(' ')
+
     textComponent.updated = true
   }
 }
