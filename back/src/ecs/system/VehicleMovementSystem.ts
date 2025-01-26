@@ -112,9 +112,9 @@ export class VehicleMovementSystem {
             .filter((index) => index !== -1)
           // Steering for front wheels
           const steeringAngle = driverInputComponent.left
-            ? Math.PI / 16
+            ? Math.PI / 12
             : driverInputComponent.right
-            ? -Math.PI / 16
+            ? -Math.PI / 12
             : 0
           for (const wheelIndex of steeringWheelsIndex) {
             vehicleController.setWheelSteering(wheelIndex, steeringAngle)
@@ -132,7 +132,12 @@ export class VehicleMovementSystem {
 
             wheel.positionComponent.y = connectionY - suspensionLength
             const quart = new THREE.Quaternion().setFromEuler(
-              new THREE.Euler(rotationRad, steeringRad, 0)
+              new THREE.Euler(
+                rotationRad, // Wheel spin (X-axis)
+                steeringRad, // Steering rotation (Y-axis)
+                0, // No camber
+                'YXZ' // Rotation order: Steer first, then spin
+              )
             )
             wheel.rotationComponent.x = quart.x
             wheel.rotationComponent.y = quart.y
