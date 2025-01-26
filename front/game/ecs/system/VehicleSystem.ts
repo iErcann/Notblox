@@ -54,6 +54,7 @@ export class VehicleSystem {
       })
     }
 
+    // Update the wheels position and rotation
     for (const entity of entities) {
       const vehicleComponent = entity.getComponent(VehicleComponent)
       const meshComponent = entity.getComponent(MeshComponent)
@@ -63,7 +64,6 @@ export class VehicleSystem {
           for (let i = 0; i < vehicleComponent.wheels.length; i++) {
             const wheel = vehicleComponent.wheels[i]
             const wheelMesh = wheelMeshes[i]
-            // Position Component is world position, so we need to convert it to local position
             wheelMesh.position.lerp(
               new THREE.Vector3(
                 wheel.positionComponent.x,
