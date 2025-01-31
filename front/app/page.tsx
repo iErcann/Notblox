@@ -31,7 +31,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
   const games = gameData as GameInfo[]
   return (
-    <div className="space-y-8 flex flex-col items-center">
+    <div className="space-y-8 flex flex-col items-center container">
+      <Navbar />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {games &&
           games.map((game, index) => (
