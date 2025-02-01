@@ -1,6 +1,6 @@
 export default function LoadingScreen() {
   return (
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
       <div className="border border-slate-900 shadow rounded-lg p-4 max w-full mx-auto">
         <div className="animate-pulse flex space-x-4">
           <div className="flex-1 space-y-6 py-1">

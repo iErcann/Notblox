@@ -9,7 +9,7 @@ import { GameInfo } from '@/types'
 export default function GamePlayer(gameInfo: GameInfo) {
   const [isLoading, setIsLoading] = useState(true)
   const [chat, updateChat] = useState<ChatListComponent>()
-  const [gameInstance, setGameInstance] = useState<Game>()
+  const [gameInstance, setGameInstance] = useState<Game | null>(null) // Initialize as null
   const refContainer = useRef(null)
 
   useEffect(() => {
@@ -29,15 +29,17 @@ export default function GamePlayer(gameInfo: GameInfo) {
   }, [gameInfo.websocketPort])
 
   return (
-    <>
+    <div className="fixed inset-0 w-full h-full">
       {isLoading && <LoadingScreen />}
-      <div ref={refContainer}>
-        <GameHud
-          chatList={chat}
-          sendMessage={gameInstance?.hud.sendMessageToServer!}
-          gameInstance={gameInstance}
-        />
-      </div>
-    </>
+      {gameInstance && ( // Only render if gameInstance is defined
+        <div ref={refContainer}>
+          <GameHud
+            chatList={chat}
+            sendMessage={gameInstance.hud.sendMessageToServer} // No need for optional chaining here
+            gameInstance={gameInstance}
+          />
+        </div>
+      )}
+    </div>
   )
 }

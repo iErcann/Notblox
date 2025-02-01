@@ -1,14 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
-import { Github, Twitter, Link } from 'lucide-react'
+import { Github, Twitter } from 'lucide-react'
+import Link from 'next/link'
 
-interface NavbarProps {
-  children?: React.ReactNode // Define the children prop
-}
-
-export default function Navbar({ children }: NavbarProps) {
+export default function Navbar() {
   return (
-    <section className="w-full  mb-2">
+    <section className="w-full">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2 py-2">
           <Image
@@ -18,11 +15,11 @@ export default function Navbar({ children }: NavbarProps) {
             height={50}
             className="transition-transform duration-300 hover:scale-110 hover:opacity-80 hover:rotate-180 rounded-xl shadow-md"
           />
-          <h1 className="text-3xl font-extrabold leading-none text-black select-none transition-opacity duration-300 hover:opacity-80">
-            <a href="/">
+          <h2 className="text-3xl font-bold leading-none text-black select-none transition-opacity duration-300 hover:opacity-80">
+            <Link href="/">
               NotBlox<span className="text-2xl">.online</span>
-            </a>
-          </h1>
+            </Link>
+          </h2>
         </div>
 
         {/* Social Icons (GitHub, Discord, Twitter) */}

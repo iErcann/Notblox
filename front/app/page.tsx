@@ -1,11 +1,10 @@
 import GameCard from '@/components/GameCard'
 import KeyboardLayout from '@/components/KeyboardLayout'
 import Navbar from '@/components/Navbar'
-import { ExternalLink, Github, Play, Twitter } from 'lucide-react'
+import { ExternalLink, Github, Twitter } from 'lucide-react'
 import Link from 'next/link'
 import { GameInfo } from '../types'
 import gameData from '../public/gameData.json'
-import Head from 'next/head'
 import { Metadata } from 'next'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,18 +37,15 @@ export default async function Home() {
           games.map((game, index) => (
             <div
               className={`col-span-1 ${
-                (index === games.length - 1 && games.length % 2 !== 0) ||
-                (games.length % 2 === 0 && index === games.length - 1)
-                  ? 'md:col-span-2'
-                  : ''
+                // Only make the last item span full width when total count is odd
+                index === games.length - 1 && games.length % 2 !== 0 ? 'md:col-span-2' : ''
               }`}
               key={index}
             >
-              <GameCard {...game} />
+              <GameCard {...game} height={96} />
             </div>
           ))}
       </div>
-
       <KeyboardLayout />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 my-4">

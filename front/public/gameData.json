@@ -36,16 +36,16 @@
       "imageUrl": "/PreviewTestGame.webp",
       "images": [
         {
-          "url": "/Logo.png",
-          "width": 800,
-          "height": 600,
+          "url": "/PreviewTestGame.webp",
+          "width": 1920,
+          "height": 1080,
           "alt": "NotBlox Logo",
-          "type": "image/png" 
+          "type": "image/webp" 
         } 
       ],
       "websocketPort": 8001,
       "slug": "test",
       "metaDescription": "This is a test server for development purposes. Feel free to join and test the game."
-    }
+    } 
   ]
   
