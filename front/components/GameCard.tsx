@@ -1,19 +1,36 @@
-import { GameInfo } from '@/types'
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 
-export default function GameCard({ title, imageUrl, slug, metaDescription }: GameInfo) {
+interface GameCardProps {
+  title: string
+  imageUrl: string
+  slug: string
+  metaDescription: string
+}
+
+export default function GameCard({ title, imageUrl, slug, metaDescription }: GameCardProps) {
   return (
     <a
       href={`/play/${slug}`}
-      className="relative overflow-hidden rounded-2xl bg-gray-900/90 hover:scale-105 transform transition-transform duration-300 drop-shadow-4 "
+      className="block group transition-transform duration-100 hover:scale-[1.02] h-full"
     >
-      <img alt={title} src={imageUrl} className="absolute inset-0 h-full w-full object-cover" />
-
-      <div className="relative bg-gradient-to-t from-gray-900/50 to-gray-900/0 pt-32 sm:pt-48 lg:pt-64  ">
-        <div className="p-4 sm:p-6">
-          <h3 className="mt-0.5 text-lg font-bold text-white">{title}</h3>
-          <p className="mt-2 line-clamp-2    text-sm/relaxed text-white/95">{metaDescription}</p>
+      <Card className="relative h-full overflow-hidden rounded-2xl bg-gray-900/90 drop-shadow-4 hover:drop-shadow-5  ">
+        {/* Fixed height image container */}
+        <div className={`relative w-full h-64 lg:h-96`}>
+          <img
+            alt={title}
+            src={imageUrl}
+            className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-gray-900/0 to-transparent" />
         </div>
-      </div>
+
+        <CardHeader className="absolute bottom-0 w-full p-4 space-y-2 sm:p-6">
+          <CardTitle className="text-xl font-bold text-white md:text-xl  ">{title}</CardTitle>
+          <CardDescription className="line-clamp-2 text-sm/relaxed text-gray-200/95 leading-relaxed">
+            {metaDescription}
+          </CardDescription>
+        </CardHeader>
+      </Card>
     </a>
   )
 }

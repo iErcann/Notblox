@@ -1,7 +1,8 @@
+// app/play/[slug]/page.tsx
 import gameData from '../../../public/gameData.json'
 import { GameInfo } from '@/types'
-import GamePlayer from '@/components/GamePlayer'
 import { Metadata } from 'next'
+import GameContent from '@/components/GameContent'
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const games = gameData as GameInfo[]
@@ -19,13 +20,13 @@ function getGamesBySlug(slug: string): GameInfo {
   return game
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
+// https://nextjs.org/docs/app/building-your-application/upgrading/version-15#params--searchparams
+type Params = Promise<{ slug: string }>
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params
   const gameInfo = getGamesBySlug(slug)
+
   return {
     title: `Play ${gameInfo.title} - NotBlox`,
     description: gameInfo.metaDescription,
@@ -46,13 +47,9 @@ export async function generateMetadata({
   }
 }
 
-export default async function GamePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function GamePage({ params }: { params: Params }) {
   const { slug } = await params
   const gameInfo = getGamesBySlug(slug)
 
-  return (
-    <>
-      <GamePlayer {...gameInfo} />
-    </>
-  )
+  return <GameContent gameInfo={gameInfo} />
 }

@@ -52,7 +52,5 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 
-gta.glb
-gtasa.glb
-pool.glb
- 
+*.glb
+*.blend
