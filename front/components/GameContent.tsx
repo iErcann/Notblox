@@ -26,12 +26,18 @@ export default function GameContent({ gameInfo }: { gameInfo: GameInfo }) {
           <div className="flex flex-col lg:flex-row gap-8 mb-12">
             {/* Image Section - Larger and Clickable */}
             <div className="lg:w-2/3 cursor-pointer" onClick={handlePlayClick}>
-              <div className="relative group rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-gray-200">
+              <div className="relative group rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300  ">
                 <img
                   src={gameInfo.imageUrl}
                   alt={`${gameInfo.title} cover`}
-                  className="w-full h-64 md:h-[500px] object-cover transform transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-64 md:h-[400px] object-cover transform transition-transform duration-300 group-hover:scale-105"
                 />
+
+                {/* Online Badge */}
+                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl px-3 py-1.5 flex items-center space-x-2 shadow-sm">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div> {/* Green dot */}
+                  <span className="text-sm font-medium text-gray-800">Online</span>
+                </div>
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent" />
                 {/* Play Icon Overlay */}
