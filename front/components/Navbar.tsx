@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { Github, Twitter } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Navbar() {
   return (
@@ -15,9 +16,9 @@ export default function Navbar() {
             className="transition-transform duration-300 hover:scale-110 hover:opacity-80 hover:rotate-180 rounded-xl shadow-md"
           />
           <h2 className="text-3xl font-bold leading-none text-black select-none transition-opacity duration-300 hover:opacity-80">
-            <a href="/">
+            <Link href="/">
               NotBlox<span className="text-2xl">.online</span>
-            </a>
+            </Link>
           </h2>
         </div>
 
