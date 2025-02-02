@@ -40,12 +40,12 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
       <div className="flex justify-between items-center">
         <div className="shadow-4xl p-4  rounded-lg space-y-1 bg-gray-800 bg-opacity-20">
           <p className="text-sm">👋 Welcome to </p>
-          <Link
+          <a
             className="text-sm md:text-2xl font-bold pointer-events-auto hover:text-gray-400"
             href="/"
           >
             NotBlox<span className="font-medium">.online</span>
-          </Link>
+          </a>
           <div className="space-x-4 text-sm flex justify-around  text-white pointer-events-auto">
             <Link
               href="https://discord.gg/kPhgtj49U2"

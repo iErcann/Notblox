@@ -9,8 +9,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <main className="bg-gray-50">{children}</main>
+      <body className="bg-gray-50">
+        <main>{children}</main>
       </body>
     </html>
   )

@@ -1,7 +1,8 @@
 // components/GameContent.tsx
-'use client' // Mark this as a Client Component
+'use client'
 
 import { useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 import GamePlayer from '@/components/GamePlayer'
 import { GameInfo } from '@/types'
 import gameData from '../public/gameData.json'
@@ -17,83 +18,71 @@ export default function GameContent({ gameInfo }: { gameInfo: GameInfo }) {
 
   return (
     <>
-      {/* Conditionally render GamePlayer or Game Header */}
       {isPlaying ? (
         <GamePlayer {...gameInfo} />
       ) : (
-        <div>
+        <div className="px-4 container mx-auto">
           <Navbar />
           <div className="flex flex-col lg:flex-row gap-8 mb-12">
-            <div className="lg:w-2/3">
-              <div className="relative group rounded-2xl overflow-hidden shadow-lg hover:shadow-md transition-shadow duration-300 border border-gray-200">
+            {/* Image Section - Larger and Clickable */}
+            <div className="lg:w-2/3 cursor-pointer" onClick={handlePlayClick}>
+              <div className="relative group rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-gray-200">
                 <img
                   src={gameInfo.imageUrl}
                   alt={`${gameInfo.title} cover`}
-                  className="w-full h-96 object-cover transform transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-64 md:h-[500px] object-cover transform transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-white/20 via-transparent" />
-              </div>
-            </div>
-
-            <div className="lg:w-1/3 flex flex-col justify-center">
-              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                {gameInfo.title}
-              </h1>
-              <p className="text-gray-600 text-lg mb-6">{gameInfo.metaDescription}</p>
-              <button
-                onClick={handlePlayClick}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 inline-block text-center shadow-md hover:shadow-lg"
-              >
-                Play Now →
-              </button>
-            </div>
-          </div>
-          {/* Game Details */}
-          <div className="grid md:grid-cols-3 gap-8 mb-12 ">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-gray-900 text-xl font-bold mb-4">Features</h3>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-center">
-                  <span className="mr-2 text-blue-500">⭐</span> Multiplayer Support
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-2 text-blue-500">🎮</span> Controller Compatible
-                </li>
-                <li className="flex items-center">
-                  <span className="mr-2 text-blue-500">🏆</span> Achievements System
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-gray-900 text-xl font-bold mb-4">Stats</h3>
-              <div className="flex justify-between text-gray-600">
-                <div>
-                  <p className="text-2xl font-bold text-gray-900">1.2M+</p>
-                  <p className="text-sm">Active Players</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-gray-900">4.8</p>
-                  <p className="text-sm">Average Rating</p>
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent" />
+                {/* Play Icon Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-black/10 rounded-full p-4 backdrop-blur-sm">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-12 w-12 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="text-gray-900 text-xl font-bold mb-4">Recent Updates</h3>
-              <p className="text-gray-600 text-sm">
-                New map added - Version 2.1.0
-                <span className="block text-blue-600 mt-2">Last updated: 3 days ago</span>
-              </p>
+            {/* Content Section - Smaller */}
+            <div className="lg:w-1/3 flex flex-col justify-center space-y-6">
+              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900">{gameInfo.title}</h1>
+              <p className="text-gray-600 text-lg leading-relaxed">{gameInfo.metaDescription}</p>
+              <div className="flex flex-col space-y-4">
+                <button
+                  onClick={handlePlayClick}
+                  className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 inline-block text-center shadow-lg hover:shadow-xl"
+                >
+                  Play Now →
+                </button>
+              </div>
             </div>
           </div>
+          {/* Markdown Content */}
+          <section className="w-full mb-12 bg-white p-4 md:p-8 rounded-2xl drop-shadow-sm border border-gray-200">
+            <div className="prose max-w-none">
+              <ReactMarkdown>{gameInfo.markdown}</ReactMarkdown>
+            </div>
+          </section>
 
           {/* Related Games */}
           <section className="w-full">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 px-4 sm:px-0">More Games</h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 ">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {gameData.map((game) => (
-                <GameCard {...game} height={64} key={game.slug} />
+                <GameCard {...game} key={game.slug} />
               ))}
             </div>
           </section>

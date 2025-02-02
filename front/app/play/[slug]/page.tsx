@@ -6,7 +6,6 @@ import GameContent from '@/components/GameContent'
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const games = gameData as GameInfo[]
-  console.log('Generating', games)
 
   return games.map((game) => ({
     slug: game.slug,
@@ -52,10 +51,5 @@ export default async function GamePage({ params }: { params: Params }) {
   const { slug } = await params
   const gameInfo = getGamesBySlug(slug)
 
-  return (
-    <div className="space-y-8 flex flex-col items-center container">
-      {/* Render the GameContent component */}
-      <GameContent gameInfo={gameInfo} />
-    </div>
-  )
+  return <GameContent gameInfo={gameInfo} />
 }

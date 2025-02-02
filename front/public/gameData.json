@@ -1,5 +1,5 @@
 [
-  {
+  { 
     "title": "Online Multiplayer Football Game",
     "imageUrl": "/PreviewFootballGame.webp",
     "slug": "football",
@@ -13,8 +13,9 @@
       } 
     ],
     "websocketPort": 8003,
-    "metaDescription": "Multiplayer football game in your browser with your friends. Play soccer on your browser desktop or mobile."
-  },   
+    "metaDescription": "Multiplayer football game in your browser with your friends. Play soccer on your browser desktop or mobile.",
+ "markdown": "## Play Free Online Football with Friends 🏆\n\nExperience fast-paced **browser-based multiplayer soccer** in our simple yet exciting football game! ⚽ Play **free online soccer** directly in your web browser - no downloads required!\n\n### Game Features:\n- 🕹️ **Real-time multiplayer matches** with players worldwide\n- 🔴🔵 Two teams: Red vs Blue - choose your side!\n- 🖥️ Stunning 3D graphics and smooth animations\n- 🎮 Simple controls for instant fun\n   - Keyboard controls for desktop players\n   - Touch controls for mobile gaming\n- 🌐 Browser-based - play anywhere, anytime\n- ⚡ Fast-paced 5-minute matches\n- 🤝 Team-based gameplay for multiplayer fun\n\n### How to Play This Free Browser Soccer Game:\n1. Click **Play Now** to start your match\n2. Choose your team (Red or Blue)\n3. Use:\n   - **Arrow keys** or **WASD** to move (desktop)\n   - **Joystick** on mobile devices\n4. Press **E** to kick the ball\n5. Score goals and have fun!\n\n**Pro Tip:** Pass to teammates and position strategically to win! 🏃‍♂️💨 Master your soccer skills in this free online football game.\n\n### Why Choose Our Online Soccer Game?\n✅ **Free to play** - no hidden costs\n✅ **No downloads** - play instantly in browser\n✅ **Multiplayer action** - play with friends\n✅ **Cross-device compatibility** - desktop & mobile\n✅ **Quick matches** - perfect for short breaks\n\n### System Requirements:\n✅ Any modern browser (Chrome, Firefox, Safari)\n✅ Internet connection\n✅ Keyboard or touch controls\n\n---\n\n### Frequently Asked Questions:\n❓ **Is this online football game really free?**  \nYes! 100% free with no hidden costs - just click and play!\n\n❓ **Can I play soccer online with friends?**  \nAbsolutely! Join the same team or compete against each other in real-time.\n\n❓ **Is this browser soccer game mobile-friendly?**  \nYes! Our web-based football game works perfectly on both desktop and mobile devices.\n\n❓ **What makes this online soccer game unique?**  \nOur game combines simple controls with fast-paced 3D gameplay, making it perfect for quick, fun matches!\n\n[Play Now] and join thousands of players in this exciting free online football game! ⚽" 
+ },
     {
       "title": "Obby Online Parkour",
       "imageUrl": "/PreviewObbyGame.webp",
@@ -29,7 +30,8 @@
         } 
       ],
       "websocketPort": 8002,
-      "metaDescription": "Play Obby NotBlox Parkour, a fun and challenging multiplayer parkour game. Compete with others to reach the top of the map."
+      "metaDescription": "Play Obby NotBlox Parkour, a fun and challenging multiplayer parkour game. Compete with others to reach the top of the map.",
+        "markdown": "## Play Free Online Obby Parkour 🏃‍♂️\n\nJump, run, and climb in our **browser-based 3D multiplayer obby obstacle course**! Play this fun parkour game directly in your browser - no downloads needed!\n\n### Game Features:\n- 🧱 Challenging 3D obstacle course\n- 🌐 Multiplayer browser gameplay\n- 🎮 Simple controls for everyone\n   - **WASD** or **Arrow keys** to move\n   - **Spacebar** to jump\n- 🖥️ Smooth 3D graphics in your browser\n- ⚡ Fast-paced parkour action\n- Roblox like experience\n\n### How to Play:\n1. Click **Play Now** to start\n2. Use:\n   - **WASD** or **Arrow keys** to move\n   - **Spacebar** to jump\n3. Navigate through the obstacle course\n4. Reach the finish line before others!\n\n**Pro Tip:** Time your jumps carefully and use momentum to clear gaps! 🚀\n\n### Why Play Our Browser Parkour Game?\n✅ **Free to play** - no hidden costs\n✅ **No downloads** - play instantly in browser\n✅ **Multiplayer fun** - compete with others\n✅ **Simple controls** - easy to learn\n✅ **3D graphics** - immersive experience\n\n### System Requirements:\n✅ Any modern browser (Chrome, Firefox, Safari)\n✅ Internet connection\n✅ Keyboard controls\n\n---\n\n### Frequently Asked Questions:\n❓ **Is this parkour game free?**  \nYes! 100% free with no hidden costs.\n\n❓ **Can I play with friends?**  \nAbsolutely! Join the same game and compete together.\n\n❓ **Does it work on mobile?**  \nYes! Our browser-based game works on both desktop and mobile devices.\n\n[Play Now] and test your parkour skills! 🏃‍♀️"
     },
     {
       "title": "Test Server",
@@ -45,7 +47,8 @@
       ],
       "websocketPort": 8001,
       "slug": "test",
-      "metaDescription": "This is a test server for development purposes. Feel free to join and test the game."
+      "metaDescription": "This is a test server for development purposes. Feel free to join and test the game.",
+      "markdown": "## Development Testing Environment 🔧\n\nWelcome to our **experimental testing zone**! This is where we prototype and improve the game. Expect frequent changes and updates as we test new features.\n\n### What We're Testing:\n- 🚗 **Improved Car Physics**: Smoother handling and realistic driving mechanics\n- 🖼️ **Enhanced Graphics**: Better visuals and performance optimizations\n- 🎮 **New Gamemodes**: Experimental gameplay modes for feedback\n- 🖥️ **UI Improvements**: Redesigned interfaces and controls\n- 🌍 **Dynamic World Changes**: The environment may change frequently during testing\n\n### Important Notes:\n⚠️ **This is a testing environment** - things may break or change unexpectedly!\n⚠️ Progress here **won't carry over** to the main game.\n⚠️ The world and mechanics will evolve as we test new ideas.\n\n### How to Help:\n1. Try out the new features and provide feedback\n\n2. Share your thoughts on new gamemodes and physics\n3. Test on different devices (desktop, mobile, etc.)\n\n### What's Changing:\n- 🚗 Cars: Improved handling, acceleration, and collisions\n- 🌍 World: New layouts, obstacles, and interactive elements\n- 🎮 Gamemodes: Experimental rules and objectives\n- 🖥️ UI: Cleaner menus and better controls\n\n**Pro Tip:** Be patient! Things may feel rough as we experiment and improve.\n\n---\n\n### Why Participate?\n✅ Get early access to new features\n✅ Help shape the future of the game\n✅ Experience cutting-edge changes before anyone else\n\n[Join Testing] and be part of the development process! 👨‍💻"
     } 
   ]
   

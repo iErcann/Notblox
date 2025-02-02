@@ -5,24 +5,17 @@ interface GameCardProps {
   imageUrl: string
   slug: string
   metaDescription: string
-  height: number
 }
 
-export default function GameCard({
-  title,
-  imageUrl,
-  slug,
-  metaDescription,
-  height,
-}: GameCardProps) {
+export default function GameCard({ title, imageUrl, slug, metaDescription }: GameCardProps) {
   return (
     <a
       href={`/play/${slug}`}
-      className="block group transition-transform duration-100 hover:scale-[1.02] h-full  relative z-0 "
+      className="block group transition-transform duration-100 hover:scale-[1.02] h-full"
     >
       <Card className="relative h-full overflow-hidden rounded-2xl bg-gray-900/90 drop-shadow-4 hover:drop-shadow-5  ">
         {/* Fixed height image container */}
-        <div className={`relative w-full h-${height}`}>
+        <div className={`relative w-full h-64 lg:h-96`}>
           <img
             alt={title}
             src={imageUrl}

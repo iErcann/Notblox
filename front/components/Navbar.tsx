@@ -1,13 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
 import { Github, Twitter } from 'lucide-react'
-import Link from 'next/link'
 
 export default function Navbar() {
   return (
     <section className="w-full">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2 py-2">
+        <div className="flex items-center space-x-2 py-4">
           <Image
             src="/LogoFlat.png"
             alt="Logo"
@@ -16,9 +15,9 @@ export default function Navbar() {
             className="transition-transform duration-300 hover:scale-110 hover:opacity-80 hover:rotate-180 rounded-xl shadow-md"
           />
           <h2 className="text-3xl font-bold leading-none text-black select-none transition-opacity duration-300 hover:opacity-80">
-            <Link href="/">
+            <a href="/">
               NotBlox<span className="text-2xl">.online</span>
-            </Link>
+            </a>
           </h2>
         </div>
 
