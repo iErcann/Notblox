@@ -9,6 +9,7 @@ import {
 } from 'uWebSockets.js'
 import { unpack } from 'msgpackr'
 import { RateLimiterMemory } from 'rate-limiter-flexible'
+import { config } from '../../../../../shared/network/config.js'
 
 import { EntityDestroyedEvent } from '../../../../../shared/component/events/EntityDestroyedEvent.js'
 import {
@@ -146,6 +147,7 @@ export class WebsocketSystem {
     const connectionMessage: ConnectionMessage = {
       t: ServerMessageType.FIRST_CONNECTION,
       id: player.entity.id,
+      tickRate: config.SERVER_TICKRATE,
     }
     // player.entity.addComponent(new RandomizeComponent(player.entity.id))
     ws.player = player

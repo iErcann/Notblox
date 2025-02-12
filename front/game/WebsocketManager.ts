@@ -3,9 +3,10 @@ import { ServerMessage, ServerMessageType } from '@shared/network/server/base'
 import { SnapshotMessage } from '@shared/network/server/serialized'
 import { Game } from './game'
 import { ConnectionMessage } from '@shared/network/server/connection'
-import { ClientMessage, ClientMessageType } from '@shared/network/client/base'
+import { ClientMessage } from '@shared/network/client/base'
 import { isNativeAccelerationEnabled } from 'msgpackr'
 import pako from 'pako'
+import { config } from '@shared/network/config'
 
 if (!isNativeAccelerationEnabled)
   console.warn('Native acceleration not enabled, verify that install finished properly')
@@ -26,7 +27,10 @@ export class WebSocketManager {
     this.addMessageHandler(ServerMessageType.FIRST_CONNECTION, (message) => {
       const connectionMessage = message as ConnectionMessage
       game.currentPlayerEntityId = connectionMessage.id
-      console.log('first connection', game.currentPlayerEntityId)
+      config.SERVER_TICKRATE = connectionMessage.tickRate
+      console.log(
+        `Connected to server with player ID: ${game.currentPlayerEntityId}, server tick rate: ${connectionMessage.tickRate}`
+      )
     })
 
     this.addMessageHandler(ServerMessageType.SNAPSHOT, (message) => {
