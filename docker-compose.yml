@@ -81,7 +81,7 @@ services:
       - com.centurylinklabs.watchtower.enable=true
     environment:
       - GAME_SCRIPT=footballScript.js
-      - GAME_TICKRATE=20 # Default tickrate
+      - GAME_TICKRATE=60
     ports:
       - '8003:8001'
     volumes:
