@@ -2,13 +2,13 @@ import * as THREE from 'three'
 import { Entity } from '@shared/entity/Entity'
 import { MeshComponent } from '../component/MeshComponent'
 import { RotationComponent } from '@shared/component/RotationComponent'
-import { SerializedEntityType } from '@shared/network/server/serialized'
-
+import { VehicleComponent } from '@shared/component/VehicleComponent'
 export class SyncRotationSystem {
   update(entities: Entity[], interpolationFactor: number) {
     for (const entity of entities) {
       const meshComponent = entity.getComponent(MeshComponent)
       const rotationComponent = entity.getComponent(RotationComponent)
+      const vehicleComponent = entity.getComponent(VehicleComponent)
 
       if (meshComponent && rotationComponent) {
         const targetQuaternion = new THREE.Quaternion(
@@ -19,11 +19,10 @@ export class SyncRotationSystem {
         )
 
         // Interpolate rotation using slerp (spherical linear interpolation)
-        if (entity.type === SerializedEntityType.VEHICLE) {
-          meshComponent.mesh.quaternion.slerp(targetQuaternion, interpolationFactor / 2)
-        } else {
-          meshComponent.mesh.quaternion.slerp(targetQuaternion, interpolationFactor)
-        }
+        meshComponent.mesh.quaternion.slerp(
+          targetQuaternion,
+          vehicleComponent ? 0.5 : interpolationFactor
+        )
       }
     }
   }

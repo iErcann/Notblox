@@ -180,7 +180,7 @@ export class Car {
     )
 
     const proximityPromptComponent = new ProximityPromptComponent(this.entity.id, {
-      text: 'Enter/Exit',
+      text: 'Enter',
       onInteract: (playerEntity) => {
         VehicleSystem.handleProximityPrompt(this.entity, playerEntity)
       },

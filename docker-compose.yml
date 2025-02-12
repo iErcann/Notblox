@@ -43,6 +43,9 @@ services:
     image: ghcr.io/iercann/notblox-game-server:latest
     labels:
       - com.centurylinklabs.watchtower.enable=true
+    environment:
+      - GAME_SCRIPT=defaultScript.js
+      - GAME_TICKRATE=60 # Higher tickrate for vehicles
     ports:
       - '8001:8001'
     volumes:
@@ -60,6 +63,7 @@ services:
       - com.centurylinklabs.watchtower.enable=true
     environment:
       - GAME_SCRIPT=parkourScript.js
+      - GAME_TICKRATE=20 # Default tickrate
     ports:
       - '8002:8001'
     volumes:
@@ -77,6 +81,7 @@ services:
       - com.centurylinklabs.watchtower.enable=true
     environment:
       - GAME_SCRIPT=footballScript.js
+      - GAME_TICKRATE=20 # Default tickrate
     ports:
       - '8003:8001'
     volumes:

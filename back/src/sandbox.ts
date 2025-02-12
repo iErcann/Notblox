@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { readFile } from 'fs/promises'
 import { Script, createContext } from 'node:vm'
 import { resolve } from 'path'
