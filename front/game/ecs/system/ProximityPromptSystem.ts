@@ -14,6 +14,7 @@ export class ProximityPromptSystem {
       const proximityPromptComponent = entity.getComponent(ProximityPromptComponent)
       // Update the interaction accumulator for each entity
       if (proximityPromptComponent) {
+        proximityPromptComponent.textComponent.updated = proximityPromptComponent.updated
         proximityPromptComponent.accumulatorPerEntity.forEach((accumulator, playerEntity) => {
           const cappedAccumulator = Math.min(
             accumulator + dt,
