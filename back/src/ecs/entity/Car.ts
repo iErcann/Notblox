@@ -137,7 +137,7 @@ export class Car {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/Car.glb'
+      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/CarNoWheel.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 
