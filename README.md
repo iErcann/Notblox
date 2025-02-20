@@ -67,7 +67,49 @@ Inspiration : https://github.com/swift502/Sketchbook
 
 [![Demo](GameScreen3.webp)](https://www.youtube.com/watch?v=Uu3VCuyD9EA 'See on youtube')
 
-## How to run locally
+
+
+## Backend Configuration (Game Server)
+
+The backend can be configured through environment variables in `./backend/.env`:
+
+```bash
+# Game script selection
+GAME_SCRIPT=defaultScript.js    # Specify which game mode script to load
+GAME_TICKRATE=20               # Server update frequency (ticks per second)
+
+# CORS settings
+FRONTEND_URL=https://www.notblox.online # Only accept connections from this URL
+# Comment to accept connections from any URL
+```
+
+#### Game Scripts
+The `GAME_SCRIPT` system allows for modular gameplay modes similar to Garry's Mod's LUA scripts:
+- Scripts are loaded dynamically at runtime
+- Multiple servers can run different game modes
+- No rebuild required when modifying game logic, just change the `GAME_SCRIPT` variable in the `.env` file and restart
+- Located in `backend/src/scripts/`
+
+#### Tickrate Configuration
+
+The `GAME_TICKRATE` setting controls how frequently the server updates game state:
+
+| Tickrate | Use Case | Description | Server CPU Usage |
+|----------|----------|-------------|-----------------|
+| 60 ticks/s | Vehicle/Physics-heavy | Smooth physics interactions, highest precision vehicle control | High |
+| 40 ticks/s | Mixed Gameplay | Good physics interactions, balanced vehicle control | Medium |
+| 20 ticks/s | Standard Gameplay | Good balance of responsiveness and performance | Low |
+
+**Performance Considerations:**
+- Higher tickrates = smoother gameplay but increased:
+  - Server CPU usage
+  - Network bandwidth
+  - Client-server messages
+- Choose based on your game's requirements and server capacity
+- [View Stress Test (20 ticks/s)](https://www.youtube.com/watch?v=7vBifZ2qG1k)
+
+
+## Example : How to run locally
 
 ### Back-end
 
