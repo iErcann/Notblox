@@ -152,22 +152,10 @@ new MapWorld('http://localhost:4001/BasicWorld.glb')
 Make sure to run the front-end with `npm run dev` to serve the local file.
 
 ### Blender: How to Export a Map Correctly
+ 
+**Export with Compression**
 
-**1. Apply All Transforms**
-
-- Press `CTRL-A` and select "All Transforms" to apply all transformations.
-
-![Apply All Transforms](https://github.com/iErcann/Notblox/assets/25112067/226d1af8-87ee-4831-b379-86bc7ed0d536)
-
-**2. Clear Parents**
-
-- Press `A` to select all objects, then `ALT-P` and choose "Clear Parent" to remove all parent relationships.
-
-![Clear Parents](https://github.com/iErcann/Notblox/assets/25112067/c253deea-0d8f-44e2-8020-a90668d2af06)
-
-**3. Export with Compression**
-
-- Choose GLB/GLTF export.
+Choose GLB/GLTF export.
 
 ![Choose GLB/GLTF Export](https://github.com/iErcann/Notblox/assets/25112067/0f199544-32e6-4420-b161-ee0c9561bde7)
 
