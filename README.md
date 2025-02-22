@@ -47,6 +47,7 @@
 - ~Delta Compression~ (needs rework)
 - Interpolation
 - Fast to load (small assets)
+- Run on low end devices : [My Three.JS Performance Guide](PERFORMANCE.md)
 - Shared code between server and client (useful for component replication)
 - Trimesh Collider
 - Cars
