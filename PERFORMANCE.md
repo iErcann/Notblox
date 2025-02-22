@@ -250,6 +250,8 @@ const basicMaterial = new THREE.MeshBasicMaterial()  // No shadows
 
 ##### Example : Only when a specific object moves
 ```typescript
+renderer.shadowMap.autoUpdate = false
+
 // Update shadows only when necessary
 function onObjectMove() {
   renderer.shadowMap.needsUpdate = true
@@ -258,6 +260,8 @@ function onObjectMove() {
 
 ##### Example : Only 1 time per second
 ```typescript
+renderer.shadowMap.autoUpdate = false
+
 // Update shadows only once per second
 function updateShadows() {
   renderer.shadowMap.needsUpdate = true
