@@ -1,4 +1,4 @@
-import { Game } from '@/game/game'
+import { Game } from '@/game/Game'
 import { Entity } from '@shared/entity/Entity'
 import { SerializedEntityType } from '@shared/network/server/serialized'
 import { EntityManager } from '@shared/system/EntityManager'

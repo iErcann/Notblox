@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { Game } from '@/game/game'
+import { Game } from '@/game/Game'
 import GameHud from '@/components/GameHud'
 import LoadingScreen from '@/components/LoadingScreen'
 import { ChatListComponent } from '@shared/component/ChatComponent'

@@ -1,4 +1,4 @@
-import { Camera } from '@/game/camera'
+import { Camera } from '@/game/Camera'
 import { PositionComponent } from '@shared/component/PositionComponent'
 import { Entity } from '@shared/entity/Entity'
 import CameraControls from 'camera-controls'

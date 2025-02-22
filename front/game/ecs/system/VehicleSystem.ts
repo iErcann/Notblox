@@ -7,7 +7,6 @@ import { VehicleComponent } from '@shared/component/VehicleComponent'
 import { ComponentAddedEvent } from '@shared/component/events/ComponentAddedEvent'
 import { EntityManager } from '@shared/system/EntityManager'
 import { EventSystem } from '@shared/system/EventSystem'
-import { Game } from '@/game/game'
 import { LoadManager } from '@/game/LoadManager'
 export class VehicleSystem {
   private entityWheels: Map<number, THREE.Mesh[]> = new Map()

@@ -1,4 +1,4 @@
-import { Renderer } from '@/game/renderer.js'
+import { Renderer } from '@/game/Renderer.js'
 import { Entity } from '@shared/entity/Entity.js'
 import { EventSystem } from '@shared/system/EventSystem.js'
 import { MeshComponent } from '../component/MeshComponent.js'

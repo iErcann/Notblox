@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction } from 'react'
 import { ChatListComponent, ChatMessageComponent } from '@shared/component/ChatComponent'
-import { Game } from './game'
+import { Game } from './Game'
 import { ClientMessageType } from '@shared/network/client/base'
 import { ChatMessage } from '@shared/network/client/chatMessage'
 

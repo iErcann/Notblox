@@ -19,8 +19,8 @@ import {
   InvisibilitySystem,
   VehicleSystem,
 } from './ecs/system'
-import { Hud } from './hud'
-import { Renderer } from './renderer'
+import { Hud } from './Hud'
+import { Renderer } from './Renderer'
 import { EventSystem } from '@shared/system/EventSystem'
 import { MutableRefObject } from 'react'
 
