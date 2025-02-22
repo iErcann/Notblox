@@ -1,5 +1,41 @@
 # Three.js Performance Guide
 
+### Performance Monitoring
+
+To monitor CPU usage while running your Three.js application, you can utilize Chrome DevTools : 
+ ![PerformanceThreeJS](https://github.com/user-attachments/assets/762cbeaa-b438-4702-b89a-49e4feca154c)
+
+
+#### Monitoring Draw Calls
+You can easily check the number of draw calls made by the renderer using the following code:
+```typescript
+// Monitor draw calls
+console.log(renderer.info.render.calls)
+````
+
+#### Using `stats.js` for Performance Metrics
+For a more detailed performance analysis, you can integrate stats.js into your application. This library provides real-time performance statistics, including frame rates and rendering times. Here’s how to set it up:
+
+```typescript
+import Stats from 'three/examples/jsm/libs/stats.module';
+
+// Create a new Stats instance
+const stats = new Stats();
+document.body.appendChild(stats.dom);
+
+// Animation loop to update stats
+function animate() {
+  stats.begin(); // Start measuring
+  // Render your scene here
+  stats.end(); // Stop measuring
+  requestAnimationFrame(animate); // Continue the animation loop
+}
+
+// Start the animation
+animate();
+```
+
+
 ## Lighting & Shadows Performance
 
 Understanding the performance impact of lights and shadows is crucial for optimizing Three.js applications.
@@ -144,6 +180,8 @@ const lights = {
   ambient: new THREE.AmbientLight('#ffffff', 0.3)
 }
 lights.main.castShadow = true
+
+// Not needed since it's by default at false, but just to show usage
 lights.spots.forEach(light => light.castShadow = false)
 
 // Night Scene
@@ -153,6 +191,8 @@ const lights = {
   ambient: new THREE.AmbientLight('#000033', 0.2)
 }
 lights.moon.castShadow = true
+
+// Not needed since it's by default at false, but just to show usage
 lights.points.forEach(light => light.castShadow = false)  // Important!
 ```
 
@@ -186,24 +226,7 @@ mainObject.traverse((child) => {
 })
 ```
 
-### Performance Monitoring
-
-```typescript
-// Monitor draw calls
-console.log(renderer.info.render.calls)
-
-// Using stats.js
-import Stats from 'three/examples/jsm/libs/stats.module'
-const stats = new Stats()
-document.body.appendChild(stats.dom)
-
-function animate() {
-  stats.begin()
-  // render scene
-  stats.end()
-  requestAnimationFrame(animate)
-}
-```
+ 
 
 ### Best Practices
 
