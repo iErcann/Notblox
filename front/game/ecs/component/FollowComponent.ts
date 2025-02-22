@@ -1,4 +1,4 @@
-import { Camera } from '@/game/camera'
+import { Camera } from '@/game/Camera'
 import { Component } from '@shared/component/Component'
 
 export class FollowComponent extends Component {

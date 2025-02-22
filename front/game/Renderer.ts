@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { Sky } from 'three/examples/jsm/objects/Sky.js'
-import { Camera } from './camera'
+import { Camera } from './Camera'
 
 import { PositionComponent } from '@shared/component/PositionComponent'
 import { Entity } from '@shared/entity/Entity'
@@ -16,24 +16,19 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js'
 
-export interface Renderable {
-  mesh: THREE.Mesh
-  addToScene(): any
-}
 export class Renderer extends THREE.WebGLRenderer {
   camera: Camera
   scene: THREE.Scene
   css2DRenderer: CSS2DRenderer
   composer?: EffectComposer
-
+  
   private directionalLight: THREE.DirectionalLight | undefined
   constructor(public gameContainerRef: MutableRefObject<any>) {
     super({ antialias: true, stencil: false, powerPreference: 'high-performance' })
-
+    // Disable auto update of shadow map, expensive operation
     this.camera = new Camera(this)
-
+    
     this.scene = new THREE.Scene()
-    this.scene.fog = new THREE.Fog(0x2f3640, 600, 1500)
     this.shadowMap.enabled = true
     this.shadowMap.type = THREE.PCFSoftShadowMap //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
 
@@ -118,21 +113,29 @@ export class Renderer extends THREE.WebGLRenderer {
     this.scene.add(sky)
   }
   private addDirectionnalLight() {
+    // Check the markdown "PERFORMANCE.md" inside this repo for more information
     // Create a directional light for shadows and highlights
     this.directionalLight = new THREE.DirectionalLight(0xff8a0d, 2)
     this.directionalLight.position.set(100, 100, -2500)
 
     // Configure shadow properties with different values
-    this.directionalLight.shadow.mapSize.height = 4096
-    this.directionalLight.shadow.mapSize.width = 4096
-    const shadowSideLength = 150
-    this.directionalLight.shadow.camera.top = shadowSideLength
-    this.directionalLight.shadow.camera.bottom = -shadowSideLength
-    this.directionalLight.shadow.camera.left = -shadowSideLength
-    this.directionalLight.shadow.camera.right = shadowSideLength
-    this.directionalLight.shadow.camera.near = 0.5
-    this.directionalLight.shadow.camera.far = 1500
-    this.directionalLight.shadow.normalBias = 0.02
+    // Set the resolution of the shadow map texture (higher = sharper shadows but more expensive)
+    this.directionalLight.shadow.mapSize.height = 1024
+    this.directionalLight.shadow.mapSize.width = 1024
+
+    // Define the size of the orthographic camera's view frustum used for shadow mapping
+    const shadowSideLength = 120 // Controls how large an area will receive shadows
+    
+    // Set the boundaries of the orthographic camera's view frustum
+    // These define a square area centered on the light's target where shadows will be cast
+    this.directionalLight.shadow.camera.top = shadowSideLength      // Upper boundary
+    this.directionalLight.shadow.camera.bottom = -shadowSideLength  // Lower boundary  
+    this.directionalLight.shadow.camera.left = -shadowSideLength    // Left boundary
+    this.directionalLight.shadow.camera.right = shadowSideLength    // Right boundary
+    this.directionalLight.shadow.camera.near = 0.01
+    this.directionalLight.shadow.camera.far = 500
+    this.directionalLight.shadow.normalBias = 0.4
+    this.directionalLight.shadow.radius = 1
     // Enable shadow casting
     this.directionalLight.castShadow = true
 
@@ -164,8 +167,10 @@ export class Renderer extends THREE.WebGLRenderer {
         )
       }
     }
+
     this.camera.update(deltaTime, entities, inputMessage)
     this.css2DRenderer.render(this.scene, this.camera)
+
     this.render(this.scene, this.camera)
     if (this.composer) {
       this.composer.render(deltaTime) // Use composer instead of direct rendering

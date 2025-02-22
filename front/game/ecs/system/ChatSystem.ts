@@ -1,4 +1,4 @@
-import { Hud } from '@/game/hud'
+import { Hud } from '@/game/Hud'
 import { ChatListComponent } from '@shared/component/ChatComponent'
 import { Entity } from '@shared/entity/Entity'
 

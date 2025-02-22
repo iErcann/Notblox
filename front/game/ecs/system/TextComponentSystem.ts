@@ -8,7 +8,7 @@ import { TextComponent } from '@shared/component/TextComponent'
 import { MeshComponent } from '../component/MeshComponent'
 import { CurrentPlayerComponent } from '../component/CurrentPlayerComponent'
 import { PositionComponent } from '@shared/component/PositionComponent'
-import { Game } from '@/game/game'
+import { Game } from '@/game/Game'
 import * as THREE from 'three'
 import { ProximityPromptComponent } from '@shared/component/ProximityPromptComponent'
 

@@ -1,7 +1,7 @@
 import { unpack, pack } from 'msgpackr'
 import { ServerMessage, ServerMessageType } from '@shared/network/server/base'
 import { SnapshotMessage } from '@shared/network/server/serialized'
-import { Game } from './game'
+import { Game } from './Game'
 import { ConnectionMessage } from '@shared/network/server/connection'
 import { ClientMessage } from '@shared/network/client/base'
 import { isNativeAccelerationEnabled } from 'msgpackr'

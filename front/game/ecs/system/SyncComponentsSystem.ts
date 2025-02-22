@@ -1,4 +1,4 @@
-import { Game } from '@/game/game'
+import { Game } from '@/game/Game'
 import { Entity } from '@shared/entity/Entity'
 import { Cube } from '../entity/Cube'
 import { Player } from '../entity/Player'

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Joystick } from 'react-joystick-component'
 import { Github, Maximize, Twitter } from 'lucide-react'
 import { ChatListComponent } from '@shared/component/ChatComponent'
-import { Game } from '@/game/game'
+import { Game } from '@/game/Game'
 import Link from 'next/link'
 
 export interface GameHudProps {

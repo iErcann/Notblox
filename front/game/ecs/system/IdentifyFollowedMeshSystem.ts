@@ -1,4 +1,4 @@
-import { Game } from '@/game/game.js'
+import { Game } from '@/game/Game.js'
 import { Entity } from '@shared/entity/Entity.js'
 import { SerializedStateType } from '@shared/network/server/serialized.js'
 import { FollowComponent } from '../component/FollowComponent.js'
