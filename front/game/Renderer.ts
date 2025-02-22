@@ -134,7 +134,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.directionalLight.shadow.camera.right = shadowSideLength    // Right boundary
     this.directionalLight.shadow.camera.near = 0.01
     this.directionalLight.shadow.camera.far = 500
-    this.directionalLight.shadow.normalBias = 0.002
+    this.directionalLight.shadow.normalBias = 0.4
     this.directionalLight.shadow.radius = 1
     // Enable shadow casting
     this.directionalLight.castShadow = true
@@ -171,7 +171,6 @@ export class Renderer extends THREE.WebGLRenderer {
     this.camera.update(deltaTime, entities, inputMessage)
     this.css2DRenderer.render(this.scene, this.camera)
 
-    console.log("calls", this.info.render.calls)
     this.render(this.scene, this.camera)
     if (this.composer) {
       this.composer.render(deltaTime) // Use composer instead of direct rendering
