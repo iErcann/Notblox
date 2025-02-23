@@ -68,20 +68,52 @@ Inspiration : https://github.com/swift502/Sketchbook
 
 [![Demo](GameScreen3.webp)](https://www.youtube.com/watch?v=Uu3VCuyD9EA 'See on youtube')
 
+## How to run locally
 
+### Back-end
+
+```bash
+  cd back
+  npm install
+  npm run dev
+```
+
+### Front-end
+
+```bash
+  cd front
+  npm install
+  npm run dev
+```
+
+Go on your browser to http://localhost:4000/play/test 
 
 ## Backend Configuration (Game Server)
 
-The backend can be configured through environment variables in `./backend/.env`:
+The backend can be configured through environment variables in `./back/.env`:
 
+### Local dev mode 
 ```bash
-# Game script selection
-GAME_SCRIPT=defaultScript.js    # Specify which game mode script to load
-GAME_TICKRATE=20               # Server update frequency (ticks per second)
+NODE_ENV=development 
+GAME_TICKRATE=20 # Game tickrate in Hz (20Hz = 50ms)
+GAME_SCRIPT=defaultScript.js # Script to run 
 
-# CORS settings
-FRONTEND_URL=https://www.notblox.online # Only accept connections from this URL
-# Comment to accept connections from any URL
+# Commented in dev mode : 
+# FRONTEND_URL=https://www.notblox.online # Only accept connections from this URL
+```
+
+### In production
+```bash
+NODE_ENV=production 
+GAME_TICKRATE=20 # Game tickrate in Hz (20Hz = 50ms)
+GAME_SCRIPT=defaultScript.js # Script to run 
+
+# To prevent hijacking
+FRONTEND_URL=https://www.notblox.online 
+
+# To get WSS, set your path:
+SSL_KEY_FILE=/etc/letsencrypt/live/npm-3/privkey.pem
+SSL_CERT_FILE=/etc/letsencrypt/live/npm-3/cert.pem
 ```
 
 #### Game Scripts
@@ -89,7 +121,7 @@ The `GAME_SCRIPT` system allows for modular gameplay modes similar to Garry's Mo
 - Scripts are loaded dynamically at runtime
 - Multiple servers can run different game modes
 - No rebuild required when modifying game logic, just change the `GAME_SCRIPT` variable in the `.env` file and restart
-- Located in `backend/src/scripts/`
+- Located in `back/src/scripts/`
 
 #### Tickrate Configuration
 
@@ -109,50 +141,18 @@ The `GAME_TICKRATE` setting controls how frequently the server updates game stat
 - Choose based on your game's requirements and server capacity
 - [View Stress Test (20 ticks/s)](https://www.youtube.com/watch?v=7vBifZ2qG1k)
 
+## Front end Configuration
 
-## Example : How to run locally
-
-### Back-end
-
-Comment the `NODE_ENV=production` & `FRONTEND_URL` line in the `back/.env` file
-
-It should look like this :
+To configure the front end, set the `NEXT_PUBLIC_SERVER_URL` environment variable in your `.env.local` file:
 
 ```bash
-# NODE_ENV=production
-# Comment to run in development mode
+# Development
+NEXT_PUBLIC_SERVER_URL=ws://localhost
 
-# FRONTEND_URL=https://www.notblox.online
-# Only accept websocket connections from this URL
-# Comment to accept connections from any URL
+# Production (SSL Required)
+# NEXT_PUBLIC_SERVER_URL=wss://back.notblox.online
 ```
-
-```bash
-  cd back
-  npm install
-  npm run dev
-```
-
-### Front-end
-
-Comment the `NEXT_PUBLIC_SERVER_URL` variable in `front/.env.local`, it will default to localhost
-
-It should look like this :
-
-```bash
-# NEXT_PUBLIC_SERVER_URL=https://www.notblox.online
-# Only accept websocket connections from this URL
-# Comment to accept connections from any URL
-```
-
-```bash
-  cd front
-  npm install
-  npm run dev
-```
-
-Go on your browser to http://localhost:4000/play/test
-
+ 
 ## How to change the map
 
 Maps are **GLB/GLTF files**. The back-end approximates a **Trimesh Collider** based on the map, which is rendered on the client.
