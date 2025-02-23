@@ -54,11 +54,24 @@ export class WebsocketSystem {
 
   private initializeServer() {
     const isProduction = process.env.NODE_ENV === 'production'
-    const acceptedOrigin: string | undefined = process.env.FRONTEND_URL
+    const acceptedOrigin: string | undefined  = process.env.FRONTEND_URL
+    const sslKeyFile: string = process.env.SSL_KEY_FILE || '/etc/letsencrypt/live/npm-3/privkey.pem'
+    const sslCertFile: string = process.env.SSL_CERT_FILE || '/etc/letsencrypt/live/npm-3/cert.pem'
+
+    if (isProduction) {
+      console.log('NODE_ENV : Running in production mode')
+    } else {
+      console.log('NODE_ENV : Running in development mode')
+    }
+    
+    if (acceptedOrigin) {
+      console.log('FRONTEND_URL : Only accepting connections from origin:', acceptedOrigin)
+    } 
+    
     const app = isProduction
       ? SSLApp({
-          key_file_name: '/etc/letsencrypt/live/npm-3/privkey.pem',
-          cert_file_name: '/etc/letsencrypt/live/npm-3/cert.pem',
+          key_file_name: sslKeyFile,
+          cert_file_name: sslCertFile,
         })
       : App()
 
@@ -76,7 +89,6 @@ export class WebsocketSystem {
 
     app.listen(this.port, this.listenHandler.bind(this))
   }
-
   private upgradeHandler(
     isProduction: boolean,
     acceptedOrigin: string | undefined,
@@ -87,7 +99,7 @@ export class WebsocketSystem {
     // Only accept connections from the frontend
     const origin = req.getHeader('origin')
     if (isProduction && acceptedOrigin && origin !== acceptedOrigin) {
-      res.writeStatus('403 Forbidden').end()
+    res.writeStatus('403 Forbidden').end()
       return
     }
 

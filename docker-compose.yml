@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   nginx_proxy_manager:
     image: 'jc21/nginx-proxy-manager:latest'
@@ -46,6 +45,8 @@ services:
     environment:
       - GAME_SCRIPT=defaultScript.js
       - GAME_TICKRATE=40 # Higher tickrate for vehicles
+      - NODE_ENV=production
+      - FRONTEND_URL=https://www.notblox.online
     ports:
       - '8001:8001'
     volumes:
@@ -64,6 +65,8 @@ services:
     environment:
       - GAME_SCRIPT=parkourScript.js
       - GAME_TICKRATE=20 # Default tickrate
+      - NODE_ENV=production
+      - FRONTEND_URL=https://www.notblox.online
     ports:
       - '8002:8001'
     volumes:
@@ -82,6 +85,8 @@ services:
     environment:
       - GAME_SCRIPT=footballScript.js
       - GAME_TICKRATE=40
+      - NODE_ENV=production
+      - FRONTEND_URL=https://www.notblox.online
     ports:
       - '8003:8001'
     volumes:
