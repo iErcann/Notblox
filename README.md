@@ -70,6 +70,11 @@ Inspiration : https://github.com/swift502/Sketchbook
 
 ## How to run locally
 
+### Clone the repo
+```bash
+git clone git@github.com:iErcann/Notblox.git
+```
+
 ### Back-end
 
 ```bash
