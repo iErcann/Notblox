@@ -84,7 +84,7 @@ services:
       - com.centurylinklabs.watchtower.enable=true
     environment:
       - GAME_SCRIPT=footballScript.js
-      - GAME_TICKRATE=40
+      - GAME_TICKRATE=20
       - NODE_ENV=production
       - FRONTEND_URL=https://www.notblox.online
     ports:
