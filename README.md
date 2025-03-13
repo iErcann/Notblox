@@ -145,7 +145,7 @@ The `GAME_TICKRATE` setting controls how frequently the server updates game stat
   - Network bandwidth
   - Client-server messages
 - Choose based on your game's requirements and server capacity
-- [View Stress Test (20 ticks/s)](https://www.youtube.com/watch?v=7vBifZ2qG1k)
+- [View Stress Test (20 ticks/s)](https://www.youtube.com/watch?v=KDODRyYXBcc)
 
 ## Front end Configuration
 
