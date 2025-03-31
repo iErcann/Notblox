@@ -54,19 +54,19 @@ export class DynamicRigidBodySystem {
     physicsBodyComponent.body = rigidBody
     const physicsPropertiesComponent = entity.getComponent(PhysicsPropertiesComponent)
     if (physicsPropertiesComponent) {
-      if (physicsPropertiesComponent.data.mass) {
+      if (physicsPropertiesComponent.data.mass !== undefined) {
         physicsBodyComponent.body.setAdditionalMass(physicsPropertiesComponent.data.mass, true)
       }
-      if (physicsPropertiesComponent.data.angularDamping) {
+      if (physicsPropertiesComponent.data.angularDamping !== undefined) {
         physicsBodyComponent.body.setAngularDamping(physicsPropertiesComponent.data.angularDamping)
       }
       if (physicsPropertiesComponent.data.enableCcd != undefined) {
         physicsBodyComponent.body.enableCcd(physicsPropertiesComponent.data.enableCcd)
       }
-      if (physicsPropertiesComponent.data.linearDamping) {
+      if (physicsPropertiesComponent.data.linearDamping !== undefined) {
         physicsBodyComponent.body.setLinearDamping(physicsPropertiesComponent.data.linearDamping)
       }
-      if (physicsPropertiesComponent.data.gravityScale) {
+      if (physicsPropertiesComponent.data.gravityScale !== undefined) {
         physicsBodyComponent.body.setGravityScale(
           physicsPropertiesComponent.data.gravityScale,
           true

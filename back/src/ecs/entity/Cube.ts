@@ -15,7 +15,10 @@ import {
   PhysicsPropertiesComponent,
   PhysicsPropertiesComponentData,
 } from '../component/physics/PhysicsPropertiesComponent.js'
-import { ColliderPropertiesComponentData } from '../component/physics/ColliderPropertiesComponent.js'
+import {
+  ColliderPropertiesComponent,
+  ColliderPropertiesComponentData,
+} from '../component/physics/ColliderPropertiesComponent.js'
 
 export interface CubeParams {
   position: {
@@ -53,7 +56,7 @@ export class Cube {
   entity: Entity
 
   constructor(params: CubeParams) {
-    const { position, size, color, meshUrl, physicsProperties } = params
+    const { position, size, color, meshUrl, physicsProperties, colliderProperties } = params
 
     this.entity = EntityManager.createEntity(SerializedEntityType.CUBE)
 
@@ -85,6 +88,9 @@ export class Cube {
     const colorComponent = new ColorComponent(this.entity.id, color ?? 'default')
     this.entity.addComponent(colorComponent)
 
+    this.entity.addComponent(
+      new ColliderPropertiesComponent(this.entity.id, colliderProperties ?? {})
+    )
     this.entity.addComponent(new BoxColliderComponent(this.entity.id))
     this.entity.addComponent(
       new PhysicsPropertiesComponent(this.entity.id, physicsProperties ?? {})

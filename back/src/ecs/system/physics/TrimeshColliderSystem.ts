@@ -84,13 +84,13 @@ export class TrimeshColliderSystem {
 
           const colliderPropertiesComponent = entity.getComponent(ColliderPropertiesComponent)
           if (colliderPropertiesComponent) {
-            if (colliderPropertiesComponent.data.friction) {
+            if (colliderPropertiesComponent.data.friction !== undefined) {
               collider.setFriction(colliderPropertiesComponent.data.friction)
             }
-            if (colliderPropertiesComponent.data.restitution) {
+            if (colliderPropertiesComponent.data.restitution !== undefined) {
               collider.setRestitution(colliderPropertiesComponent.data.restitution)
             }
-            if (colliderPropertiesComponent.data.isSensor) {
+            if (colliderPropertiesComponent.data.isSensor !== undefined) {
               collider.setSensor(colliderPropertiesComponent.data.isSensor)
             }
           }

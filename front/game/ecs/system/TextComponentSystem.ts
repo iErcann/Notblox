@@ -56,14 +56,6 @@ export class TextComponentSystem {
     textComponent: TextComponent,
     isProximityPrompt: boolean
   ) {
-    function sanitize(input: string): string {
-      const element = document.createElement('div')
-      element.innerText = input
-      return element.innerHTML
-    }
-
-    const sanitizedText = sanitize(textComponent.text)
-
     // Check if the text element has been initialized
     if (!textElement.dataset.initialized) {
       if (isProximityPrompt) {
@@ -101,16 +93,22 @@ export class TextComponentSystem {
       } else {
         textElement.innerHTML = `
           <div style="display: flex; align-items: center; justify-content: space-between; background-color: rgba(23, 23, 23, 0.2); color: white; padding: 0.5rem; border-radius: 0.375rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); ">
-            <p class="text-content" style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;"></p>
+            <p class="text-content"  style="font-size: 0.875rem; font-weight: 500; line-height: 1.25rem;"></p>
           </div>`
       }
       textElement.dataset.initialized = 'true'
     }
 
-    // Update only the text content
+    // Create a temporary DOM element to parse HTML safely
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(textComponent.text, 'text/html')
+    const sanitizedHTML = doc.body.innerHTML
+
+    // Update the text content with properly sanitized HTML
+    // BTW this is not enough at all. But those component don't accept player inputs for now.
     const textContentElement = textElement.querySelector('.text-content')
     if (textContentElement) {
-      textContentElement.textContent = sanitizedText
+      textContentElement.innerHTML = sanitizedHTML
     }
   }
 

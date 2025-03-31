@@ -53,13 +53,13 @@ export class SphereColliderSystem {
     const colliderProperties = entity.getComponent(ColliderPropertiesComponent)
 
     if (colliderProperties) {
-      if (colliderProperties.data.isSensor) {
-        colliderDesc.setSensor(true)
+      if (colliderProperties.data.isSensor !== undefined) {
+        colliderDesc.setSensor(colliderProperties.data.isSensor)
       }
-      if (colliderProperties.data.friction) {
+      if (colliderProperties.data.friction !== undefined) {
         colliderDesc.setFriction(colliderProperties.data.friction)
       }
-      if (colliderProperties.data.restitution) {
+      if (colliderProperties.data.restitution !== undefined) {
         colliderDesc.setRestitution(colliderProperties.data.restitution)
       }
     }
