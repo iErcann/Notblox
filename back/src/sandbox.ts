@@ -42,6 +42,9 @@ import { TextComponent } from '../../shared/component/TextComponent.js'
 import { Car } from './ecs/entity/Car.js'
 import { EntityDestroyedEvent } from '../../shared/component/events/EntityDestroyedEvent.js'
 import { Mesh } from './ecs/entity/Mesh.js'
+import { ComponentRemovedEvent } from '../../shared/component/events/ComponentRemovedEvent.js'
+import { ComponentAddedEvent } from '../../shared/component/events/ComponentAddedEvent.js'
+import { InvisibleComponent } from '../../shared/component/InvisibleComponent.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
@@ -72,6 +75,7 @@ async function loadGameLogic() {
     ProximityPromptComponent,
     NetworkDataComponent,
     TextComponent,
+    InvisibleComponent,
 
     // Physics Components
     BoxColliderComponent,
@@ -94,6 +98,8 @@ async function loadGameLogic() {
     SizeEvent,
     SingleSizeEvent,
     EntityDestroyedEvent,
+    ComponentRemovedEvent,
+    ComponentAddedEvent,
 
     // Entities
     Cube,

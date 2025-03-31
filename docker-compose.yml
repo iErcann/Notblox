@@ -97,3 +97,23 @@ services:
       options:
         max-size: '10m'
         max-file: '3'
+
+  game_pet_simulator:
+    image: ghcr.io/iercann/notblox-game-server:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    environment:
+      - GAME_SCRIPT=petSimulatorScript.js
+      - GAME_TICKRATE=20
+      - NODE_ENV=production
+      - FRONTEND_URL=https://www.notblox.online
+    ports:
+      - '8004:8001'
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+    restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
