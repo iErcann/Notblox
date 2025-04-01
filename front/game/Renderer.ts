@@ -91,7 +91,7 @@ export class Renderer extends THREE.WebGLRenderer {
   private addSky() {
     const sun = new THREE.Vector3()
 
-    let sky = new Sky()
+    const sky = new Sky()
 
     const uniforms = sky.material.uniforms
     uniforms['turbidity'].value = 12
@@ -116,15 +116,15 @@ export class Renderer extends THREE.WebGLRenderer {
     // Check the markdown "PERFORMANCE.md" inside this repo for more information
     // Create a directional light for shadows and highlights
     this.directionalLight = new THREE.DirectionalLight(0xff8a0d, 2)
-    this.directionalLight.position.set(100, 100, -2500)
+    this.directionalLight.position.set(100, 100, -250)
 
     // Configure shadow properties with different values
     // Set the resolution of the shadow map texture (higher = sharper shadows but more expensive)
-    this.directionalLight.shadow.mapSize.height = 1024
-    this.directionalLight.shadow.mapSize.width = 1024
+    this.directionalLight.shadow.mapSize.height = 2048
+    this.directionalLight.shadow.mapSize.width = 2048
 
     // Define the size of the orthographic camera's view frustum used for shadow mapping
-    const shadowSideLength = 120 // Controls how large an area will receive shadows
+    const shadowSideLength = 150 // Controls how large an area will receive shadows
     
     // Set the boundaries of the orthographic camera's view frustum
     // These define a square area centered on the light's target where shadows will be cast
@@ -134,8 +134,12 @@ export class Renderer extends THREE.WebGLRenderer {
     this.directionalLight.shadow.camera.right = shadowSideLength    // Right boundary
     this.directionalLight.shadow.camera.near = 0.01
     this.directionalLight.shadow.camera.far = 500
-    this.directionalLight.shadow.normalBias = 0.4
-    this.directionalLight.shadow.radius = 1
+
+    // Improve shadow quality
+    this.directionalLight.shadow.bias = -0.0001
+    this.directionalLight.shadow.normalBias = 0.02
+    this.directionalLight.shadow.radius = 1.5
+
     // Enable shadow casting
     this.directionalLight.castShadow = true
 

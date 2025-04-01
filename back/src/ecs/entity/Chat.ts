@@ -1,10 +1,10 @@
-import { ChatListComponent } from '../../../../shared/component/ChatComponent.js'
+import { MessageListComponent } from '../../../../shared/component/MessageComponent.js'
 import { Entity } from '../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../shared/system/EntityManager.js'
 import { EventSystem } from '../../../../shared/system/EventSystem.js'
 import { SerializedEntityType } from '../../../../shared/network/server/serialized.js'
 import { NetworkDataComponent } from '../../../../shared/network/NetworkDataComponent.js'
-import { ChatMessageEvent } from '../component/events/ChatMessageEvent.js'
+import { MessageEvent } from '../component/events/MessageEvent.js'
 import { ChatComponent } from '../component/tag/TagChatComponent.js'
 
 export class Chat {
@@ -16,14 +16,14 @@ export class Chat {
     this.entity.addComponent(new ChatComponent(this.entity.id))
 
     EventSystem.addEvent(
-      new ChatMessageEvent(this.entity.id, '🖥️ [SERVER]', `Started ${new Date().toLocaleString()}`)
+      new MessageEvent(this.entity.id, '🖥️ [SERVER]', `Started ${new Date().toLocaleString()}`)
     )
 
     EventSystem.addEvent(
-      new ChatMessageEvent(this.entity.id, '🖥️ [SERVER]', 'Welcome to the chat !')
+      new MessageEvent(this.entity.id, '🖥️ [SERVER]', 'Welcome to the chat !')
     )
 
-    const chatListComponent = new ChatListComponent(this.entity.id, [])
+    const chatListComponent = new MessageListComponent(this.entity.id, [])
     this.entity.addComponent(chatListComponent)
 
     const networkDataComponent = new NetworkDataComponent(this.entity.id, this.entity.type, [

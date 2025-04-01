@@ -2,7 +2,7 @@ import { EntityDestroyedEvent } from '../../../../../shared/component/events/Ent
 import { Entity } from '../../../../../shared/entity/Entity.js'
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
-import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
+import { MessageEvent } from '../../component/events/MessageEvent.js'
 import { PlayerComponent } from '../../../../../shared/component/PlayerComponent.js'
 
 export class DestroyEventSystem {
@@ -18,7 +18,7 @@ export class DestroyEventSystem {
 
       if (entity.getComponent(PlayerComponent)) {
         EventSystem.addEvent(
-          new ChatMessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
+          new MessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
         )
       }
 

@@ -22,7 +22,7 @@ import {
 import { ConnectionMessage, ServerMessageType } from '../../../../../shared/network/server/index.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 
-import { ChatMessageEvent } from '../../component/events/ChatMessageEvent.js'
+import { MessageEvent } from '../../component/events/MessageEvent.js'
 import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
 import { NetworkSystem } from './NetworkSystem.js'
@@ -166,7 +166,7 @@ export class WebsocketSystem {
     ws.send(NetworkSystem.compress(connectionMessage), true)
 
     EventSystem.addEvent(
-      new ChatMessageEvent(
+      new MessageEvent(
         player.entity.id,
         '🖥️ [SERVER]',
         `Player ${player.entity.id} joined at ${new Date().toLocaleString()}`
@@ -226,7 +226,7 @@ export class WebsocketSystem {
       return
     }
     EventSystem.addEvent(
-      new ChatMessageEvent(player.entity.id, `Player ${player.entity.id}`, content)
+      new MessageEvent(player.entity.id, `Player ${player.entity.id}`, content)
     )
   }
   private handleProximityPromptInteractMessage(ws: any, message: ProximityPromptInteractMessage) {

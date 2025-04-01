@@ -8,11 +8,11 @@ import { Component, ComponentConstructor } from '../Component.js'
  * // Create a new event list component
  * const eventListComponent = new EventListComponent(1)
  * // Add an event to the list
- * eventListComponent.addEvent(new ChatMessageEvent(1, 'Player', 'Hello, world!'))
+ * eventListComponent.addEvent(new MessageEvent(1, 'Player', 'Hello, world!'))
  * // Get all events in the list
  * const allEvents = eventListComponent.getAllEvents()
  * // Get an event of a certain type
- * const chatMessages = eventListComponent.getEvents(ChatMessageEvent)
+ * const messages = eventListComponent.getEvents(MessageEvent)
  */
 export class EventListComponent extends Component {
   events: Map<ComponentConstructor, Component[]> = new Map()

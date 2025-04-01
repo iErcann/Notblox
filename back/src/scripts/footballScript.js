@@ -46,18 +46,17 @@ const chatEntity = EntityManager.getFirstEntityWithComponent(
   EntityManager.getInstance().getAllEntities(),
   ChatComponent
 )
-
-const sendChatMessage = (author, message) => {
-  EventSystem.addEvent(new ChatMessageEvent(chatEntity.id, author, message))
+function sendGlobalChatMessage(author, message) {
+  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_CHAT))
 }
 
 const updateScore = () => {
-  sendChatMessage('⚽', `Score: 🔴 Red ${redScore} - ${blueScore} Blue 🔵`)
+  sendGlobalChatMessage('⚽', `Score: 🔴 Red ${redScore} - ${blueScore} Blue 🔵`)
   scoreText.updateText(`🔴 ${redScore} - ${blueScore} 🔵`)
 }
 
 // Initialize chat and score
-sendChatMessage('⚽', 'Football NotBlox.Online')
+sendGlobalChatMessage('⚽', 'Football NotBlox.Online')
 updateScore()
 
 // Team spawn teleporters and coloring
@@ -93,7 +92,7 @@ function handleGoal(scoringTeam) {
   if (scoringTeam === 'blue') blueScore++
   else redScore++
 
-  sendChatMessage('⚽', `${scoringTeam === 'blue' ? '🔵 Blue' : '🔴 Red'} team scores! 🎉`)
+  sendGlobalChatMessage('⚽', `${scoringTeam === 'blue' ? '🔵 Blue' : '🔴 Red'} team scores! 🎉`)
   updateScore()
 
   const body = ball.entity.getComponent(DynamicRigidBodyComponent).body
@@ -135,7 +134,7 @@ ScriptableSystem.update = (dt, entities) => {
 
   if (!hasPlayers) {
     // No players are present. Reset the game
-    sendChatMessage('⚽', 'No players, resetting game...')
+    sendGlobalChatMessage('⚽', 'No players, resetting game...')
 
     const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
     ballBody.setTranslation(
