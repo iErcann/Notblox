@@ -12,14 +12,14 @@ const sphereParams = {
   },
   meshUrl: 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Ball.glb',
   physicsProperties: {
-    mass: 1,
+    mass: 1.5,
     // Enable continuous collision detection to prevent the ball from going through the walls
     enableCcd: true,
     angularDamping: 0.3,
     linearDamping: 0.2,
   },
   colliderProperties: {
-    friction: 0.1,
+    friction: 0.2,
     restitution: 0.8,
   },
 }
@@ -46,8 +46,22 @@ const chatEntity = EntityManager.getFirstEntityWithComponent(
   EntityManager.getInstance().getAllEntities(),
   ChatComponent
 )
+
+// Message sending functions
 function sendGlobalChatMessage(author, message) {
   EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_CHAT))
+}
+
+function sendGlobalNotification(author, message) {
+  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_NOTIFICATION))
+}
+
+function sendTargetedNotification(author, message, targetPlayerIds) {
+  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.TARGETED_NOTIFICATION, targetPlayerIds))
+}
+
+function sendTargetedChat(author, message, targetPlayerIds) {
+  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.TARGETED_CHAT, targetPlayerIds))
 }
 
 const updateScore = () => {
@@ -77,6 +91,10 @@ function createTeamTrigger(x, y, z, color, spawnX) {
         collidedWithEntity
           .getComponent(DynamicRigidBodyComponent)
           .body.setTranslation(new Rapier.Vector3(spawnX, 5, -350), true)
+
+        // Broadcast join message
+        const teamEmoji = color === '#f0513c' ? '🔴' : '🔵'
+        sendGlobalNotification(`${teamEmoji} New Player`, `${collidedWithEntity.getComponent(TextComponent).text} joined the team ${teamEmoji}`)
       }
     },
     () => {},
@@ -92,7 +110,9 @@ function handleGoal(scoringTeam) {
   if (scoringTeam === 'blue') blueScore++
   else redScore++
 
+  // Send both chat message and global notification
   sendGlobalChatMessage('⚽', `${scoringTeam === 'blue' ? '🔵 Blue' : '🔴 Red'} team scores! 🎉`)
+  sendGlobalNotification('⚽ GOAL!', `${scoringTeam === 'blue' ? '🔵 Blue' : '🔴 Red'} team scores!`)
   updateScore()
 
   const body = ball.entity.getComponent(DynamicRigidBodyComponent).body
@@ -135,6 +155,7 @@ ScriptableSystem.update = (dt, entities) => {
   if (!hasPlayers) {
     // No players are present. Reset the game
     sendGlobalChatMessage('⚽', 'No players, resetting game...')
+    sendGlobalNotification('⚽ Game Reset', 'Waiting for players to join...')
 
     const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
     ballBody.setTranslation(
@@ -163,8 +184,11 @@ const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
     if (ballRigidbody && playerRotationComponent && playerEntity.getComponent(InputComponent)) {
       // Convert rotation to direction vector
       const direction = playerRotationComponent.getForwardDirection()
+      
+      // Send targeted notification to the player who kicked the ball
+      sendTargetedNotification('⚽', 'You kicked the ball!', [playerEntity.id])
+      
       // Calculate player looking direction
-      // sendChatMessage('⚽', `Player shot the ball !`)
       const playerLookingDirectionVector = new Rapier.Vector3(
         direction.x * 750,
         0,
