@@ -261,7 +261,7 @@ ScriptableSystem.update = (dt, entities) => {
       const command = args[0].toLowerCase()
 
       if (command === '/help') {
-        sendGlobalChatMessage('🤖', 'Available commands: /help, /coins, /give <player name> <amount>')
+        sendGlobalChatMessage('🤖', 'Available commands: /help, /coins, /give <player name> <amount>, /stats')
       } else if (command === '/coins') {
         const playerCoins = getPlayerCoins(event.entityId)
         sendGlobalChatMessage('💰', `${senderName} have ${playerCoins} coins`)
@@ -321,7 +321,7 @@ ScriptableSystem.update = (dt, entities) => {
    * Periodic help message
    */
   if (helpMessageTimer >= HELP_MESSAGE_INTERVAL) {
-    sendGlobalChatMessage('🤖', 'Available commands: /help, /coins, /give <player name> <amount>')
+    sendGlobalChatMessage('🤖', 'Available commands: /help, /coins, /give <player name> <amount>, /stats')
     helpMessageTimer = 0
   } else {
     helpMessageTimer += dt / 1000

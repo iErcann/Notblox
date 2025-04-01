@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Game } from '@/game/Game'
 import GameHud from '@/components/GameHud'
 import LoadingScreen from '@/components/LoadingScreen'
-import { MessageListComponent } from '@shared/component/ChatComponent'
+import { MessageListComponent } from '@shared/component/MessageComponent'
 import { GameInfo } from '@/types'
 
 export default function GamePlayer(gameInfo: GameInfo) {

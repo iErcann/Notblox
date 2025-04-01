@@ -32,15 +32,14 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
     
     // Process new messages for notifications
     chatList.list.forEach((messageComponent, index) => {
-      const messageType = messageComponent.message.type
-      const messageId = `${messageComponent.message.author}-${messageComponent.message.content}-${index}`
-      
+      const messageType = messageComponent.messageType
+      const messageId = messageComponent.timestamp.toString()      
       
       // Skip if we've already processed this message
       if (processedMessagesRef.current.has(messageId)) {
         return
       }
-      console.log( messageId)
+
       if (!messageType) {
         return
       }
@@ -49,7 +48,8 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
       // Check if the message is a notification type
       if (messageType === SerializedMessageType.GLOBAL_NOTIFICATION || 
           messageType === SerializedMessageType.TARGETED_NOTIFICATION && gameInstance?.currentPlayerEntityId && 
-          messageComponent.message.targetPlayerIds?.includes(gameInstance?.currentPlayerEntityId)) {
+          messageComponent.targetPlayerIds?.includes(gameInstance?.currentPlayerEntityId)) {
+
 
         // Mark as processed
         processedMessagesRef.current.add(messageId)
@@ -57,11 +57,11 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
         // Add new notification
         const newNotification = {
           id: Date.now() + index, // Unique ID
-          content: messageComponent.message.content,
-          author: messageComponent.message.author,
+          content: messageComponent.content,
+          author: messageComponent.author,
           timestamp: Date.now()
         }
-        
+
         // Only show one at a time for now
         setNotifications([newNotification])
         
@@ -87,8 +87,8 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
     if (!chatList) return []
     
     return chatList.list.filter(message => {
-      const messageType = message.message.type 
-      const targetPlayerIds = message.message.targetPlayerIds || []
+      const messageType = message.messageType 
+      const targetPlayerIds = message.targetPlayerIds || []
       // Show global chat messages
       if (messageType === SerializedMessageType.GLOBAL_CHAT) return true
       
@@ -172,18 +172,18 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
             return (
               <div key={index} ref={index === getFilteredMessages().length - 1 ? messagesEndRef : null}>
                 <div className={`rounded-lg p-2 ${
-                  messageComponent.message.type === SerializedMessageType.TARGETED_CHAT 
+                  messageComponent.messageType === SerializedMessageType.TARGETED_CHAT 
                     ? 'bg-gray-900 bg-opacity-40 p-2' 
                     : 'bg-gray-700 bg-opacity-30'
                 }`}>
                   <p className="text-sm">
                     <span className={`font-medium ${
-                      messageComponent.message.type === SerializedMessageType.TARGETED_CHAT 
+                      messageComponent.messageType === SerializedMessageType.TARGETED_CHAT 
                         ? 'text-gray-1000' 
                         : ''
                     }`}>
-                      {messageComponent.message.author}
-                    </span>: {messageComponent.message.content}
+                      {messageComponent.author}
+                    </span>: {messageComponent.content}
                   </p>
                 </div>
               </div>
