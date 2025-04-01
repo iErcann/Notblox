@@ -12,7 +12,7 @@ export enum SerializedComponentType {
   STATE = 7,
 
   CHAT_LIST = 8,
-  CHAT_MESSAGE = 9,
+  MESSAGE = 9,
 
   SERVER_MESH = 10,
   PROXIMITY_PROMPT = 11,
@@ -61,4 +61,18 @@ export interface SerializedEntity {
 
 export interface SnapshotMessage extends ServerMessage {
   e: SerializedEntity[]
+}
+
+
+/**
+ * Message types for different kinds of chat messages
+ */
+export enum SerializedMessageType {
+  // Chat messages
+  GLOBAL_CHAT = 1,        // Regular chat message
+  TARGETED_CHAT = 2, // Message to specific players
+  
+  // Notifications
+  GLOBAL_NOTIFICATION = 3,     // Global notification at top of screen
+  TARGETED_NOTIFICATION = 4  // Message to specific players
 }

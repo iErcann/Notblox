@@ -3,12 +3,12 @@ import { useEffect, useRef, useState } from 'react'
 import { Game } from '@/game/Game'
 import GameHud from '@/components/GameHud'
 import LoadingScreen from '@/components/LoadingScreen'
-import { ChatListComponent } from '@shared/component/ChatComponent'
+import { MessageListComponent } from '@shared/component/ChatComponent'
 import { GameInfo } from '@/types'
 
 export default function GamePlayer(gameInfo: GameInfo) {
   const [isLoading, setIsLoading] = useState(true)
-  const [chat, updateChat] = useState<ChatListComponent>()
+  const [chat, updateChat] = useState<MessageListComponent>()
   const [gameInstance, setGameInstance] = useState<Game | null>(null) // Initialize as null
   const refContainer = useRef(null)
 

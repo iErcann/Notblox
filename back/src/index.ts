@@ -8,7 +8,7 @@ import { Chat } from './ecs/entity/Chat.js'
 import { AnimationSystem } from './ecs/system/AnimationSystem.js'
 import { MovementSystem } from './ecs/system/MovementSystem.js'
 import { RandomizeSystem } from './ecs/system/RandomizeSystem.js'
-import { ChatEventSystem } from './ecs/system/events/ChatEventSystem.js'
+import { MessageEventSystem } from './ecs/system/events/MessageEventSystem.js'
 import { ColorEventSystem } from './ecs/system/events/ColorEventSystem.js'
 import { DestroyEventSystem } from './ecs/system/events/DestroyEventSystem.js'
 import { SingleSizeEventSystem } from './ecs/system/events/SingleSizeEventSystem.js'
@@ -58,7 +58,7 @@ const singleSizeEventSystem = new SingleSizeEventSystem()
 const sizeEventSystem = new SizeEventSystem()
 const syncPositionSystem = new SyncPositionSystem()
 const syncRotationSystem = new SyncRotationSystem()
-const chatSystem = new ChatEventSystem()
+const messageEventSystem = new MessageEventSystem()
 const destroyEventSystem = new DestroyEventSystem()
 const proximityPromptSystem = new ProximityPromptSystem()
 
@@ -122,7 +122,7 @@ async function updateGameState(dt: number) {
   syncRotationSystem.update(entities)
   syncPositionSystem.update(entities)
 
-  chatSystem.update(entities)
+  messageEventSystem.update(entities)
   lockedRotationSystem.update(entities)
   networkSystem.update(entities)
   sleepCheckSystem.update(entities)

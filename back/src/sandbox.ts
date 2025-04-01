@@ -13,7 +13,7 @@ import { LockedRotationComponent } from './ecs/component/LockedRotationComponent
 import { RandomizeComponent } from './ecs/component/RandomizeComponent.js'
 import { SpawnPositionComponent } from './ecs/component/SpawnPositionComponent.js'
 import { ZombieComponent } from './ecs/component/ZombieComponent.js'
-import { ChatMessageEvent } from './ecs/component/events/ChatMessageEvent.js'
+import { MessageEvent } from './ecs/component/events/MessageEvent.js'
 import { OnCollisionEnterEvent } from './ecs/component/events/OnCollisionEnterEvent.js'
 import { OnCollisionExitEvent } from './ecs/component/events/OnCollisionExitEvent.js'
 import { BoxColliderComponent } from './ecs/component/physics/BoxColliderComponent.js'
@@ -23,7 +23,6 @@ import { KinematicRigidBodyComponent } from './ecs/component/physics/KinematicRi
 import { PhysicsPropertiesComponent } from './ecs/component/physics/PhysicsPropertiesComponent.js'
 import { SphereColliderComponent } from './ecs/component/physics/SphereColliderComponent.js'
 import { TrimeshColliderComponent } from './ecs/component/physics/TrimeshColliderComponent.js'
-import { ChatComponent } from './ecs/component/tag/TagChatComponent.js'
 import { PlayerComponent } from '../../shared/component/PlayerComponent.js'
 import { Cube } from './ecs/entity/Cube.js'
 import { MapWorld } from './ecs/entity/MapWorld.js'
@@ -45,6 +44,8 @@ import { Mesh } from './ecs/entity/Mesh.js'
 import { ComponentRemovedEvent } from '../../shared/component/events/ComponentRemovedEvent.js'
 import { ComponentAddedEvent } from '../../shared/component/events/ComponentAddedEvent.js'
 import { InvisibleComponent } from '../../shared/component/InvisibleComponent.js'
+import { ChatComponent } from './ecs/component/tag/TagChatComponent.js'
+import { SerializedMessageType } from '../../shared/network/server/serialized.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
@@ -76,6 +77,8 @@ async function loadGameLogic() {
     NetworkDataComponent,
     TextComponent,
     InvisibleComponent,
+    SerializedMessageType,
+
 
     // Physics Components
     BoxColliderComponent,
@@ -87,13 +90,13 @@ async function loadGameLogic() {
     PhysicsPropertiesComponent,
 
     // Tag Components
-    PlayerComponent,
+    PlayerComponent,  
     ChatComponent,
 
     // Events
     OnCollisionEnterEvent,
     OnCollisionExitEvent,
-    ChatMessageEvent,
+    MessageEvent,
     ColorEvent,
     SizeEvent,
     SingleSizeEvent,

@@ -16,7 +16,7 @@ import {
   SnapshotMessage,
 } from '@shared/network/server/serialized'
 
-import { ChatListComponent } from '@shared/component/ChatComponent'
+import { MessageListComponent } from '@shared/component/MessageComponent'
 import { ColorComponent } from '@shared/component/ColorComponent'
 import { PositionComponent } from '@shared/component/PositionComponent'
 import { RotationComponent } from '@shared/component/RotationComponent'
@@ -176,7 +176,7 @@ export class SyncComponentsSystem {
         component = new StateComponent(entityId, SerializedStateType.IDLE)
         break
       case SerializedComponentType.CHAT_LIST:
-        component = new ChatListComponent(entityId, [])
+        component = new MessageListComponent(entityId, [])
         break
       case SerializedComponentType.SERVER_MESH:
         component = new ServerMeshComponent(entityId, '')

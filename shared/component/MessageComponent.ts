@@ -30,10 +30,12 @@ export class MessageListComponent extends NetworkComponent {
     super(entityId, SerializedComponentType.CHAT_LIST)
   }
   deserialize(data: SerializedMessageListComponent): void {
+    console.log("Deserializing message list", data)
     this.list = data.messages.map((message) => new MessageComponent(this.entityId, message))
   }
   serialize(): SerializedMessageListComponent {
-    const messages = this.list.map((message) => message.serialize())
+    console.log("Serializing message list", this.list)
+    const messages = this.list.filter(message => message.updated).map((message) => message.serialize())
     return { messages }
   }
   // Add a message to the chat list with specified type and targets

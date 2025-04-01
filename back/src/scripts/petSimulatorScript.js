@@ -9,7 +9,7 @@ const chatEntity = EntityManager.getFirstEntityWithComponent(allEntities, ChatCo
 const playerData = new Map()
 
 // Leaderboard display
-const leaderboardText = new FloatingText('👑 LEADERBOARD 🏆', 0, 10, -180, 200)
+const leaderboardText = new FloatingText('👑 LEADERBOARD 🏆', 0, 10, -250, 150)
 
 function updateLeaderboard() {
   // Convert Map to array for sorting
@@ -29,8 +29,20 @@ function updateLeaderboard() {
   leaderboardText.updateText(leaderboardString)
 }
 
-function sendChatMessage(author, message) {
-  EventSystem.addEvent(new ChatMessageEvent(chatEntity.id, author, message))
+function sendGlobalChatMessage(author, message) {
+  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_CHAT))
+}
+
+function sendGlobalNotification(author, message) {
+  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_NOTIFICATION))
+}
+
+function sendTargetedNotification(author, message, targetPlayerIds) {
+  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.TARGETED_NOTIFICATION, targetPlayerIds))
+}
+
+function sendTargetedChat(author, message, targetPlayerIds) {
+  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.TARGETED_CHAT, targetPlayerIds))
 }
 
 function initializePlayerData(playerId) {
@@ -62,6 +74,7 @@ function getPlayerCoins(playerId) {
 
 function addPlayerCoins(playerId, amount) {
   const data = getPlayerData(playerId)
+  if (!data) return
   data.coins += amount
   data.lastActive = new Date()
   updateLeaderboard()
@@ -70,6 +83,7 @@ function addPlayerCoins(playerId, amount) {
 
 function addPlayerPet(playerId, pet) {
   const data = getPlayerData(playerId)
+  if (!data) return
   data.pets.push(pet)
   data.lastActive = new Date()
   updateLeaderboard()
@@ -144,7 +158,7 @@ const chickenPrompt = new ProximityPromptComponent(chickenShopProximityButton.en
     const playerData = getPlayerData(playerId)
     const playerName = playerData.name
 
-    if (playerData.coins >= 50) {
+    if (playerData && playerData.coins >= 50) {
       // Add chicken to player's pets
       addPlayerCoins(playerId, -50) // Deduct cost
       const pet = {
@@ -156,16 +170,11 @@ const chickenPrompt = new ProximityPromptComponent(chickenShopProximityButton.en
 
       // Calculate total bonus
       const totalBonus = playerData.pets.reduce((sum, pet) => sum + pet.bonus, 0)
-
-      sendChatMessage(
-        '🐔',
-        `${playerName} bought a chicken! Total chickens: ${playerData.pets.length} (${totalBonus} coins/jump)`
-      )
+      sendTargetedNotification('🐔', `You bought a chicken! Total chickens: ${playerData.pets.length} (${totalBonus} coins/jump)`, [playerId])
+      sendGlobalChatMessage('🐔', `${playerName} bought a chicken!`, [playerId])
     } else {
-      sendChatMessage(
-        '❌',
-        `${playerName} needs ${50 - playerData.coins} more coins to buy a chicken!`
-      )
+      sendTargetedChat('❌', `You need ${50 - playerData.coins} more coins to buy a chicken!`, [playerId])
+      sendTargetedNotification('❌', `You need ${50 - playerData.coins} more coins to buy a chicken!`, [playerId])
     }
   },
   maxInteractDistance: 20,
@@ -181,10 +190,11 @@ createTriggerArea(
   (player) => {
     // Add coins when player enters trigger area
     const playerData = getPlayerData(player.id)
+    if (!playerData) return
     const bonus = playerData.pets.reduce((sum, pet) => sum + pet.bonus, 0) || 1
     const newCoins = addPlayerCoins(player.id, bonus)
-    const playerName = player.getComponent(TextComponent).text
-    sendChatMessage('💰', `${playerName}: +${bonus} coins (${newCoins})`)
+    sendTargetedNotification('🪙 Coins', `You received ${bonus} coins!`, [player.id])
+    sendTargetedChat(`+🪙 ${bonus} coins`, `Total: ${newCoins} 🪙`, [player.id])
   }
 )
 
@@ -213,12 +223,14 @@ ScriptableSystem.update = (dt, entities) => {
   for (const event of playerRemovedEvents) {
     const playerId = event.entityId
     const data = getPlayerData(playerId)
-    sendChatMessage(
-      '👋',
-      `Player ${playerId.toString().substring(0, 4)} disconnected. Total coins: ${
-        data.coins
-      }, Pets: ${data.pets.length}`
-    )
+    if (data && data.coins) {
+      sendGlobalChatMessage(
+        '👋',
+        `Player ${playerId.toString().substring(0, 4)} disconnected. Total coins: ${
+          data.coins
+          }, Pets: ${data.pets.length}`
+      )
+    }
     playerData.delete(playerId)
   }
 
@@ -234,8 +246,12 @@ ScriptableSystem.update = (dt, entities) => {
   /**
    * Catch chat events
    */
-  const chatMessageEvents = EventSystem.getEvents(ChatMessageEvent)
-  for (const event of chatMessageEvents) {
+  const messageEvents = EventSystem.getEvents(MessageEvent)
+  for (const event of messageEvents) {
+    // Only catch global chat messages
+    if (event.messageType !== SerializedMessageType.GLOBAL_CHAT) {
+      continue
+    }
     const senderName = event.sender
     const content = event.content
 
@@ -245,24 +261,26 @@ ScriptableSystem.update = (dt, entities) => {
       const command = args[0].toLowerCase()
 
       if (command === '/help') {
-        sendChatMessage('🤖', 'Available commands: /help, /coins, /give <player name> <amount>')
+        sendGlobalChatMessage('🤖', 'Available commands: /help, /coins, /give <player name> <amount>')
       } else if (command === '/coins') {
         const playerCoins = getPlayerCoins(event.entityId)
-        sendChatMessage('💰', `${senderName} have ${playerCoins} coins`)
+        sendGlobalChatMessage('💰', `${senderName} have ${playerCoins} coins`)
       } else if (command === '/give' && args.length >= 3) {
         const playerName = args.slice(1, -1).join(' ')
         const amount = parseInt(args[args.length - 1])
 
         // Validate amount
         if (isNaN(amount) || amount <= 0) {
-          sendChatMessage('❌', 'Please enter a valid positive number')
+          sendTargetedChat('❌', 'Please enter a valid positive number', [event.entityId])
+          sendTargetedNotification('❌', 'Please enter a valid positive number', [event.entityId])
           continue
         }
 
         // Check if player has enough coins
         const senderCoins = getPlayerCoins(event.entityId)
         if (senderCoins < amount) {
-          sendChatMessage('❌', `You don't have enough coins. Current balance: ${senderCoins}`)
+          sendTargetedChat('❌', `You don't have enough coins. Current balance: ${senderCoins}`, [event.entityId])
+          sendTargetedNotification('❌', `You don't have enough coins. Current balance: ${senderCoins}`, [event.entityId])
           continue
         }
 
@@ -273,18 +291,29 @@ ScriptableSystem.update = (dt, entities) => {
         })
 
         if (!targetPlayerId) {
-          sendChatMessage('❌', `"${playerName}" not found`)
+          sendTargetedChat('❌', `"${playerName}" not found`, [event.entityId])
+          sendTargetedNotification('❌', `"${playerName}" not found`, [event.entityId])
           continue
         }
 
         // Transfer coins
         addPlayerCoins(event.entityId, -amount) // Remove from sender
         addPlayerCoins(targetPlayerId, amount) // Add to recipient
-        sendChatMessage('💰', `${senderName} gave ${amount} coins to ${playerName}`)
+        sendGlobalChatMessage('💰', `${senderName} gave ${amount} coins to ${playerName}`)
       } else if (command === '/pos') {
         const entity = EntityManager.getEntityById(entities, event.entityId)
         const position = entity.getComponent(PositionComponent)
-        sendChatMessage('📍', `Position: x=${position.x}, y=${position.y}, z=${position.z}`)
+        sendGlobalChatMessage('📍', `Position: x=${position.x}, y=${position.y}, z=${position.z}`)
+      } else if (command === '/stats') {
+        // Show coins, pets, playtime
+        const playerData = getPlayerData(event.entityId)
+        if (!playerData) continue
+        const coins = playerData.coins
+        const pets = playerData.pets
+        const playtime = (Date.now() - playerData.joinDate) / 1000
+        const playtimeString = `${Math.floor(playtime / 3600)}h ${Math.floor((playtime % 3600) / 60)}m`
+        // Display all stats in a single message
+        sendGlobalChatMessage('📊', `${playerData.name} stats: 💰 ${coins} coins | 🐾 ${pets.length} pets | ⏱️ ${playtimeString}`)
       }
     }
   }
@@ -292,7 +321,7 @@ ScriptableSystem.update = (dt, entities) => {
    * Periodic help message
    */
   if (helpMessageTimer >= HELP_MESSAGE_INTERVAL) {
-    sendChatMessage('🤖', 'Available commands: /help, /coins, /give <player name> <amount>')
+    sendGlobalChatMessage('🤖', 'Available commands: /help, /coins, /give <player name> <amount>')
     helpMessageTimer = 0
   } else {
     helpMessageTimer += dt / 1000
