@@ -170,6 +170,43 @@ for (let i = -3; i < 6; i++) {
   car.entity.addComponent(new SpawnPositionComponent(car.entity.id, x, y, z))
 }
 
+// Create a row of cars with varying wheel sizes
+for (let i = 1; i < 10; i++) {
+  const x = -140 + 5 * -i
+  const y = 5
+  const z = 20 * i
+
+  // Configure wheels with varying sizes
+  let wheelConfig = {}
+  if (i < 5) {
+    // Small front wheels for first set of cars
+    wheelConfig = {
+      frontLeft: Math.max(1, i / 2.5),
+      frontRight: Math.max(1, i / 2.5),
+      backLeft: 1.4,
+      backRight: 1.4,
+    }
+  } else {
+    // Small back wheels for second set of cars
+    wheelConfig = {
+      frontLeft: 1.4,
+      frontRight: 1.4,
+      backLeft: Math.max(1, (10 - i) / 2.5),
+      backRight: Math.max(1, (10 - i) / 2.5),
+    }
+  }
+
+  const car = new Car({
+    position: { x, y, z },
+    name: 'Weird Car',
+    meshUrl:
+      'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/CarNoWheel.glb',
+    wheelRadius: wheelConfig,
+    color: randomHexColor(),
+  })
+  car.entity.addComponent(new SpawnPositionComponent(car.entity.id, x, y, z))
+}
+
 const noWheelCar = new Car({
   position: { x: 0, y: 5, z: -500 },
   name: 'Weird Car',
@@ -258,7 +295,5 @@ function spawnFootballBall() {
   })
   ball.entity.addNetworkComponent(proximityPromptComponent)
 }
-
-spawnFootballBall()
 
 spawnFootballBall()
