@@ -1,6 +1,5 @@
 import 'dotenv/config'
 import { readFile } from 'fs/promises'
-import { Script, createContext } from 'node:vm'
 import { resolve } from 'path'
 import { ColorComponent } from '../../shared/component/ColorComponent.js'
 import { PositionComponent } from '../../shared/component/PositionComponent.js'
@@ -79,7 +78,6 @@ async function loadGameLogic() {
     InvisibleComponent,
     SerializedMessageType,
 
-
     // Physics Components
     BoxColliderComponent,
     CapsuleColliderComponent,
@@ -90,7 +88,7 @@ async function loadGameLogic() {
     PhysicsPropertiesComponent,
 
     // Tag Components
-    PlayerComponent,  
+    PlayerComponent,
     ChatComponent,
 
     // Events
@@ -114,9 +112,9 @@ async function loadGameLogic() {
     FloatingText,
     Car,
   }
-  const context = createContext(sandbox)
-  const script = new Script(code)
-  script.runInContext(context)
+  // Execute the script
+  const script = new Function(...Object.keys(sandbox), code)
+  script(...Object.values(sandbox))
 }
 
 loadGameLogic()
