@@ -1,12 +1,16 @@
-import { SerializedComponent, SerializedComponentType, SerializedMessageType } from '../network/server/serialized.js'
+import {
+  SerializedComponent,
+  SerializedComponentType,
+  SerializedMessageType,
+} from '../network/server/serialized.js'
 import { NetworkComponent } from '../network/NetworkComponent.js'
 
 export class MessageComponent extends NetworkComponent {
-  public author: string;
-  public content: string;
-  public messageType: SerializedMessageType;
-  public timestamp: number;
-  public targetPlayerIds: number[];
+  public author: string
+  public content: string
+  public messageType: SerializedMessageType
+  public timestamp: number
+  public targetPlayerIds: number[]
 
   constructor(entityId: number, message: SerializedMessageComponent) {
     super(entityId, SerializedComponentType.MESSAGE)
@@ -54,12 +58,12 @@ export class MessageListComponent extends NetworkComponent {
     super(entityId, SerializedComponentType.CHAT_LIST)
   }
   deserialize(data: SerializedMessageListComponent): void {
-    console.log("Deserializing message list", data)
     this.list = data.messages.map((message) => new MessageComponent(this.entityId, message))
   }
   serialize(): SerializedMessageListComponent {
-    console.log("Serializing message list", this.list)
-    const messages = this.list.filter(message => message.updated).map((message) => message.serialize())
+    const messages = this.list
+      .filter((message) => message.updated)
+      .map((message) => message.serialize())
     return { messages }
   }
   /**
@@ -69,14 +73,19 @@ export class MessageListComponent extends NetworkComponent {
    * @param messageType The type of message (GLOBAL_CHAT, TARGETED_CHAT, GLOBAL_NOTIFICATION, TARGETED_NOTIFICATION)
    * @param targetPlayerIds Array of player IDs for targeted messages (only used when messageType is TARGETED_CHAT or TARGETED_NOTIFICATION)
    */
-  addMessage(author: string, content: string, messageType = SerializedMessageType.GLOBAL_CHAT, targetPlayerIds: number[] = []) {
+  addMessage(
+    author: string,
+    content: string,
+    messageType = SerializedMessageType.GLOBAL_CHAT,
+    targetPlayerIds: number[] = []
+  ) {
     this.list.push(
       new MessageComponent(this.entityId, {
         a: author,
         c: content,
         mT: messageType,
         tpIds: targetPlayerIds,
-        ts: Date.now()
+        ts: Date.now(),
       })
     )
 
