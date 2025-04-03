@@ -48,8 +48,11 @@ function sendTargetedChat(author, message, targetPlayerIds) {
 function initializePlayerData(playerId) {
   const playerEntity = EntityManager.getEntityById(allEntities, playerId)
   if (!playerEntity) return
-  const nameComponent = playerEntity.getComponent(TextComponent)
-  const name = nameComponent.text
+  
+  // Get player name from PlayerComponent instead of TextComponent
+  const playerComponent = playerEntity.getComponent(PlayerComponent)
+  const name = playerComponent ? playerComponent.name : `Player ${playerId}`
+  
   return {
     coins: 0,
     pets: [],
@@ -226,9 +229,7 @@ ScriptableSystem.update = (dt, entities) => {
     if (data && data.coins) {
       sendGlobalChatMessage(
         '👋',
-        `Player ${playerId.toString().substring(0, 4)} disconnected. Total coins: ${
-          data.coins
-          }, Pets: ${data.pets.length}`
+        `${data.name} disconnected. Total coins: ${data.coins}, Pets: ${data.pets.length}`
       )
     }
     playerData.delete(playerId)

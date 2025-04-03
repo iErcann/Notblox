@@ -23,6 +23,7 @@ import { Hud } from './Hud'
 import { Renderer } from './Renderer'
 import { EventSystem } from '@shared/system/EventSystem'
 import { MutableRefObject } from 'react'
+import { ClientMessageType, SetPlayerNameMessage } from '@shared/network/client'
 
 export class Game {
   private static instance: Game
@@ -89,6 +90,21 @@ export class Game {
     await this.websocketManager.connect()
     this.renderer.appendChild()
     this.renderer.setAnimationLoop(this.loopFunction)
+  }
+
+  /**
+   * Sets the player's name and sends it to the server
+   * @param name The player name to set
+   */
+  setPlayerName(name: string) {
+    if (!name || !name.trim()) return
+    
+    // Send the player name to the server using the correct message format
+    const message: SetPlayerNameMessage = {
+      t: ClientMessageType.SET_PLAYER_NAME,
+      name: name.trim()
+    }
+    this.websocketManager.send(message)
   }
 
   private loadingPromise: Promise<void> | null = null

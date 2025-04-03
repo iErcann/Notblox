@@ -6,7 +6,11 @@ import LoadingScreen from '@/components/LoadingScreen'
 import { MessageListComponent } from '@shared/component/MessageComponent'
 import { GameInfo } from '@/types'
 
-export default function GamePlayer(gameInfo: GameInfo) {
+interface GamePlayerProps extends GameInfo {
+  playerName?: string;
+}
+
+export default function GamePlayer({ playerName, ...gameInfo }: GamePlayerProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [chat, updateChat] = useState<MessageListComponent>()
   const [gameInstance, setGameInstance] = useState<Game | null>(null) // Initialize as null
@@ -19,6 +23,12 @@ export default function GamePlayer(gameInfo: GameInfo) {
       setGameInstance(game)
       try {
         await game.start()
+        
+        // Set player name if provided
+        if (playerName && playerName.trim()) {
+          game.setPlayerName(playerName.trim())
+        }
+        
         setIsLoading(false)
       } catch (error) {
         console.error('Error connecting to WebSocket:', error)
@@ -26,7 +36,7 @@ export default function GamePlayer(gameInfo: GameInfo) {
     }
 
     initializeGame()
-  }, [gameInfo.websocketPort])
+  }, [gameInfo.websocketPort, playerName])
 
   return (
     <div className="fixed inset-0 w-full h-full">
