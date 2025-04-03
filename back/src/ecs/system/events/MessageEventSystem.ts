@@ -1,7 +1,7 @@
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { MessageListComponent } from '../../../../../shared/component/MessageComponent.js'
 import { Entity } from '../../../../../shared/entity/Entity.js'
-  import { MessageEvent } from '../../component/events/MessageEvent.js'
+import { MessageEvent } from '../../component/events/MessageEvent.js'
 import { ChatComponent } from '../../component/tag/TagChatComponent.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { SerializedMessageType } from '../../../../../shared/network/server/serialized.js'
@@ -28,8 +28,8 @@ export class MessageEventSystem {
     }
 
     for (const chatMessageEvent of chatMessageEvents) {
-      const chatListComponent = chatEntity.getComponent(MessageListComponent)
-      if (chatListComponent) {
+      const messageListComponent = chatEntity.getComponent(MessageListComponent)
+      if (messageListComponent) {
         let content = chatMessageEvent.content
         const sender = chatMessageEvent.sender
         const messageType = chatMessageEvent.messageType
@@ -40,42 +40,45 @@ export class MessageEventSystem {
           content = content.substring(0, this.MAX_CONTENT_LENGTH)
         }
 
+        // Limit message history (bandwidth)
+        if (messageListComponent.list.length >= this.MAX_MESSAGES) {
+          messageListComponent.list.shift()
+        }
+
         // Handle different message types
+        /**
+         * Those messages are broadcasted to everybody, and front end handles the targeting.
+         */
         switch (messageType) {
           case SerializedMessageType.GLOBAL_NOTIFICATION:
             // Add global notification
-            chatListComponent.addMessage(sender, content, SerializedMessageType.GLOBAL_NOTIFICATION)
-            break;
-            
+            messageListComponent.addMessage(
+              sender,
+              content,
+              SerializedMessageType.GLOBAL_NOTIFICATION
+            )
+            break
+
           case SerializedMessageType.TARGETED_NOTIFICATION:
           case SerializedMessageType.TARGETED_CHAT:
             // Check if we have valid target player IDs
             if (targetPlayerIds && targetPlayerIds.length > 0) {
               // Add targeted message with appropriate message type
-              chatListComponent.addMessage(sender, content, messageType, targetPlayerIds)
+              messageListComponent.addMessage(sender, content, messageType, targetPlayerIds)
             } else {
               console.warn(`ChatEventSystem: ${messageType} without target player IDs`)
               // Fall back to regular chat message
-              this.addGlobalChatMessage(chatListComponent, sender, content)
+              messageListComponent.addMessage(sender, content, SerializedMessageType.GLOBAL_CHAT)
             }
-            break;
-            
+            break
+
           case SerializedMessageType.GLOBAL_CHAT:
           default:
             // Regular chat message
-            this.addGlobalChatMessage(chatListComponent, sender, content)
-            break;
+            messageListComponent.addMessage(sender, content, SerializedMessageType.GLOBAL_CHAT)
+            break
         }
       }
     }
-  }
-  
-  private addGlobalChatMessage(chatListComponent: MessageListComponent, sender: string, content: string) {
-    // Limit history to maxMessages
-    if (chatListComponent.list.length >= this.MAX_MESSAGES) {
-      chatListComponent.list.shift()
-    }
-    
-    chatListComponent.addMessage(sender, content, SerializedMessageType.GLOBAL_CHAT)
   }
 }
