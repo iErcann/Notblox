@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import GamePlayer from '@/components/GamePlayer'
 import { GameInfo } from '@/types'
 import gameData from '../public/gameData.json'
-import GameCard from './GameCard'
+import { MiniGameCard } from './GameCard'
 import Navbar from './Navbar'
 
 export default function GameContent({ gameInfo }: { gameInfo: GameInfo }) {
@@ -104,20 +104,19 @@ export default function GameContent({ gameInfo }: { gameInfo: GameInfo }) {
               </div>
             </div>
           </div>
-          {/* Markdown Content */}
-          <section className="w-full mb-12 bg-white p-4 md:p-8 rounded-2xl drop-shadow-sm border border-gray-200">
-            <div className="prose max-w-none">
-              <ReactMarkdown>{gameInfo.markdown}</ReactMarkdown>
-            </div>
-          </section>
-
           {/* Related Games */}
           <section className="w-full">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 px-4 sm:px-0">More Games</h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {gameData.map((game) => (
-                <GameCard {...game} key={game.slug} />
+                <MiniGameCard {...game} key={game.slug} />
               ))}
+            </div>
+          </section>
+          {/* Markdown Content */}
+          <section className="w-full mt-12 bg-white p-4 md:p-8 rounded-2xl drop-shadow-sm border border-gray-200">
+            <div className="prose max-w-none">
+              <ReactMarkdown>{gameInfo.markdown}</ReactMarkdown>
             </div>
           </section>
         </div>
