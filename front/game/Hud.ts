@@ -1,15 +1,15 @@
 // Binding react states - game
 
 import { Dispatch, SetStateAction } from 'react'
-import { MessageListComponent } from '@shared/component/MessageComponent'
+import { MessageComponent } from '@shared/component/MessageComponent'
 import { Game } from './Game'
 import { ClientMessageType } from '@shared/network/client/base'
 import { ChatMessage } from '@shared/network/client/chatMessage'
 
 // Props drill
 export class Hud {
-  updateChat: Dispatch<SetStateAction<MessageListComponent | undefined>> | undefined
-  passChatState(updateChat: Dispatch<SetStateAction<MessageListComponent | undefined>>) {
+  updateChat: Dispatch<SetStateAction<MessageComponent[]>> | undefined
+  passChatState(updateChat: Dispatch<SetStateAction<MessageComponent[]>>) {
     // Update the type of setChat
     this.updateChat = updateChat
   }

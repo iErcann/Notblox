@@ -1,24 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
 import { Joystick } from 'react-joystick-component'
-import { Github, Maximize, Twitter } from 'lucide-react'
-import { MessageListComponent } from '@shared/component/MessageComponent'
 import { Game } from '@/game/Game'
 import Link from 'next/link'
 import { SerializedMessageType } from '@shared/network/server/serialized'
+import { MessageComponent } from '@shared/component/MessageComponent'
+import { Twitter, Github, Maximize } from 'lucide-react'
 
 export interface GameHudProps {
-  chatList: MessageListComponent | undefined
+  messages: MessageComponent[]
   sendMessage: (message: string) => void
   gameInstance: Game
 }
 
-export default function GameHud({ chatList, sendMessage, gameInstance }: GameHudProps) {
+export default function GameHud({
+  messages: messageComponents,
+  sendMessage,
+  gameInstance,
+}: GameHudProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const refContainer = useRef<HTMLDivElement>(null)
   const [notifications, setNotifications] = useState<
     Array<{ id: number; content: string; author: string; timestamp: number }>
   >([])
-  const processedMessagesRef = useRef<Set<string>>(new Set())
+  const processedMessagesRef = useRef<Set<number>>(new Set())
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -26,23 +30,20 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
 
   useEffect(() => {
     scrollToBottom()
-  }, [chatList?.list])
+  }, [messageComponents])
 
   // Handle notifications from chat messages
   useEffect(() => {
-    if (!chatList) return
+    if (!messageComponents || messageComponents.length === 0) return
 
+    console.log('WQSDSQDQ', messageComponents)
     // Process new messages for notifications
-    chatList.list.forEach((messageComponent, index) => {
+    messageComponents.forEach((messageComponent, index) => {
       const messageType = messageComponent.messageType
-      const messageId = messageComponent.timestamp.toString()
+      const messageId = messageComponent.timestamp
 
       // Skip if we've already processed this message
       if (processedMessagesRef.current.has(messageId)) {
-        return
-      }
-
-      if (!messageType) {
         return
       }
 
@@ -74,7 +75,7 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
         }, 5000)
       }
     })
-  }, [chatList?.list]) // Only depend on chatList.list, not notifications
+  }, [messageComponents, gameInstance?.currentPlayerEntityId])
 
   const handleFullscreenClick = () => {
     if (document.fullscreenElement) {
@@ -86,9 +87,9 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
 
   // Filter messages based on type and target
   const getFilteredMessages = () => {
-    if (!chatList) return []
+    if (!messageComponents || messageComponents.length === 0) return []
 
-    return chatList.list.filter((message) => {
+    return messageComponents.filter((message) => {
       const messageType = message.messageType
       const targetPlayerIds = message.targetPlayerIds || []
       // Show global chat messages
