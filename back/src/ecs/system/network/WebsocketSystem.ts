@@ -57,7 +57,7 @@ export class WebsocketSystem {
 
   private initializeServer() {
     const isProduction = process.env.NODE_ENV === 'production'
-    const acceptedOrigin: string | undefined  = process.env.FRONTEND_URL
+    const acceptedOrigin: string | undefined = process.env.FRONTEND_URL
     const sslKeyFile: string = process.env.SSL_KEY_FILE || '/etc/letsencrypt/live/npm-3/privkey.pem'
     const sslCertFile: string = process.env.SSL_CERT_FILE || '/etc/letsencrypt/live/npm-3/cert.pem'
 
@@ -66,11 +66,11 @@ export class WebsocketSystem {
     } else {
       console.log('NODE_ENV : Running in development mode')
     }
-    
+
     if (acceptedOrigin) {
       console.log('FRONTEND_URL : Only accepting connections from origin:', acceptedOrigin)
-    } 
-    
+    }
+
     const app = isProduction
       ? SSLApp({
           key_file_name: sslKeyFile,
@@ -102,7 +102,7 @@ export class WebsocketSystem {
     // Only accept connections from the frontend
     const origin = req.getHeader('origin')
     if (isProduction && acceptedOrigin && origin !== acceptedOrigin) {
-    res.writeStatus('403 Forbidden').end()
+      res.writeStatus('403 Forbidden').end()
       return
     }
 
@@ -239,9 +239,7 @@ export class WebsocketSystem {
       return
     }
 
-    EventSystem.addEvent(
-      new MessageEvent(player.entity.id, playerName, content)
-    )
+    EventSystem.addEvent(new MessageEvent(player.entity.id, playerName, content))
   }
   private handleProximityPromptInteractMessage(ws: any, message: ProximityPromptInteractMessage) {
     const player: Player = ws.player
@@ -259,7 +257,7 @@ export class WebsocketSystem {
       console.error(`Player with WS ${ws} not found.`)
       return
     }
-    
+
     const { name } = message
     if (!name || typeof name !== 'string') {
       console.error(`Invalid player name message, sent from ${player.entity.id}`, message)
@@ -272,7 +270,7 @@ export class WebsocketSystem {
     //   console.log(`Player ${playerComponent.name} attempted to change name again. Not allowed.`)
     //   return
     // }
-    
+
     // Sanitize player name to prevent abuse
     let sanitizedName = name.trim().substring(0, 20)
     // Remove any HTML tags or potentially harmful characters
@@ -289,11 +287,10 @@ export class WebsocketSystem {
     // Find the PlayerComponent on the player entity and update it
     if (playerComponent) {
       playerComponent.name = sanitizedName
-      console.log(`Player ${player.entity.id} set name to: ${sanitizedName}`)
     } else {
       console.error(`PlayerComponent not found for player ${player.entity.id}`)
     }
-    
+
     // Find the TextComponent on the player entity and update it
     // Visual update of the name, could be changed in the future because games will alter this
     // This resets the styling of the name

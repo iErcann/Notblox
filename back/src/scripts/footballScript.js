@@ -49,19 +49,39 @@ const chatEntity = EntityManager.getFirstEntityWithComponent(
 
 // Message sending functions
 function sendGlobalChatMessage(author, message) {
-  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_CHAT))
+  EventSystem.addEvent(
+    new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_CHAT)
+  )
 }
 
 function sendGlobalNotification(author, message) {
-  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_NOTIFICATION))
+  EventSystem.addEvent(
+    new MessageEvent(chatEntity.id, author, message, SerializedMessageType.GLOBAL_NOTIFICATION)
+  )
 }
 
 function sendTargetedNotification(author, message, targetPlayerIds) {
-  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.TARGETED_NOTIFICATION, targetPlayerIds))
+  EventSystem.addEvent(
+    new MessageEvent(
+      chatEntity.id,
+      author,
+      message,
+      SerializedMessageType.TARGETED_NOTIFICATION,
+      targetPlayerIds
+    )
+  )
 }
 
 function sendTargetedChat(author, message, targetPlayerIds) {
-  EventSystem.addEvent(new MessageEvent(chatEntity.id, author, message, SerializedMessageType.TARGETED_CHAT, targetPlayerIds))
+  EventSystem.addEvent(
+    new MessageEvent(
+      chatEntity.id,
+      author,
+      message,
+      SerializedMessageType.TARGETED_CHAT,
+      targetPlayerIds
+    )
+  )
 }
 
 const updateScore = () => {
@@ -88,13 +108,24 @@ function createTeamTrigger(x, y, z, color, spawnX) {
         // Change the player color
         EventSystem.addEvent(new ColorEvent(collidedWithEntity.id, color))
         // Teleport the player to the spawn point
-        collidedWithEntity
-          .getComponent(DynamicRigidBodyComponent)
-          .body.setTranslation(new Rapier.Vector3(spawnX, 5, -350), true)
+        // Teleport player to team spawn
+        const playerBody = collidedWithEntity.getComponent(DynamicRigidBodyComponent).body
+        playerBody.setTranslation(new Rapier.Vector3(spawnX, 5, -350), true)
+
+        // Reset player velocity
+        playerBody.setLinvel(new Rapier.Vector3(0, 0, 0), true)
+
+        // Determine team info
+        const isRedTeam = color === '#f0513c'
+        const teamColor = isRedTeam ? 'red' : 'blue'
+        const teamEmoji = isRedTeam ? '🔴' : '🔵'
+        const playerName = collidedWithEntity.getComponent(TextComponent)?.text || 'Player'
 
         // Broadcast join message
-        const teamEmoji = color === '#f0513c' ? '🔴' : '🔵'
-        sendGlobalNotification(`${teamEmoji} New Player`, `${collidedWithEntity.getComponent(TextComponent).text} joined the team ${teamEmoji}`)
+        sendGlobalNotification(
+          `${teamEmoji} New Player`,
+          `${playerName} joined the ${teamColor} team`
+        )
       }
     },
     () => {},
@@ -112,7 +143,10 @@ function handleGoal(scoringTeam) {
 
   // Send both chat message and global notification
   sendGlobalChatMessage('⚽', `${scoringTeam === 'blue' ? '🔵 Blue' : '🔴 Red'} team scores! 🎉`)
-  sendGlobalNotification('⚽ GOAL!', `${scoringTeam === 'blue' ? '🔵 Blue' : '🔴 Red'} team scores!`)
+  sendGlobalNotification(
+    '⚽ GOAL!',
+    `${scoringTeam === 'blue' ? '🔵 Blue' : '🔴 Red'} team scores!`
+  )
   updateScore()
 
   const body = ball.entity.getComponent(DynamicRigidBodyComponent).body
@@ -149,13 +183,22 @@ new TriggerCube(
 )
 
 ScriptableSystem.update = (dt, entities) => {
+  /**
+   * Catch player connect events.
+   */
+  const playerAddedEvents = EventSystem.getEventsWrapped(ComponentAddedEvent, PlayerComponent)
+  for (const event of playerAddedEvents) {
+    sendTargetedNotification('⚽ Welcome to Football NotBlox!', 'Choose a team to get started', [
+      event.entityId,
+    ])
+  }
+
   // Check if there are any players
   const hasPlayers = entities.some((entity) => entity.getComponent(PlayerComponent))
 
   if (!hasPlayers) {
     // No players are present. Reset the game
     sendGlobalChatMessage('⚽', 'No players, resetting game...')
-    sendGlobalNotification('⚽ Game Reset', 'Waiting for players to join...')
 
     const ballBody = ball.entity.getComponent(DynamicRigidBodyComponent).body
     ballBody.setTranslation(
@@ -184,10 +227,10 @@ const proximityPromptComponent = new ProximityPromptComponent(ball.entity.id, {
     if (ballRigidbody && playerRotationComponent && playerEntity.getComponent(InputComponent)) {
       // Convert rotation to direction vector
       const direction = playerRotationComponent.getForwardDirection()
-      
+
       // Send targeted notification to the player who kicked the ball
-      sendTargetedNotification('⚽', 'You kicked the ball!', [playerEntity.id])
-      
+      sendTargetedNotification('', 'You kicked the ball!', [playerEntity.id])
+
       // Calculate player looking direction
       const playerLookingDirectionVector = new Rapier.Vector3(
         direction.x * 750,

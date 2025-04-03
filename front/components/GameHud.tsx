@@ -15,7 +15,9 @@ export interface GameHudProps {
 export default function GameHud({ chatList, sendMessage, gameInstance }: GameHudProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const refContainer = useRef<HTMLDivElement>(null)
-  const [notifications, setNotifications] = useState<Array<{id: number, content: string, author: string, timestamp: number}>>([])
+  const [notifications, setNotifications] = useState<
+    Array<{ id: number; content: string; author: string; timestamp: number }>
+  >([])
   const processedMessagesRef = useRef<Set<string>>(new Set())
 
   const scrollToBottom = () => {
@@ -29,12 +31,12 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
   // Handle notifications from chat messages
   useEffect(() => {
     if (!chatList) return
-    
+
     // Process new messages for notifications
     chatList.list.forEach((messageComponent, index) => {
       const messageType = messageComponent.messageType
-      const messageId = messageComponent.timestamp.toString()      
-      
+      const messageId = messageComponent.timestamp.toString()
+
       // Skip if we've already processed this message
       if (processedMessagesRef.current.has(messageId)) {
         return
@@ -43,31 +45,32 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
       if (!messageType) {
         return
       }
-      
+
       // Only process global notifications
       // Check if the message is a notification type
-      if (messageType === SerializedMessageType.GLOBAL_NOTIFICATION || 
-          messageType === SerializedMessageType.TARGETED_NOTIFICATION && gameInstance?.currentPlayerEntityId && 
-          messageComponent.targetPlayerIds?.includes(gameInstance?.currentPlayerEntityId)) {
-
-
+      if (
+        messageType === SerializedMessageType.GLOBAL_NOTIFICATION ||
+        (messageType === SerializedMessageType.TARGETED_NOTIFICATION &&
+          gameInstance?.currentPlayerEntityId &&
+          messageComponent.targetPlayerIds?.includes(gameInstance?.currentPlayerEntityId))
+      ) {
         // Mark as processed
         processedMessagesRef.current.add(messageId)
-        
+
         // Add new notification
         const newNotification = {
           id: Date.now() + index, // Unique ID
           content: messageComponent.content,
           author: messageComponent.author,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         }
 
         // Only show one at a time for now
         setNotifications([newNotification])
-        
+
         // Remove notification after 5 seconds
         setTimeout(() => {
-          setNotifications(prev => prev.filter(n => n.id !== newNotification.id))
+          setNotifications((prev) => prev.filter((n) => n.id !== newNotification.id))
         }, 5000)
       }
     })
@@ -81,34 +84,38 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
     }
   }
 
-
   // Filter messages based on type and target
   const getFilteredMessages = () => {
     if (!chatList) return []
-    
-    return chatList.list.filter(message => {
-      const messageType = message.messageType 
+
+    return chatList.list.filter((message) => {
+      const messageType = message.messageType
       const targetPlayerIds = message.targetPlayerIds || []
       // Show global chat messages
       if (messageType === SerializedMessageType.GLOBAL_CHAT) return true
-      
+
       // Show targeted chat messages if player is in target list
-      if (messageType === SerializedMessageType.TARGETED_CHAT && gameInstance?.currentPlayerEntityId) {
+      if (
+        messageType === SerializedMessageType.TARGETED_CHAT &&
+        gameInstance?.currentPlayerEntityId
+      ) {
         return targetPlayerIds.includes(gameInstance?.currentPlayerEntityId)
       }
-      
+
       // Don't show notifications in chat
-      if (messageType === SerializedMessageType.GLOBAL_NOTIFICATION || 
-          messageType === SerializedMessageType.TARGETED_NOTIFICATION) {
+      if (
+        messageType === SerializedMessageType.GLOBAL_NOTIFICATION ||
+        messageType === SerializedMessageType.TARGETED_NOTIFICATION
+      ) {
         return false
       }
-      
+
       return true
     })
   }
 
   // Add CSS for animations
- 
+
   return (
     <div
       id="hud"
@@ -116,23 +123,25 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
       ref={refContainer}
     >
       {/* Global Notifications */}
-      <div className="fixed top-36 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-2 pointer-events-none">
-        {notifications.map(notification => (
-          <div 
+      <div className="fixed top-24 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-2 pointer-events-none">
+        {notifications.map((notification) => (
+          <div
             key={notification.id}
-            className="bg-black bg-opacity-80 text-white p-4 rounded-lg shadow-lg max-w-md text-center"
+            className="bg-black/60 text-white w-full max-w-sm p-3 rounded-lg shadow-xl text-center transition-opacity duration-500"
             style={{
-              animation: 'bounceIn 0.5s ease, fadeOut 0.5s ease 4.5s forwards',
+              animation: 'bounceIn 0.4s ease-out, fadeOut 0.6s ease 4s forwards',
               transformOrigin: 'top center',
             }}
           >
-            <p className="text-lg">
-              <span className="font-bold text-yellow-400">{notification.author}</span> {notification.content}
-            </p>
+            <div className="flex flex-col items-center">
+              <p className="font-semibold font-sans text-yellow-400 text-lg sm:text-xl">
+                {notification.author}
+              </p>
+              <p className="text-white text-base sm:text-lg">{notification.content}</p>
+            </div>
           </div>
         ))}
       </div>
-
       <div className="flex justify-between items-center">
         <div className="shadow-4xl p-4  rounded-lg space-y-1 bg-gray-800 bg-opacity-20">
           <p className="text-sm">👋 Welcome to </p>
@@ -170,24 +179,32 @@ export default function GameHud({ chatList, sendMessage, gameInstance }: GameHud
         <div className="overflow-y-auto max-h-64 h-64 space-y-2 pr-2">
           {getFilteredMessages().map((messageComponent, index) => {
             return (
-              <div key={index} ref={index === getFilteredMessages().length - 1 ? messagesEndRef : null}>
-                <div className={`rounded-lg p-2 ${
-                  messageComponent.messageType === SerializedMessageType.TARGETED_CHAT 
-                    ? 'bg-gray-900 bg-opacity-40 p-2' 
-                    : 'bg-gray-700 bg-opacity-30'
-                }`}>
+              <div
+                key={index}
+                ref={index === getFilteredMessages().length - 1 ? messagesEndRef : null}
+              >
+                <div
+                  className={`rounded-lg p-2 ${
+                    messageComponent.messageType === SerializedMessageType.TARGETED_CHAT
+                      ? 'bg-gray-900 bg-opacity-40 p-2'
+                      : 'bg-gray-700 bg-opacity-30'
+                  }`}
+                >
                   <p className="text-sm">
-                    <span className={`font-medium ${
-                      messageComponent.messageType === SerializedMessageType.TARGETED_CHAT 
-                        ? 'text-gray-1000' 
-                        : ''
-                    }`}>
+                    <span
+                      className={`font-medium ${
+                        messageComponent.messageType === SerializedMessageType.TARGETED_CHAT
+                          ? 'text-gray-1000'
+                          : ''
+                      }`}
+                    >
                       {messageComponent.author}
-                    </span>: {messageComponent.content}
+                    </span>
+                    : {messageComponent.content}
                   </p>
                 </div>
               </div>
-            );
+            )
           })}
         </div>
         <input
