@@ -1,7 +1,7 @@
 // components/GameContent.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import GamePlayer from '@/components/GamePlayer'
 import { GameInfo } from '@/types'
@@ -11,15 +11,28 @@ import Navbar from './Navbar'
 
 export default function GameContent({ gameInfo }: { gameInfo: GameInfo }) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [playerName, setPlayerName] = useState('')
+
+  // Load player name from localStorage on component mount
+  useEffect(() => {
+    const savedName = localStorage.getItem('playerName')
+    if (savedName) {
+      setPlayerName(savedName)
+    }
+  }, [])
 
   const handlePlayClick = () => {
+    // Save player name to localStorage
+    if (playerName.trim()) {
+      localStorage.setItem('playerName', playerName.trim())
+    }
     setIsPlaying(true)
   }
 
   return (
     <>
       {isPlaying ? (
-        <GamePlayer {...gameInfo} />
+        <GamePlayer {...gameInfo} playerName={playerName} />
       ) : (
         <div className="px-4 container mx-auto">
           <Navbar />
@@ -67,6 +80,21 @@ export default function GameContent({ gameInfo }: { gameInfo: GameInfo }) {
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900">{gameInfo.title}</h1>
               <p className="text-gray-600 text-lg leading-relaxed">{gameInfo.metaDescription}</p>
               <div className="flex flex-col space-y-4">
+                {/* Player Name Input */}
+                <div className="flex flex-col space-y-2">
+                  <label htmlFor="playerName" className="text-sm font-medium text-gray-700">
+                    Your Player Name
+                  </label>
+                  <input
+                    type="text"
+                    id="playerName"
+                    value={playerName}
+                    onChange={(e) => setPlayerName(e.target.value)}
+                    placeholder="Enter your name"
+                    maxLength={20}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  />
+                </div>
                 <button
                   onClick={handlePlayClick}
                   className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 inline-block text-center shadow-lg hover:shadow-xl"

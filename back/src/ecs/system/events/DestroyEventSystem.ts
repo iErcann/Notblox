@@ -4,6 +4,7 @@ import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { MessageEvent } from '../../component/events/MessageEvent.js'
 import { PlayerComponent } from '../../../../../shared/component/PlayerComponent.js'
+import { SerializedMessageType } from '../../../../../shared/network/server/serialized.js'
 
 export class DestroyEventSystem {
   update(entities: Entity[]) {
@@ -16,9 +17,16 @@ export class DestroyEventSystem {
         continue
       }
 
-      if (entity.getComponent(PlayerComponent)) {
+      // Send a message to all players when a player disconnects
+      const playerComponent = entity.getComponent(PlayerComponent)
+      if (playerComponent) {
         EventSystem.addEvent(
-          new MessageEvent(entity.id, '🖥️ [SERVER]', `Player ${entity.id} left the game.`)
+          new MessageEvent(
+            entity.id, 
+            '🖥️ [SERVER]', 
+            `Player ${playerComponent.name} disconnected at ${new Date().toLocaleString()}`,
+            SerializedMessageType.GLOBAL_CHAT
+          )
         )
       }
 

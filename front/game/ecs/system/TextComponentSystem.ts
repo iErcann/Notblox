@@ -11,6 +11,7 @@ import { PositionComponent } from '@shared/component/PositionComponent'
 import { Game } from '@/game/Game'
 import * as THREE from 'three'
 import { ProximityPromptComponent } from '@shared/component/ProximityPromptComponent'
+import DOMPurify from 'dompurify'
 
 /**
  * TextComponent is shown when the entity is within the display distance
@@ -99,13 +100,14 @@ export class TextComponentSystem {
       textElement.dataset.initialized = 'true'
     }
 
-    // Create a temporary DOM element to parse HTML safely
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(textComponent.text, 'text/html')
-    const sanitizedHTML = doc.body.innerHTML
+    // Sanitize HTML using DOMPurify to prevent XSS attacks
+    const sanitizedHTML = DOMPurify.sanitize(textComponent.text, {
+      ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'span', 'p', 'br'],
+      ALLOWED_ATTR: ['style', 'class', 'className'],
+      ALLOW_DATA_ATTR: false
+    })
 
     // Update the text content with properly sanitized HTML
-    // BTW this is not enough at all. But those component don't accept player inputs for now.
     const textContentElement = textElement.querySelector('.text-content')
     if (textContentElement) {
       textContentElement.innerHTML = sanitizedHTML

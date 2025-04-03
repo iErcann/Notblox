@@ -16,6 +16,7 @@ import {
   ChatMessage,
   InputMessage,
   ProximityPromptInteractMessage,
+  SetPlayerNameMessage,
   ClientMessageType,
   ClientMessage,
 } from '../../../../../shared/network/client/index.js'
@@ -27,6 +28,8 @@ import { Player } from '../../entity/Player.js'
 import { InputProcessingSystem } from '../InputProcessingSystem.js'
 import { NetworkSystem } from './NetworkSystem.js'
 import { ProximityPromptInteractEvent } from '../../component/events/ProximityPromptInteractEvent.js'
+import { TextComponent } from '../../../../../shared/component/TextComponent.js'
+import { PlayerComponent } from '../../../../../shared/component/PlayerComponent.js'
 type MessageHandler = (ws: any, message: any) => void
 
 export class WebsocketSystem {
@@ -127,6 +130,10 @@ export class WebsocketSystem {
       ClientMessageType.PROXIMITY_PROMPT_INTERACT,
       this.handleProximityPromptInteractMessage.bind(this)
     )
+    this.addMessageHandler(
+      ClientMessageType.SET_PLAYER_NAME,
+      this.handleSetPlayerNameMessage.bind(this)
+    )
   }
 
   private addMessageHandler(type: ClientMessageType, handler: MessageHandler) {
@@ -169,7 +176,7 @@ export class WebsocketSystem {
       new MessageEvent(
         player.entity.id,
         '🖥️ [SERVER]',
-        `Player ${player.entity.id} joined at ${new Date().toLocaleString()}`
+        `New player joined at ${new Date().toLocaleString()}`
       )
     )
     this.players.push(player)
@@ -225,8 +232,15 @@ export class WebsocketSystem {
       console.error(`Invalid chat message, sent from ${player}`, message)
       return
     }
+
+    const playerName = player.entity.getComponent(PlayerComponent)?.name
+    if (!playerName) {
+      console.error(`Player name not found for player ${player.entity.id}`)
+      return
+    }
+
     EventSystem.addEvent(
-      new MessageEvent(player.entity.id, `Player ${player.entity.id}`, content)
+      new MessageEvent(player.entity.id, playerName, content)
     )
   }
   private handleProximityPromptInteractMessage(ws: any, message: ProximityPromptInteractMessage) {
@@ -237,5 +251,60 @@ export class WebsocketSystem {
     }
     const { eId } = message
     EventSystem.addEvent(new ProximityPromptInteractEvent(player.entity.id, eId))
+  }
+
+  private handleSetPlayerNameMessage(ws: any, message: SetPlayerNameMessage) {
+    const player: Player = ws.player
+    if (!player) {
+      console.error(`Player with WS ${ws} not found.`)
+      return
+    }
+    
+    const { name } = message
+    if (!name || typeof name !== 'string') {
+      console.error(`Invalid player name message, sent from ${player.entity.id}`, message)
+      return
+    }
+
+    // Check if player already has a custom name (not the default "Player" name)
+    const playerComponent = player.entity.getComponent(PlayerComponent)
+    // if (playerComponent && !playerComponent.name.startsWith('Player ')) {
+    //   console.log(`Player ${playerComponent.name} attempted to change name again. Not allowed.`)
+    //   return
+    // }
+    
+    // Sanitize player name to prevent abuse
+    let sanitizedName = name.trim().substring(0, 20)
+    // Remove any HTML tags or potentially harmful characters
+    sanitizedName = sanitizedName.replace(/<[^>]*>|[<>]/g, '')
+    // Remove all spaces from the name
+    sanitizedName = sanitizedName.replace(/\s+/g, '')
+    // Default to "Player" if name is empty after sanitization
+    if (!sanitizedName) sanitizedName = `Player ${player.entity.id}`
+
+    // TODO: Add a duplicate name check
+    // The player component holds the name, but the TextComponent could be altered by game scripts
+    // Like : [New Player] - iErcan (10)
+    // To not lose the name of the player, store it in the PlayerComponent
+    // Find the PlayerComponent on the player entity and update it
+    if (playerComponent) {
+      playerComponent.name = sanitizedName
+      console.log(`Player ${player.entity.id} set name to: ${sanitizedName}`)
+    } else {
+      console.error(`PlayerComponent not found for player ${player.entity.id}`)
+    }
+    
+    // Find the TextComponent on the player entity and update it
+    // Visual update of the name, could be changed in the future because games will alter this
+    // This resets the styling of the name
+    const textComponent = player.entity.getComponent(TextComponent)
+    if (textComponent) {
+      textComponent.text = sanitizedName
+      // Updated it gets broadcasted + re-rendered
+      textComponent.updated = true
+      console.log(`Player ${player.entity.id} set name to: ${sanitizedName}`)
+    } else {
+      console.error(`TextComponent not found for player ${player.entity.id}`)
+    }
   }
 }
