@@ -56,13 +56,33 @@ export interface CarParams {
    * @default { friction: 0.6, restitution: 0.2 }
    */
   colliderProperties?: ColliderPropertiesComponentData
+  /**
+   * @default { frontLeft: 1.4, frontRight: 1.4, backLeft: 1.4, backRight: 1.4 }
+   *
+   * Wheels Radius configuration object
+   */
+  wheelRadius?: {
+    frontLeft?: number
+    frontRight?: number
+    backLeft?: number
+    backRight?: number
+  }
 }
 
 export class Car {
   entity: Entity
 
   constructor(params: CarParams) {
-    const { position, size, color, meshUrl, physicsProperties, name, colliderProperties } = params
+    const {
+      position,
+      size,
+      color,
+      meshUrl,
+      physicsProperties,
+      name,
+      colliderProperties,
+      wheelRadius,
+    } = params
 
     this.entity = EntityManager.createEntity(SerializedEntityType.VEHICLE)
 
@@ -71,7 +91,7 @@ export class Car {
       entityId: this.entity.id,
       positionComponent: new PositionComponent(this.entity.id, -3.46, -0.0287, 4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.4,
+      radius: wheelRadius?.frontLeft ?? 1.4,
       suspensionStiffness: 10000,
       suspensionCompression: 1,
       suspensionLength: 1 / 4,
@@ -83,19 +103,19 @@ export class Car {
       entityId: this.entity.id,
       positionComponent: new PositionComponent(this.entity.id, 3.46, -0.0287, 4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.4,
+      radius: wheelRadius?.frontRight ?? 1.4,
       suspensionStiffness: 10000,
       suspensionCompression: 1,
       suspensionLength: 1 / 4,
       sideFrictionStiffness: 4,
-      frictionSlip: 0.1,
+      frictionSlip: 1,
       isSteeringWheel: true,
     })
     const backLeftWheel = new WheelComponent({
       entityId: this.entity.id,
       positionComponent: new PositionComponent(this.entity.id, -3.46, -0.0287, -4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.4,
+      radius: wheelRadius?.backLeft ?? 1.4,
       suspensionStiffness: 10000,
       suspensionCompression: 1,
       suspensionLength: 1 / 4,
@@ -108,12 +128,12 @@ export class Car {
       entityId: this.entity.id,
       positionComponent: new PositionComponent(this.entity.id, 3.46, -0.0287, -4.14),
       rotationComponent: new RotationComponent(this.entity.id, 0, 0, 0),
-      radius: 1.4,
+      radius: wheelRadius?.backRight ?? 1.4,
       suspensionStiffness: 10000,
       suspensionCompression: 1,
       suspensionLength: 1 / 4,
       sideFrictionStiffness: 4,
-      frictionSlip: 0.1,
+      frictionSlip: 1,
       isEngineWheel: true,
     })
 
@@ -137,7 +157,8 @@ export class Car {
 
     const serverMeshComponent = new ServerMeshComponent(
       this.entity.id,
-      meshUrl ?? 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/CarNoWheel.glb'
+      meshUrl ??
+        'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/vehicle/CarNoWheel.glb'
     )
     this.entity.addComponent(serverMeshComponent)
 
@@ -156,7 +177,7 @@ export class Car {
       new ColliderPropertiesComponent(
         this.entity.id,
         colliderProperties ?? {
-          friction: 0.6,
+          friction: 0.9,
           restitution: 0.2,
         }
       )
@@ -173,8 +194,9 @@ export class Car {
         physicsProperties ?? {
           enableCcd: true,
           angularDamping: 0.4,
-          linearDamping: 0.4,
-          mass: 2,
+          linearDamping: 0.3,
+          mass: 4,
+          gravityScale: 0.85,
         }
       )
     )
