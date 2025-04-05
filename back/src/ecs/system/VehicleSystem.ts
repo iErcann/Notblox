@@ -26,7 +26,7 @@ export class VehicleSystem {
     /**
      * Vehicle movement based on player input
      */
-    this.vehicleMovementSystem.update(entities, dt)
+    this.vehicleMovementSystem.update(entities)
     /**
      * Catch player entering a vehicle (VehicleOccupancyComponent)
      */
@@ -57,7 +57,7 @@ export class VehicleSystem {
     const playerVehicleOccupancyComponent = playerEntity.getComponent(VehicleOccupancyComponent)
     const vehicleComponent = vehicleEntity.getComponent(VehicleComponent)
 
-    if (!playerComponent || !vehicleComponent) return;
+    if (!playerComponent || !vehicleComponent) return
 
     // Is the current player already occupying a vehicle?
     const playerInsideVehicle = playerVehicleOccupancyComponent !== undefined

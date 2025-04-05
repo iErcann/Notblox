@@ -45,7 +45,7 @@ export class VehicleMovementSystem {
     }
   }
 
-  update(entities: Entity[], dt: number): void {
+  update(entities: Entity[]): void {
     this.snapAllOccupantsToVehicle(entities)
 
     for (const entity of entities) {

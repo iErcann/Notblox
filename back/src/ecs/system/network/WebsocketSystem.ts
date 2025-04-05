@@ -50,7 +50,8 @@ export class WebsocketSystem {
     try {
       await this.limiter.consume(ip) // Use a unique identifier for each WebSocket connection
       return false // Not rate limited
-    } catch (rejRes) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_rejRes) {
       return true // Rate limited
     }
   }
@@ -297,6 +298,7 @@ export class WebsocketSystem {
     // The player component holds the name, but the TextComponent could be altered by game scripts
     // Like : [New Player] - iErcan (10)
     // To not lose the name of the player, store it in the PlayerComponent
+    // TODO: Make it more abstract by using a NameComponent.
     // Find the PlayerComponent on the player entity and update it
     if (playerComponent) {
       playerComponent.name = sanitizedName
