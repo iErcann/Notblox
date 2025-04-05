@@ -117,3 +117,18 @@ services:
       options:
         max-size: '10m'
         max-file: '3'
+
+  monitor-logs:
+    build: ./monitor
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - DOCKER_GATEWAY=https://172.17.0.1
+      - CHECK_INTERVAL=10000
+    restart: unless-stopped
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
