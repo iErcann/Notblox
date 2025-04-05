@@ -1,0 +1,17 @@
+{
+  "name": "notblox-monitor",
+  "version": "1.0.0",
+  "description": "Health monitoring for Notblox game servers (Sends to Discord)",
+  "main": "dist/monitor.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/monitor.js" 
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.86",
+    "typescript": "^5.0.4"
+  }
+}
