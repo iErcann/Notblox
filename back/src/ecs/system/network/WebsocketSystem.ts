@@ -198,6 +198,9 @@ export class WebsocketSystem {
     const entityId = entity.id
 
     EventSystem.addNetworkEvent(new EntityDestroyedEvent(entityId))
+
+    // Remove player from players array
+    this.players = this.players.filter((player) => player !== disconnectedPlayer)
   }
 
   private async handleInputMessage(ws: any, message: InputMessage) {
