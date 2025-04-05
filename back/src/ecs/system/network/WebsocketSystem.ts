@@ -269,10 +269,10 @@ export class WebsocketSystem {
 
     // Check if player already has a custom name (not the default "Player" name)
     const playerComponent = player.entity.getComponent(PlayerComponent)
-    // if (playerComponent && !playerComponent.name.startsWith('Player ')) {
-    //   console.log(`Player ${playerComponent.name} attempted to change name again. Not allowed.`)
-    //   return
-    // }
+    if (playerComponent && !playerComponent.name.startsWith('Player')) {
+      console.log(`Player ${playerComponent.name} attempted to change name again. Not allowed.`)
+      return
+    }
 
     // Sanitize player name to prevent abuse
     let sanitizedName = name.trim().substring(0, 20)
@@ -283,7 +283,17 @@ export class WebsocketSystem {
     // Default to "Player" if name is empty after sanitization
     if (!sanitizedName) sanitizedName = `Player ${player.entity.id}`
 
-    // TODO: Add a duplicate name check
+    // Check for duplicate names
+    const isDuplicateName = this.players.some(
+      (p) =>
+        p.entity.id !== player.entity.id &&
+        p.entity.getComponent(PlayerComponent)?.name === sanitizedName
+    )
+    if (isDuplicateName) {
+      console.log(`Player ${player.entity.id} attempted to use duplicate name: ${sanitizedName}`)
+      sanitizedName += `${player.entity.id}`
+    }
+
     // The player component holds the name, but the TextComponent could be altered by game scripts
     // Like : [New Player] - iErcan (10)
     // To not lose the name of the player, store it in the PlayerComponent

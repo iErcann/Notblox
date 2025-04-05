@@ -11,7 +11,7 @@ import Navbar from './Navbar'
 
 export default function GameContent({ gameInfo }: { gameInfo: GameInfo }) {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [playerName, setPlayerName] = useState('')
+  const [playerName, setPlayerName] = useState<string>('')
 
   // Load player name from localStorage on component mount
   useEffect(() => {
