@@ -5,13 +5,13 @@
   "main": "dist/monitor.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/monitor.js" 
+    "start": "node dist/monitor.js"
   },
   "dependencies": {
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
-    "@types/node": "^18.19.86",
+    "@types/node": "^22.0.1",
     "typescript": "^5.0.4"
   }
 }
