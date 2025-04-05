@@ -20,7 +20,11 @@ import {
   ClientMessageType,
   ClientMessage,
 } from '../../../../../shared/network/client/index.js'
-import { ConnectionMessage, ServerMessageType } from '../../../../../shared/network/server/index.js'
+import {
+  ConnectionMessage,
+  SerializedMessageType,
+  ServerMessageType,
+} from '../../../../../shared/network/server/index.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 
 import { MessageEvent } from '../../component/events/MessageEvent.js'
@@ -30,6 +34,9 @@ import { NetworkSystem } from './NetworkSystem.js'
 import { ProximityPromptInteractEvent } from '../../component/events/ProximityPromptInteractEvent.js'
 import { TextComponent } from '../../../../../shared/component/TextComponent.js'
 import { PlayerComponent } from '../../../../../shared/component/PlayerComponent.js'
+import { EntityManager } from '../../../../../shared/system/EntityManager.js'
+import { MessageListComponent } from '../../../../../shared/component/MessageComponent.js'
+import { ChatComponent } from '../../component/tag/TagChatComponent.js'
 type MessageHandler = (ws: any, message: any) => void
 
 export class WebsocketSystem {
@@ -78,6 +85,51 @@ export class WebsocketSystem {
           cert_file_name: sslCertFile,
         })
       : App()
+
+    // Add health check endpoint
+    app.get('/health', (res) => {
+      // Get connected players count
+      const connectedPlayers = this.players.map(
+        (player) => player.entity.getComponent(PlayerComponent)?.name
+      )
+
+      // Get message list from MessageListComponent if available
+      const chatEntity = EntityManager.getFirstEntityWithComponent(
+        EntityManager.getInstance().getAllEntities(),
+        ChatComponent
+      )
+      const messageListComponent = chatEntity?.getComponent(MessageListComponent)
+      const messages = messageListComponent?.list
+
+      const healthData = {
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        game: {
+          script: process.env.GAME_SCRIPT || 'Unknown',
+          tickrate: config.SERVER_TICKRATE,
+        },
+        players: connectedPlayers,
+        messages: {
+          globalChat: messages?.filter(
+            ({ messageType }) => messageType === SerializedMessageType.GLOBAL_CHAT
+          ),
+          targetedChat: messages?.filter(
+            ({ messageType }) => messageType === SerializedMessageType.TARGETED_CHAT
+          ),
+          globalNotification: messages?.filter(
+            ({ messageType }) => messageType === SerializedMessageType.GLOBAL_NOTIFICATION
+          ),
+          targetedNotification: messages?.filter(
+            ({ messageType }) => messageType === SerializedMessageType.TARGETED_NOTIFICATION
+          ),
+        },
+      }
+
+      // Send response
+      res.writeHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify(healthData))
+    })
 
     app.ws('/*', {
       idleTimeout: 32,
