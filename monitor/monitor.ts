@@ -107,9 +107,11 @@ async function processMessageQueue(): Promise<void> {
       }
     }
 
-    // Try again immediately
+    // Try again after a delay
     if (messageQueue.length > 0) {
-      await processMessageQueue()
+      setTimeout(async () => {
+        await processMessageQueue()
+      }, 1000) // 1 second delay
     }
   } finally {
     isProcessingQueue = false
