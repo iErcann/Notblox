@@ -87,10 +87,7 @@ export class WebsocketSystem {
       : App()
 
     // Add health check endpoint
-    app.get('/health', (res, req) => {
-      // Get memory usage
-      const memoryUsage = process.memoryUsage()
-
+    app.get('/health', (res) => {
       // Get connected players count
       const connectedPlayers = this.players.map(
         (player) => player.entity.getComponent(PlayerComponent)?.name
