@@ -1,8 +1,6 @@
-import { Game } from '@/game/Game'
 import { Entity } from '@shared/entity/Entity'
 import { SerializedEntityType } from '@shared/network/server/serialized'
 import { EntityManager } from '@shared/system/EntityManager'
-import { useEffect } from 'react'
 
 export class Chat {
   entity: Entity
