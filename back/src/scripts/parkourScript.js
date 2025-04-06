@@ -125,6 +125,7 @@ ScriptableSystem.update = (dt, entities) => {
       if (content.startsWith('/cp') || content.startsWith('/checkpoint')) {
         const playerId = event.entityId
         const playerEntity = EntityManager.getEntityById(entities, playerId)
+        const position = playerEntity.getComponent(PositionComponent)
         if (playerEntity && position) {
           try {
             // Update the player's checkpoint position
