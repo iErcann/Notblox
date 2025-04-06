@@ -36,7 +36,6 @@ export default function GameHud({
   useEffect(() => {
     if (!messageComponents || messageComponents.length === 0) return
 
-    console.log('WQSDSQDQ', messageComponents)
     // Process new messages for notifications
     messageComponents.forEach((messageComponent, index) => {
       const messageType = messageComponent.messageType

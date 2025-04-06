@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import { Sky } from 'three/examples/jsm/objects/Sky.js'
 import { Camera } from './Camera'
 
 import { PositionComponent } from '@shared/component/PositionComponent'
@@ -21,16 +20,16 @@ export class Renderer extends THREE.WebGLRenderer {
   scene: THREE.Scene
   css2DRenderer: CSS2DRenderer
   composer?: EffectComposer
-  
+
   private directionalLight: THREE.DirectionalLight | undefined
   constructor(public gameContainerRef: MutableRefObject<any>) {
     super({ antialias: true, stencil: false, powerPreference: 'high-performance' })
     // Disable auto update of shadow map, expensive operation
     this.camera = new Camera(this)
-    
+
     this.scene = new THREE.Scene()
     this.shadowMap.enabled = true
-    this.shadowMap.type = THREE.PCFSoftShadowMap //THREE.BasicShadowMap | THREE.PCFShadowMap |  THREE.VSMShadowMap | THREE.PCFSoftShadowMap
+    this.shadowMap.type = THREE.PCFSoftShadowMap
 
     this.setSize(window.innerWidth, window.innerHeight)
     this.setPixelRatio(this.getDevicePixelRatio())
@@ -43,9 +42,9 @@ export class Renderer extends THREE.WebGLRenderer {
 
     // Prevent right click context menu
     this.domElement.addEventListener('contextmenu', (event) => event.preventDefault())
-    this.addLight()
+    // this.addStaticLight()
     this.addDirectionnalLight()
-    this.addSky()
+    this.addHDRSky()
     // this.setupPostProcessing()
 
     window.addEventListener('resize', this.onWindowResize.bind(this), false)
@@ -87,30 +86,21 @@ export class Renderer extends THREE.WebGLRenderer {
     this.gameContainerRef.current.appendChild(this.domElement)
     if (this.css2DRenderer) document.body.appendChild(this.css2DRenderer.domElement)
     else console.error("Can't append child CSS3DRenderer")
+
+    // Add ocean after appending renderer
+    //this.addOcean()
   }
-  private addSky() {
-    const sun = new THREE.Vector3()
 
-    const sky = new Sky()
+  private addHDRSky() {
+    // Environment map
+    const textureLoader = new THREE.TextureLoader()
+    // Load a sky texture for the environment map
+    // Options: kloofendal_48d_partly_cloudy_puresky, rustig_koppie_puresky
+    const texture = textureLoader.load('/sky/kloofendal_48d_partly_cloudy_puresky.webp')
+    texture.mapping = THREE.EquirectangularReflectionMapping
 
-    const uniforms = sky.material.uniforms
-    uniforms['turbidity'].value = 12
-    uniforms['rayleigh'].value = 0
-    uniforms['mieCoefficient'].value = 0.045
-    uniforms['mieDirectionalG'].value = 0.0263
-
-    const elevation = 2
-    const azimuth = 360
-
-    const phi = THREE.MathUtils.degToRad(90 - elevation)
-    const theta = THREE.MathUtils.degToRad(azimuth)
-
-    sun.setFromSphericalCoords(1, phi, theta)
-
-    uniforms['sunPosition'].value.copy(sun)
-
-    sky.scale.setScalar(450000)
-    this.scene.add(sky)
+    this.scene.background = texture
+    this.scene.environment = texture
   }
   private addDirectionnalLight() {
     // Check the markdown "PERFORMANCE.md" inside this repo for more information
@@ -125,13 +115,13 @@ export class Renderer extends THREE.WebGLRenderer {
 
     // Define the size of the orthographic camera's view frustum used for shadow mapping
     const shadowSideLength = 150 // Controls how large an area will receive shadows
-    
+
     // Set the boundaries of the orthographic camera's view frustum
     // These define a square area centered on the light's target where shadows will be cast
-    this.directionalLight.shadow.camera.top = shadowSideLength      // Upper boundary
-    this.directionalLight.shadow.camera.bottom = -shadowSideLength  // Lower boundary  
-    this.directionalLight.shadow.camera.left = -shadowSideLength    // Left boundary
-    this.directionalLight.shadow.camera.right = shadowSideLength    // Right boundary
+    this.directionalLight.shadow.camera.top = shadowSideLength // Upper boundary
+    this.directionalLight.shadow.camera.bottom = -shadowSideLength // Lower boundary
+    this.directionalLight.shadow.camera.left = -shadowSideLength // Left boundary
+    this.directionalLight.shadow.camera.right = shadowSideLength // Right boundary
     this.directionalLight.shadow.camera.near = 0.01
     this.directionalLight.shadow.camera.far = 500
 
@@ -149,7 +139,7 @@ export class Renderer extends THREE.WebGLRenderer {
     this.scene.add(this.directionalLight, lightTarget)
   }
 
-  private addLight() {
+  private addStaticLight() {
     // Use HemisphereLight for natural lighting
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0xff8a05, 1)
     hemiLight.position.set(0, 50, 0)
