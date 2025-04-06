@@ -86,10 +86,25 @@ export class WebSocketManager {
   }
 
   send(message: ClientMessage) {
-    if (this.isConnected()) {
-      this.websocket!.send(pack(message))
-    } else {
-      console.error("Websocket doesnt exist can't send message", message)
+    if (!this.isConnected()) {
+      console.error("Websocket not connected, can't send message", message)
+      return
+    }
+
+    if (!this.websocket) {
+      console.error("Websocket not initialized, can't send message", message)
+      return
+    }
+
+    try {
+      // Compress with msgpackr
+      const packed = pack(message)
+      this.websocket.send(packed)
+    } catch (error) {
+      console.error(
+        `Failed to send message: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        message
+      )
     }
   }
   private isConnected(): boolean {

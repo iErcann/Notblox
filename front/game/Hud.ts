@@ -5,6 +5,7 @@ import { MessageComponent } from '@shared/component/MessageComponent'
 import { Game } from './Game'
 import { ClientMessageType } from '@shared/network/client/base'
 import { ChatMessage } from '@shared/network/client/chatMessage'
+import { config } from '@shared/network/config'
 
 // Props drill
 export class Hud {
@@ -16,10 +17,11 @@ export class Hud {
 
   sendMessageToServer(message: string) {
     if (message === '') return
-    console.log('Sending message to server:', message)
+    // Limit message length to 300 characters
+    const trimmedMessage = message.slice(0, config.MAX_MESSAGE_CONTENT_LENGTH)
     const chatMessage: ChatMessage = {
       t: ClientMessageType.CHAT_MESSAGE,
-      content: message,
+      content: trimmedMessage,
     }
     Game.getInstance().websocketManager.send(chatMessage)
   }

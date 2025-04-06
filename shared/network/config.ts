@@ -11,4 +11,5 @@ export const config = {
    */
   SERVER_TICKRATE: isServer ? Number(process.env.GAME_TICKRATE) || 20 : 20,
   IS_SERVER: isServer,
+  MAX_MESSAGE_CONTENT_LENGTH: 300,
 }

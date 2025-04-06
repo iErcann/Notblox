@@ -5,10 +5,10 @@ import { MessageEvent } from '../../component/events/MessageEvent.js'
 import { ChatComponent } from '../../component/tag/TagChatComponent.js'
 import { EventSystem } from '../../../../../shared/system/EventSystem.js'
 import { SerializedMessageType } from '../../../../../shared/network/server/serialized.js'
+import { config } from '../../../../../shared/network/config.js'
 
 export class MessageEventSystem {
   private MAX_MESSAGES: number = 20
-  private MAX_CONTENT_LENGTH: number = 300
 
   update(entities: Entity[]) {
     const chatMessageEvents = EventSystem.getEvents(MessageEvent)
@@ -36,10 +36,7 @@ export class MessageEventSystem {
         const targetPlayerIds = chatMessageEvent.targetPlayerIds
 
         // Limit content length
-        if (content.length > this.MAX_CONTENT_LENGTH) {
-          content = content.substring(0, this.MAX_CONTENT_LENGTH)
-        }
-
+        content = content.slice(0, config.MAX_MESSAGE_CONTENT_LENGTH)
         // Limit message history (bandwidth)
         if (messageListComponent.list.length >= this.MAX_MESSAGES) {
           messageListComponent.list.shift()
