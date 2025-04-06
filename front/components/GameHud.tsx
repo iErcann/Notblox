@@ -191,7 +191,7 @@ export default function GameHud({
                       : 'bg-gray-700 bg-opacity-30'
                   }`}
                 >
-                  <p className="text-sm">
+                  <p className="text-sm break-words">
                     <span
                       className={`font-medium ${
                         messageComponent.messageType === SerializedMessageType.TARGETED_CHAT
