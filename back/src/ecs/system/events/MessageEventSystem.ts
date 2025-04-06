@@ -8,7 +8,7 @@ import { SerializedMessageType } from '../../../../../shared/network/server/seri
 
 export class MessageEventSystem {
   private MAX_MESSAGES: number = 20
-  private MAX_CONTENT_LENGTH: number = 160
+  private MAX_CONTENT_LENGTH: number = 300
 
   update(entities: Entity[]) {
     const chatMessageEvents = EventSystem.getEvents(MessageEvent)
