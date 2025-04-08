@@ -270,7 +270,7 @@ function initializePlayerData(playerId) {
   const name = playerComponent ? playerComponent.name : `Player${playerId}`
 
   return {
-    coins: 10000000,
+    coins: 100,
     pets: [],
     eggs: 1, // Start with 1 egg
     joinDate: new Date(),
