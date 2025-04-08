@@ -19,6 +19,7 @@ import {
   ColliderPropertiesComponent,
   ColliderPropertiesComponentData,
 } from '../component/physics/ColliderPropertiesComponent.js'
+import { TextComponent } from '../../../../shared/component/TextComponent.js'
 
 export interface CubeParams {
   position: {
@@ -50,13 +51,17 @@ export interface CubeParams {
    * @default {}
    */
   colliderProperties?: ColliderPropertiesComponentData
+  /**
+   * @default ""
+   */
+  name?: string
 }
 
 export class Cube {
   entity: Entity
 
   constructor(params: CubeParams) {
-    const { position, size, color, meshUrl, physicsProperties, colliderProperties } = params
+    const { position, size, color, meshUrl, physicsProperties, colliderProperties, name } = params
 
     this.entity = EntityManager.createEntity(SerializedEntityType.CUBE)
 
@@ -104,6 +109,12 @@ export class Cube {
       colorComponent,
       serverMeshComponent,
     ])
+
+    if (name) {
+      const textComponent = new TextComponent(this.entity.id, name)
+      this.entity.addComponent(textComponent)
+      networkDataComponent.components.push(textComponent)
+    }
     this.entity.addComponent(networkDataComponent)
   }
 }

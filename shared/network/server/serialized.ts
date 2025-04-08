@@ -35,6 +35,7 @@ export enum SerializedEntityType {
   EVENT_QUEUE = 6,
   FLOATING_TEXT = 7,
   VEHICLE = 8,
+  ORBITAL_COMPANION = 9,
 }
 
 // Movement states
@@ -63,16 +64,15 @@ export interface SnapshotMessage extends ServerMessage {
   e: SerializedEntity[]
 }
 
-
 /**
  * Message types for different kinds of chat messages
  */
 export enum SerializedMessageType {
   // Chat messages
-  GLOBAL_CHAT = 1,        // Regular chat message
+  GLOBAL_CHAT = 1, // Regular chat message
   TARGETED_CHAT = 2, // Message to specific players
-  
+
   // Notifications
-  GLOBAL_NOTIFICATION = 3,     // Global notification at top of screen
-  TARGETED_NOTIFICATION = 4  // Message to specific players
+  GLOBAL_NOTIFICATION = 3, // Global notification at top of screen
+  TARGETED_NOTIFICATION = 4, // Message to specific players
 }

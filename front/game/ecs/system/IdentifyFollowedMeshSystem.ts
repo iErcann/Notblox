@@ -1,7 +1,7 @@
 import { Game } from '@/game/Game.js'
 import { Entity } from '@shared/entity/Entity.js'
 import { SerializedStateType } from '@shared/network/server/serialized.js'
-import { FollowComponent } from '../component/FollowComponent.js'
+import { CameraFollowComponent } from '../component/CameraFollowComponent.js'
 import { CurrentPlayerComponent } from '../component/CurrentPlayerComponent.js'
 import { PlayerComponent } from '@shared/component/PlayerComponent.js'
 import { VehicleComponent } from '@shared/component/VehicleComponent.js'
@@ -23,7 +23,7 @@ export class IdentifyFollowedMeshSystem {
         const entity = EntityManager.getEntityById(entities, playerEvent.entityId)
         if (entity) {
           entity.addComponent(new CurrentPlayerComponent(playerEvent.entityId))
-          entity.addComponent(new FollowComponent(playerEvent.entityId, game.renderer.camera))
+          entity.addComponent(new CameraFollowComponent(playerEvent.entityId, game.renderer.camera))
           this.currentPlayerEntity = entity
           this.followedEntity = entity
         }
@@ -63,9 +63,9 @@ export class IdentifyFollowedMeshSystem {
           continue
         }
         // Stop following previous entity
-        this.followedEntity?.removeComponent(FollowComponent)
+        this.followedEntity?.removeComponent(CameraFollowComponent)
         // Follow the vehicle
-        vehicle.addComponent(new FollowComponent(vehicle.id, game.renderer.camera))
+        vehicle.addComponent(new CameraFollowComponent(vehicle.id, game.renderer.camera))
         this.followedEntity = vehicle
       }
     }
@@ -80,10 +80,10 @@ export class IdentifyFollowedMeshSystem {
       const vehicleOccupancyComponent: VehicleOccupancyComponent = vehicleOccupancyEvent.component
       if (vehicleOccupancyComponent.entityId === this.currentPlayerEntity.id) {
         // Stop following the vehicle
-        this.followedEntity?.removeComponent(FollowComponent)
+        this.followedEntity?.removeComponent(CameraFollowComponent)
         // Follow the current player entity
         this.currentPlayerEntity.addComponent(
-          new FollowComponent(this.currentPlayerEntity.id, game.renderer.camera)
+          new CameraFollowComponent(this.currentPlayerEntity.id, game.renderer.camera)
         )
         this.followedEntity = this.currentPlayerEntity
       }
