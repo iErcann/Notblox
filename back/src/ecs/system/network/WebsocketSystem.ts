@@ -37,6 +37,7 @@ import { PlayerComponent } from '../../../../../shared/component/PlayerComponent
 import { EntityManager } from '../../../../../shared/system/EntityManager.js'
 import { MessageListComponent } from '../../../../../shared/component/MessageComponent.js'
 import { ChatComponent } from '../../component/tag/TagChatComponent.js'
+import { WebSocketComponent } from '../../component/WebsocketComponent.js'
 type MessageHandler = (ws: any, message: any) => void
 
 export class WebsocketSystem {
@@ -254,6 +255,9 @@ export class WebsocketSystem {
 
     // Remove player from players array
     this.players = this.players.filter((player) => player !== disconnectedPlayer)
+
+    // Remove the WebsocketComponent directly to avoid sending messages to the client
+    entity.removeComponent(WebSocketComponent)
   }
 
   private async handleInputMessage(ws: any, message: InputMessage) {

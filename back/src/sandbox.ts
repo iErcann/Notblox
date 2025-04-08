@@ -45,6 +45,10 @@ import { ComponentAddedEvent } from '../../shared/component/events/ComponentAdde
 import { InvisibleComponent } from '../../shared/component/InvisibleComponent.js'
 import { ChatComponent } from './ecs/component/tag/TagChatComponent.js'
 import { SerializedMessageType } from '../../shared/network/server/serialized.js'
+import { OrbitalCompanion } from './ecs/entity/OrbitalCompanion.js'
+import { FollowTargetComponent } from './ecs/component/FollowTargetComponent.js'
+import { SizeComponent } from '../../shared/component/SizeComponent.js'
+import { SingleSizeComponent } from '../../shared/component/SingleSizeComponent.js'
 
 async function loadGameLogic() {
   const gameScript = process.env.GAME_SCRIPT || 'defaultScript.js' // Default script name if not provided
@@ -77,6 +81,9 @@ async function loadGameLogic() {
     TextComponent,
     InvisibleComponent,
     SerializedMessageType,
+    FollowTargetComponent,
+    SingleSizeComponent,
+    SizeComponent,
 
     // Physics Components
     BoxColliderComponent,
@@ -111,6 +118,7 @@ async function loadGameLogic() {
     TriggerCube,
     FloatingText,
     Car,
+    OrbitalCompanion,
   }
   // Execute the script
   const script = new Function(...Object.keys(sandbox), code)

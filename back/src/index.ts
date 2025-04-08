@@ -30,6 +30,7 @@ import { TrimeshColliderSystem } from './ecs/system/physics/TrimeshColliderSyste
 import { PlayerComponent } from '../../shared/component/PlayerComponent.js'
 import { ZombieSystem } from './ecs/system/ZombieSystem.js'
 import { ScriptableSystem } from './ecs/system/ScriptableSystem.js'
+import { FollowTargetSystem } from './ecs/system/FollowTargetSystem.js'
 import { ProximityPromptSystem } from './ecs/system/events/ProximityPromptEventSystem.js'
 import { ConvexHullColliderSystem } from './ecs/system/physics/ConvexHullColliderSystem.js'
 import { VehicleSystem } from './ecs/system/VehicleSystem.js'
@@ -71,6 +72,7 @@ const sleepCheckSystem = new SleepCheckSystem()
 const randomizeSystem = new RandomizeSystem()
 const boundaryCheckSystem = new BoundaryCheckSystem()
 const zombieSystem = new ZombieSystem()
+const followTargetSystem = new FollowTargetSystem()
 
 new Chat()
 
@@ -109,6 +111,7 @@ async function updateGameState(dt: number) {
 
   // Other systems
   zombieSystem.update(dt, entities)
+  followTargetSystem.update(dt, entities)
   randomizeSystem.update(entities)
   sizeEventSystem.update(entities)
   singleSizeEventSystem.update(entities)
@@ -128,6 +131,7 @@ async function updateGameState(dt: number) {
   sleepCheckSystem.update(entities)
 
   // Finalize events
+  destroyEventSystem.afterUpdate(entities)
   eventSystem.afterUpdate(entities)
 }
 

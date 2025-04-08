@@ -3,7 +3,7 @@ import { PositionComponent } from '@shared/component/PositionComponent'
 import { Entity } from '@shared/entity/Entity'
 import CameraControls from 'camera-controls'
 import * as THREE from 'three'
-import { FollowComponent } from '../component/FollowComponent'
+import { CameraFollowComponent } from '../component/CameraFollowComponent'
 import { InputMessage } from '@shared/network/client/inputMessage'
 import { MeshComponent } from '../component/MeshComponent'
 
@@ -43,7 +43,7 @@ export class OrbitCameraFollowSystem {
     this.cameraControls.update(dt)
 
     for (const entity of entities) {
-      const followComponent = entity.getComponent(FollowComponent)
+      const followComponent = entity.getComponent(CameraFollowComponent)
       if (!followComponent) continue
 
       const newTargetPosition = this.getTargetPosition(entity)

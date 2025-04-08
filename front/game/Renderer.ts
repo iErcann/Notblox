@@ -6,7 +6,7 @@ import { Entity } from '@shared/entity/Entity'
 import { InputMessage } from '@shared/network/client/inputMessage'
 import { EntityManager } from '@shared/system/EntityManager'
 import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js'
-import { FollowComponent } from './ecs/component/FollowComponent'
+import { CameraFollowComponent } from './ecs/component/CameraFollowComponent'
 import { MutableRefObject } from 'react'
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
@@ -147,7 +147,10 @@ export class Renderer extends THREE.WebGLRenderer {
   }
 
   update(deltaTime: number, entities: Entity[], inputMessage: InputMessage) {
-    const followedEntity = EntityManager.getFirstEntityWithComponent(entities, FollowComponent)
+    const followedEntity = EntityManager.getFirstEntityWithComponent(
+      entities,
+      CameraFollowComponent
+    )
     if (followedEntity && this.directionalLight) {
       const position = followedEntity.getComponent(PositionComponent)
       if (position) {

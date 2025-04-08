@@ -42,21 +42,35 @@ export class NetworkSystem {
 
   // Updates the network state and sends snapshots to clients.
   update(entities: Entity[]): void {
-    // Send full snapshot to newly connected clients
+    // 1. Handle new clients that need full snapshots
     let fullSnapshotMessage: Uint8Array | undefined
-    for (const entity of entities) {
+    // 2. Get all entities with WebSocketComponent that need a full snapshot
+    const newClients = entities.filter((entity) => {
       const websocketComponent = entity.getComponent(WebSocketComponent)
-      if (websocketComponent && !websocketComponent.isFirstSnapshotSent) {
-        if (!fullSnapshotMessage) {
-          const fullSerializedEntities = this.serialize(entities, true)
-          fullSnapshotMessage = this.buildSnapshotMessage(fullSerializedEntities)
+      return websocketComponent && !websocketComponent.isFirstSnapshotSent
+    })
+
+    // 3. Only build the full snapshot if there are new clients
+    if (newClients.length > 0) {
+      fullSnapshotMessage = this.buildSnapshotMessage(this.serialize(entities, true))
+
+      // 4. Send to all new clients
+      for (const entity of newClients) {
+        const websocketComponent = entity.getComponent(WebSocketComponent)
+        if (!websocketComponent) {
+          console.error('Websocket not found', websocketComponent)
+          continue
+        }
+        if (!websocketComponent.ws) {
+          console.error('Websocket not found', websocketComponent)
+          continue
         }
         websocketComponent.ws.send(fullSnapshotMessage, true)
         websocketComponent.isFirstSnapshotSent = true
       }
     }
 
-    // Send delta snapshots to all clients
+    // 5. Send delta snapshots to all clients
     const serializedEntities = this.serialize(entities, false)
     const snapshotMessage = this.buildSnapshotMessage(serializedEntities)
     this.broadcast(entities, snapshotMessage)
