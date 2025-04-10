@@ -155,7 +155,7 @@ export default function GameHud({
             <Link
               href="https://discord.gg/kPhgtj49U2"
               target="_blank"
-              className="flex items-center justify-center mt-2 gap-2 px-3 py-1 w-full bg-blue-800 opacity-60 hover:bg-blue-700 rounded-md transition-colors"
+              className="flex items-center justify-center mt-2 gap-2 px-3 py-1 w-full bg-transparent border border-b-2 hover:bg-blue-900/30 rounded-md transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
