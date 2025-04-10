@@ -66,3 +66,30 @@ export function MiniGameCard({ title, imageUrl, slug, metaDescription }: GameCar
     </a>
   )
 }
+
+/**
+ * A micro version of the GameCard component for use in compact UI elements
+ * where minimal space is available.
+ */
+export function MicroGameCard({ title, imageUrl, slug }: Omit<GameCardProps, 'metaDescription'>) {
+  return (
+    <a
+      href={`/play/${slug}`}
+      className="block group transition-transform duration-200 hover:scale-[1.03]"
+    >
+      <Card className="relative overflow-hidden rounded-md bg-gray-900 drop-shadow-md hover:drop-shadow-lg border-0">
+        <div className="relative w-full h-12 aspect-square">
+          <img
+            alt={title}
+            src={imageUrl}
+            className="h-full w-full object-cover brightness-100 group-hover:brightness-110 transition-all duration-300"
+          />
+          <div className="absolute inset-0 bg-black/30" />
+          <CardTitle className="absolute bottom-1 left-1 text-xs/relaxed text-white truncate w-5/6">
+            {title}
+          </CardTitle>
+        </div>
+      </Card>
+    </a>
+  )
+}

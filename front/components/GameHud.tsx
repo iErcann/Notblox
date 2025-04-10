@@ -1,10 +1,14 @@
+/* eslint-disable react/jsx-no-undef */
 import { useEffect, useRef, useState } from 'react'
 import { Joystick } from 'react-joystick-component'
 import { Game } from '@/game/Game'
 import Link from 'next/link'
 import { SerializedMessageType } from '@shared/network/server/serialized'
 import { MessageComponent } from '@shared/component/MessageComponent'
-import { Twitter, Github, Maximize } from 'lucide-react'
+import { Maximize } from 'lucide-react'
+import { MicroGameCard } from './GameCard'
+import { GameInfo } from '@/types'
+import gameData from '../public/gameData.json'
 
 export interface GameHudProps {
   messages: MessageComponent[]
@@ -170,7 +174,19 @@ export default function GameHud({
         </div>
       </div>
 
-      <div className="absolute bottom-4 right-4 bg-black bg-opacity-20 rounded-xl p-4 z-50 hidden lg:flex flex-col w-[360px] pointer-events-auto space-y-4">
+      <div className="absolute bottom-4 right-4 bg-black bg-opacity-20 rounded-xl p-4 z-50 hidden lg:flex flex-col w-[360px] pointer-events-auto space-y-2">
+        {/* Other games cards mini section */}
+        <div className="grid grid-cols-4 gap-3">
+          {gameData.slice(0, 4).map((game: GameInfo) => (
+            <MicroGameCard
+              key={game.slug}
+              title={game.title}
+              imageUrl={game.imageUrl}
+              slug={game.slug}
+            />
+          ))}
+        </div>
+
         <div className="overflow-y-auto max-h-64 h-64 space-y-2 pr-2">
           {getFilteredMessages().map((messageComponent, index) => {
             return (
