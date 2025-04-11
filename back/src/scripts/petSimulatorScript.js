@@ -107,6 +107,7 @@ const EGG_TYPES = {
       epic: 0.5,
       legendary: 0.2,
     },
+    buyPosition: { x: -97.73, y: -12.08, z: 13.17 },
   },
   SPOTTED: {
     name: 'Spotted Egg',
@@ -120,6 +121,7 @@ const EGG_TYPES = {
       epic: 0.8,
       legendary: 0.5,
     },
+    buyPosition: { x: -89.87, y: -12.59, z: -2.18 },
   },
   GOLDEN: {
     name: 'Golden Egg',
@@ -133,6 +135,7 @@ const EGG_TYPES = {
       epic: 1.5,
       legendary: 1.0,
     },
+    buyPosition: { x: -82.12, y: -12.46, z: -17.4 },
   },
   CRYSTAL: {
     name: 'Crystal Egg',
@@ -146,6 +149,7 @@ const EGG_TYPES = {
       epic: 2.0,
       legendary: 3.0,
     },
+    buyPosition: { x: -73.78, y: -12.07, z: -29.45 },
   },
 }
 
@@ -172,7 +176,7 @@ const chatEntity = EntityManager.getFirstEntityWithComponent(allEntities, ChatCo
 const playerData = new Map()
 
 // Leaderboard display
-const leaderboardText = new FloatingText('👑 LEADERBOARD 🏆', 0, 10, -250, 150)
+const leaderboardText = new FloatingText('👑 LEADERBOARD 🏆', 93.47, -12.45, 39.26, 150)
 
 function updateLeaderboard() {
   // Convert Map to array for sorting
@@ -499,17 +503,10 @@ function levelUpPet(playerId, petIndex) {
 }
 
 // Initialize separate egg shops for each egg type
-Object.entries(EGG_TYPES).forEach(([eggType, eggData], index) => {
+Object.entries(EGG_TYPES).forEach(([eggType, eggData]) => {
   // Position each shop in a line, spaced out from each other
-  const xPos = index * 16 // Spread them out by 4 units, starting at -4
-
-  const eggShop = new Cube({
-    position: { x: xPos - 50, y: -15, z: 130.238 },
-    size: {
-      width: 2,
-      height: 2,
-      depth: 2,
-    },
+  const eggShop = new Mesh({
+    position: { x: eggData.buyPosition.x, y: eggData.buyPosition.y, z: eggData.buyPosition.z },
     colliderProperties: {
       isSensor: true,
     },
@@ -517,7 +514,8 @@ Object.entries(EGG_TYPES).forEach(([eggType, eggData], index) => {
       mass: 0,
       gravityScale: 0,
     },
-    // name: eggData.name,
+    meshUrl: 'https://notbloxo.fra1.cdn.digitaloceanspaces.com/Notblox-Assets/base/Egg.glb',
+    name: eggData.name,
   })
 
   // Add proximity prompt for buying this specific egg type
@@ -553,14 +551,14 @@ Object.entries(EGG_TYPES).forEach(([eggType, eggData], index) => {
     },
     interactionCooldown: 1000,
     holdDuration: 0,
-    maxInteractDistance: 10,
+    maxInteractDistance: 12,
   })
   eggShop.entity.addNetworkComponent(eggShopPrompt)
 })
 
 // Initialize egg hatching station
 const eggHatchingStation = new Cube({
-  position: { x: -0.027, y: -15.877, z: 80.238 },
+  position: { x: 90.27, y: -15, z: -57.81 },
   size: {
     width: 0.1,
     height: 0.1,
@@ -682,10 +680,12 @@ const eggHatchPrompt = new ProximityPromptComponent(eggHatchingStation.entity.id
 
         // Send appropriate notifications based on rarity
         const rarityInfo = RARITY_DATA[petData.rarity]
-        const hatchMessage = `Your ${eggData.emoji} ${eggData.name} hatched into a ${rarityInfo.emoji} ${petData.name}! (${petData.bonus} coins/jump)`
+        // Create a colored message based on pet rarity
+        const rarityText = getRarityColoredText(petData.name, petData.rarity)
+        const hatchMessage = `Your ${eggData.emoji} ${eggData.name} hatched into a ${rarityText}! It gives you +${pet.bonus} coins per jump!`
 
-        sendTargetedNotification(`🥚 Hatched!`, hatchMessage, [playerId])
-
+        sendTargetedNotification(`🐣 New Pet!`, hatchMessage, [playerId])
+        sendTargetedChat('🐣', hatchMessage, [playerId])
         // For rare or higher pets, broadcast to everyone to create FOMO
         if (
           petData.rarity === 'rare' ||
@@ -991,6 +991,25 @@ ScriptableSystem.update = (dt, entities) => {
         sendGlobalChatMessage(
           '📊',
           `${playerData.name} stats: 💰 ${coins} coins | 🥚 ${eggs} eggs | 🐾 ${pets.length} pets${legendaryString} | ⏱️ ${playtimeString}`
+        )
+      } else if (command === '/pos') {
+        const playerData = getPlayerData(event.entityId)
+        if (!playerData) continue
+        const entity = EntityManager.getEntityById(entities, event.entityId)
+        if (!entity) {
+          console.error('Entity not found', event.entityId)
+          continue
+        }
+        // Show player position
+        const positionComponent = entity.getComponent(PositionComponent)
+        if (!positionComponent) {
+          console.error('Position component not found', positionComponent)
+          continue
+        }
+        const position = positionComponent.serialize()
+        sendGlobalChatMessage(
+          '📍',
+          `${playerData.name} is at ${position.x}, ${position.y}, ${position.z}`
         )
       }
     }

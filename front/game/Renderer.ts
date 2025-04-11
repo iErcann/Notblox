@@ -14,6 +14,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader.js'
+import { Sky } from 'three/examples/jsm/objects/Sky.js'
 
 export class Renderer extends THREE.WebGLRenderer {
   camera: Camera
@@ -42,9 +43,15 @@ export class Renderer extends THREE.WebGLRenderer {
 
     // Prevent right click context menu
     this.domElement.addEventListener('contextmenu', (event) => event.preventDefault())
-    //this.addStaticLight()
     this.addDirectionnalLight()
-    this.addHDRSky()
+    const legacySky = false
+    if (legacySky) {
+      this.addStaticLight()
+      this.addSky()
+    } else {
+      // HDR sky breaks mobile lighting
+      this.addHDRSky()
+    }
     // this.setupPostProcessing()
 
     window.addEventListener('resize', this.onWindowResize.bind(this), false)
@@ -91,6 +98,31 @@ export class Renderer extends THREE.WebGLRenderer {
     //this.addOcean()
   }
 
+  private addSky() {
+    // Normal sky Three.JS
+    const sun = new THREE.Vector3()
+
+    const sky = new Sky()
+
+    const uniforms = sky.material.uniforms
+    uniforms['turbidity'].value = 12
+    uniforms['rayleigh'].value = 0
+    uniforms['mieCoefficient'].value = 0.045
+    uniforms['mieDirectionalG'].value = 0.0263
+
+    const elevation = 2
+    const azimuth = 360
+
+    const phi = THREE.MathUtils.degToRad(90 - elevation)
+    const theta = THREE.MathUtils.degToRad(azimuth)
+
+    sun.setFromSphericalCoords(1, phi, theta)
+
+    uniforms['sunPosition'].value.copy(sun)
+
+    sky.scale.setScalar(450000)
+    this.scene.add(sky)
+  }
   private addHDRSky() {
     // Environment map
     const textureLoader = new THREE.TextureLoader()
