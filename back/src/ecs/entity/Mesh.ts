@@ -12,7 +12,10 @@ import {
   PhysicsPropertiesComponent,
   PhysicsPropertiesComponentData,
 } from '../component/physics/PhysicsPropertiesComponent.js'
-import { ColliderPropertiesComponentData } from '../component/physics/ColliderPropertiesComponent.js'
+import {
+  ColliderPropertiesComponent,
+  ColliderPropertiesComponentData,
+} from '../component/physics/ColliderPropertiesComponent.js'
 import { ConvexHullColliderComponent } from '../component/physics/ConvexHullColliderComponent.js'
 
 export interface MeshParams {
@@ -51,7 +54,7 @@ export class Mesh {
   entity: Entity
 
   constructor(params: MeshParams) {
-    const { position, meshUrl, physicsProperties } = params
+    const { position, meshUrl, physicsProperties, colliderProperties } = params
 
     this.entity = EntityManager.createEntity(SerializedEntityType.CUBE)
 
@@ -72,6 +75,9 @@ export class Mesh {
     )
     this.entity.addComponent(serverMeshComponent)
 
+    this.entity.addComponent(
+      new ColliderPropertiesComponent(this.entity.id, colliderProperties ?? {})
+    )
     this.entity.addComponent(
       new ConvexHullColliderComponent(
         this.entity.id,
