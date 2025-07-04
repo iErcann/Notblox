@@ -44,7 +44,7 @@ export class Renderer extends THREE.WebGLRenderer {
     // Prevent right click context menu
     this.domElement.addEventListener('contextmenu', (event) => event.preventDefault())
     this.addDirectionnalLight()
-    const legacySky = false
+    const legacySky = true
     if (legacySky) {
       this.addStaticLight()
       this.addSky()
